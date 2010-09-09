@@ -1,0 +1,69 @@
+; -- Example1.iss --
+; Demonstrates copying 3 files and creating an icon.
+
+; SEE THE DOCUMENTATION FOR DETAILS ON CREATING .ISS SCRIPT FILES!
+
+[Setup]
+AppName=JT65-HF
+AppVerName=JT65-HF 1.0.6
+DefaultDirName={pf}\jt65hf
+DefaultGroupName=JT65-HF
+UninstallDisplayIcon={app}\jt65-hf.exe
+Compression=lzma
+SolidCompression=yes
+LicenseFile=license.txt
+OutputDir=.
+
+[InstallDelete]
+Type: files; Name: "{app}\gpl-2.0.txt"
+Type: files; Name: "{app}\HRDInterface001.dll"
+Type: files; Name: "{app}\jl_libfftw3f.dll"
+Type: files; Name: "{app}\jl-libportaudio-2.dll"
+Type: files; Name: "{app}\jl-libsamplerate.dll"
+Type: files; Name: "{app}\jt65.dll"
+Type: files; Name: "{app}\jt65-hf.exe"
+Type: files; Name: "{app}\libfftw3f-3.dll"
+Type: files; Name: "{app}\libfftw3f.dll"
+Type: files; Name: "{app}\libusb0.dll"
+Type: files; Name: "{app}\PSKReporter.dll"
+Type: files; Name: "{app}\sg-jt65-hf.exe"
+Type: files; Name: "{app}\KVASD_g95.exe"
+Type: filesandordirs; Name: "{app}\hamlib"
+Type: filesandordirs; Name: "{app}\optfft"
+
+[Files]
+Source: "jt65-hf.exe"; DestDir: "{app}"
+Source: "sg-jt65-hf.exe"; DestDir: "{app}"
+Source: "KVASD_g95.EXE"; DestDir: "{app}"
+Source: "jl_libfftw3f-3.dll"; DestDir: "{app}"
+Source: "libfftw3f-3.dll"; DestDir: "{app}"
+Source: "jt65.dll"; DestDir: "{app}"
+Source: "jl-libportaudio-2.dll"; DestDir: "{app}"
+Source: "jl-libsamplerate.dll"; DestDir: "{app}"
+Source: "PSKReporter.dll"; DestDir: "{app}"
+Source: "libusb0.dll"; DestDir: "{app}"
+Source: "gpl-2.0.txt"; DestDir: "{app}"
+Source: "hamlib\*.*"; DestDir: "{app}\hamlib"
+Source: "hamlib\rig_dde\*.*"; DestDir: "{app}\hamlib\rig_dde"
+Source: "optFFT\*.*"; DestDir: "{app}\optFFT"
+Source: "placeholder"; DestDir: "{localappdata}\JT65-HF"
+
+[Run]
+Filename: "{app}\optFFT\jt65-hf.exe"; Flags: postinstall; Description: "Setup indicates it should update optimal FFT calculations.  This will take from 10 to 20+ minutes.  If you do not wish to do this uncheck the box to left of this text!"; Check: optFFTCheck()
+
+[Icons]
+Name: "{group}\JT65-HF"; Filename: "{app}\jt65-hf.exe"
+Name: "{group}\JTG65-HF Small GUI"; Filename: "{app}\sg-jt65-hf.exe"
+Name: "{group}\Uninstall JT65-HF"; Filename: "{uninstallexe}"
+
+[CODE]
+function optFFTCheck(): Boolean;
+Var
+  fname : String;
+Begin
+  fname := ExpandConstant('{localappdata}')+'\JT65-HF\wisdom2.dat';
+  // The logic is somewhat reversed from what might seem correct
+  // here.  I want to run optfft if the file DOES NOT exist thus
+  // the seemingly backward return result.
+  If FileExists(fname) Then result := False else result := True;
+End;

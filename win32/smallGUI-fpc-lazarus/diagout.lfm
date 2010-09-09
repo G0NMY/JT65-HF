@@ -1,0 +1,38 @@
+object Form3: TForm3
+  Height = 535
+  Width = 730
+  BorderIcons = [biSystemMenu]
+  Caption = 'Program Messages'
+  ClientHeight = 535
+  ClientWidth = 730
+  Constraints.MaxHeight = 535
+  Constraints.MaxWidth = 730
+  Constraints.MinHeight = 535
+  Constraints.MinWidth = 730
+  Font.Height = -13
+  Font.Name = 'Arial'
+  LCLVersion = '0.9.26.2'
+  object ListBox1: TListBox
+    Height = 529
+    Width = 408
+    TabOrder = 0
+  end
+  object ListBox2: TListBox
+    Left = 408
+    Height = 337
+    Width = 321
+    TabOrder = 1
+  end
+  object ListBox3: TListBox
+    Left = 408
+    Height = 193
+    Top = 336
+    Width = 321
+    Font.Color = clRed
+    Font.Height = -13
+    Font.Name = 'Arial'
+    Font.Style = [fsBold]
+    ParentFont = False
+    TabOrder = 2
+  end
+end

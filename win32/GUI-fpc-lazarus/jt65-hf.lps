@@ -1,0 +1,337 @@
+<?xml version="1.0"?>
+<CONFIG>
+  <ProjectSession>
+    <PathDelim Value="\"/>
+    <Version Value="7"/>
+    <Units Count="30">
+      <Unit0>
+        <Filename Value="jt65-hf.lpr"/>
+        <IsPartOfProject Value="True"/>
+        <CursorPos X="51" Y="33"/>
+        <TopLine Value="3"/>
+        <EditorIndex Value="18"/>
+        <UsageCount Value="215"/>
+        <Loaded Value="True"/>
+      </Unit0>
+      <Unit1>
+        <Filename Value="maincode.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="Form1"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="maincode"/>
+        <CursorPos X="35" Y="1662"/>
+        <TopLine Value="1653"/>
+        <EditorIndex Value="7"/>
+        <UsageCount Value="215"/>
+        <Bookmarks Count="2">
+          <Item0 X="1" Y="1793" ID="0"/>
+          <Item1 X="1" Y="4172" ID="1"/>
+        </Bookmarks>
+        <Loaded Value="True"/>
+      </Unit1>
+      <Unit2>
+        <Filename Value="portaudio.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="portaudio"/>
+        <CursorPos X="1" Y="21"/>
+        <TopLine Value="21"/>
+        <EditorIndex Value="12"/>
+        <UsageCount Value="215"/>
+        <Loaded Value="True"/>
+      </Unit2>
+      <Unit3>
+        <Filename Value="parsecallsign.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="parseCallSign"/>
+        <CursorPos X="1" Y="1"/>
+        <TopLine Value="1"/>
+        <EditorIndex Value="19"/>
+        <UsageCount Value="215"/>
+        <Loaded Value="True"/>
+      </Unit3>
+      <Unit4>
+        <Filename Value="encode65.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="encode65"/>
+        <CursorPos X="1" Y="57"/>
+        <TopLine Value="29"/>
+        <EditorIndex Value="21"/>
+        <UsageCount Value="215"/>
+        <Loaded Value="True"/>
+      </Unit4>
+      <Unit5>
+        <Filename Value="globaldata.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="globalData"/>
+        <CursorPos X="1" Y="47"/>
+        <TopLine Value="17"/>
+        <EditorIndex Value="22"/>
+        <UsageCount Value="215"/>
+        <Loaded Value="True"/>
+      </Unit5>
+      <Unit6>
+        <Filename Value="spectrum.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="spectrum"/>
+        <CursorPos X="1" Y="284"/>
+        <TopLine Value="254"/>
+        <EditorIndex Value="23"/>
+        <UsageCount Value="215"/>
+        <Loaded Value="True"/>
+      </Unit6>
+      <Unit7>
+        <Filename Value="cmaps.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="cmaps"/>
+        <CursorPos X="22" Y="22"/>
+        <TopLine Value="1"/>
+        <UsageCount Value="215"/>
+      </Unit7>
+      <Unit8>
+        <Filename Value="adc.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="adc"/>
+        <CursorPos X="63" Y="36"/>
+        <TopLine Value="16"/>
+        <EditorIndex Value="15"/>
+        <UsageCount Value="215"/>
+        <Loaded Value="True"/>
+      </Unit8>
+      <Unit9>
+        <Filename Value="samplerate.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="samplerate"/>
+        <CursorPos X="39" Y="91"/>
+        <TopLine Value="67"/>
+        <EditorIndex Value="13"/>
+        <UsageCount Value="202"/>
+        <Loaded Value="True"/>
+      </Unit9>
+      <Unit10>
+        <Filename Value="dac.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="dac"/>
+        <CursorPos X="43" Y="36"/>
+        <TopLine Value="17"/>
+        <EditorIndex Value="16"/>
+        <UsageCount Value="201"/>
+        <Loaded Value="True"/>
+      </Unit10>
+      <Unit11>
+        <Filename Value="dlog.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="dlog"/>
+        <CursorPos X="1" Y="1"/>
+        <TopLine Value="1"/>
+        <EditorIndex Value="1"/>
+        <UsageCount Value="200"/>
+        <Loaded Value="True"/>
+      </Unit11>
+      <Unit12>
+        <Filename Value="rawdec.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="Form5"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="rawdec"/>
+        <CursorPos X="49" Y="29"/>
+        <TopLine Value="1"/>
+        <EditorIndex Value="10"/>
+        <UsageCount Value="200"/>
+        <Loaded Value="True"/>
+      </Unit12>
+      <Unit13>
+        <Filename Value="cfgvtwo.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="Form6"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="cfgvtwo"/>
+        <CursorPos X="56" Y="94"/>
+        <TopLine Value="64"/>
+        <EditorIndex Value="2"/>
+        <UsageCount Value="200"/>
+        <Loaded Value="True"/>
+      </Unit13>
+      <Unit14>
+        <Filename Value="guiconfig.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="guiConfig"/>
+        <CursorPos X="1" Y="29"/>
+        <TopLine Value="9"/>
+        <EditorIndex Value="5"/>
+        <UsageCount Value="201"/>
+        <Loaded Value="True"/>
+      </Unit14>
+      <Unit15>
+        <Filename Value="verholder.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="verHolder"/>
+        <CursorPos X="24" Y="35"/>
+        <TopLine Value="8"/>
+        <EditorIndex Value="17"/>
+        <UsageCount Value="201"/>
+        <Loaded Value="True"/>
+      </Unit15>
+      <Unit16>
+        <Filename Value="PSKReporter.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="PSKReporter"/>
+        <CursorPos X="1" Y="51"/>
+        <TopLine Value="21"/>
+        <EditorIndex Value="11"/>
+        <UsageCount Value="210"/>
+        <Loaded Value="True"/>
+      </Unit16>
+      <Unit17>
+        <Filename Value="catcontrol.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="catControl"/>
+        <CursorPos X="12" Y="107"/>
+        <TopLine Value="82"/>
+        <EditorIndex Value="0"/>
+        <UsageCount Value="266"/>
+        <Loaded Value="True"/>
+      </Unit17>
+      <Unit18>
+        <Filename Value="Si570Dev.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="Si570Dev"/>
+        <CursorPos X="74" Y="139"/>
+        <TopLine Value="109"/>
+        <EditorIndex Value="9"/>
+        <UsageCount Value="218"/>
+        <Loaded Value="True"/>
+      </Unit18>
+      <Unit19>
+        <Filename Value="LibUSB.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="LibUSB"/>
+        <CursorPos X="1" Y="26"/>
+        <TopLine Value="7"/>
+        <UsageCount Value="218"/>
+      </Unit19>
+      <Unit20>
+        <Filename Value="SndTypes.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="SndTypes"/>
+        <CursorPos X="1" Y="19"/>
+        <TopLine Value="1"/>
+        <UsageCount Value="218"/>
+      </Unit20>
+      <Unit21>
+        <Filename Value="UsbDev.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="UsbDev"/>
+        <CursorPos X="1" Y="142"/>
+        <TopLine Value="117"/>
+        <EditorIndex Value="8"/>
+        <UsageCount Value="218"/>
+        <Loaded Value="True"/>
+      </Unit21>
+      <Unit22>
+        <Filename Value="synaser.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="synaser"/>
+        <CursorPos X="16" Y="96"/>
+        <TopLine Value="84"/>
+        <UsageCount Value="200"/>
+      </Unit22>
+      <Unit23>
+        <Filename Value="rbc.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="rbc"/>
+        <CursorPos X="27" Y="96"/>
+        <TopLine Value="66"/>
+        <EditorIndex Value="6"/>
+        <UsageCount Value="200"/>
+        <Loaded Value="True"/>
+      </Unit23>
+      <Unit24>
+        <Filename Value="adif.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="adif"/>
+        <CursorPos X="1" Y="35"/>
+        <TopLine Value="5"/>
+        <EditorIndex Value="3"/>
+        <UsageCount Value="200"/>
+        <Loaded Value="True"/>
+      </Unit24>
+      <Unit25>
+        <Filename Value="log.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="Form2"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="log"/>
+        <CursorPos X="33" Y="1"/>
+        <TopLine Value="1"/>
+        <EditorIndex Value="4"/>
+        <UsageCount Value="234"/>
+        <Loaded Value="True"/>
+      </Unit25>
+      <Unit26>
+        <Filename Value="diagout.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="Form3"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="diagout"/>
+        <CursorPos X="67" Y="15"/>
+        <TopLine Value="1"/>
+        <EditorIndex Value="14"/>
+        <UsageCount Value="200"/>
+        <Loaded Value="True"/>
+      </Unit26>
+      <Unit27>
+        <Filename Value="fftw_jl.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="fftw_jl"/>
+        <CursorPos X="18" Y="27"/>
+        <TopLine Value="27"/>
+        <EditorIndex Value="25"/>
+        <UsageCount Value="201"/>
+        <Loaded Value="True"/>
+      </Unit27>
+      <Unit28>
+        <Filename Value="waterfall.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="waterfall"/>
+        <CursorPos X="1" Y="70"/>
+        <TopLine Value="40"/>
+        <EditorIndex Value="24"/>
+        <UsageCount Value="200"/>
+        <Loaded Value="True"/>
+      </Unit28>
+      <Unit29>
+        <Filename Value="d65.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="d65"/>
+        <CursorPos X="29" Y="355"/>
+        <TopLine Value="325"/>
+        <EditorIndex Value="20"/>
+        <UsageCount Value="202"/>
+        <Loaded Value="True"/>
+      </Unit29>
+    </Units>
+    <General>
+      <ActiveEditorIndexAtStart Value="7"/>
+    </General>
+  </ProjectSession>
+  <Debugging>
+    <BreakPoints Count="1">
+      <Item1>
+        <Source Value="spectrum4.pas"/>
+        <Line Value="497"/>
+      </Item1>
+    </BreakPoints>
+    <Exceptions Count="3">
+      <Item1>
+        <Name Value="EXMLReadError"/>
+      </Item1>
+      <Item2>
+        <Name Value="EInOutError"/>
+      </Item2>
+      <Item3>
+        <Name Value="ERangeError"/>
+      </Item3>
+    </Exceptions>
+  </Debugging>
+</CONFIG>

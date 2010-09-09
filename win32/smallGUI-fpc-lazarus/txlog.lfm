@@ -1,0 +1,30 @@
+object Form4: TForm4
+  Left = 295
+  Height = 547
+  Top = 1
+  Width = 450
+  BorderIcons = [biSystemMenu]
+  Caption = 'TX Log'
+  ClientHeight = 547
+  ClientWidth = 450
+  Constraints.MaxHeight = 547
+  Constraints.MaxWidth = 450
+  Constraints.MinHeight = 547
+  Constraints.MinWidth = 450
+  Font.Height = -13
+  Font.Name = 'Arial'
+  LCLVersion = '0.9.28.2'
+  object Memo1: TMemo
+    Left = 0
+    Height = 546
+    Top = 0
+    Width = 450
+    Lines.Strings = (
+      'Transmitted Messages.  Double Click in this window to clear.'
+    )
+    OnDblClick = Memo1DblClick
+    ReadOnly = True
+    ScrollBars = ssVertical
+    TabOrder = 0
+  end
+end

@@ -1,0 +1,13 @@
+{ This is an automatically generated lazarus resource file }
+
+LazarusResources.Add('TForm4','FORMDATA',[
+  'TPF0'#6'TForm4'#5'Form4'#4'Left'#3''''#1#6'Height'#3'#'#2#3'Top'#2#1#5'Width'
+  +#3#194#1#11'BorderIcons'#11#12'biSystemMenu'#0#7'Caption'#6#6'TX Log'#12'Cli'
+  +'entHeight'#3'#'#2#11'ClientWidth'#3#194#1#21'Constraints.MaxHeight'#3'#'#2
+  +#20'Constraints.MaxWidth'#3#194#1#21'Constraints.MinHeight'#3'#'#2#20'Constr'
+  +'aints.MinWidth'#3#194#1#11'Font.Height'#2#243#9'Font.Name'#6#5'Arial'#10'LC'
+  +'LVersion'#6#8'0.9.28.2'#0#5'TMemo'#5'Memo1'#4'Left'#2#0#6'Height'#3'"'#2#3
+  +'Top'#2#0#5'Width'#3#194#1#13'Lines.Strings'#1#6'<Transmitted Messages.  Dou'
+  +'ble Click in this window to clear.'#0#10'OnDblClick'#7#13'Memo1DblClick'#8
+  +'ReadOnly'#9#10'ScrollBars'#7#10'ssVertical'#8'TabOrder'#2#0#0#0#0
+]);
