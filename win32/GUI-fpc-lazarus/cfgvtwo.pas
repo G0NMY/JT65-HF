@@ -88,7 +88,9 @@ type
     editPSKRAntenna: TEdit;
     editUserDefinedPort1: TEdit;
     edUserMsg4: TEdit;
+    groupHRD: TGroupBox;
     Label10: TLabel;
+    labelHRDRig: TLabel;
     Label12: TLabel;
     Label122: TLabel;
     Label123: TLabel;
@@ -134,13 +136,14 @@ type
     Label64: TLabel;
     Label7: TLabel;
     Label8: TLabel;
+    labelHRDButtons: TLabel;
+    labelHRDDropDowns: TLabel;
+    labelHRDSliders: TLabel;
     OmniGroup: TRadioGroup;
     Page3: TPage;
     Page5: TPage;
     Page6: TPage;
     Colors: TPage;
-    radioHRD1: TRadioButton;
-    radioHRD2: TRadioButton;
     RadioGroup1: TRadioGroup;
     RadioGroup2: TRadioGroup;
     radioOmni1: TRadioButton;
@@ -464,12 +467,15 @@ procedure TForm6.chkUseHRDChange(Sender: TObject);
 begin
      If chkUseHRD.Checked Then
      Begin
+          cfgvtwo.Form6.labelHRDRig.Caption := 'Waiting for data...';
+          cfgvtwo.Form6.groupHRD.Visible := True;
           chkUseOmni.Checked := False;
           chkUseCommander.Checked := False;
           glcatBy := 'hrd';
      End
      Else
      Begin
+          cfgvtwo.Form6.groupHRD.Visible := False;
           glcatBy := 'none';
           globalData.gqrg := 0.0;
           globalData.strqrg := '0';

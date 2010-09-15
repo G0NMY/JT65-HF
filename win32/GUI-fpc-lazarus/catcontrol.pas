@@ -25,7 +25,7 @@ unit catControl;
 interface
 
 uses
-  Classes, SysUtils, Process, globalData, dlog;
+  Classes, SysUtils, Process, globalData, dlog, hrdinterface, cfgvtwo;
 
 Type
     omniRec = Record
@@ -42,41 +42,88 @@ Type
     end;
 
   function readOmni(rig : Integer) : Double;  // rig = 1 or 2.
-  function readHRD(rig : Integer): Double;
+  function readHRD(): Double;
   function readDXLabs(): Double;
 
 implementation
 
-function readHRD(rig : Integer): Double;
+function readHRD(): Double;
 Var
-   catProc : TProcess;
-   foo     : String;
-   qrg     : Double;
-   inStrs  : TStringList;
+   //foo                : WideString;
+   qrg                : Double;
+   hrdcontext         : PWIDECHAR;
+   hrdradio           : PWIDECHAR;
+   hrdqrg             : PWIDECHAR;
+   hrdbuttons         : PWIDECHAR;
+   hrddropdowns       : PWIDECHAR;
+   hrdsliders         : PWIDECHAR;
+   hrdresult          : PWIDECHAR;
+   hrdmsg             : WideString;
+   hrdon              : Boolean;
 Begin
-     catProc := TProcess.Create(nil);
-     inStrs := TStringList.Create;
-     if rig=1 Then foo := 'HRD_RADIO_000';
-     if rig=2 Then foo := 'HRD_RADIO_001';
-     catProc.CommandLine := 'hamlib\rig_dde\hrd_dde1 ' + foo;
-     catProc.Options := catProc.Options + [poWaitOnExit];
-     catProc.Options := catProc.Options + [poNoConsole];
-     catProc.Options := catProc.Options + [poUsePipes];
-     catProc.Execute;
-     inStrs.LoadFromStream(catProc.Output);
-     qrg := 0.0;
-     If TryStrToFloat(inStrs.Strings[0],qrg) Then
-     Begin
-          Result := qrg;
-          globalData.strqrg := FloatToStr(qrg);
+     // Testing HRD Interface code
+     hrdon := False;
+     hrdon := hrdinterface.HRDInterfaceConnect('localhost', 7809);
+     if hrdon then
+     begin
+          hrdradio := '';
+          hrdcontext := '';
+          hrdqrg := '';
+          hrdbuttons := '';
+          hrddropdowns := '';
+          hrdsliders := '';
+          hrdresult := '';
+          hrdmsg := 'Get Radio';
+          hrdradio := hrdinterface.HRDInterfaceSendMessage(hrdmsg);
+          cfgvtwo.Form6.labelHRDRig.Caption := 'Controlled Rig:  ' + hrdradio;
+          hrdmsg := 'Get Context';
+          hrdcontext := hrdinterface.HRDInterfaceSendMessage(hrdmsg);
+          hrdmsg := 'Get Frequency';
+          hrdqrg := hrdinterface.HRDInterfaceSendMessage(hrdmsg);
+          hrdmsg := '[' + hrdcontext + '] get buttons';
+          hrdbuttons := hrdinterface.HRDInterfaceSendMessage(hrdmsg);
+          cfgvtwo.Form6.labelHRDButtons.Caption := 'Buttons:  ' + hrdbuttons;
+          hrdmsg := '[' + hrdcontext + '] get dropdowns';
+          hrddropdowns := hrdinterface.HRDInterfaceSendMessage(hrdmsg);
+          cfgvtwo.Form6.labelHRDDropDowns.Caption := 'Dropdowns:  ' + hrddropdowns;
+          hrdmsg := '[' + hrdcontext + '] get sliders';
+          hrdsliders := hrdinterface.HRDInterfaceSendMessage(hrdmsg);
+          cfgvtwo.Form6.labelHRDSliders.Caption := 'Sliders:  ' + hrdsliders;
+          hrdresult := '';
+          //hrdmsg := '[' + hrdcontext + '] set dropdown mode usb 1';
+          hrdmsg := '[' + hrdcontext + '] set dropdown mode usb 1';
+          hrdresult := hrdinterface.HRDInterfaceSendMessage(hrdmsg);
+
+          //dlog.fileDebug(hrdradio + ' ' + hrdcontext + ' ' + hrdqrg);
+          //hrdmsg := '[' + hrdcontext + '] set frequency-hz 14076000';
+          //hrdresult := hrdinterface.HRDInterfaceSendMessage(hrdmsg);
+          //hrdmsg := 'Get Frequency';
+          //hrdqrg := hrdinterface.HRDInterfaceSendMessage(hrdmsg);
+
+          qrg := 0.0;
+          If TryStrToFloat(hrdqrg,qrg) Then
+          Begin
+               Result := qrg;
+               globalData.strqrg := FloatToStr(qrg);
+          end
+          else
+          Begin
+               Result := 0.0;
+               globalData.strqrg := '0';
+          end;
+          hrdinterface.HRDInterfaceFreeString(hrdcontext);
+          hrdinterface.HRDInterfaceFreeString(hrdradio);
+          hrdinterface.HRDInterfaceFreeString(hrdqrg);
+          //hrdinterface.HRDInterfaceFreeString(hrdbuttons);
+          //hrdinterface.HRDInterfaceFreeString(hrddropdowns);
+          //hrdinterface.HRDInterfaceFreeString(hrdsliders);
+          //hrdinterface.HRDInterfaceFreeString(hrdresult);
+          hrdinterface.HRDInterfaceDisconnect();
      end
      else
-     Begin
+     begin
           Result := 0.0;
-          globalData.strqrg := '0';
      end;
-     inStrs.Free;
-     catProc.Destroy;
 End;
 
 function readDXLabs(): Double;

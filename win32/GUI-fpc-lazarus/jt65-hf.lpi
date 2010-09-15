@@ -21,7 +21,7 @@
       <AutoIncrementBuild Value="True"/>
       <CurrentVersionNr Value="1"/>
       <CurrentMinorRevNr Value="6"/>
-      <CurrentBuildNr Value="1"/>
+      <CurrentBuildNr Value="175"/>
       <FileDescription Value="Amateur Radio communications using JT65A"/>
       <LegalCopyright Value="2009..2010 - J C Large - W4CQZ - GPL 2"/>
     </VersionInfo>
@@ -46,7 +46,7 @@
         <PackageName Value="LCL"/>
       </Item2>
     </RequiredPackages>
-    <Units Count="30">
+    <Units Count="31">
       <Unit0>
         <Filename Value="jt65-hf.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -207,6 +207,11 @@
         <IsPartOfProject Value="True"/>
         <UnitName Value="d65"/>
       </Unit29>
+      <Unit30>
+        <Filename Value="hrdinterface.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="hrdinterface"/>
+      </Unit30>
     </Units>
   </ProjectOptions>
   <CompilerOptions>

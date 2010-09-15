@@ -635,10 +635,10 @@ begin
                   End;
                   if cfgvtwo.glcatBy = 'hrd' Then
                   Begin
-                       ifoo := 0;
-                       if cfgvtwo.Form6.radioHRD1.Checked Then ifoo := 1;
-                       if cfgvtwo.Form6.radioHRD2.Checked Then ifoo := 2;
-                       globalData.gqrg := catControl.readHRD(ifoo);
+                       //ifoo := 0;
+                       //if cfgvtwo.Form6.radioHRD1.Checked Then ifoo := 1;
+                       //if cfgvtwo.Form6.radioHRD2.Checked Then ifoo := 2;
+                       globalData.gqrg := catControl.readHRD();
                   End;
                   if cfgvtwo.glcatBy = 'commander' Then
                   Begin
@@ -2963,6 +2963,7 @@ Begin
           halt;
      End;
      dlog.fileDebug('JT65.dll version check OK.');
+
      // Initialize prefix/suffix support
      encode65.pfxBuild();
      for i := 0 to 338 do
