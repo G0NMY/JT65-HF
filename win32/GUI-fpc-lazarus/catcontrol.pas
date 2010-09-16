@@ -25,7 +25,10 @@ unit catControl;
 interface
 
 uses
-  Classes, SysUtils, Process, globalData, dlog, hrdinterface, cfgvtwo;
+  Classes, SysUtils, Process, globalData, dlog, hrdinterface, cfgvtwo, StrUtils;
+
+Const
+    hrdDelim = [','];
 
 Type
     omniRec = Record
@@ -47,10 +50,44 @@ Type
 
 implementation
 
+function writeHRD(_para1:WideString): Boolean;
+Var
+   hrdcontext         : PWIDECHAR;
+   hrdradio           : PWIDECHAR;
+   hrdresult          : PWIDECHAR;
+   hrdmsg             : WideString;
+   hrdon              : Boolean;
+Begin
+     Result := False;
+     hrdon := False;
+     hrdon := hrdinterface.HRDInterfaceConnect('localhost', 7809);
+     if hrdon then
+     begin
+          hrdradio := '';
+          hrdcontext := '';
+          hrdresult := '';
+          hrdmsg := 'Get Radio';
+          hrdradio := hrdinterface.HRDInterfaceSendMessage(hrdmsg);
+          hrdmsg := 'Get Context';
+          hrdcontext := hrdinterface.HRDInterfaceSendMessage(hrdmsg);
+          hrdresult := hrdinterface.HRDInterfaceSendMessage(_para1);
+          if hrdresult='OK' Then Result := True else Result := False;
+          hrdinterface.HRDInterfaceFreeString(hrdcontext);
+          hrdinterface.HRDInterfaceFreeString(hrdradio);
+          hrdinterface.HRDInterfaceFreeString(hrdresult);
+          hrdinterface.HRDInterfaceDisconnect();
+     end
+     else
+     begin
+          Result := False;
+     end;
+end;
+
 function readHRD(): Double;
 Var
-   //foo                : WideString;
+   foo                : WideString;
    qrg                : Double;
+   wcount             : Integer;
    hrdcontext         : PWIDECHAR;
    hrdradio           : PWIDECHAR;
    hrdqrg             : PWIDECHAR;
@@ -58,10 +95,11 @@ Var
    hrddropdowns       : PWIDECHAR;
    hrdsliders         : PWIDECHAR;
    hrdresult          : PWIDECHAR;
+   hrdModeList        : PWIDECHAR;
+   hrdError           : PWIDECHAR;
    hrdmsg             : WideString;
    hrdon              : Boolean;
 Begin
-     // Testing HRD Interface code
      hrdon := False;
      hrdon := hrdinterface.HRDInterfaceConnect('localhost', 7809);
      if hrdon then
@@ -73,6 +111,7 @@ Begin
           hrddropdowns := '';
           hrdsliders := '';
           hrdresult := '';
+          hrdModeList := '';
           hrdmsg := 'Get Radio';
           hrdradio := hrdinterface.HRDInterfaceSendMessage(hrdmsg);
           cfgvtwo.Form6.labelHRDRig.Caption := 'Controlled Rig:  ' + hrdradio;
@@ -82,17 +121,50 @@ Begin
           hrdqrg := hrdinterface.HRDInterfaceSendMessage(hrdmsg);
           hrdmsg := '[' + hrdcontext + '] get buttons';
           hrdbuttons := hrdinterface.HRDInterfaceSendMessage(hrdmsg);
-          cfgvtwo.Form6.labelHRDButtons.Caption := 'Buttons:  ' + hrdbuttons;
+          //cfgvtwo.Form6.labelHRDButtons.Caption := 'Buttons:  ' + hrdbuttons;
+
+
           hrdmsg := '[' + hrdcontext + '] get dropdowns';
           hrddropdowns := hrdinterface.HRDInterfaceSendMessage(hrdmsg);
-          cfgvtwo.Form6.labelHRDDropDowns.Caption := 'Dropdowns:  ' + hrddropdowns;
+
+          //wcount := WordCount(hrddropdowns,hrdDelim);
+          foo := ExtractWord(1,hrddropdowns,HRDDelim);
+          cfgvtwo.Form6.Label17.Caption := Foo;
+          foo := ExtractWord(2,hrddropdowns,HRDDelim);
+          cfgvtwo.Form6.Label18.Caption := Foo;
+
+          hrdError := '';
+          hrdModeList := '';
+          hrdmsg := '[' + hrdcontext + '] Get Dropdown-list Mode';
+          //hrdmsg := '[' + hrdcontext + '] Get dropdown-list ' + ExtractWord(1,hrddropdowns,HRDDelim);
+          hrdModeList := hrdinterface.HRDInterfaceSendMessage(hrdmsg);
+          //hrdError := hrdinterface.HRDInterfaceGetLastError();
+          //cfgvtwo.Form6.labelHRDresult.Caption := hrdError;
+
+          //wcount := WordCount(hrdModeList,hrdDelim);
+
+          cfgvtwo.Form6.labelHRDDropDowns.Caption := 'Modes:  ' + hrdModeList;
+
           hrdmsg := '[' + hrdcontext + '] get sliders';
           hrdsliders := hrdinterface.HRDInterfaceSendMessage(hrdmsg);
           cfgvtwo.Form6.labelHRDSliders.Caption := 'Sliders:  ' + hrdsliders;
           hrdresult := '';
           //hrdmsg := '[' + hrdcontext + '] set dropdown mode usb 1';
-          hrdmsg := '[' + hrdcontext + '] set dropdown mode usb 1';
+          //hrdmsg := '[' + hrdcontext + '] set dropdown mode usb 1';
+          //hrdresult := hrdinterface.HRDInterfaceSendMessage(hrdmsg);
+          hrdmsg := '[' + hrdcontext + '] Get slider-pos ' + hrdradio + ' AF~gain';
           hrdresult := hrdinterface.HRDInterfaceSendMessage(hrdmsg);
+          //cfgvtwo.Form6.labelHRDresult.Caption := hrdresult;
+          foo := ExtractWord(1,hrdresult,HRDDelim);
+          cfgvtwo.Form6.sliderAF.Position := StrToInt(foo);
+          cfgvtwo.Form6.Label11.Caption := 'Audio Gain (Currently:  ' + IntToStr(cfgvtwo.Form6.sliderAF.Position) + ')';
+
+          hrdmsg := '[' + hrdcontext + '] Get slider-pos ' + hrdradio + ' Mic~gain';
+          hrdresult := hrdinterface.HRDInterfaceSendMessage(hrdmsg);
+          //cfgvtwo.Form6.labelHRDresult.Caption := hrdresult;
+          foo := ExtractWord(1,hrdresult,HRDDelim);
+          cfgvtwo.Form6.sliderMic.Position := StrToInt(foo);
+          cfgvtwo.Form6.Label15.Caption := 'Mic Gain (Currently:  ' + IntToStr(cfgvtwo.Form6.sliderMic.Position) + ')';
 
           //dlog.fileDebug(hrdradio + ' ' + hrdcontext + ' ' + hrdqrg);
           //hrdmsg := '[' + hrdcontext + '] set frequency-hz 14076000';
@@ -114,10 +186,11 @@ Begin
           hrdinterface.HRDInterfaceFreeString(hrdcontext);
           hrdinterface.HRDInterfaceFreeString(hrdradio);
           hrdinterface.HRDInterfaceFreeString(hrdqrg);
-          //hrdinterface.HRDInterfaceFreeString(hrdbuttons);
-          //hrdinterface.HRDInterfaceFreeString(hrddropdowns);
-          //hrdinterface.HRDInterfaceFreeString(hrdsliders);
-          //hrdinterface.HRDInterfaceFreeString(hrdresult);
+          hrdinterface.HRDInterfaceFreeString(hrdbuttons);
+          hrdinterface.HRDInterfaceFreeString(hrddropdowns);
+          hrdinterface.HRDInterfaceFreeString(hrdsliders);
+          hrdinterface.HRDInterfaceFreeString(hrdresult);
+          hrdinterface.HRDInterfaceFreeString(hrdModeList);
           hrdinterface.HRDInterfaceDisconnect();
      end
      else

@@ -32,7 +32,7 @@ uses
 implementation
   function verReturn() : String;
   Begin
-       Result := '1.0.6';
+       Result := '1.0.7';
   End;
 end.
 

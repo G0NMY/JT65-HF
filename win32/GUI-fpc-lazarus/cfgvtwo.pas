@@ -27,7 +27,7 @@ interface
 uses
   Classes, SysUtils, LResources, Forms, Controls, Graphics, Dialogs,
   ComCtrls, ExtCtrls, StdCtrls, StrUtils, globalData, CTypes, synaser,
-  EditBtn, Grids, Si570dev;
+  EditBtn, Grids, Si570dev, hrdinterface;
 
 const myWordDelims = [' ',','];
 Const JT_DLL = 'jt65.dll';
@@ -40,6 +40,7 @@ type
     btnSetSi570: TButton;
     btnClearLog: TButton;
     Button1: TButton;
+    Button2: TButton;
     buttonTestPTT: TButton;
     cbAudioIn: TComboBox;
     cbAudioOut: TComboBox;
@@ -63,12 +64,15 @@ type
     ComboBox1: TComboBox;
     ComboBox2: TComboBox;
     ComboBox3: TComboBox;
+    ComboBox4: TComboBox;
+    ComboBox5: TComboBox;
     comboSuffix: TComboBox;
     comboPrefix: TComboBox;
     DirectoryEdit1: TDirectoryEdit;
     Edit1: TEdit;
     Edit2: TEdit;
     Edit3: TEdit;
+    Edit4: TEdit;
     editSI570Freq: TEdit;
     editSI570FreqOffset: TEdit;
     edUserMsg10: TEdit;
@@ -90,6 +94,11 @@ type
     edUserMsg4: TEdit;
     groupHRD: TGroupBox;
     Label10: TLabel;
+    Label11: TLabel;
+    Label15: TLabel;
+    Label16: TLabel;
+    Label17: TLabel;
+    Label18: TLabel;
     labelHRDRig: TLabel;
     Label12: TLabel;
     Label122: TLabel;
@@ -139,6 +148,7 @@ type
     labelHRDButtons: TLabel;
     labelHRDDropDowns: TLabel;
     labelHRDSliders: TLabel;
+    labelHRDresult: TLabel;
     OmniGroup: TRadioGroup;
     Page3: TPage;
     Page5: TPage;
@@ -174,8 +184,11 @@ type
     Page2: TPage;
     Page4: TPage;
     sgCallsHeard: TStringGrid;
+    sliderAF: TTrackBar;
+    sliderMic: TTrackBar;
     procedure btnClearLogClick(Sender: TObject);
     procedure Button1Click(Sender: TObject);
+    procedure Button2Click(Sender: TObject);
     procedure buttonTestPTTClick(Sender: TObject);
     procedure cbAudioInChange(Sender: TObject);
     procedure cbAudioOutChange(Sender: TObject);
@@ -195,6 +208,8 @@ type
     procedure edMyCallChange(Sender: TObject);
     procedure edUserMsgChange(Sender: TObject);
     procedure FormCreate(Sender: TObject);
+    procedure sliderAFChange(Sender: TObject);
+    procedure sliderMicChange(Sender: TObject);
 
   private
     { private declarations }
@@ -385,6 +400,34 @@ procedure TForm6.Button1Click(Sender: TObject);
 begin
      glmustConfig := False;
      self.Hide;
+end;
+
+procedure TForm6.Button2Click(Sender: TObject);
+Var
+   hrdcontext         : PWIDECHAR;
+   hrdradio           : PWIDECHAR;
+   hrdresult          : PWIDECHAR;
+   hrdmsg             : WideString;
+   hrdon              : Boolean;
+Begin
+     hrdon := False;
+     hrdon := hrdinterface.HRDInterfaceConnect('localhost', 7809);
+     if hrdon then
+     begin
+          hrdradio := '';
+          hrdcontext := '';
+          hrdresult := '';
+          hrdmsg := 'Get Radio';
+          hrdradio := hrdinterface.HRDInterfaceSendMessage(hrdmsg);
+          hrdmsg := 'Get Context';
+          hrdcontext := hrdinterface.HRDInterfaceSendMessage(hrdmsg);
+          hrdmsg := '[' + hrdcontext + '] set frequency-hz ' + cfgvtwo.Form6.Edit4.Text;
+          hrdresult := hrdinterface.HRDInterfaceSendMessage(hrdmsg);
+          hrdinterface.HRDInterfaceFreeString(hrdcontext);
+          hrdinterface.HRDInterfaceFreeString(hrdradio);
+          hrdinterface.HRDInterfaceFreeString(hrdresult);
+          hrdinterface.HRDInterfaceDisconnect();
+     end;
 end;
 
 procedure TForm6.buttonTestPTTClick(Sender: TObject);
@@ -659,6 +702,68 @@ end;
 procedure TForm6.FormCreate(Sender: TObject);
 begin
      Form6.DirectoryEdit1.Directory := GetAppConfigDir(False);
+end;
+
+procedure TForm6.sliderAFChange(Sender: TObject);
+Var
+   hrdcontext         : PWIDECHAR;
+   hrdradio           : PWIDECHAR;
+   hrdresult          : PWIDECHAR;
+   hrdmsg             : WideString;
+   hrdon              : Boolean;
+begin
+     // Changes AF Gain via HRD
+     hrdon := False;
+     hrdon := hrdinterface.HRDInterfaceConnect('localhost', 7809);
+     if hrdon then
+     begin
+          hrdradio := '';
+          hrdcontext := '';
+          hrdresult := '';
+          hrdmsg := 'Get Radio';
+          hrdradio := hrdinterface.HRDInterfaceSendMessage(hrdmsg);
+          hrdmsg := 'Get Context';
+          hrdcontext := hrdinterface.HRDInterfaceSendMessage(hrdmsg);
+          hrdresult := '';
+          //[c] set slider-pos RADIO XXX POS
+          hrdmsg := '[' + hrdcontext + '] set slider-pos ' + hrdradio + ' AF~gain ' + IntToStr(cfgvtwo.Form6.sliderAF.Position);
+          hrdresult := hrdinterface.HRDInterfaceSendMessage(hrdmsg);
+          hrdinterface.HRDInterfaceFreeString(hrdcontext);
+          hrdinterface.HRDInterfaceFreeString(hrdradio);
+          hrdinterface.HRDInterfaceFreeString(hrdresult);
+          hrdinterface.HRDInterfaceDisconnect();
+     end;
+end;
+
+procedure TForm6.sliderMicChange(Sender: TObject);
+Var
+   hrdcontext         : PWIDECHAR;
+   hrdradio           : PWIDECHAR;
+   hrdresult          : PWIDECHAR;
+   hrdmsg             : WideString;
+   hrdon              : Boolean;
+begin
+     // Changes Mic Gain via HRD
+     hrdon := False;
+     hrdon := hrdinterface.HRDInterfaceConnect('localhost', 7809);
+     if hrdon then
+     begin
+          hrdradio := '';
+          hrdcontext := '';
+          hrdresult := '';
+          hrdmsg := 'Get Radio';
+          hrdradio := hrdinterface.HRDInterfaceSendMessage(hrdmsg);
+          hrdmsg := 'Get Context';
+          hrdcontext := hrdinterface.HRDInterfaceSendMessage(hrdmsg);
+          hrdresult := '';
+          //[c] set slider-pos RADIO XXX POS
+          hrdmsg := '[' + hrdcontext + '] set slider-pos ' + hrdradio + ' Mic~gain ' + IntToStr(cfgvtwo.Form6.sliderMic.Position);
+          hrdresult := hrdinterface.HRDInterfaceSendMessage(hrdmsg);
+          hrdinterface.HRDInterfaceFreeString(hrdcontext);
+          hrdinterface.HRDInterfaceFreeString(hrdradio);
+          hrdinterface.HRDInterfaceFreeString(hrdresult);
+          hrdinterface.HRDInterfaceDisconnect();
+     end;
 end;
 
 procedure TForm6.ComboBox1Change(Sender: TObject);

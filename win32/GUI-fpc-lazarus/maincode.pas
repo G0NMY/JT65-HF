@@ -5168,7 +5168,7 @@ initialization
   adc.adcRunning := False;
   d65.glnd65firstrun := True;
   d65.glbinspace := 100;
-  globalData.debugOn := False;
+  globalData.debugOn := True;
   globalData.gmode := 65;
   txmode := globalData.gmode;
   mnHavePrefix := False;
