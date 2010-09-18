@@ -87,16 +87,11 @@ function readHRD(): Double;
 Var
    foo                : WideString;
    qrg                : Double;
-   wcount             : Integer;
+   ifoo               : Integer;
    hrdcontext         : PWIDECHAR;
    hrdradio           : PWIDECHAR;
    hrdqrg             : PWIDECHAR;
-   hrdbuttons         : PWIDECHAR;
-   hrddropdowns       : PWIDECHAR;
-   hrdsliders         : PWIDECHAR;
    hrdresult          : PWIDECHAR;
-   hrdModeList        : PWIDECHAR;
-   hrdError           : PWIDECHAR;
    hrdmsg             : WideString;
    hrdon              : Boolean;
 Begin
@@ -104,73 +99,20 @@ Begin
      hrdon := hrdinterface.HRDInterfaceConnect('localhost', 7809);
      if hrdon then
      begin
-          hrdradio := '';
           hrdcontext := '';
+          hrdradio := '';
           hrdqrg := '';
-          hrdbuttons := '';
-          hrddropdowns := '';
-          hrdsliders := '';
           hrdresult := '';
-          hrdModeList := '';
+
           hrdmsg := 'Get Radio';
           hrdradio := hrdinterface.HRDInterfaceSendMessage(hrdmsg);
-          cfgvtwo.Form6.labelHRDRig.Caption := 'Controlled Rig:  ' + hrdradio;
+          cfgvtwo.Form6.groupHRD.Caption := 'HRD Connected to ' + hrdradio;
+
           hrdmsg := 'Get Context';
           hrdcontext := hrdinterface.HRDInterfaceSendMessage(hrdmsg);
+
           hrdmsg := 'Get Frequency';
           hrdqrg := hrdinterface.HRDInterfaceSendMessage(hrdmsg);
-          hrdmsg := '[' + hrdcontext + '] get buttons';
-          hrdbuttons := hrdinterface.HRDInterfaceSendMessage(hrdmsg);
-          //cfgvtwo.Form6.labelHRDButtons.Caption := 'Buttons:  ' + hrdbuttons;
-
-
-          hrdmsg := '[' + hrdcontext + '] get dropdowns';
-          hrddropdowns := hrdinterface.HRDInterfaceSendMessage(hrdmsg);
-
-          //wcount := WordCount(hrddropdowns,hrdDelim);
-          foo := ExtractWord(1,hrddropdowns,HRDDelim);
-          cfgvtwo.Form6.Label17.Caption := Foo;
-          foo := ExtractWord(2,hrddropdowns,HRDDelim);
-          cfgvtwo.Form6.Label18.Caption := Foo;
-
-          hrdError := '';
-          hrdModeList := '';
-          hrdmsg := '[' + hrdcontext + '] Get Dropdown-list Mode';
-          //hrdmsg := '[' + hrdcontext + '] Get dropdown-list ' + ExtractWord(1,hrddropdowns,HRDDelim);
-          hrdModeList := hrdinterface.HRDInterfaceSendMessage(hrdmsg);
-          //hrdError := hrdinterface.HRDInterfaceGetLastError();
-          //cfgvtwo.Form6.labelHRDresult.Caption := hrdError;
-
-          //wcount := WordCount(hrdModeList,hrdDelim);
-
-          cfgvtwo.Form6.labelHRDDropDowns.Caption := 'Modes:  ' + hrdModeList;
-
-          hrdmsg := '[' + hrdcontext + '] get sliders';
-          hrdsliders := hrdinterface.HRDInterfaceSendMessage(hrdmsg);
-          cfgvtwo.Form6.labelHRDSliders.Caption := 'Sliders:  ' + hrdsliders;
-          hrdresult := '';
-          //hrdmsg := '[' + hrdcontext + '] set dropdown mode usb 1';
-          //hrdmsg := '[' + hrdcontext + '] set dropdown mode usb 1';
-          //hrdresult := hrdinterface.HRDInterfaceSendMessage(hrdmsg);
-          hrdmsg := '[' + hrdcontext + '] Get slider-pos ' + hrdradio + ' AF~gain';
-          hrdresult := hrdinterface.HRDInterfaceSendMessage(hrdmsg);
-          //cfgvtwo.Form6.labelHRDresult.Caption := hrdresult;
-          foo := ExtractWord(1,hrdresult,HRDDelim);
-          cfgvtwo.Form6.sliderAF.Position := StrToInt(foo);
-          cfgvtwo.Form6.Label11.Caption := 'Audio Gain (Currently:  ' + IntToStr(cfgvtwo.Form6.sliderAF.Position) + ')';
-
-          hrdmsg := '[' + hrdcontext + '] Get slider-pos ' + hrdradio + ' Mic~gain';
-          hrdresult := hrdinterface.HRDInterfaceSendMessage(hrdmsg);
-          //cfgvtwo.Form6.labelHRDresult.Caption := hrdresult;
-          foo := ExtractWord(1,hrdresult,HRDDelim);
-          cfgvtwo.Form6.sliderMic.Position := StrToInt(foo);
-          cfgvtwo.Form6.Label15.Caption := 'Mic Gain (Currently:  ' + IntToStr(cfgvtwo.Form6.sliderMic.Position) + ')';
-
-          //dlog.fileDebug(hrdradio + ' ' + hrdcontext + ' ' + hrdqrg);
-          //hrdmsg := '[' + hrdcontext + '] set frequency-hz 14076000';
-          //hrdresult := hrdinterface.HRDInterfaceSendMessage(hrdmsg);
-          //hrdmsg := 'Get Frequency';
-          //hrdqrg := hrdinterface.HRDInterfaceSendMessage(hrdmsg);
 
           qrg := 0.0;
           If TryStrToFloat(hrdqrg,qrg) Then
@@ -183,14 +125,71 @@ Begin
                Result := 0.0;
                globalData.strqrg := '0';
           end;
+
+          //hrdmsg := '[' + hrdcontext + '] get buttons';
+          //hrdbuttons := hrdinterface.HRDInterfaceSendMessage(hrdmsg);
+          //cfgvtwo.Form6.labelHRDButtons.Caption := 'Buttons:  ' + hrdbuttons;
+
+          //hrdmsg := '[' + hrdcontext + '] get dropdowns';
+          //hrddropdowns := hrdinterface.HRDInterfaceSendMessage(hrdmsg);
+          //cfgvtwo.Form6.labelHRDDropDowns.Caption := 'Dropdowns:  ' + hrddropdowns;
+          //foo := ExtractWord(1,hrddropdowns,HRDDelim);
+
+          //hrdmsg := '[' + hrdcontext + '] set dropdown mode usb 1';
+          //hrdmsg := '[' + hrdcontext + '] set dropdown mode usb 1';
+          //hrdresult := hrdinterface.HRDInterfaceSendMessage(hrdmsg);
+
+          //hrdmsg := '[' + hrdcontext + '] get sliders';
+          //hrdsliders := hrdinterface.HRDInterfaceSendMessage(hrdmsg);
+          //cfgvtwo.Form6.labelHRDSliders.Caption := 'Sliders:  ' + hrdsliders;
+          //hrdresult := '';
+
+          hrdmsg := '[' + hrdcontext + '] Get slider-pos ' + hrdradio + ' AF~gain';
+          hrdresult := hrdinterface.HRDInterfaceSendMessage(hrdmsg);
+          foo := ExtractWord(1,hrdresult,HRDDelim);
+          ifoo := -1;
+          If TryStrToInt(foo, ifoo) Then cfgvtwo.Form6.sliderAFGain.Position := ifoo;
+          cfgvtwo.Form6.Label11.Caption := 'Audio Gain (Currently:  ' + ExtractWord(2,hrdresult,HRDDelim) + '%)';
+
+          hrdmsg := '[' + hrdcontext + '] Get slider-pos ' + hrdradio + ' Mic~gain';
+          hrdresult := hrdinterface.HRDInterfaceSendMessage(hrdmsg);
+          foo := ExtractWord(1,hrdresult,HRDDelim);
+          ifoo := -1;
+          If TryStrToInt(foo, ifoo) Then cfgvtwo.Form6.sliderMicGain.Position := ifoo;
+          cfgvtwo.Form6.Label15.Caption := 'Mic Gain (Currently:  ' + ExtractWord(2,hrdresult,HRDDelim) + '%)';
+
+          hrdmsg := '[' + hrdcontext + '] Get slider-pos ' + hrdradio + ' RF~gain';
+          hrdresult := hrdinterface.HRDInterfaceSendMessage(hrdmsg);
+          foo := ExtractWord(1,hrdresult,HRDDelim);
+          ifoo := -1;
+          If TryStrToInt(foo, ifoo) Then cfgvtwo.Form6.sliderRFGain.Position := ifoo;
+          cfgvtwo.Form6.Label17.Caption := 'RF Gain (Currently:  ' + ExtractWord(2,hrdresult,HRDDelim) + '%)';
+
+          hrdmsg := '[' + hrdcontext + '] Get slider-pos ' + hrdradio + ' RF~power';
+          hrdresult := hrdinterface.HRDInterfaceSendMessage(hrdmsg);
+          foo := ExtractWord(1,hrdresult,HRDDelim);
+          ifoo := -1;
+          If TryStrToInt(foo, ifoo) Then cfgvtwo.Form6.sliderPALevel.Position := ifoo;
+          cfgvtwo.Form6.Label18.Caption := 'RF Output Level (Currently:  ' + ExtractWord(2,hrdresult,HRDDelim) + '%)';
+
+          // [c] Get SMeter-Main
+
+          hrdmsg := '[' + hrdcontext + '] Get SMeter-Main';
+          hrdresult := hrdinterface.HRDInterfaceSendMessage(hrdmsg);
+          foo := ExtractWord(2,hrdresult,HRDDelim);
+          ifoo := -1;
+          If TryStrToInt(foo, ifoo) Then cfgvtwo.Form6.pbSMeter.Position := ifoo;
+          cfgvtwo.Form6.Label24.Caption := ExtractWord(1,hrdresult,HRDDelim);
+
           hrdinterface.HRDInterfaceFreeString(hrdcontext);
           hrdinterface.HRDInterfaceFreeString(hrdradio);
           hrdinterface.HRDInterfaceFreeString(hrdqrg);
-          hrdinterface.HRDInterfaceFreeString(hrdbuttons);
-          hrdinterface.HRDInterfaceFreeString(hrddropdowns);
-          hrdinterface.HRDInterfaceFreeString(hrdsliders);
+          //hrdinterface.HRDInterfaceFreeString(hrdbuttons);
+          //hrdinterface.HRDInterfaceFreeString(hrddropdowns);
+          //hrdinterface.HRDInterfaceFreeString(hrdsliders);
           hrdinterface.HRDInterfaceFreeString(hrdresult);
-          hrdinterface.HRDInterfaceFreeString(hrdModeList);
+          //hrdinterface.HRDInterfaceFreeString(hrdModeList);
+          //hrdinterface.HRDInterfaceFreeString(hrdError);
           hrdinterface.HRDInterfaceDisconnect();
      end
      else

@@ -1443,7 +1443,7 @@ end;
 
 procedure TForm1.FormClose(Sender: TObject; var CloseAction: TCloseAction);
 var
-   i : Integer;
+   i, termcount : Integer;
 begin
      Form1.Timer1.Enabled := False;
      diagout.Form3.ListBox1.Clear;
@@ -1529,11 +1529,15 @@ begin
           Begin
                diagout.Form3.ListBox1.Items.Add('Closing RB');
                cfgvtwo.glrbcLogout := True;
+               sleep(1000);
           end;
+          termcount := 0;
           While rbc.glrbActive Do
           Begin
                application.ProcessMessages;
-               sleep(1);
+               sleep(1000);
+               inc(termcount);
+               if termcount > 9 then break;
           end;
           diagout.Form3.ListBox1.Items.Add('Closed RB');
           diagout.Form3.ListBox1.Items.Add('Terminating RB Thread');
@@ -1541,19 +1545,25 @@ begin
           diagout.Form3.ListBox1.Items.Add('Terminated RB Thread');
 
           diagout.Form3.ListBox1.Items.Add('Terminating Decoder Thread');
+          termcount := 0;
           while d65.glinProg Do
           Begin
                application.ProcessMessages;
-               sleep(1);
+               sleep(1000);
+               inc(termcount);
+               if termcount > 9 then break;
           end;
           decoderThread.Suspend;
           diagout.Form3.ListBox1.Items.Add('Terminated Decoder Thread');
 
           diagout.Form3.ListBox1.Items.Add('Terminating Rig Control Thread');
+          termcount := 0;
           while catInProgress Do
           Begin
                application.ProcessMessages;
-               sleep(1);
+               sleep(1000);
+               inc(termcount);
+               if termcount > 9 then break;
           end;
           rigThread.Suspend;
           diagout.Form3.ListBox1.Items.Add('Terminated Rig Control Thread');
@@ -1570,12 +1580,15 @@ begin
           diagout.Form3.ListBox1.Items.Add('Cleaning up Audio Streams');
           portAudio.Pa_StopStream(paInStream);
           portAudio.Pa_StopStream(paOutStream);
+          termcount := 0;
           while (portAudio.Pa_IsStreamActive(paInStream) > 0) or (portAudio.Pa_IsStreamActive(paOutStream) > 0) Do
           Begin
                application.ProcessMessages;
                if portAudio.Pa_IsStreamActive(paInStream) > 0 Then portAudio.Pa_StopStream(paInStream);
                if portAudio.Pa_IsStreamActive(paOutStream) > 0 Then portAudio.Pa_StopStream(paOutStream);
-               sleep(5);
+               sleep(1000);
+               inc(termcount);
+               if termcount > 9 then break;
           end;
           diagout.Form3.ListBox1.Items.Add('Stopped Audio Streams');
           diagout.Form3.ListBox1.Items.Add('Terminating PortAudio');
@@ -1596,7 +1609,7 @@ begin
           Waterfall.Free;
           diagout.Form3.ListBox1.Items.Add('Released waterfall');
           diagout.Form3.ListBox1.Items.Add('JT65-HF Shutdown complete.  Exiting.');
-          For i := 0 to 10 do
+          For i := 0 to 9 do
           begin
                application.ProcessMessages;
                sleep(100);
@@ -2845,11 +2858,17 @@ Begin
      // No warning range -10 .. +10 dB or 25 .. 75 sLevel
      Form1.pbAu1.Position := audioAveL;
      Form1.pbAu2.Position := audioAveR;
+     cfgvtwo.Form6.pbAULeft.Position := audioAveL;
+     cfgvtwo.Form6.pbAURight.Position := audioAveR;
      // Convert S Level to dB for text display
      if adc.specLevel1 > 0 Then Form1.rbUseLeft.Caption := 'L ' + IntToStr(Round((audioAveL*0.4)-20)) Else Form1.rbUseLeft.Caption := 'L -20';
      if adc.specLevel2 > 0 Then Form1.rbUseRight.Caption := 'R ' + IntToStr(Round((audioAveR*0.4)-20)) Else Form1.rbUseRight.Caption := 'R -20';
      if (adc.specLevel1 < 40) Or (adc.specLevel1 > 60) Then rbUseLeft.Font.Color := clRed else rbUseLeft.Font.Color := clBlack;
      if (adc.specLevel2 < 40) Or (adc.specLevel2 > 60) Then rbUseRight.Font.Color := clRed else rbUseRight.Font.Color := clBlack;
+     if adc.specLevel1 > 0 Then cfgvtwo.Form6.Label25.Caption := 'L ' + IntToStr(Round((audioAveL*0.4)-20)) Else cfgvtwo.Form6.Label25.Caption := 'L -20';
+     if adc.specLevel2 > 0 Then cfgvtwo.Form6.Label31.Caption := 'R ' + IntToStr(Round((audioAveR*0.4)-20)) Else cfgvtwo.Form6.Label31.Caption := 'R -20';
+     if (adc.specLevel1 < 40) Or (adc.specLevel1 > 60) Then cfgvtwo.Form6.Label25.Font.Color := clRed else cfgvtwo.Form6.Label25.Font.Color := clBlack;
+     if (adc.specLevel2 < 40) Or (adc.specLevel2 > 60) Then cfgvtwo.Form6.Label31.Font.Color := clRed else cfgvtwo.Form6.Label31.Font.Color := clBlack;
 End;
 
 procedure TForm1.updateStatus(i : Integer);
@@ -3646,7 +3665,7 @@ Begin
      if not cfgvtwo.Form6.chkNoOptFFT.Checked Then
      Begin
           {$IFDEF win32}
-            fname := GetAppConfigDir(False)+'\wisdom2.dat';
+            fname := GetAppConfigDir(False)+'wisdom2.dat';
             if FileExists(fname) Then
           {$ENDIF}
           {$IFDEF linux}

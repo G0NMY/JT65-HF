@@ -18,13 +18,13 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="maincode"/>
-        <CursorPos X="1" Y="1848"/>
-        <TopLine Value="1832"/>
+        <CursorPos X="22" Y="3672"/>
+        <TopLine Value="3657"/>
         <EditorIndex Value="7"/>
         <UsageCount Value="215"/>
         <Bookmarks Count="2">
-          <Item0 X="2" Y="2933" ID="0"/>
-          <Item1 X="1" Y="4173" ID="1"/>
+          <Item0 X="2" Y="2952" ID="0"/>
+          <Item1 X="1" Y="4192" ID="1"/>
         </Bookmarks>
         <Loaded Value="True"/>
       </Unit1>
@@ -140,8 +140,8 @@
         <ComponentName Value="Form6"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="cfgvtwo"/>
-        <CursorPos X="52" Y="765"/>
-        <TopLine Value="740"/>
+        <CursorPos X="40" Y="712"/>
+        <TopLine Value="697"/>
         <EditorIndex Value="2"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
@@ -178,8 +178,8 @@
         <Filename Value="catcontrol.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="catControl"/>
-        <CursorPos X="60" Y="138"/>
-        <TopLine Value="123"/>
+        <CursorPos X="108" Y="193"/>
+        <TopLine Value="167"/>
         <EditorIndex Value="0"/>
         <UsageCount Value="266"/>
         <Loaded Value="True"/>
@@ -228,8 +228,8 @@
         <Filename Value="rbc.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="rbc"/>
-        <CursorPos X="1" Y="1"/>
-        <TopLine Value="1"/>
+        <CursorPos X="20" Y="701"/>
+        <TopLine Value="686"/>
         <EditorIndex Value="8"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
@@ -250,8 +250,8 @@
         <ComponentName Value="Form2"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="log"/>
-        <CursorPos X="33" Y="1"/>
-        <TopLine Value="1"/>
+        <CursorPos X="40" Y="81"/>
+        <TopLine Value="58"/>
         <EditorIndex Value="4"/>
         <UsageCount Value="234"/>
         <Loaded Value="True"/>
@@ -292,8 +292,8 @@
         <Filename Value="d65.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="d65"/>
-        <CursorPos X="29" Y="1"/>
-        <TopLine Value="1"/>
+        <CursorPos X="28" Y="361"/>
+        <TopLine Value="346"/>
         <EditorIndex Value="15"/>
         <UsageCount Value="202"/>
         <Loaded Value="True"/>
@@ -302,15 +302,15 @@
         <Filename Value="hrdinterface.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="hrdinterface"/>
-        <CursorPos X="1" Y="13"/>
+        <CursorPos X="38" Y="10"/>
         <TopLine Value="1"/>
         <EditorIndex Value="6"/>
-        <UsageCount Value="43"/>
+        <UsageCount Value="51"/>
         <Loaded Value="True"/>
       </Unit30>
     </Units>
     <General>
-      <ActiveEditorIndexAtStart Value="0"/>
+      <ActiveEditorIndexAtStart Value="15"/>
     </General>
   </ProjectSession>
   <Debugging>

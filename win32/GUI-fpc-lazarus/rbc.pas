@@ -695,7 +695,7 @@ Var
 Begin
      Try
         {$IFDEF win32}
-          fname := GetAppConfigDir(False)+'\rbcache.txt';
+          fname := GetAppConfigDir(False)+'rbcache.txt';
         {$ENDIF}
         {$IFDEF linux}
           fname := GetAppConfigDir(False)+'rbcache.txt';

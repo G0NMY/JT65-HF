@@ -242,7 +242,6 @@ Begin
           kdec := '';
      End;
      kvProc.Destroy;
-     if FileExists('KVASD.DAT') Then DeleteFile('KVASD.DAT');
      kdec := TrimLeft(TrimRight(StrPas(glkvs)));
      if (Length(kdec) > 0) And (kvCount > -1) Then
      Begin
@@ -254,6 +253,7 @@ Begin
           Result := False;
           kdec := '';
      End;
+     if FileExists('KVASD.DAT') Then DeleteFile('KVASD.DAT');
 end;
 
 procedure doDecode(bStart, bEnd : Integer);
@@ -302,7 +302,7 @@ begin
          glmyline := StrAlloc(43);
          glkvs := StrAlloc(22);
            {$IFDEF win32}
-             glwisfile := StrAlloc(Length(GetAppConfigDir(False)+'\wisdom2.dat')+1);
+             glwisfile := StrAlloc(Length(GetAppConfigDir(False)+'wisdom2.dat')+1);
            {$ENDIF}
            {$IFDEF linux}
              glwisfile := StrAlloc(Length(GetAppConfigDir(False)+'wisdom2.dat')+1);
@@ -355,7 +355,7 @@ begin
       diagout.Form3.ListBox3.Clear;
       strPcopy(glkvfname,'KVASD.DAT');
       {$IFDEF win32}
-        strPcopy(glwisfile,GetAppConfigDir(False)+'\wisdom2.dat');
+        strPcopy(glwisfile,GetAppConfigDir(False)+'wisdom2.dat');
       {$ENDIF}
       {$IFDEF linux}
         strPcopy(glwisfile,GetAppConfigDir(False)+'wisdom2.dat');

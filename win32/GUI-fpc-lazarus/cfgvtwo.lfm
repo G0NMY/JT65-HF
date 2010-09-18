@@ -599,157 +599,214 @@ object Form6: TForm6
         Caption = 'HRD Details'
         ClientHeight = 246
         ClientWidth = 755
+        Font.Height = -13
+        Font.Name = 'Arial'
+        Font.Style = [fsBold]
+        ParentFont = False
         TabOrder = 9
         Visible = False
-        object labelHRDRig: TLabel
-          Left = 7
-          Height = 17
-          Top = 8
-          Width = 131
-          Caption = 'Controlled Rig:  IC-718'
-          Font.Height = -13
-          Font.Name = 'Arial'
-          ParentColor = False
-          ParentFont = False
-        end
-        object labelHRDButtons: TLabel
-          Left = 247
-          Height = 11
-          Top = 206
-          Width = 32
-          Caption = 'Buttons:  '
-          Font.Height = -8
-          Font.Name = 'Arial'
-          ParentColor = False
-          ParentFont = False
-        end
-        object labelHRDSliders: TLabel
-          Left = 247
-          Height = 17
-          Top = 224
-          Width = 53
-          Caption = 'Sliders:  '
-          Font.Height = -13
-          Font.Name = 'Arial'
-          ParentColor = False
-          ParentFont = False
-        end
-        object labelHRDDropDowns: TLabel
-          Left = 7
-          Height = 17
-          Top = 200
-          Width = 77
-          Caption = 'Dropdowns:  '
-          Font.Height = -13
-          Font.Name = 'Arial'
-          ParentColor = False
-          ParentFont = False
-        end
-        object labelHRDresult: TLabel
-          Left = 7
-          Height = 17
-          Top = 224
-          Width = 53
-          Caption = 'Sliders:  '
-          Font.Height = -13
-          Font.Name = 'Arial'
-          ParentColor = False
-          ParentFont = False
-        end
         object Label11: TLabel
-          Left = 7
+          Left = 433
           Height = 17
-          Top = 96
-          Width = 141
+          Top = 132
+          Width = 154
           Caption = 'Audio Gain (Currently:  )'
+          Font.Height = -13
+          Font.Name = 'Arial'
+          Font.Style = [fsBold]
           ParentColor = False
+          ParentFont = False
         end
         object Label15: TLabel
-          Left = 7
+          Left = 17
           Height = 17
-          Top = 144
-          Width = 129
+          Top = 188
+          Width = 139
           Caption = 'Mic Gain (Currently:  )'
+          Font.Height = -13
+          Font.Name = 'Arial'
+          Font.Style = [fsBold]
           ParentColor = False
+          ParentFont = False
         end
         object Label16: TLabel
-          Left = 335
+          Left = 7
           Height = 17
-          Top = 8
-          Width = 73
+          Top = 11
+          Width = 75
           Caption = 'Rig QRG Hz'
+          Font.Height = -13
+          Font.Name = 'Arial'
+          Font.Style = [fsBold]
           ParentColor = False
+          ParentFont = False
         end
         object Label17: TLabel
-          Left = 343
+          Left = 433
           Height = 17
-          Top = 48
-          Width = 53
-          Caption = 'Combo 1'
+          Top = 188
+          Width = 134
+          Caption = 'RF Gain (Currently:  )'
+          Font.Height = -13
+          Font.Name = 'Arial'
+          Font.Style = [fsBold]
           ParentColor = False
+          ParentFont = False
         end
         object Label18: TLabel
-          Left = 507
+          Left = 17
           Height = 17
-          Top = 48
-          Width = 53
-          Caption = 'Combo 2'
+          Top = 132
+          Width = 185
+          Caption = 'RF Output Level (Currently:  )'
+          Font.Height = -13
+          Font.Name = 'Arial'
+          Font.Style = [fsBold]
+          ParentColor = False
+          ParentFont = False
+        end
+        object Label21: TLabel
+          Left = 151
+          Height = 17
+          Top = 101
+          Width = 190
+          Caption = 'PA Output 100% (of Maximum)'
           ParentColor = False
         end
-        object sliderAF: TTrackBar
-          Left = 7
+        object Label24: TLabel
+          Left = 527
+          Height = 17
+          Top = 101
+          Width = 176
+          Caption = 'S-Meter 100% (of Maximum)'
+          ParentColor = False
+        end
+        object Label25: TLabel
+          Left = 423
+          Height = 17
+          Top = 49
+          Width = 89
+          Caption = 'Audio Level L'
+          ParentColor = False
+        end
+        object Label31: TLabel
+          Left = 543
+          Height = 17
+          Top = 49
+          Width = 90
+          Caption = 'Audio Level R'
+          ParentColor = False
+        end
+        object sliderAFGain: TTrackBar
+          Left = 423
           Height = 25
-          Top = 112
-          Width = 736
+          Top = 150
+          Width = 328
           Max = 255
-          OnChange = sliderAFChange
+          OnChange = sliderAFGainChange
           Position = 0
+          TickStyle = tsNone
           TabOrder = 0
         end
-        object sliderMic: TTrackBar
+        object sliderMicGain: TTrackBar
           Left = 7
           Height = 25
-          Top = 160
-          Width = 736
+          Top = 206
+          Width = 328
           Max = 255
-          OnChange = sliderMicChange
+          OnChange = sliderMicGainChange
           Position = 0
+          TickStyle = tsNone
           TabOrder = 1
         end
         object Edit4: TEdit
-          Left = 415
+          Left = 87
           Height = 24
-          Top = 5
-          Width = 192
+          Top = 8
+          Width = 80
+          Font.Height = -13
+          Font.Name = 'Arial'
+          Font.Style = [fsBold]
+          ParentFont = False
           TabOrder = 2
-          Text = '0'
+          Text = '14076000'
         end
         object Button2: TButton
-          Left = 623
+          Left = 175
           Height = 24
-          Top = 5
+          Top = 8
           Width = 75
           Caption = 'Set QRG'
+          Font.Height = -13
+          Font.Name = 'Arial'
+          Font.Style = [fsBold]
           OnClick = Button2Click
+          ParentFont = False
           TabOrder = 3
         end
-        object ComboBox4: TComboBox
-          Left = 343
-          Height = 24
-          Top = 65
-          Width = 100
-          ItemHeight = 16
+        object sliderRFGain: TTrackBar
+          Left = 423
+          Height = 25
+          Top = 206
+          Width = 328
+          Max = 255
+          OnChange = sliderRFGainChange
+          Position = 0
+          TickStyle = tsNone
           TabOrder = 4
-          Text = 'ComboBox4'
         end
-        object ComboBox5: TComboBox
-          Left = 507
-          Height = 24
-          Top = 65
-          Width = 100
-          ItemHeight = 16
+        object sliderPALevel: TTrackBar
+          Left = 7
+          Height = 25
+          Top = 150
+          Width = 328
+          Max = 255
+          OnChange = sliderPALevelChange
+          Position = 0
+          TickStyle = tsNone
           TabOrder = 5
-          Text = 'ComboBox5'
+        end
+        object Button3: TButton
+          Left = 7
+          Height = 25
+          Top = 96
+          Width = 38
+          Caption = 'TX'
+          TabOrder = 6
+        end
+        object pbPAMeter: TProgressBar
+          Left = 48
+          Height = 25
+          Top = 96
+          Width = 100
+          Max = 255
+          Smooth = True
+          TabOrder = 7
+        end
+        object pbSMeter: TProgressBar
+          Left = 423
+          Height = 25
+          Top = 96
+          Width = 100
+          Max = 255
+          Smooth = True
+          TabOrder = 8
+        end
+        object pbAULeft: TProgressBar
+          Left = 423
+          Height = 20
+          Top = 69
+          Width = 100
+          Smooth = True
+          TabOrder = 9
+        end
+        object pbAURight: TProgressBar
+          Left = 543
+          Height = 20
+          Top = 69
+          Width = 100
+          Smooth = True
+          TabOrder = 10
         end
       end
     end
@@ -925,7 +982,7 @@ object Form6: TForm6
         Left = 12
         Height = 17
         Top = 277
-        Width = 91
+        Width = 90
         Caption = '11 - 24920 KHz'
         Font.Height = -13
         Font.Name = 'Arial'
@@ -1129,7 +1186,7 @@ object Form6: TForm6
         Left = 180
         Height = 17
         Top = 341
-        Width = 23
+        Width = 22
         Caption = '11 -'
         Font.Height = -13
         Font.Name = 'Arial'
@@ -1165,7 +1222,7 @@ object Form6: TForm6
         Left = 476
         Height = 97
         Top = 16
-        Width = 278
+        Width = 277
         Caption = 'QRG Definition is used when entering QRG'#13#10'manually.  When Rig Control is off the input'#13#10'box for QRG becomes editable.  You may'#13#10'enter QRG directly (in Hz, KHz or MHz) or'#13#10'by right clicking up the values in the QRG'#13#10'definitions.'
         Font.Height = -13
         Font.Name = 'Arial'
