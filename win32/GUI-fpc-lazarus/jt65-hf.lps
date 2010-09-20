@@ -140,7 +140,7 @@
         <ComponentName Value="Form6"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="cfgvtwo"/>
-        <CursorPos X="40" Y="712"/>
+        <CursorPos X="40" Y="713"/>
         <TopLine Value="697"/>
         <EditorIndex Value="2"/>
         <UsageCount Value="200"/>
@@ -238,8 +238,8 @@
         <Filename Value="adif.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="adif"/>
-        <CursorPos X="1" Y="35"/>
-        <TopLine Value="5"/>
+        <CursorPos X="77" Y="95"/>
+        <TopLine Value="77"/>
         <EditorIndex Value="3"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
@@ -305,12 +305,12 @@
         <CursorPos X="38" Y="10"/>
         <TopLine Value="1"/>
         <EditorIndex Value="6"/>
-        <UsageCount Value="51"/>
+        <UsageCount Value="62"/>
         <Loaded Value="True"/>
       </Unit30>
     </Units>
     <General>
-      <ActiveEditorIndexAtStart Value="15"/>
+      <ActiveEditorIndexAtStart Value="3"/>
     </General>
   </ProjectSession>
   <Debugging>

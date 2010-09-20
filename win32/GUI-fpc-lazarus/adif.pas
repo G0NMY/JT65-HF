@@ -92,7 +92,7 @@ Begin
           End;
           if fqrg > 0 Then foo := foo + '<FREQ:' + IntToStr(Length(freq)) + '>' + freq;
      End;
-     if (Length(grid)>3) And (Length(grid)<7) Then foo := foo + '<GRID:' + IntToStr(Length(grid)) + '>' + grid;
+     if (Length(grid)>3) And (Length(grid)<7) Then foo := foo + '<GRIDSQUARE:' + IntToStr(Length(grid)) + '>' + grid;
      foo := foo + '<MODE:' + IntToStr(Length(mode)) + '>' + mode;
      if Length(rstrx)>0 Then foo := foo + '<RST_RCVD:' + IntToStr(Length(rstrx)) + '>' + rstrx;
      if Length(rsttx)>0 Then foo := foo + '<RST_SENT:' + IntToStr(Length(rsttx)) + '>' + rsttx;

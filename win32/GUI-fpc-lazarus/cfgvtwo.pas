@@ -43,7 +43,6 @@ type
     btnClearLog: TButton;
     Button1: TButton;
     Button2: TButton;
-    Button3: TButton;
     buttonTestPTT: TButton;
     cbAudioIn: TComboBox;
     cbAudioOut: TComboBox;
@@ -58,6 +57,7 @@ type
     cbRestoreMulti: TCheckBox;
     cbSi570PTT: TCheckBox;
     cbCWID: TCheckBox;
+    CheckBox1: TCheckBox;
     checkSi570: TCheckBox;
     chkNoOptFFT: TCheckBox;
     chkUseCommander: TCheckBox;
@@ -114,6 +114,7 @@ type
     Label3: TLabel;
     Label30: TLabel;
     Label31: TLabel;
+    Label32: TLabel;
     Label33: TLabel;
     Label34: TLabel;
     Label35: TLabel;
