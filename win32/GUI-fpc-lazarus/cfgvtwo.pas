@@ -27,7 +27,7 @@ interface
 uses
   Classes, SysUtils, LResources, Forms, Controls, Graphics, Dialogs,
   ComCtrls, ExtCtrls, StdCtrls, StrUtils, globalData, CTypes, synaser,
-  EditBtn, Grids, Si570dev, hrdinterface;
+  EditBtn, Grids, Spin, Si570dev, hrdinterface;
 
 Const
     myWordDelims = [' ',','];
@@ -58,6 +58,17 @@ type
     cbSi570PTT: TCheckBox;
     cbCWID: TCheckBox;
     CheckBox1: TCheckBox;
+    CheckBox10: TCheckBox;
+    CheckBox2: TCheckBox;
+    CheckBox3: TCheckBox;
+    CheckBox4: TCheckBox;
+    CheckBox5: TCheckBox;
+    CheckBox6: TCheckBox;
+    CheckBox7: TCheckBox;
+    CheckBox8: TCheckBox;
+    CheckBox9: TCheckBox;
+    chkHRDPTT: TCheckBox;
+    chkTxDFVFO: TCheckBox;
     checkSi570: TCheckBox;
     chkNoOptFFT: TCheckBox;
     chkUseCommander: TCheckBox;
@@ -74,6 +85,11 @@ type
     Edit2: TEdit;
     Edit3: TEdit;
     Edit4: TEdit;
+    Edit5: TEdit;
+    Edit6: TEdit;
+    Edit7: TEdit;
+    Edit8: TEdit;
+    Edit9: TEdit;
     editSI570Freq: TEdit;
     editSI570FreqOffset: TEdit;
     edUserMsg10: TEdit;
@@ -148,6 +164,7 @@ type
     Label62: TLabel;
     Label63: TLabel;
     Label64: TLabel;
+    Label66: TLabel;
     Label7: TLabel;
     Label8: TLabel;
     OmniGroup: TRadioGroup;
@@ -155,7 +172,6 @@ type
     Page5: TPage;
     Page6: TPage;
     Colors: TPage;
-    pbPAMeter: TProgressBar;
     pbSMeter: TProgressBar;
     pbAULeft: TProgressBar;
     pbAURight: TProgressBar;
@@ -193,6 +209,16 @@ type
     sliderPALevel: TTrackBar;
     sliderRFGain: TTrackBar;
     sliderMicGain: TTrackBar;
+    SpinEdit1: TSpinEdit;
+    SpinEdit10: TSpinEdit;
+    SpinEdit2: TSpinEdit;
+    SpinEdit3: TSpinEdit;
+    SpinEdit4: TSpinEdit;
+    SpinEdit5: TSpinEdit;
+    SpinEdit6: TSpinEdit;
+    SpinEdit7: TSpinEdit;
+    SpinEdit8: TSpinEdit;
+    SpinEdit9: TSpinEdit;
     procedure btnClearLogClick(Sender: TObject);
     procedure Button1Click(Sender: TObject);
     procedure Button2Click(Sender: TObject);

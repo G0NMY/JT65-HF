@@ -504,7 +504,7 @@ object Form6: TForm6
         Left = 12
         Height = 48
         Top = 133
-        Width = 200
+        Width = 192
         AutoFill = True
         Caption = 'Ham Radio Deluxe Settings'
         ChildSizing.LeftRightSpacing = 6
@@ -516,14 +516,14 @@ object Form6: TForm6
         ChildSizing.Layout = cclLeftToRightThenTopToBottom
         ChildSizing.ControlsPerLine = 3
         ClientHeight = 30
-        ClientWidth = 196
+        ClientWidth = 188
         Columns = 3
         TabOrder = 3
         object chkUseHRD: TCheckBox
           Left = 6
           Height = 18
           Top = 6
-          Width = 112
+          Width = 110
           Caption = 'Use HRD'
           OnChange = chkUseHRDChange
           TabOrder = 0
@@ -608,7 +608,7 @@ object Form6: TForm6
         object Label11: TLabel
           Left = 433
           Height = 17
-          Top = 132
+          Top = 64
           Width = 154
           Caption = 'Audio Gain (Currently:  )'
           Font.Height = -13
@@ -618,9 +618,9 @@ object Form6: TForm6
           ParentFont = False
         end
         object Label15: TLabel
-          Left = 17
+          Left = 433
           Height = 17
-          Top = 188
+          Top = 152
           Width = 139
           Caption = 'Mic Gain (Currently:  )'
           Font.Height = -13
@@ -632,7 +632,7 @@ object Form6: TForm6
         object Label16: TLabel
           Left = 7
           Height = 17
-          Top = 11
+          Top = 6
           Width = 75
           Caption = 'Rig QRG Hz'
           Font.Height = -13
@@ -644,7 +644,7 @@ object Form6: TForm6
         object Label17: TLabel
           Left = 433
           Height = 17
-          Top = 188
+          Top = 108
           Width = 134
           Caption = 'RF Gain (Currently:  )'
           Font.Height = -13
@@ -654,9 +654,9 @@ object Form6: TForm6
           ParentFont = False
         end
         object Label18: TLabel
-          Left = 17
+          Left = 433
           Height = 17
-          Top = 132
+          Top = 196
           Width = 185
           Caption = 'RF Output Level (Currently:  )'
           Font.Height = -13
@@ -665,18 +665,10 @@ object Form6: TForm6
           ParentColor = False
           ParentFont = False
         end
-        object Label21: TLabel
-          Left = 7
-          Height = 17
-          Top = 72
-          Width = 190
-          Caption = 'PA Output 100% (of Maximum)'
-          ParentColor = False
-        end
         object Label24: TLabel
-          Left = 683
+          Left = 423
           Height = 17
-          Top = 101
+          Top = 35
           Width = 39
           Caption = 'S9+70'
           ParentColor = False
@@ -684,31 +676,47 @@ object Form6: TForm6
         object Label25: TLabel
           Left = 423
           Height = 17
-          Top = 16
-          Width = 89
-          Caption = 'Audio Level L'
+          Top = 6
+          Width = 50
+          Caption = 'Audio L'
           ParentColor = False
         end
         object Label31: TLabel
-          Left = 543
+          Left = 598
           Height = 17
-          Top = 16
-          Width = 90
-          Caption = 'Audio Level R'
+          Top = 6
+          Width = 51
+          Caption = 'Audio R'
+          ParentColor = False
+        end
+        object Label21: TLabel
+          Left = 31
+          Height = 17
+          Top = 35
+          Width = 80
+          Caption = 'At UTC Time'
           ParentColor = False
         end
         object Label32: TLabel
-          Left = 423
+          Left = 143
           Height = 17
-          Top = 72
-          Width = 50
-          Caption = 'S Meter'
+          Top = 35
+          Width = 77
+          Caption = 'QSY to QRG'
+          ParentColor = False
+        end
+        object Label66: TLabel
+          Left = 246
+          Height = 17
+          Top = 35
+          Width = 89
+          Caption = 'Tune Antenna'
           ParentColor = False
         end
         object sliderAFGain: TTrackBar
           Left = 423
           Height = 25
-          Top = 150
+          Top = 82
           Width = 328
           Max = 255
           OnChange = sliderAFGainChange
@@ -717,9 +725,9 @@ object Form6: TForm6
           TabOrder = 0
         end
         object sliderMicGain: TTrackBar
-          Left = 7
+          Left = 423
           Height = 25
-          Top = 206
+          Top = 170
           Width = 328
           Max = 255
           OnChange = sliderMicGainChange
@@ -730,7 +738,7 @@ object Form6: TForm6
         object Edit4: TEdit
           Left = 87
           Height = 24
-          Top = 8
+          Top = 3
           Width = 80
           Font.Height = -13
           Font.Name = 'Arial'
@@ -742,7 +750,7 @@ object Form6: TForm6
         object Button2: TButton
           Left = 175
           Height = 24
-          Top = 8
+          Top = 3
           Width = 75
           Caption = 'Set QRG'
           Font.Height = -13
@@ -755,7 +763,7 @@ object Form6: TForm6
         object sliderRFGain: TTrackBar
           Left = 423
           Height = 25
-          Top = 206
+          Top = 126
           Width = 328
           Max = 255
           OnChange = sliderRFGainChange
@@ -764,9 +772,9 @@ object Form6: TForm6
           TabOrder = 4
         end
         object sliderPALevel: TTrackBar
-          Left = 7
+          Left = 423
           Height = 25
-          Top = 150
+          Top = 214
           Width = 328
           Max = 255
           OnChange = sliderPALevelChange
@@ -774,47 +782,266 @@ object Form6: TForm6
           TickStyle = tsNone
           TabOrder = 5
         end
-        object pbPAMeter: TProgressBar
-          Left = 7
+        object pbSMeter: TProgressBar
+          Left = 475
           Height = 25
-          Top = 96
+          Top = 30
           Width = 255
           Max = 255
           Smooth = True
           TabOrder = 6
         end
-        object pbSMeter: TProgressBar
-          Left = 423
-          Height = 25
-          Top = 96
-          Width = 255
-          Max = 255
+        object pbAULeft: TProgressBar
+          Left = 475
+          Height = 20
+          Top = 3
+          Width = 100
           Smooth = True
           TabOrder = 7
         end
-        object pbAULeft: TProgressBar
-          Left = 423
+        object pbAURight: TProgressBar
+          Left = 651
           Height = 20
-          Top = 36
+          Top = 3
           Width = 100
           Smooth = True
           TabOrder = 8
         end
-        object pbAURight: TProgressBar
-          Left = 543
+        object chkTxDFVFO: TCheckBox
+          Left = 143
           Height = 20
-          Top = 36
-          Width = 100
-          Smooth = True
+          Top = 219
+          Width = 268
+          Caption = 'Shift QRG to match DF if DF > +/- 100Hz'
           TabOrder = 9
+        end
+        object chkHRDPTT: TCheckBox
+          Left = 7
+          Height = 20
+          Top = 219
+          Width = 124
+          Caption = 'Use HRD for PTT'
+          TabOrder = 10
+        end
+        object SpinEdit1: TSpinEdit
+          Left = 31
+          Height = 24
+          Top = 55
+          Width = 50
+          Font.Height = -13
+          Font.Name = 'Arial'
+          MaxValue = 23
+          ParentFont = False
+          TabOrder = 11
+        end
+        object SpinEdit2: TSpinEdit
+          Left = 80
+          Height = 24
+          Top = 55
+          Width = 50
+          Font.Height = -13
+          Font.Name = 'Arial'
+          MaxValue = 59
+          ParentFont = False
+          TabOrder = 12
+        end
+        object Edit5: TEdit
+          Left = 143
+          Height = 24
+          Top = 55
+          Width = 128
+          TabOrder = 13
+          Text = 'Edit5'
         end
         object CheckBox1: TCheckBox
           Left = 7
-          Height = 20
-          Top = 36
-          Width = 268
-          Caption = 'Shift QRG to match DF if DF > +/- 100Hz'
-          TabOrder = 10
+          Height = 19
+          Top = 60
+          Width = 20
+          TabOrder = 14
+        end
+        object SpinEdit3: TSpinEdit
+          Left = 31
+          Height = 23
+          Top = 86
+          Width = 50
+          Font.Height = -13
+          Font.Name = 'Arial'
+          MaxValue = 23
+          ParentFont = False
+          TabOrder = 15
+        end
+        object SpinEdit4: TSpinEdit
+          Left = 80
+          Height = 23
+          Top = 86
+          Width = 50
+          Font.Height = -13
+          Font.Name = 'Arial'
+          MaxValue = 59
+          ParentFont = False
+          TabOrder = 16
+        end
+        object Edit6: TEdit
+          Left = 143
+          Height = 24
+          Top = 86
+          Width = 128
+          TabOrder = 17
+          Text = 'Edit5'
+        end
+        object CheckBox2: TCheckBox
+          Left = 7
+          Height = 19
+          Top = 90
+          Width = 20
+          TabOrder = 18
+        end
+        object SpinEdit5: TSpinEdit
+          Left = 31
+          Height = 23
+          Top = 116
+          Width = 50
+          Font.Height = -13
+          Font.Name = 'Arial'
+          MaxValue = 23
+          ParentFont = False
+          TabOrder = 19
+        end
+        object SpinEdit6: TSpinEdit
+          Left = 80
+          Height = 23
+          Top = 116
+          Width = 50
+          Font.Height = -13
+          Font.Name = 'Arial'
+          MaxValue = 59
+          ParentFont = False
+          TabOrder = 20
+        end
+        object Edit7: TEdit
+          Left = 143
+          Height = 24
+          Top = 116
+          Width = 128
+          TabOrder = 21
+          Text = 'Edit5'
+        end
+        object CheckBox3: TCheckBox
+          Left = 7
+          Height = 19
+          Top = 120
+          Width = 20
+          TabOrder = 22
+        end
+        object SpinEdit7: TSpinEdit
+          Left = 31
+          Height = 23
+          Top = 146
+          Width = 50
+          Font.Height = -13
+          Font.Name = 'Arial'
+          MaxValue = 23
+          ParentFont = False
+          TabOrder = 23
+        end
+        object SpinEdit8: TSpinEdit
+          Left = 80
+          Height = 23
+          Top = 146
+          Width = 50
+          Font.Height = -13
+          Font.Name = 'Arial'
+          MaxValue = 59
+          ParentFont = False
+          TabOrder = 24
+        end
+        object Edit8: TEdit
+          Left = 143
+          Height = 24
+          Top = 145
+          Width = 128
+          TabOrder = 25
+          Text = 'Edit5'
+        end
+        object CheckBox4: TCheckBox
+          Left = 7
+          Height = 19
+          Top = 150
+          Width = 20
+          TabOrder = 26
+        end
+        object SpinEdit9: TSpinEdit
+          Left = 31
+          Height = 23
+          Top = 176
+          Width = 50
+          Font.Height = -13
+          Font.Name = 'Arial'
+          MaxValue = 23
+          ParentFont = False
+          TabOrder = 27
+        end
+        object SpinEdit10: TSpinEdit
+          Left = 80
+          Height = 23
+          Top = 176
+          Width = 50
+          Font.Height = -13
+          Font.Name = 'Arial'
+          MaxValue = 59
+          ParentFont = False
+          TabOrder = 28
+        end
+        object Edit9: TEdit
+          Left = 143
+          Height = 24
+          Top = 176
+          Width = 128
+          TabOrder = 29
+          Text = 'Edit5'
+        end
+        object CheckBox5: TCheckBox
+          Left = 7
+          Height = 19
+          Top = 180
+          Width = 20
+          TabOrder = 30
+        end
+        object CheckBox6: TCheckBox
+          Left = 279
+          Height = 19
+          Top = 61
+          Width = 20
+          TabOrder = 31
+        end
+        object CheckBox7: TCheckBox
+          Left = 279
+          Height = 19
+          Top = 91
+          Width = 20
+          TabOrder = 32
+        end
+        object CheckBox8: TCheckBox
+          Left = 279
+          Height = 19
+          Top = 121
+          Width = 20
+          TabOrder = 33
+        end
+        object CheckBox9: TCheckBox
+          Left = 279
+          Height = 19
+          Top = 151
+          Width = 20
+          TabOrder = 34
+        end
+        object CheckBox10: TCheckBox
+          Left = 279
+          Height = 19
+          Top = 181
+          Width = 20
+          TabOrder = 35
         end
       end
     end

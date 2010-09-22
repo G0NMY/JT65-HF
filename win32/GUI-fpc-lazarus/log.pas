@@ -16,6 +16,7 @@ type
     btnLogQSO: TButton;
     Button1: TButton;
     DirectoryEdit1: TDirectoryEdit;
+    edLogComment: TEdit;
     edLogSTime: TEdit;
     edLogDate: TEdit;
     edLogETime: TEdit;
@@ -28,6 +29,7 @@ type
     Label1: TLabel;
     Label10: TLabel;
     Label11: TLabel;
+    Label12: TLabel;
     Label2: TLabel;
     Label29: TLabel;
     Label3: TLabel;
@@ -47,7 +49,8 @@ type
   end; 
 
 var
-  Form2: TForm2; 
+  Form2: TForm2;
+  logmycall, logmygrid : String;
 
 implementation
 
@@ -62,7 +65,8 @@ begin
      foo := '';
      foo := adif.adifString(edLogCall.Text,edLogFrequency.Text,edLogGrid.Text,adif.JT65A,
                             edLogRReport.Text,edLogSReport.Text,edLogSTime.Text,
-                            edLogETime.Text,edLogPower.Text,edLogDate.Text);
+                            edLogETime.Text,edLogPower.Text,edLogDate.Text,edLogComment.Text,
+                            logmycall, logmygrid);
      fname := Form2.DirectoryEdit1.Directory + '\jt65hf_log.adi';
      AssignFile(lfile, fname);
      If FileExists(fname) Then append(lfile) else rewrite(lfile);

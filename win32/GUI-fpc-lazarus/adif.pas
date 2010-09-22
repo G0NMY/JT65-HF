@@ -28,12 +28,12 @@ type
       tx_pwr  : String;
     end;
 
-function adifString(call, freq, grid, mode, rstrx, rsttx, timeon, timeoff, txpower, qdate: String): String;
+function adifString(call, freq, grid, mode, rstrx, rsttx, timeon, timeoff, txpower, qdate, comment, mycall, mygrid: String): String;
 
 
 implementation
 
-function adifString(call, freq, grid, mode, rstrx, rsttx, timeon, timeoff, txpower, qdate: String): String;
+function adifString(call, freq, grid, mode, rstrx, rsttx, timeon, timeoff, txpower, qdate, comment, mycall, mygrid: String): String;
 var
    foo  : String;
    qrg  : Integer;
@@ -100,6 +100,9 @@ Begin
      foo := foo + '<TIME_ON:' + IntToStr(Length(timeon)) + '>' + timeon;
      foo := foo + '<TIME_OFF:' + IntToStr(Length(timeoff)) + '>' + timeoff;
      if Length(txpower)>0 Then foo := foo + '<TX_PWR:' + IntToStr(Length(txpower)) + '>' + txpower;
+     if Length(comment)>0 Then foo := foo + '<COMMENT:' + IntToStr(Length(comment)) + '>' + comment;
+     if Length(mycall)>0 Then foo := foo + '<STATION_CALLSIGN:' + IntToStr(Length(mycall)) + '>' + mycall;
+     if Length(mygrid)>0 Then foo := foo + '<MY_GRIDSQUARE:' + IntToStr(Length(mygrid)) + '>' + mygrid;
      foo := foo + '<eor>';
      result := foo;
 End;

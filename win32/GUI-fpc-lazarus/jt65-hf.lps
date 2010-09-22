@@ -18,13 +18,13 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="maincode"/>
-        <CursorPos X="22" Y="3672"/>
-        <TopLine Value="3657"/>
+        <CursorPos X="50" Y="2262"/>
+        <TopLine Value="2247"/>
         <EditorIndex Value="7"/>
         <UsageCount Value="215"/>
         <Bookmarks Count="2">
-          <Item0 X="2" Y="2952" ID="0"/>
-          <Item1 X="1" Y="4192" ID="1"/>
+          <Item0 X="51" Y="2262" ID="0"/>
+          <Item1 X="1" Y="4194" ID="1"/>
         </Bookmarks>
         <Loaded Value="True"/>
       </Unit1>
@@ -61,7 +61,7 @@
         <IsPartOfProject Value="True"/>
         <UnitName Value="globalData"/>
         <CursorPos X="1" Y="47"/>
-        <TopLine Value="29"/>
+        <TopLine Value="1"/>
         <EditorIndex Value="17"/>
         <UsageCount Value="215"/>
         <Loaded Value="True"/>
@@ -140,8 +140,8 @@
         <ComponentName Value="Form6"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="cfgvtwo"/>
-        <CursorPos X="40" Y="713"/>
-        <TopLine Value="697"/>
+        <CursorPos X="40" Y="739"/>
+        <TopLine Value="710"/>
         <EditorIndex Value="2"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
@@ -238,8 +238,8 @@
         <Filename Value="adif.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="adif"/>
-        <CursorPos X="77" Y="95"/>
-        <TopLine Value="77"/>
+        <CursorPos X="31" Y="105"/>
+        <TopLine Value="80"/>
         <EditorIndex Value="3"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
@@ -250,8 +250,8 @@
         <ComponentName Value="Form2"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="log"/>
-        <CursorPos X="40" Y="81"/>
-        <TopLine Value="58"/>
+        <CursorPos X="43" Y="69"/>
+        <TopLine Value="50"/>
         <EditorIndex Value="4"/>
         <UsageCount Value="234"/>
         <Loaded Value="True"/>
@@ -305,12 +305,12 @@
         <CursorPos X="38" Y="10"/>
         <TopLine Value="1"/>
         <EditorIndex Value="6"/>
-        <UsageCount Value="62"/>
+        <UsageCount Value="65"/>
         <Loaded Value="True"/>
       </Unit30>
     </Units>
     <General>
-      <ActiveEditorIndexAtStart Value="3"/>
+      <ActiveEditorIndexAtStart Value="4"/>
     </General>
   </ProjectSession>
   <Debugging>

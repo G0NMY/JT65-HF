@@ -2258,6 +2258,8 @@ begin
      fqrg := fqrg/1000000;
      sqrg := FloatToStr(fqrg);
      log.Form2.edLogFrequency.Text := sqrg;
+     log.logmycall := globalData.fullcall;
+     log.logmygrid := cfgvtwo.Form6.edMyGrid.Text;
      log.Form2.Visible := True;
      log.Form2.Show;
      log.Form2.BringToFront;
