@@ -20,10 +20,10 @@
       <UseVersionInfo Value="True"/>
       <AutoIncrementBuild Value="True"/>
       <CurrentVersionNr Value="1"/>
-      <CurrentMinorRevNr Value="6"/>
-      <CurrentBuildNr Value="339"/>
+      <CurrentMinorRevNr Value="7"/>
+      <CurrentBuildNr Value="6"/>
       <FileDescription Value="Amateur Radio communications using JT65A"/>
-      <LegalCopyright Value="2009..2010 - J C Large - W4CQZ - GPL 2"/>
+      <LegalCopyright Value="2009..2010 - J C Large - W6CQZ - GPL 2"/>
     </VersionInfo>
     <PublishOptions>
       <Version Value="2"/>

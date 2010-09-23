@@ -1444,6 +1444,7 @@ end;
 procedure TForm1.FormClose(Sender: TObject; var CloseAction: TCloseAction);
 var
    i, termcount : Integer;
+   foo          : String;
 begin
      Form1.Timer1.Enabled := False;
      diagout.Form3.ListBox1.Clear;
@@ -1505,6 +1506,7 @@ begin
           if cfgvtwo.Form6.cbRestoreMulti.Checked Then cfg.StoredValue['restoreMulti'] := 'on' else cfg.StoredValue['restoreMulti'] := 'off';
           if cfgvtwo.Form6.chkNoOptFFT.Checked Then cfg.StoredValue['optFFT'] := 'off' else cfg.StoredValue['optFFT'] := 'on';
           if cfgvtwo.Form6.cbUseAltPTT.Checked Then cfg.StoredValue['useAltPTT'] := 'yes' else cfg.StoredValue['useAltPTT'] := 'no';
+          if cfgvtwo.Form6.chkHRDPTT.Checked Then cfg.StoredValue['useHRDPTT'] := 'yes' else cfg.StoredValue['useHRDPTT'] := 'no';
           cfg.StoredValue['specVGain'] := IntToStr(spinGain.Value);
           cfg.StoredValue['binspace'] := IntToStr(spinBin.Value);
           cfg.StoredValue['cqColor'] := IntToStr(cfgvtwo.Form6.ComboBox1.ItemIndex);
@@ -1517,6 +1519,112 @@ begin
           cfg.StoredValue['si570qrg'] := cfgvtwo.Form6.editSI570Freq.Text;
           if cfgvtwo.Form6.cbSi570PTT.Checked Then cfg.StoredValue['si570ptt'] := 'y' else cfg.StoredValue['si570ptt'] := 'n';
           if cfgvtwo.Form6.cbCWID.Checked Then cfg.StoredValue['useCWID'] := 'y' else cfg.StoredValue['useCWID'] := 'n';
+          if cfgvtwo.Form6.chkTxDFVFO.Checked Then cfg.StoredValue['useCATTxDF'] := 'yes' else cfg.StoredValue['useCATTxDF'] := 'no';
+          if cfgvtwo.Form6.cbEnableQSY1.Checked Then cfg.StoredValue['enAutoQSY1'] := 'yes' else cfg.StoredValue['enAutoQSY1'] := 'no';
+          if cfgvtwo.Form6.cbEnableQSY2.Checked Then cfg.StoredValue['enAutoQSY2'] := 'yes' else cfg.StoredValue['enAutoQSY2'] := 'no';
+          if cfgvtwo.Form6.cbEnableQSY3.Checked Then cfg.StoredValue['enAutoQSY3'] := 'yes' else cfg.StoredValue['enAutoQSY3'] := 'no';
+          if cfgvtwo.Form6.cbEnableQSY4.Checked Then cfg.StoredValue['enAutoQSY4'] := 'yes' else cfg.StoredValue['enAutoQSY4'] := 'no';
+          if cfgvtwo.Form6.cbEnableQSY5.Checked Then cfg.StoredValue['enAutoQSY5'] := 'yes' else cfg.StoredValue['enAutoQSY5'] := 'no';
+          if cfgvtwo.Form6.cbATQSY1.Checked Then cfg.StoredValue['autoQSYAT1'] := 'yes' else cfg.StoredValue['autoQSYAT1'] := 'no';
+          if cfgvtwo.Form6.cbATQSY2.Checked Then cfg.StoredValue['autoQSYAT2'] := 'yes' else cfg.StoredValue['autoQSYAT2'] := 'no';
+          if cfgvtwo.Form6.cbATQSY3.Checked Then cfg.StoredValue['autoQSYAT3'] := 'yes' else cfg.StoredValue['autoQSYAT3'] := 'no';
+          if cfgvtwo.Form6.cbATQSY4.Checked Then cfg.StoredValue['autoQSYAT4'] := 'yes' else cfg.StoredValue['autoQSYAT4'] := 'no';
+          if cfgvtwo.Form6.cbATQSY5.Checked Then cfg.StoredValue['autoQSYAT5'] := 'yes' else cfg.StoredValue['autoQSYAT5'] := 'no';
+          cfg.StoredValue['autoQSYQRG1'] := cfgvtwo.Form6.edQRGQSY1.Text;
+          cfg.StoredValue['autoQSYQRG2'] := cfgvtwo.Form6.edQRGQSY2.Text;
+          cfg.StoredValue['autoQSYQRG3'] := cfgvtwo.Form6.edQRGQSY3.Text;
+          cfg.StoredValue['autoQSYQRG4'] := cfgvtwo.Form6.edQRGQSY4.Text;
+          cfg.StoredValue['autoQSYQRG5'] := cfgvtwo.Form6.edQRGQSY5.Text;
+          if cfgvtwo.Form6.qsyHour1.Value < 10 Then
+          Begin
+               foo := '0' + IntToStr(cfgvtwo.Form6.qsyHour1.Value);
+          End
+          Else
+          Begin
+               foo := IntToStr(cfgvtwo.Form6.qsyHour1.Value);
+          end;
+          if cfgvtwo.Form6.qsyMinute1.Value < 10 Then
+          Begin
+               foo := foo + '0' + IntToStr(cfgvtwo.Form6.qsyMinute1.Value);
+          End
+          Else
+          Begin
+               foo := foo + IntToStr(cfgvtwo.Form6.qsyMinute1.Value);
+          end;
+          cfg.StoredValue['autoQSYUTC1'] := foo;
+
+          if cfgvtwo.Form6.qsyHour2.Value < 10 Then
+          Begin
+               foo := '0' + IntToStr(cfgvtwo.Form6.qsyHour2.Value);
+          End
+          Else
+          Begin
+               foo := IntToStr(cfgvtwo.Form6.qsyHour2.Value);
+          end;
+          if cfgvtwo.Form6.qsyMinute2.Value < 10 Then
+          Begin
+               foo := foo + '0' + IntToStr(cfgvtwo.Form6.qsyMinute2.Value);
+          End
+          Else
+          Begin
+               foo := foo + IntToStr(cfgvtwo.Form6.qsyMinute2.Value);
+          end;
+          cfg.StoredValue['autoQSYUTC2'] := foo;
+
+          if cfgvtwo.Form6.qsyHour3.Value < 10 Then
+          Begin
+               foo := '0' + IntToStr(cfgvtwo.Form6.qsyHour3.Value);
+          End
+          Else
+          Begin
+               foo := IntToStr(cfgvtwo.Form6.qsyHour3.Value);
+          end;
+          if cfgvtwo.Form6.qsyMinute3.Value < 10 Then
+          Begin
+               foo := foo + '0' + IntToStr(cfgvtwo.Form6.qsyMinute3.Value);
+          End
+          Else
+          Begin
+               foo := foo + IntToStr(cfgvtwo.Form6.qsyMinute3.Value);
+          end;
+          cfg.StoredValue['autoQSYUTC3'] := foo;
+
+          if cfgvtwo.Form6.qsyHour4.Value < 10 Then
+          Begin
+               foo := '0' + IntToStr(cfgvtwo.Form6.qsyHour4.Value);
+          End
+          Else
+          Begin
+               foo := IntToStr(cfgvtwo.Form6.qsyHour4.Value);
+          end;
+          if cfgvtwo.Form6.qsyMinute4.Value < 10 Then
+          Begin
+               foo := foo + '0' + IntToStr(cfgvtwo.Form6.qsyMinute4.Value);
+          End
+          Else
+          Begin
+               foo := foo + IntToStr(cfgvtwo.Form6.qsyMinute4.Value);
+          end;
+          cfg.StoredValue['autoQSYUTC4'] := foo;
+
+          if cfgvtwo.Form6.qsyHour5.Value < 10 Then
+          Begin
+               foo := '0' + IntToStr(cfgvtwo.Form6.qsyHour5.Value);
+          End
+          Else
+          Begin
+               foo := IntToStr(cfgvtwo.Form6.qsyHour5.Value);
+          end;
+          if cfgvtwo.Form6.qsyMinute5.Value < 10 Then
+          Begin
+               foo := foo + '0' + IntToStr(cfgvtwo.Form6.qsyMinute5.Value);
+          End
+          Else
+          Begin
+               foo := foo + IntToStr(cfgvtwo.Form6.qsyMinute5.Value);
+          end;
+          cfg.StoredValue['autoQSYUTC5'] := foo;
+
           cfg.Save;
           diagout.Form3.ListBox1.Items.Add('Saved configuration');
           if mnpttOpened Then
@@ -3150,6 +3258,33 @@ Begin
           cfgvtwo.glcqColor := clLime;
           cfgvtwo.glcallColor := clRed;
           cfgvtwo.glqsoColor := clSilver;
+          cfgvtwo.Form6.cbEnableQSY1.Checked := False;
+          cfgvtwo.Form6.cbEnableQSY2.Checked := False;
+          cfgvtwo.Form6.cbEnableQSY3.Checked := False;
+          cfgvtwo.Form6.cbEnableQSY4.Checked := False;
+          cfgvtwo.Form6.cbEnableQSY5.Checked := False;
+          cfgvtwo.Form6.qsyHour1.Value := 0;
+          cfgvtwo.Form6.qsyHour2.Value := 0;
+          cfgvtwo.Form6.qsyHour3.Value := 0;
+          cfgvtwo.Form6.qsyHour4.Value := 0;
+          cfgvtwo.Form6.qsyHour5.Value := 0;
+          cfgvtwo.Form6.qsyMinute1.Value := 0;
+          cfgvtwo.Form6.qsyMinute2.Value := 0;
+          cfgvtwo.Form6.qsyMinute3.Value := 0;
+          cfgvtwo.Form6.qsyMinute4.Value := 0;
+          cfgvtwo.Form6.qsyMinute5.Value := 0;
+          cfgvtwo.Form6.edQRGQSY1.Text := '14076000';
+          cfgvtwo.Form6.edQRGQSY2.Text := '14076000';
+          cfgvtwo.Form6.edQRGQSY3.Text := '14076000';
+          cfgvtwo.Form6.edQRGQSY4.Text := '14076000';
+          cfgvtwo.Form6.edQRGQSY5.Text := '14076000';
+          cfgvtwo.Form6.cbATQSY1.Checked := False;
+          cfgvtwo.Form6.cbATQSY2.Checked := False;
+          cfgvtwo.Form6.cbATQSY3.Checked := False;
+          cfgvtwo.Form6.cbATQSY4.Checked := False;
+          cfgvtwo.Form6.cbATQSY5.Checked := False;
+          cfgvtwo.Form6.chkHRDPTT.Checked := False;
+          cfgvtwo.Form6.chkTxDFVFO.Checked := False;
           Form1.spinGain.Value := 0;
           Form1.spinBin.Value := 3;
           Form1.Edit1.Text := '100';
@@ -3220,6 +3355,7 @@ Begin
           cfg.StoredValue['pskrAntenna'] := cfgvtwo.Form6.editPSKRAntenna.Text;
           if cfgvtwo.Form6.chkNoOptFFT.Checked Then cfg.StoredValue['optFFT'] := 'off' else cfg.StoredValue['optFFT'] := 'on';
           if cfgvtwo.Form6.cbUseAltPTT.Checked Then cfg.StoredValue['useAltPTT'] := 'yes' else cfg.StoredValue['useAltPTT'] := 'no';
+          if cfgvtwo.Form6.chkHRDPTT.Checked Then cfg.StoredValue['useHRDPTT'] := 'yes' else cfg.StoredValue['useHRDPTT'] := 'no';
           cfg.StoredValue['userQRG1'] := cfgvtwo.Form6.edUserQRG1.Text;
           cfg.StoredValue['userQRG2'] := cfgvtwo.Form6.edUserQRG2.Text;
           cfg.StoredValue['userQRG3'] := cfgvtwo.Form6.edUserQRG3.Text;
@@ -3246,6 +3382,111 @@ Begin
           if cfgvtwo.Form6.cbSi570PTT.Checked Then cfg.StoredValue['si570ptt'] := 'y' else cfg.StoredValue['si570ptt'] := 'n';
           if cfgvtwo.Form6.cbSi570PTT.Checked Then cfg.StoredValue['si570ptt'] := 'y' else cfg.StoredValue['si570ptt'] := 'n';
           if cfgvtwo.Form6.cbCWID.Checked Then cfg.StoredValue['useCWID'] := 'y' else cfg.StoredValue['useCWID'] := 'n';
+          if cfgvtwo.Form6.chkTxDFVFO.Checked Then cfg.StoredValue['useCATTxDF'] := 'yes' else cfg.StoredValue['useCATTxDF'] := 'no';
+          if cfgvtwo.Form6.cbEnableQSY1.Checked Then cfg.StoredValue['enAutoQSY1'] := 'yes' else cfg.StoredValue['enAutoQSY1'] := 'no';
+          if cfgvtwo.Form6.cbEnableQSY2.Checked Then cfg.StoredValue['enAutoQSY2'] := 'yes' else cfg.StoredValue['enAutoQSY2'] := 'no';
+          if cfgvtwo.Form6.cbEnableQSY3.Checked Then cfg.StoredValue['enAutoQSY3'] := 'yes' else cfg.StoredValue['enAutoQSY3'] := 'no';
+          if cfgvtwo.Form6.cbEnableQSY4.Checked Then cfg.StoredValue['enAutoQSY4'] := 'yes' else cfg.StoredValue['enAutoQSY4'] := 'no';
+          if cfgvtwo.Form6.cbEnableQSY5.Checked Then cfg.StoredValue['enAutoQSY5'] := 'yes' else cfg.StoredValue['enAutoQSY5'] := 'no';
+          if cfgvtwo.Form6.cbATQSY1.Checked Then cfg.StoredValue['autoQSYAT1'] := 'yes' else cfg.StoredValue['autoQSYAT1'] := 'no';
+          if cfgvtwo.Form6.cbATQSY2.Checked Then cfg.StoredValue['autoQSYAT2'] := 'yes' else cfg.StoredValue['autoQSYAT2'] := 'no';
+          if cfgvtwo.Form6.cbATQSY3.Checked Then cfg.StoredValue['autoQSYAT3'] := 'yes' else cfg.StoredValue['autoQSYAT3'] := 'no';
+          if cfgvtwo.Form6.cbATQSY4.Checked Then cfg.StoredValue['autoQSYAT4'] := 'yes' else cfg.StoredValue['autoQSYAT4'] := 'no';
+          if cfgvtwo.Form6.cbATQSY5.Checked Then cfg.StoredValue['autoQSYAT5'] := 'yes' else cfg.StoredValue['autoQSYAT5'] := 'no';
+          cfg.StoredValue['autoQSYQRG1'] := cfgvtwo.Form6.edQRGQSY1.Text;
+          cfg.StoredValue['autoQSYQRG2'] := cfgvtwo.Form6.edQRGQSY2.Text;
+          cfg.StoredValue['autoQSYQRG3'] := cfgvtwo.Form6.edQRGQSY3.Text;
+          cfg.StoredValue['autoQSYQRG4'] := cfgvtwo.Form6.edQRGQSY4.Text;
+          cfg.StoredValue['autoQSYQRG5'] := cfgvtwo.Form6.edQRGQSY5.Text;
+          if cfgvtwo.Form6.qsyHour1.Value < 10 Then
+          Begin
+               foo := '0' + IntToStr(cfgvtwo.Form6.qsyHour1.Value);
+          End
+          Else
+          Begin
+               foo := IntToStr(cfgvtwo.Form6.qsyHour1.Value);
+          end;
+          if cfgvtwo.Form6.qsyMinute1.Value < 10 Then
+          Begin
+               foo := foo + '0' + IntToStr(cfgvtwo.Form6.qsyMinute1.Value);
+          End
+          Else
+          Begin
+               foo := foo + IntToStr(cfgvtwo.Form6.qsyMinute1.Value);
+          end;
+          cfg.StoredValue['autoQSYUTC1'] := foo;
+
+          if cfgvtwo.Form6.qsyHour2.Value < 10 Then
+          Begin
+               foo := '0' + IntToStr(cfgvtwo.Form6.qsyHour2.Value);
+          End
+          Else
+          Begin
+               foo := IntToStr(cfgvtwo.Form6.qsyHour2.Value);
+          end;
+          if cfgvtwo.Form6.qsyMinute2.Value < 10 Then
+          Begin
+               foo := foo + '0' + IntToStr(cfgvtwo.Form6.qsyMinute2.Value);
+          End
+          Else
+          Begin
+               foo := foo + IntToStr(cfgvtwo.Form6.qsyMinute2.Value);
+          end;
+          cfg.StoredValue['autoQSYUTC2'] := foo;
+
+          if cfgvtwo.Form6.qsyHour3.Value < 10 Then
+          Begin
+               foo := '0' + IntToStr(cfgvtwo.Form6.qsyHour3.Value);
+          End
+          Else
+          Begin
+               foo := IntToStr(cfgvtwo.Form6.qsyHour3.Value);
+          end;
+          if cfgvtwo.Form6.qsyMinute3.Value < 10 Then
+          Begin
+               foo := foo + '0' + IntToStr(cfgvtwo.Form6.qsyMinute3.Value);
+          End
+          Else
+          Begin
+               foo := foo + IntToStr(cfgvtwo.Form6.qsyMinute3.Value);
+          end;
+          cfg.StoredValue['autoQSYUTC3'] := foo;
+
+          if cfgvtwo.Form6.qsyHour4.Value < 10 Then
+          Begin
+               foo := '0' + IntToStr(cfgvtwo.Form6.qsyHour4.Value);
+          End
+          Else
+          Begin
+               foo := IntToStr(cfgvtwo.Form6.qsyHour4.Value);
+          end;
+          if cfgvtwo.Form6.qsyMinute4.Value < 10 Then
+          Begin
+               foo := foo + '0' + IntToStr(cfgvtwo.Form6.qsyMinute4.Value);
+          End
+          Else
+          Begin
+               foo := foo + IntToStr(cfgvtwo.Form6.qsyMinute4.Value);
+          end;
+          cfg.StoredValue['autoQSYUTC4'] := foo;
+
+          if cfgvtwo.Form6.qsyHour5.Value < 10 Then
+          Begin
+               foo := '0' + IntToStr(cfgvtwo.Form6.qsyHour5.Value);
+          End
+          Else
+          Begin
+               foo := IntToStr(cfgvtwo.Form6.qsyHour5.Value);
+          end;
+          if cfgvtwo.Form6.qsyMinute5.Value < 10 Then
+          Begin
+               foo := foo + '0' + IntToStr(cfgvtwo.Form6.qsyMinute5.Value);
+          End
+          Else
+          Begin
+               foo := foo + IntToStr(cfgvtwo.Form6.qsyMinute5.Value);
+          end;
+          cfg.StoredValue['autoQSYUTC5'] := foo;
           cfg.Save;
           dlog.fileDebug('Ran initial configuration.');
      End;
@@ -3587,10 +3828,10 @@ Begin
      if cfg.StoredValue['usePSKR'] = 'yes' Then cfgvtwo.Form6.cbUsePSKReporter.Checked := True else cfgvtwo.Form6.cbUsePSKReporter.Checked := False;
      if cfg.StoredValue['useRB'] = 'yes' Then cfgvtwo.Form6.cbUseRB.Checked := True else cfgvtwo.Form6.cbUseRB.Checked := False;
      cfgvtwo.Form6.editPSKRAntenna.Text := cfg.StoredValue['pskrAntenna'];
-     if cfg.StoredValue['optFFT'] = 'on' Then cfgvtwo.Form6.chkNoOptFFT.Checked := False;
-     if cfg.StoredValue['optFFT'] = 'off' Then cfgvtwo.Form6.chkNoOptFFT.Checked := True;
-     if cfg.StoredValue['useAltPTT'] = 'yes' Then cfgvtwo.Form6.cbUseAltPTT.Checked := True;
-     if cfg.StoredValue['useAltPTT'] = 'no' Then cfgvtwo.Form6.cbUseAltPTT.Checked := False;
+     if cfg.StoredValue['optFFT'] = 'on' Then cfgvtwo.Form6.chkNoOptFFT.Checked := False else cfgvtwo.Form6.chkNoOptFFT.Checked := True;
+     if cfg.StoredValue['useAltPTT'] = 'yes' Then cfgvtwo.Form6.cbUseAltPTT.Checked else cfgvtwo.Form6.cbUseAltPTT.Checked := False;
+     if cfg.StoredValue['useHRDPTT'] = 'yes' Then cfgvtwo.Form6.chkHRDPTT.Checked := True else cfgvtwo.Form6.chkHRDPTT.Checked := False;
+     if cfg.StoredValue['useCATTxDF'] = 'yes' Then cfgvtwo.Form6.chkTxDFVFO.Checked := True else cfgvtwo.Form6.chkTxDFVFO.Checked := False;
 
      cfgvtwo.Form6.edUserQRG1.Text := cfg.StoredValue['userQRG1'];
      cfgvtwo.Form6.edUserQRG2.Text := cfg.StoredValue['userQRG2'];
@@ -3643,6 +3884,38 @@ Begin
      if cfg.storedValue['si570ptt'] = 'y' then cfgvtwo.Form6.cbSi570PTT.Checked := True else cfgvtwo.Form6.cbSi570PTT.Checked := False;
      if cfg.storedValue['si570ptt'] = 'y' then globalData.si570ptt := True else globalData.si570ptt := False;
      if cfg.storedValue['useCWID'] = 'y' then cfgvtwo.Form6.cbCWID.Checked := True else cfgvtwo.Form6.cbCWID.Checked := False;
+     if cfg.StoredValue['useCATTxDF'] = 'yes' then cfgvtwo.Form6.chkTxDFVFO.Checked := True else cfgvtwo.Form6.chkTxDFVFO.Checked := False;
+     if cfg.StoredValue['enAutoQSY1'] = 'yes' then cfgvtwo.Form6.cbEnableQSY1.Checked := True else cfgvtwo.Form6.cbEnableQSY1.Checked := False;
+     if cfg.StoredValue['enAutoQSY2'] = 'yes' then cfgvtwo.Form6.cbEnableQSY2.Checked := True else cfgvtwo.Form6.cbEnableQSY2.Checked := False;
+     if cfg.StoredValue['enAutoQSY3'] = 'yes' then cfgvtwo.Form6.cbEnableQSY3.Checked := True else cfgvtwo.Form6.cbEnableQSY3.Checked := False;
+     if cfg.StoredValue['enAutoQSY4'] = 'yes' then cfgvtwo.Form6.cbEnableQSY4.Checked := True else cfgvtwo.Form6.cbEnableQSY4.Checked := False;
+     if cfg.StoredValue['enAutoQSY5'] = 'yes' then cfgvtwo.Form6.cbEnableQSY5.Checked := True else cfgvtwo.Form6.cbEnableQSY5.Checked := False;
+     if cfg.StoredValue['autoQSYAT1'] = 'yes' then cfgvtwo.Form6.cbATQSY1.Checked := True else cfgvtwo.Form6.cbATQSY1.Checked := False;
+     if cfg.StoredValue['autoQSYAT2'] = 'yes' then cfgvtwo.Form6.cbATQSY2.Checked := True else cfgvtwo.Form6.cbATQSY2.Checked := False;
+     if cfg.StoredValue['autoQSYAT3'] = 'yes' then cfgvtwo.Form6.cbATQSY3.Checked := True else cfgvtwo.Form6.cbATQSY3.Checked := False;
+     if cfg.StoredValue['autoQSYAT4'] = 'yes' then cfgvtwo.Form6.cbATQSY4.Checked := True else cfgvtwo.Form6.cbATQSY4.Checked := False;
+     if cfg.StoredValue['autoQSYAT5'] = 'yes' then cfgvtwo.Form6.cbATQSY5.Checked := True else cfgvtwo.Form6.cbATQSY5.Checked := False;
+     cfgvtwo.Form6.edQRGQSY1.Text := cfg.StoredValue['autoQSYQRG1'];
+     cfgvtwo.Form6.edQRGQSY2.Text := cfg.StoredValue['autoQSYQRG2'];
+     cfgvtwo.Form6.edQRGQSY3.Text := cfg.StoredValue['autoQSYQRG3'];
+     cfgvtwo.Form6.edQRGQSY4.Text := cfg.StoredValue['autoQSYQRG4'];
+     cfgvtwo.Form6.edQRGQSY5.Text := cfg.StoredValue['autoQSYQRG5'];
+     foo := cfg.StoredValue['autoQSYUTC1'];
+     cfgvtwo.Form6.qsyHour1.Value := StrToInt(foo[1..2]);
+     cfgvtwo.Form6.qsyMinute1.Value := StrToInt(foo[3..4]);
+     foo := cfg.StoredValue['autoQSYUTC2'];
+     cfgvtwo.Form6.qsyHour2.Value := StrToInt(foo[1..2]);
+     cfgvtwo.Form6.qsyMinute2.Value := StrToInt(foo[3..4]);
+     foo := cfg.StoredValue['autoQSYUTC3'];
+     cfgvtwo.Form6.qsyHour3.Value := StrToInt(foo[1..2]);
+     cfgvtwo.Form6.qsyMinute3.Value := StrToInt(foo[3..4]);
+     foo := cfg.StoredValue['autoQSYUTC4'];
+     cfgvtwo.Form6.qsyHour4.Value := StrToInt(foo[1..2]);
+     cfgvtwo.Form6.qsyMinute4.Value := StrToInt(foo[3..4]);
+     foo := cfg.StoredValue['autoQSYUTC5'];
+     cfgvtwo.Form6.qsyHour5.Value := StrToInt(foo[1..2]);
+     cfgvtwo.Form6.qsyMinute5.Value := StrToInt(foo[3..4]);
+
      if cfg.StoredValue['version'] <> verHolder.verReturn() Then verUpdate := True else verUpdate := False;
 
      if verUpdate Then
@@ -3666,14 +3939,8 @@ Begin
      d65.glfftSWisdom := 0;
      if not cfgvtwo.Form6.chkNoOptFFT.Checked Then
      Begin
-          {$IFDEF win32}
-            fname := GetAppConfigDir(False)+'wisdom2.dat';
-            if FileExists(fname) Then
-          {$ENDIF}
-          {$IFDEF linux}
-            fname := GetAppConfigDir(False)+'wisdom2.dat';
-            if FileExists(fname) Then
-          {$ENDIF}
+          fname := GetAppConfigDir(False)+'wisdom2.dat';
+          if FileExists(fname) Then
           Begin
                // I have data for FFTW_MEASURE metrics use ical settings in
                // decode65 for measure.
@@ -5211,5 +5478,7 @@ initialization
   globalData.si570ptt := False;
   doCWID := False;
   actionSet := False;
+  catControl.autoQSY := False;
+  catControl.catTxDF := False;
 end.
 

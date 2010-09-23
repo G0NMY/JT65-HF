@@ -44,6 +44,10 @@ Type
      r2freq  : String;
     end;
 
+  Var
+     autoQSY : Boolean;
+     catTxDF : Boolean;
+
   function readOmni(rig : Integer) : Double;  // rig = 1 or 2.
   function readHRD(): Double;
   function readDXLabs(): Double;
