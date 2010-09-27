@@ -27,10 +27,10 @@ uses
   cthreads, cmem,
   {$ENDIF}{$ENDIF}
   Interfaces, // this includes the LCL widgetset
-  Forms, maincode, portaudio, encode65, globalData, spectrum, cmaps,
-  fftw_jl, adc, samplerate, dac, LResources, dlog, rawdec, cfgvtwo, guiConfig,
-  verHolder, PSKReporter, catControl, Si570Dev, LibUSB, SndTypes, UsbDev,
-  synaser, rbc, adif, log, diagout, waterfall, d65, hrdinterface;
+  Forms, maincode, portaudio, encode65, globalData, spectrum, cmaps, fftw_jl,
+  adc, samplerate, dac, LResources, dlog, rawdec, cfgvtwo, guiConfig, verHolder,
+  PSKReporter, catControl, Si570Dev, LibUSB, SndTypes, UsbDev, synaser, rbc,
+  adif, log, diagout, waterfall, d65, hrdinterface5, hrdinterface4;
 
 {$IFDEF WINDOWS}{$R jt65-hf.rc}{$ENDIF}
 

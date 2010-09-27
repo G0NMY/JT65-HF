@@ -25,7 +25,7 @@ unit catControl;
 interface
 
 uses
-  Classes, SysUtils, Process, globalData, dlog, hrdinterface, cfgvtwo, StrUtils;
+  Classes, SysUtils, Process, globalData, dlog, hrdinterface4, hrdinterface5, cfgvtwo, StrUtils;
 
 Const
     hrdDelim = [','];
@@ -45,160 +45,605 @@ Type
     end;
 
   Var
-     autoQSY : Boolean;
-     catTxDF : Boolean;
+     catControlautoQSY       : Boolean;
+     catControlcatTxDF       : Boolean;
 
-  function readOmni(rig : Integer) : Double;  // rig = 1 or 2.
-  function readHRD(): Double;
-  function readDXLabs(): Double;
+  procedure hrdrigCAPS();
+  function  readOmni(rig : Integer) : Double;  // rig = 1 or 2.
+  function  readHRDQRG(): Double;
+  function  readHRD(_para1:WideString): WideString;
+  function  readDXLabs(): Double;
+  function  writeHRD(_para1:WideString): Boolean;
 
 implementation
 
-function writeHRD(_para1:WideString): Boolean;
+procedure hrdrigCAPS();
 Var
-   hrdcontext         : PWIDECHAR;
-   hrdradio           : PWIDECHAR;
+   foo                : WideString;
+   ifoo               : Integer;
+   wcount             : Integer;
    hrdresult          : PWIDECHAR;
    hrdmsg             : WideString;
+   hrdon              : Boolean;
+Begin
+     hrdon := False;
+
+     globalData.hrdcatControlcurrentRig.hrdAlive        := False;
+     globalData.hrdcatControlcurrentRig.hrdAlive        := False;
+     globalData.hrdcatControlcurrentRig.hasAFGain       := False;
+     globalData.hrdcatControlcurrentRig.hasRFGain       := False;
+     globalData.hrdcatControlcurrentRig.hasMicGain      := False;
+     globalData.hrdcatControlcurrentRig.hasPAGain       := False;
+     globalData.hrdcatControlcurrentRig.hasTX           := False;
+     globalData.hrdcatControlcurrentRig.hasSMeter       := False;
+     globalData.hrdcatControlcurrentRig.hasAutoTune     := False;
+     globalData.hrdcatControlcurrentRig.hasAutoTuneDo   := False;
+     globalData.hrdcatControlcurrentRig.afgControl      := '';
+     globalData.hrdcatControlcurrentRig.rfgControl      := '';
+     globalData.hrdcatControlcurrentRig.micgControl     := '';
+     globalData.hrdcatControlcurrentRig.pagControl      := '';
+     globalData.hrdcatControlcurrentRig.txControl       := '';
+     globalData.hrdcatControlcurrentRig.smeterControl   := '';
+     globalData.hrdcatControlcurrentRig.autotuneControl := '';
+     globalData.hrdcatControlcurrentRig.radioName       := '';
+     globalData.hrdcatControlcurrentRig.radioContext    := '';
+
+     if cfgvtwo.Form6.rbHRD4.Checked Then
+     Begin
+          // Using HRD Version 4 support.
+          hrdon := hrdinterface4.HRDInterfaceConnect(globalData.hrdcatControlcurrentRig.hrdAddress, globalData.hrdcatControlcurrentRig.hrdPort);
+          if hrdon then
+          begin
+               globalData.hrdcatControlcurrentRig.hrdAlive := True;
+
+               hrdresult := '';
+
+               hrdmsg := 'Get Radio';
+               hrdresult := hrdinterface4.HRDInterfaceSendMessage(hrdmsg);
+               globalData.hrdcatControlcurrentRig.radioName := hrdresult;
+
+               hrdmsg := 'Get Context';
+               hrdresult := hrdinterface4.HRDInterfaceSendMessage(hrdmsg);
+               globalData.hrdcatControlcurrentRig.radioContext := hrdresult;
+
+               // This retrieves the buttons available of interest
+               hrdmsg := '[' + globalData.hrdcatControlcurrentRig.radioContext + '] get buttons';
+               hrdresult := hrdinterface4.HRDInterfaceSendMessage(hrdmsg);
+               wcount := WordCount(hrdresult,hrdDelim);
+               if wcount > 0 Then
+               Begin
+                    for ifoo := 1 to wcount do
+                    begin
+                         foo := ExtractWord(ifoo,hrdresult,hrdDelim);
+                         if foo = 'TX' then globalData.hrdcatControlcurrentRig.hasTX := True;
+                         if foo = 'ATU' then globalData.hrdcatControlcurrentRig.hasAutoTune := True;
+                         if foo = 'TUNE' then globalData.hrdcatControlcurrentRig.hasAutoTuneDo := True;
+
+                    end;
+               end
+               else
+               begin
+                    globalData.hrdcatControlcurrentRig.hasTX := False;
+                    globalData.hrdcatControlcurrentRig.hasAutoTune := False;
+                    globalData.hrdcatControlcurrentRig.hasAutoTuneDo := False;
+               end;
+
+               if globalData.hrdcatControlcurrentRig.hasTX then globalData.hrdcatControlcurrentRig.txControl := 'TX' else globalData.hrdcatControlcurrentRig.txControl := '';
+               if globalData.hrdcatControlcurrentRig.hasAutoTune then globalData.hrdcatControlcurrentRig.autotuneControl := 'ATU' else globalData.hrdcatControlcurrentRig.autotuneControl := '';
+               if globalData.hrdcatControlcurrentRig.hasAutoTune then globalData.hrdcatControlcurrentRig.autotuneControlDo := 'Tune' else globalData.hrdcatControlcurrentRig.autotuneControlDo := '';
+
+               // This retrieves the sliders available of interest
+               hrdmsg := '[' + globalData.hrdcatControlcurrentRig.radioContext + '] get sliders';
+               hrdresult := hrdinterface4.HRDInterfaceSendMessage(hrdmsg);
+               wcount := WordCount(hrdresult,hrdDelim);
+               if wcount > 0 Then
+               Begin
+                    for ifoo := 1 to wcount do
+                    begin
+                         foo := ExtractWord(ifoo,hrdresult,hrdDelim);
+                         if foo = 'AF gain (main)' then
+                         Begin
+                              globalData.hrdcatControlcurrentRig.hasAFGain := True;
+                              globalData.hrdcatControlcurrentRig.afgControl := 'AF~gain~(main)';
+                         end;
+                         if foo = 'AF gain' then
+                         Begin
+                              globalData.hrdcatControlcurrentRig.hasAFGain := True;
+                              globalData.hrdcatControlcurrentRig.afgControl := 'AF~gain';
+                         end;
+                         if foo = 'RF gain' then
+                         Begin
+                              globalData.hrdcatControlcurrentRig.hasRFGain := True;
+                              globalData.hrdcatControlcurrentRig.rfgControl := 'RF~gain';
+                         end;
+                         if foo = 'Mic gain' then
+                         Begin
+                              globalData.hrdcatControlcurrentRig.hasMicGain := True;
+                              globalData.hrdcatControlcurrentRig.micgControl := 'Mic~gain';
+                         end;
+                         if foo = 'RF power' then
+                         Begin
+                              globalData.hrdcatControlcurrentRig.hasPAGain := True;
+                              globalData.hrdcatControlcurrentRig.pagControl := 'RF~power';
+                         end;
+                    end;
+               end
+               else
+               begin
+                    globalData.hrdcatControlcurrentRig.hasAFGain       := False;
+                    globalData.hrdcatControlcurrentRig.hasRFGain       := False;
+                    globalData.hrdcatControlcurrentRig.hasMicGain      := False;
+                    globalData.hrdcatControlcurrentRig.hasPAGain       := False;
+                    globalData.hrdcatControlcurrentRig.afgControl      := '';
+                    globalData.hrdcatControlcurrentRig.rfgControl      := '';
+                    globalData.hrdcatControlcurrentRig.micgControl     := '';
+                    globalData.hrdcatControlcurrentRig.pagControl      := '';
+               end;
+
+               globalData.hrdcatControlcurrentRig.hasSMeter       := True;
+               globalData.hrdcatControlcurrentRig.smeterControl   := 'SMeter-Main';
+
+               // Get meter element min/max values.
+               if globalData.hrdcatControlcurrentRig.hasAFGain Then
+               Begin
+                    //Get slider-range AF
+                    hrdmsg := '[' + globalData.hrdcatControlcurrentRig.radioContext + '] get slider-range ' + globalData.hrdcatControlcurrentRig.radioName + ' ' + globalData.hrdcatControlcurrentRig.afgControl;
+                    hrdresult := hrdinterface4.HRDInterfaceSendMessage(hrdmsg);
+                    wcount := WordCount(hrdresult,hrdDelim);
+                    if wcount > 0 Then
+                    Begin
+                         ifoo := -1;
+                         If TryStrToInt(ExtractWord(1,hrdresult,catControl.hrdDelim), ifoo) Then globalData.hrdcatControlcurrentRig.afgMin := ifoo;
+                         ifoo := -1;
+                         If TryStrToInt(ExtractWord(2,hrdresult,catControl.hrdDelim), ifoo) Then globalData.hrdcatControlcurrentRig.afgMax := ifoo;
+                         ifoo := -1;
+                    end
+                    else
+                    begin
+                         globalData.hrdcatControlcurrentRig.afgMin := 0;
+                         globalData.hrdcatControlcurrentRig.afgMax := 0;
+                    end;
+               end;
+
+               if globalData.hrdcatControlcurrentRig.hasRFGain Then
+               Begin
+                    //Get slider-range RF
+                    hrdmsg := '[' + globalData.hrdcatControlcurrentRig.radioContext + '] get slider-range ' + globalData.hrdcatControlcurrentRig.radioName + ' ' + globalData.hrdcatControlcurrentRig.rfgControl;
+                    hrdresult := hrdinterface4.HRDInterfaceSendMessage(hrdmsg);
+                    wcount := WordCount(hrdresult,hrdDelim);
+                    if wcount > 0 Then
+                    Begin
+                         ifoo := -1;
+                         If TryStrToInt(ExtractWord(1,hrdresult,catControl.hrdDelim), ifoo) Then globalData.hrdcatControlcurrentRig.rfgMin := ifoo;
+                         ifoo := -1;
+                         If TryStrToInt(ExtractWord(2,hrdresult,catControl.hrdDelim), ifoo) Then globalData.hrdcatControlcurrentRig.rfgMax := ifoo;
+                         ifoo := -1;
+                    end
+                    else
+                    begin
+                         globalData.hrdcatControlcurrentRig.rfgMin := 0;
+                         globalData.hrdcatControlcurrentRig.rfgMax := 0;
+                    end;
+               end;
+
+               if globalData.hrdcatControlcurrentRig.hasMicGain Then
+               Begin
+                    //Get slider-range Mic
+                    hrdmsg := '[' + globalData.hrdcatControlcurrentRig.radioContext + '] get slider-range ' + globalData.hrdcatControlcurrentRig.radioName + ' ' + globalData.hrdcatControlcurrentRig.micgControl;
+                    hrdresult := hrdinterface4.HRDInterfaceSendMessage(hrdmsg);
+                    wcount := WordCount(hrdresult,hrdDelim);
+                    if wcount > 0 Then
+                    Begin
+                         ifoo := -1;
+                         If TryStrToInt(ExtractWord(1,hrdresult,catControl.hrdDelim), ifoo) Then globalData.hrdcatControlcurrentRig.micgMin := ifoo;
+                         ifoo := -1;
+                         If TryStrToInt(ExtractWord(2,hrdresult,catControl.hrdDelim), ifoo) Then globalData.hrdcatControlcurrentRig.micgMax := ifoo;
+                         ifoo := -1;
+                    end
+                    else
+                    begin
+                         globalData.hrdcatControlcurrentRig.micgMin := 0;
+                         globalData.hrdcatControlcurrentRig.micgMax := 0;
+                    end;
+               end;
+
+               if globalData.hrdcatControlcurrentRig.hasPAGain Then
+               Begin
+                    //Get slider-range PA
+                    hrdmsg := '[' + globalData.hrdcatControlcurrentRig.radioContext + '] get slider-range ' + globalData.hrdcatControlcurrentRig.radioName + ' ' + globalData.hrdcatControlcurrentRig.pagControl;
+                    hrdresult := hrdinterface4.HRDInterfaceSendMessage(hrdmsg);
+                    wcount := WordCount(hrdresult,hrdDelim);
+                    if wcount > 0 Then
+                    Begin
+                         ifoo := -1;
+                         If TryStrToInt(ExtractWord(1,hrdresult,catControl.hrdDelim), ifoo) Then globalData.hrdcatControlcurrentRig.pagMin := ifoo;
+                         ifoo := -1;
+                         If TryStrToInt(ExtractWord(2,hrdresult,catControl.hrdDelim), ifoo) Then globalData.hrdcatControlcurrentRig.pagMax := ifoo;
+                         ifoo := -1;
+                    end
+                    else
+                    begin
+                         globalData.hrdcatControlcurrentRig.pagMin := 0;
+                         globalData.hrdcatControlcurrentRig.pagMax := 0;
+                    end;
+               end;
+
+               hrdinterface4.HRDInterfaceFreeString(hrdresult);
+               hrdinterface4.HRDInterfaceDisconnect();
+          end
+          else
+          begin
+               globalData.hrdcatControlcurrentRig.hrdAlive        := False;
+               globalData.hrdcatControlcurrentRig.hasAFGain       := False;
+               globalData.hrdcatControlcurrentRig.hasRFGain       := False;
+               globalData.hrdcatControlcurrentRig.hasMicGain      := False;
+               globalData.hrdcatControlcurrentRig.hasPAGain       := False;
+               globalData.hrdcatControlcurrentRig.hasTX           := False;
+               globalData.hrdcatControlcurrentRig.hasSMeter       := False;
+               globalData.hrdcatControlcurrentRig.hasAutoTune     := False;
+               globalData.hrdcatControlcurrentRig.hasAutoTuneDo   := False;
+               globalData.hrdcatControlcurrentRig.afgControl      := '';
+               globalData.hrdcatControlcurrentRig.rfgControl      := '';
+               globalData.hrdcatControlcurrentRig.micgControl     := '';
+               globalData.hrdcatControlcurrentRig.pagControl      := '';
+               globalData.hrdcatControlcurrentRig.txControl       := '';
+               globalData.hrdcatControlcurrentRig.smeterControl   := '';
+               globalData.hrdcatControlcurrentRig.autotuneControl := '';
+               globalData.hrdcatControlcurrentRig.radioName       := '';
+               globalData.hrdcatControlcurrentRig.radioContext    := '';
+          end;
+     end
+     else
+     begin
+          // Using HRD Version 5 support.
+          hrdon := hrdinterface5.HRDInterfaceConnect(globalData.hrdcatControlcurrentRig.hrdAddress, globalData.hrdcatControlcurrentRig.hrdPort);
+          if hrdon then
+          begin
+               globalData.hrdcatControlcurrentRig.hrdAlive := True;
+
+               hrdresult := '';
+
+               hrdmsg := 'Get Radio';
+               hrdresult := hrdinterface5.HRDInterfaceSendMessage(hrdmsg);
+               globalData.hrdcatControlcurrentRig.radioName := hrdresult;
+
+               hrdmsg := 'Get Context';
+               hrdresult := hrdinterface5.HRDInterfaceSendMessage(hrdmsg);
+               globalData.hrdcatControlcurrentRig.radioContext := hrdresult;
+
+               // This retrieves the buttons available of interest
+               hrdmsg := '[' + globalData.hrdcatControlcurrentRig.radioContext + '] get buttons';
+               hrdresult := hrdinterface5.HRDInterfaceSendMessage(hrdmsg);
+               wcount := WordCount(hrdresult,hrdDelim);
+               if wcount > 0 Then
+               Begin
+                    for ifoo := 1 to wcount do
+                    begin
+                         foo := ExtractWord(ifoo,hrdresult,hrdDelim);
+                         if foo = 'TX' then globalData.hrdcatControlcurrentRig.hasTX := True;
+                         if foo = 'ATU' then globalData.hrdcatControlcurrentRig.hasAutoTune := True;
+                         if foo = 'TUNE' then globalData.hrdcatControlcurrentRig.hasAutoTuneDo := True;
+
+                    end;
+               end
+               else
+               begin
+                    globalData.hrdcatControlcurrentRig.hasTX := False;
+                    globalData.hrdcatControlcurrentRig.hasAutoTune := False;
+                    globalData.hrdcatControlcurrentRig.hasAutoTuneDo := False;
+               end;
+
+               if globalData.hrdcatControlcurrentRig.hasTX then globalData.hrdcatControlcurrentRig.txControl := 'TX' else globalData.hrdcatControlcurrentRig.txControl := '';
+               if globalData.hrdcatControlcurrentRig.hasAutoTune then globalData.hrdcatControlcurrentRig.autotuneControl := 'ATU' else globalData.hrdcatControlcurrentRig.autotuneControl := '';
+               if globalData.hrdcatControlcurrentRig.hasAutoTune then globalData.hrdcatControlcurrentRig.autotuneControlDo := 'Tune' else globalData.hrdcatControlcurrentRig.autotuneControlDo := '';
+
+               // This retrieves the sliders available of interest
+               hrdmsg := '[' + globalData.hrdcatControlcurrentRig.radioContext + '] get sliders';
+               hrdresult := hrdinterface5.HRDInterfaceSendMessage(hrdmsg);
+               wcount := WordCount(hrdresult,hrdDelim);
+               if wcount > 0 Then
+               Begin
+                    for ifoo := 1 to wcount do
+                    begin
+                         foo := ExtractWord(ifoo,hrdresult,hrdDelim);
+                         if foo = 'AF gain (main)' then
+                         Begin
+                              globalData.hrdcatControlcurrentRig.hasAFGain := True;
+                              globalData.hrdcatControlcurrentRig.afgControl := 'AF~gain~(main)';
+                         end;
+                         if foo = 'AF gain' then
+                         Begin
+                              globalData.hrdcatControlcurrentRig.hasAFGain := True;
+                              globalData.hrdcatControlcurrentRig.afgControl := 'AF~gain';
+                         end;
+                         if foo = 'RF gain' then
+                         Begin
+                              globalData.hrdcatControlcurrentRig.hasRFGain := True;
+                              globalData.hrdcatControlcurrentRig.rfgControl := 'RF~gain';
+                         end;
+                         if foo = 'Mic gain' then
+                         Begin
+                              globalData.hrdcatControlcurrentRig.hasMicGain := True;
+                              globalData.hrdcatControlcurrentRig.micgControl := 'Mic~gain';
+                         end;
+                         if foo = 'RF power' then
+                         Begin
+                              globalData.hrdcatControlcurrentRig.hasPAGain := True;
+                              globalData.hrdcatControlcurrentRig.pagControl := 'RF~power';
+                         end;
+                    end;
+               end
+               else
+               begin
+                    globalData.hrdcatControlcurrentRig.hasAFGain       := False;
+                    globalData.hrdcatControlcurrentRig.hasRFGain       := False;
+                    globalData.hrdcatControlcurrentRig.hasMicGain      := False;
+                    globalData.hrdcatControlcurrentRig.hasPAGain       := False;
+                    globalData.hrdcatControlcurrentRig.afgControl      := '';
+                    globalData.hrdcatControlcurrentRig.rfgControl      := '';
+                    globalData.hrdcatControlcurrentRig.micgControl     := '';
+                    globalData.hrdcatControlcurrentRig.pagControl      := '';
+               end;
+
+               globalData.hrdcatControlcurrentRig.hasSMeter       := True;
+               globalData.hrdcatControlcurrentRig.smeterControl   := 'SMeter-Main';
+
+               // Get meter element min/max values.
+               if globalData.hrdcatControlcurrentRig.hasAFGain Then
+               Begin
+                    //Get slider-range AF
+                    hrdmsg := '[' + globalData.hrdcatControlcurrentRig.radioContext + '] get slider-range ' + globalData.hrdcatControlcurrentRig.radioName + ' ' + globalData.hrdcatControlcurrentRig.afgControl;
+                    hrdresult := hrdinterface5.HRDInterfaceSendMessage(hrdmsg);
+                    wcount := WordCount(hrdresult,hrdDelim);
+                    if wcount > 0 Then
+                    Begin
+                         ifoo := -1;
+                         If TryStrToInt(ExtractWord(1,hrdresult,catControl.hrdDelim), ifoo) Then globalData.hrdcatControlcurrentRig.afgMin := ifoo;
+                         ifoo := -1;
+                         If TryStrToInt(ExtractWord(2,hrdresult,catControl.hrdDelim), ifoo) Then globalData.hrdcatControlcurrentRig.afgMax := ifoo;
+                         ifoo := -1;
+                    end
+                    else
+                    begin
+                         globalData.hrdcatControlcurrentRig.afgMin := 0;
+                         globalData.hrdcatControlcurrentRig.afgMax := 0;
+                    end;
+               end;
+
+               if globalData.hrdcatControlcurrentRig.hasRFGain Then
+               Begin
+                    //Get slider-range RF
+                    hrdmsg := '[' + globalData.hrdcatControlcurrentRig.radioContext + '] get slider-range ' + globalData.hrdcatControlcurrentRig.radioName + ' ' + globalData.hrdcatControlcurrentRig.rfgControl;
+                    hrdresult := hrdinterface5.HRDInterfaceSendMessage(hrdmsg);
+                    wcount := WordCount(hrdresult,hrdDelim);
+                    if wcount > 0 Then
+                    Begin
+                         ifoo := -1;
+                         If TryStrToInt(ExtractWord(1,hrdresult,catControl.hrdDelim), ifoo) Then globalData.hrdcatControlcurrentRig.rfgMin := ifoo;
+                         ifoo := -1;
+                         If TryStrToInt(ExtractWord(2,hrdresult,catControl.hrdDelim), ifoo) Then globalData.hrdcatControlcurrentRig.rfgMax := ifoo;
+                         ifoo := -1;
+                    end
+                    else
+                    begin
+                         globalData.hrdcatControlcurrentRig.rfgMin := 0;
+                         globalData.hrdcatControlcurrentRig.rfgMax := 0;
+                    end;
+               end;
+
+               if globalData.hrdcatControlcurrentRig.hasMicGain Then
+               Begin
+                    //Get slider-range Mic
+                    hrdmsg := '[' + globalData.hrdcatControlcurrentRig.radioContext + '] get slider-range ' + globalData.hrdcatControlcurrentRig.radioName + ' ' + globalData.hrdcatControlcurrentRig.micgControl;
+                    hrdresult := hrdinterface5.HRDInterfaceSendMessage(hrdmsg);
+                    wcount := WordCount(hrdresult,hrdDelim);
+                    if wcount > 0 Then
+                    Begin
+                         ifoo := -1;
+                         If TryStrToInt(ExtractWord(1,hrdresult,catControl.hrdDelim), ifoo) Then globalData.hrdcatControlcurrentRig.micgMin := ifoo;
+                         ifoo := -1;
+                         If TryStrToInt(ExtractWord(2,hrdresult,catControl.hrdDelim), ifoo) Then globalData.hrdcatControlcurrentRig.micgMax := ifoo;
+                         ifoo := -1;
+                    end
+                    else
+                    begin
+                         globalData.hrdcatControlcurrentRig.micgMin := 0;
+                         globalData.hrdcatControlcurrentRig.micgMax := 0;
+                    end;
+               end;
+
+               if globalData.hrdcatControlcurrentRig.hasPAGain Then
+               Begin
+                    //Get slider-range PA
+                    hrdmsg := '[' + globalData.hrdcatControlcurrentRig.radioContext + '] get slider-range ' + globalData.hrdcatControlcurrentRig.radioName + ' ' + globalData.hrdcatControlcurrentRig.pagControl;
+                    hrdresult := hrdinterface5.HRDInterfaceSendMessage(hrdmsg);
+                    wcount := WordCount(hrdresult,hrdDelim);
+                    if wcount > 0 Then
+                    Begin
+                         ifoo := -1;
+                         If TryStrToInt(ExtractWord(1,hrdresult,catControl.hrdDelim), ifoo) Then globalData.hrdcatControlcurrentRig.pagMin := ifoo;
+                         ifoo := -1;
+                         If TryStrToInt(ExtractWord(2,hrdresult,catControl.hrdDelim), ifoo) Then globalData.hrdcatControlcurrentRig.pagMax := ifoo;
+                         ifoo := -1;
+                    end
+                    else
+                    begin
+                         globalData.hrdcatControlcurrentRig.pagMin := 0;
+                         globalData.hrdcatControlcurrentRig.pagMax := 0;
+                    end;
+               end;
+
+               hrdinterface5.HRDInterfaceFreeString(hrdresult);
+               hrdinterface5.HRDInterfaceDisconnect();
+          end
+          else
+          begin
+               globalData.hrdcatControlcurrentRig.hrdAlive        := False;
+               globalData.hrdcatControlcurrentRig.hasAFGain       := False;
+               globalData.hrdcatControlcurrentRig.hasRFGain       := False;
+               globalData.hrdcatControlcurrentRig.hasMicGain      := False;
+               globalData.hrdcatControlcurrentRig.hasPAGain       := False;
+               globalData.hrdcatControlcurrentRig.hasTX           := False;
+               globalData.hrdcatControlcurrentRig.hasSMeter       := False;
+               globalData.hrdcatControlcurrentRig.hasAutoTune     := False;
+               globalData.hrdcatControlcurrentRig.hasAutoTuneDo   := False;
+               globalData.hrdcatControlcurrentRig.afgControl      := '';
+               globalData.hrdcatControlcurrentRig.rfgControl      := '';
+               globalData.hrdcatControlcurrentRig.micgControl     := '';
+               globalData.hrdcatControlcurrentRig.pagControl      := '';
+               globalData.hrdcatControlcurrentRig.txControl       := '';
+               globalData.hrdcatControlcurrentRig.smeterControl   := '';
+               globalData.hrdcatControlcurrentRig.autotuneControl := '';
+               globalData.hrdcatControlcurrentRig.radioName       := '';
+               globalData.hrdcatControlcurrentRig.radioContext    := '';
+          end;
+     end;
+end;
+
+function writeHRD(_para1:WideString): Boolean;
+Var
+   hrdresult          : PWIDECHAR;
    hrdon              : Boolean;
 Begin
      Result := False;
      hrdon := False;
-     hrdon := hrdinterface.HRDInterfaceConnect('localhost', 7809);
-     if hrdon then
-     begin
-          hrdradio := '';
-          hrdcontext := '';
-          hrdresult := '';
-          hrdmsg := 'Get Radio';
-          hrdradio := hrdinterface.HRDInterfaceSendMessage(hrdmsg);
-          hrdmsg := 'Get Context';
-          hrdcontext := hrdinterface.HRDInterfaceSendMessage(hrdmsg);
-          hrdresult := hrdinterface.HRDInterfaceSendMessage(_para1);
-          if hrdresult='OK' Then Result := True else Result := False;
-          hrdinterface.HRDInterfaceFreeString(hrdcontext);
-          hrdinterface.HRDInterfaceFreeString(hrdradio);
-          hrdinterface.HRDInterfaceFreeString(hrdresult);
-          hrdinterface.HRDInterfaceDisconnect();
+     if cfgvtwo.Form6.rbHRD4.Checked Then
+     Begin
+          hrdon := hrdinterface4.HRDInterfaceConnect(globalData.hrdcatControlcurrentRig.hrdAddress, globalData.hrdcatControlcurrentRig.hrdPort);
+          if hrdon then
+          begin
+               hrdresult := hrdinterface4.HRDInterfaceSendMessage(_para1);
+               if hrdresult='OK' Then Result := True else Result := False;
+               hrdinterface4.HRDInterfaceFreeString(hrdresult);
+               hrdinterface4.HRDInterfaceDisconnect();
+          end
+          else
+          begin
+               Result := False;
+          end;
      end
      else
      begin
-          Result := False;
+          hrdon := hrdinterface5.HRDInterfaceConnect(globalData.hrdcatControlcurrentRig.hrdAddress, globalData.hrdcatControlcurrentRig.hrdPort);
+          if hrdon then
+          begin
+               hrdresult := hrdinterface5.HRDInterfaceSendMessage(_para1);
+               if hrdresult='OK' Then Result := True else Result := False;
+               hrdinterface5.HRDInterfaceFreeString(hrdresult);
+               hrdinterface5.HRDInterfaceDisconnect();
+          end
+          else
+          begin
+               Result := False;
+          end;
      end;
 end;
 
-function readHRD(): Double;
+function readHRDQRG(): Double;
 Var
-   foo                : WideString;
    qrg                : Double;
-   ifoo               : Integer;
-   hrdcontext         : PWIDECHAR;
-   hrdradio           : PWIDECHAR;
-   hrdqrg             : PWIDECHAR;
    hrdresult          : PWIDECHAR;
    hrdmsg             : WideString;
    hrdon              : Boolean;
 Begin
      hrdon := False;
-     hrdon := hrdinterface.HRDInterfaceConnect('localhost', 7809);
-     if hrdon then
-     begin
-          hrdcontext := '';
-          hrdradio := '';
-          hrdqrg := '';
-          hrdresult := '';
+     if cfgvtwo.Form6.rbHRD4.Checked Then
+     Begin
+          hrdon := hrdinterface4.HRDInterfaceConnect(globalData.hrdcatControlcurrentRig.hrdAddress, globalData.hrdcatControlcurrentRig.hrdPort);
+          if hrdon then
+          begin
+               cfgvtwo.Form6.groupHRD.Caption := 'HRD Connected to ' + globalData.hrdcatControlcurrentRig.radioName;
 
-          hrdmsg := 'Get Radio';
-          hrdradio := hrdinterface.HRDInterfaceSendMessage(hrdmsg);
-          cfgvtwo.Form6.groupHRD.Caption := 'HRD Connected to ' + hrdradio;
+               hrdresult := '';
+               hrdmsg := 'Get Frequency';
+               hrdresult := hrdinterface4.HRDInterfaceSendMessage(hrdmsg);
 
-          hrdmsg := 'Get Context';
-          hrdcontext := hrdinterface.HRDInterfaceSendMessage(hrdmsg);
-
-          hrdmsg := 'Get Frequency';
-          hrdqrg := hrdinterface.HRDInterfaceSendMessage(hrdmsg);
-
-          qrg := 0.0;
-          If TryStrToFloat(hrdqrg,qrg) Then
-          Begin
-               Result := qrg;
-               globalData.strqrg := FloatToStr(qrg);
+               qrg := 0.0;
+               If TryStrToFloat(hrdresult,qrg) Then
+               Begin
+                    Result := qrg;
+                    globalData.strqrg := FloatToStr(qrg);
+               end
+               else
+               Begin
+                    Result := 0.0;
+                    globalData.strqrg := '0';
+               end;
+               hrdinterface4.HRDInterfaceFreeString(hrdresult);
+               hrdinterface4.HRDInterfaceDisconnect();
           end
           else
-          Begin
+          begin
                Result := 0.0;
-               globalData.strqrg := '0';
           end;
-
-          //hrdmsg := '[' + hrdcontext + '] get buttons';
-          //hrdbuttons := hrdinterface.HRDInterfaceSendMessage(hrdmsg);
-          //cfgvtwo.Form6.labelHRDButtons.Caption := 'Buttons:  ' + hrdbuttons;
-
-          //hrdmsg := '[' + hrdcontext + '] get dropdowns';
-          //hrddropdowns := hrdinterface.HRDInterfaceSendMessage(hrdmsg);
-          //cfgvtwo.Form6.labelHRDDropDowns.Caption := 'Dropdowns:  ' + hrddropdowns;
-          //foo := ExtractWord(1,hrddropdowns,HRDDelim);
-
-          //hrdmsg := '[' + hrdcontext + '] set dropdown mode usb 1';
-          //hrdmsg := '[' + hrdcontext + '] set dropdown mode usb 1';
-          //hrdresult := hrdinterface.HRDInterfaceSendMessage(hrdmsg);
-
-          //hrdmsg := '[' + hrdcontext + '] get sliders';
-          //hrdsliders := hrdinterface.HRDInterfaceSendMessage(hrdmsg);
-          //cfgvtwo.Form6.labelHRDSliders.Caption := 'Sliders:  ' + hrdsliders;
-          //hrdresult := '';
-
-          hrdmsg := '[' + hrdcontext + '] Get slider-pos ' + hrdradio + ' AF~gain';
-          hrdresult := hrdinterface.HRDInterfaceSendMessage(hrdmsg);
-          foo := ExtractWord(1,hrdresult,HRDDelim);
-          ifoo := -1;
-          If TryStrToInt(foo, ifoo) Then cfgvtwo.Form6.sliderAFGain.Position := ifoo;
-          cfgvtwo.Form6.Label11.Caption := 'Audio Gain (Currently:  ' + ExtractWord(2,hrdresult,HRDDelim) + '%)';
-
-          hrdmsg := '[' + hrdcontext + '] Get slider-pos ' + hrdradio + ' Mic~gain';
-          hrdresult := hrdinterface.HRDInterfaceSendMessage(hrdmsg);
-          foo := ExtractWord(1,hrdresult,HRDDelim);
-          ifoo := -1;
-          If TryStrToInt(foo, ifoo) Then cfgvtwo.Form6.sliderMicGain.Position := ifoo;
-          cfgvtwo.Form6.Label15.Caption := 'Mic Gain (Currently:  ' + ExtractWord(2,hrdresult,HRDDelim) + '%)';
-
-          hrdmsg := '[' + hrdcontext + '] Get slider-pos ' + hrdradio + ' RF~gain';
-          hrdresult := hrdinterface.HRDInterfaceSendMessage(hrdmsg);
-          foo := ExtractWord(1,hrdresult,HRDDelim);
-          ifoo := -1;
-          If TryStrToInt(foo, ifoo) Then cfgvtwo.Form6.sliderRFGain.Position := ifoo;
-          cfgvtwo.Form6.Label17.Caption := 'RF Gain (Currently:  ' + ExtractWord(2,hrdresult,HRDDelim) + '%)';
-
-          hrdmsg := '[' + hrdcontext + '] Get slider-pos ' + hrdradio + ' RF~power';
-          hrdresult := hrdinterface.HRDInterfaceSendMessage(hrdmsg);
-          foo := ExtractWord(1,hrdresult,HRDDelim);
-          ifoo := -1;
-          If TryStrToInt(foo, ifoo) Then cfgvtwo.Form6.sliderPALevel.Position := ifoo;
-          cfgvtwo.Form6.Label18.Caption := 'RF Output Level (Currently:  ' + ExtractWord(2,hrdresult,HRDDelim) + '%)';
-
-          // [c] Get SMeter-Main
-
-          hrdmsg := '[' + hrdcontext + '] Get SMeter-Main';
-          hrdresult := hrdinterface.HRDInterfaceSendMessage(hrdmsg);
-          foo := ExtractWord(2,hrdresult,HRDDelim);
-          ifoo := -1;
-          If TryStrToInt(foo, ifoo) Then cfgvtwo.Form6.pbSMeter.Position := ifoo;
-          cfgvtwo.Form6.Label24.Caption := ExtractWord(1,hrdresult,HRDDelim);
-
-          hrdinterface.HRDInterfaceFreeString(hrdcontext);
-          hrdinterface.HRDInterfaceFreeString(hrdradio);
-          hrdinterface.HRDInterfaceFreeString(hrdqrg);
-          //hrdinterface.HRDInterfaceFreeString(hrdbuttons);
-          //hrdinterface.HRDInterfaceFreeString(hrddropdowns);
-          //hrdinterface.HRDInterfaceFreeString(hrdsliders);
-          hrdinterface.HRDInterfaceFreeString(hrdresult);
-          //hrdinterface.HRDInterfaceFreeString(hrdModeList);
-          //hrdinterface.HRDInterfaceFreeString(hrdError);
-          hrdinterface.HRDInterfaceDisconnect();
      end
      else
      begin
-          Result := 0.0;
+          hrdon := hrdinterface5.HRDInterfaceConnect(globalData.hrdcatControlcurrentRig.hrdAddress, globalData.hrdcatControlcurrentRig.hrdPort);
+          if hrdon then
+          begin
+               cfgvtwo.Form6.groupHRD.Caption := 'HRD Connected to ' + globalData.hrdcatControlcurrentRig.radioName;
+
+               hrdresult := '';
+               hrdmsg := 'Get Frequency';
+               hrdresult := hrdinterface5.HRDInterfaceSendMessage(hrdmsg);
+
+               qrg := 0.0;
+               If TryStrToFloat(hrdresult,qrg) Then
+               Begin
+                    Result := qrg;
+                    globalData.strqrg := FloatToStr(qrg);
+               end
+               else
+               Begin
+                    Result := 0.0;
+                    globalData.strqrg := '0';
+               end;
+               hrdinterface5.HRDInterfaceFreeString(hrdresult);
+               hrdinterface5.HRDInterfaceDisconnect();
+          end
+          else
+          begin
+               Result := 0.0;
+          end;
+     end;
+End;
+
+function readHRD(_para1:WideString): WideString;
+Var
+   hrdresult          : PWIDECHAR;
+   hrdon              : Boolean;
+Begin
+     hrdon := False;
+     if cfgvtwo.Form6.rbHRD4.Checked Then
+     Begin
+          hrdon := hrdinterface4.HRDInterfaceConnect(globalData.hrdcatControlcurrentRig.hrdAddress, globalData.hrdcatControlcurrentRig.hrdPort);
+          if hrdon then
+          begin
+               hrdresult := hrdinterface4.HRDInterfaceSendMessage(_para1);
+               Result := hrdresult;
+               hrdinterface4.HRDInterfaceFreeString(hrdresult);
+               hrdinterface4.HRDInterfaceDisconnect();
+          end
+          else
+          begin
+               Result := 'NAK';
+          end;
+     end
+     else
+     begin
+          hrdon := hrdinterface5.HRDInterfaceConnect(globalData.hrdcatControlcurrentRig.hrdAddress, globalData.hrdcatControlcurrentRig.hrdPort);
+          if hrdon then
+          begin
+               hrdresult := hrdinterface5.HRDInterfaceSendMessage(_para1);
+               Result := hrdresult;
+               hrdinterface5.HRDInterfaceFreeString(hrdresult);
+               hrdinterface5.HRDInterfaceDisconnect();
+          end
+          else
+          begin
+               Result := 'NAK';
+          end;
      end;
 End;
 

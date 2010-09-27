@@ -27,24 +27,53 @@ interface
 uses
   Classes, SysUtils, Graphics, CTypes;
 
+Type
+    hrdrigCAP = Record
+     hasAFGain         : Boolean;
+     hasRFGain         : Boolean;
+     hasMicGain        : Boolean;
+     hasPAGain         : Boolean;
+     hasTX             : Boolean;
+     hasSMeter         : Boolean;
+     hasAutoTune       : Boolean;
+     hasAutoTuneDo     : Boolean;
+     hrdAlive          : Boolean;
+     afgControl        : WideString;
+     rfgControl        : WideString;
+     micgControl       : WideString;
+     pagControl        : WideString;
+     txControl         : WideString;
+     smeterControl     : WideString;
+     autotuneControl   : WideString;
+     autotuneControlDo : WideString;
+     radioName         : WideString;
+     radioContext      : WideString;
+     hrdAddress        : WideString;
+     hrdPort           : Word;
+     afgMin, afgMax    : Integer;
+     rfgMin, rfgMax    : Integer;
+     micgMin, micgMax  : Integer;
+     pagMin, pagMax    : Integer;
+    end;
 
 Var
    // Global Vars
-   d65samfacin          : CTypes.cdouble;
-   specMs65             : TMemoryStream;
-   spectrumComputing65  : Boolean;
-   audioComputing       : Boolean;
-   specNewSpec65        : Boolean;
-   gqrg                 : Double;
-   strqrg               : String;
-   rbLoggedIn           : Boolean;
-   rbCacheOnly          : Boolean;
-   txInProgress         : Boolean;
-   debugOn              : Boolean;
-   fullcall             : String;
-   gmode                : Integer; // 65 or 4
-   mtext                : String;
-   si570ptt             : Boolean;
+   d65samfacin             : CTypes.cdouble;
+   specMs65                : TMemoryStream;
+   spectrumComputing65     : Boolean;
+   audioComputing          : Boolean;
+   specNewSpec65           : Boolean;
+   gqrg                    : Double;
+   strqrg                  : String;
+   rbLoggedIn              : Boolean;
+   rbCacheOnly             : Boolean;
+   txInProgress            : Boolean;
+   debugOn                 : Boolean;
+   fullcall                : String;
+   gmode                   : Integer; // 65 or 4
+   mtext                   : String;
+   si570ptt                : Boolean;
+   hrdcatControlcurrentRig : hrdrigCAP;
 
    // The variable list above comprises those variables used in more than two
    // units (inclusive of maincode).  Addition of variables to this list should

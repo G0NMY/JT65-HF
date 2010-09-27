@@ -1,10 +1,10 @@
-unit hrdinterface;
+unit hrdinterface4;
 {$PACKRECORDS C}
 
 interface
 
   const
-     HRD_DLL = 'HRDInterface001.dll';
+     HRD_DLL = 'HRDInterface0014.dll';
 
   function  HRDInterfaceConnect(_para1:WideString; _para2:WORD):BOOLEAN;cdecl;external HRD_DLL;
   function  HRDInterfaceGetLastCode():DWORD;cdecl;external HRD_DLL;

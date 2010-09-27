@@ -418,11 +418,12 @@ object Form6: TForm6
         Width = 174
         Caption = 'Rig Control Reported QRG Hz'
         ParentColor = False
+        Visible = False
       end
       object Label33: TLabel
         Left = 12
         Height = 17
-        Top = 78
+        Top = 53
         Width = 282
         Caption = '[Optional] Antenna Description for PSK Reporter.'
         ParentColor = False
@@ -436,12 +437,13 @@ object Form6: TForm6
         ParentColor = False
       end
       object cbUsePSKReporter: TCheckBox
-        Left = 236
+        Left = 364
         Height = 20
-        Top = 53
+        Top = 21
         Width = 219
         Caption = 'Spot Receptions via PSK Reporter'
         TabOrder = 0
+        Visible = False
       end
       object rigQRG: TEdit
         Left = 596
@@ -451,11 +453,12 @@ object Form6: TForm6
         ReadOnly = True
         TabOrder = 1
         Text = '0'
+        Visible = False
       end
       object OmniGroup: TRadioGroup
-        Left = 255
+        Left = 292
         Height = 48
-        Top = 133
+        Top = 101
         Width = 264
         AutoFill = True
         Caption = 'OmniRig Settings'
@@ -501,10 +504,10 @@ object Form6: TForm6
         end
       end
       object RadioGroup1: TRadioGroup
-        Left = 12
+        Left = 10
         Height = 48
-        Top = 133
-        Width = 192
+        Top = 101
+        Width = 264
         AutoFill = True
         Caption = 'Ham Radio Deluxe Settings'
         ChildSizing.LeftRightSpacing = 6
@@ -516,23 +519,43 @@ object Form6: TForm6
         ChildSizing.Layout = cclLeftToRightThenTopToBottom
         ChildSizing.ControlsPerLine = 3
         ClientHeight = 30
-        ClientWidth = 188
+        ClientWidth = 260
         Columns = 3
         TabOrder = 3
         object chkUseHRD: TCheckBox
           Left = 6
           Height = 18
           Top = 6
-          Width = 110
+          Width = 88
           Caption = 'Use HRD'
           OnChange = chkUseHRDChange
           TabOrder = 0
         end
+        object rbHRD4: TRadioButton
+          Left = 94
+          Height = 18
+          Top = 6
+          Width = 81
+          Caption = 'HRD V4'
+          TabOrder = 2
+          TabStop = False
+        end
+        object setHRDQRG: TRadioButton
+          Left = 175
+          Height = 18
+          Top = 6
+          Width = 79
+          Caption = 'HRD V5'
+          Checked = True
+          OnClick = setHRDQRGClick
+          State = cbChecked
+          TabOrder = 1
+        end
       end
       object RadioGroup2: TRadioGroup
-        Left = 572
+        Left = 570
         Height = 48
-        Top = 133
+        Top = 101
         Width = 200
         AutoFill = True
         Caption = 'DX Labs Commander Settings'
@@ -559,9 +582,9 @@ object Form6: TForm6
         end
       end
       object editPSKRAntenna: TEdit
-        Left = 12
+        Left = 10
         Height = 24
-        Top = 98
+        Top = 73
         Width = 760
         TabOrder = 5
       end
@@ -574,31 +597,33 @@ object Form6: TForm6
         TabOrder = 6
       end
       object cbUseRB: TCheckBox
-        Left = 12
+        Left = 140
         Height = 20
-        Top = 53
+        Top = 21
         Width = 208
         Caption = 'Spot Receptions via RB Network'
         OnChange = cbUseRBChange
         TabOrder = 7
+        Visible = False
       end
       object cbNoInet: TCheckBox
-        Left = 476
+        Left = 588
         Height = 20
-        Top = 53
+        Top = 21
         Width = 178
         Caption = 'Operate RB in Offline Mode'
         OnChange = cbNoInetChange
         TabOrder = 8
+        Visible = False
       end
       object groupHRD: TGroupBox
-        Left = 11
-        Height = 264
-        Top = 189
-        Width = 759
+        Left = 10
+        Height = 296
+        Top = 157
+        Width = 760
         Caption = 'HRD Details'
-        ClientHeight = 246
-        ClientWidth = 755
+        ClientHeight = 278
+        ClientWidth = 756
         Font.Height = -13
         Font.Name = 'Arial'
         Font.Style = [fsBold]
@@ -608,7 +633,7 @@ object Form6: TForm6
         object Label11: TLabel
           Left = 433
           Height = 17
-          Top = 64
+          Top = 79
           Width = 154
           Caption = 'Audio Gain (Currently:  )'
           Font.Height = -13
@@ -620,7 +645,7 @@ object Form6: TForm6
         object Label15: TLabel
           Left = 433
           Height = 17
-          Top = 152
+          Top = 179
           Width = 139
           Caption = 'Mic Gain (Currently:  )'
           Font.Height = -13
@@ -630,9 +655,9 @@ object Form6: TForm6
           ParentFont = False
         end
         object Label16: TLabel
-          Left = 7
+          Left = 6
           Height = 17
-          Top = 6
+          Top = 188
           Width = 75
           Caption = 'Rig QRG Hz'
           Font.Height = -13
@@ -644,7 +669,7 @@ object Form6: TForm6
         object Label17: TLabel
           Left = 433
           Height = 17
-          Top = 108
+          Top = 129
           Width = 134
           Caption = 'RF Gain (Currently:  )'
           Font.Height = -13
@@ -656,7 +681,7 @@ object Form6: TForm6
         object Label18: TLabel
           Left = 433
           Height = 17
-          Top = 196
+          Top = 229
           Width = 185
           Caption = 'RF Output Level (Currently:  )'
           Font.Height = -13
@@ -666,49 +691,49 @@ object Form6: TForm6
           ParentFont = False
         end
         object Label24: TLabel
-          Left = 423
+          Left = 698
           Height = 17
-          Top = 35
+          Top = 8
           Width = 39
           Caption = 'S9+70'
           ParentColor = False
         end
         object Label25: TLabel
-          Left = 423
+          Left = 433
           Height = 17
-          Top = 6
-          Width = 50
-          Caption = 'Audio L'
+          Top = 32
+          Width = 105
+          Caption = 'Left Audio Level'
           ParentColor = False
         end
         object Label31: TLabel
-          Left = 598
+          Left = 637
           Height = 17
-          Top = 6
-          Width = 51
-          Caption = 'Audio R'
+          Top = 32
+          Width = 114
+          Caption = 'Right Audio Level'
           ParentColor = False
         end
         object Label21: TLabel
-          Left = 31
+          Left = 30
           Height = 17
-          Top = 35
+          Top = 8
           Width = 80
           Caption = 'At UTC Time'
           ParentColor = False
         end
         object Label32: TLabel
-          Left = 143
+          Left = 142
           Height = 17
-          Top = 35
+          Top = 8
           Width = 77
           Caption = 'QSY to QRG'
           ParentColor = False
         end
         object Label66: TLabel
-          Left = 246
+          Left = 245
           Height = 17
-          Top = 35
+          Top = 8
           Width = 89
           Caption = 'Tune Antenna'
           ParentColor = False
@@ -716,7 +741,7 @@ object Form6: TForm6
         object sliderAFGain: TTrackBar
           Left = 423
           Height = 25
-          Top = 82
+          Top = 97
           Width = 328
           Max = 255
           OnChange = sliderAFGainChange
@@ -727,7 +752,7 @@ object Form6: TForm6
         object sliderMicGain: TTrackBar
           Left = 423
           Height = 25
-          Top = 170
+          Top = 197
           Width = 328
           Max = 255
           OnChange = sliderMicGainChange
@@ -736,9 +761,9 @@ object Form6: TForm6
           TabOrder = 1
         end
         object Edit4: TEdit
-          Left = 87
+          Left = 86
           Height = 24
-          Top = 3
+          Top = 185
           Width = 80
           Font.Height = -13
           Font.Name = 'Arial'
@@ -748,22 +773,22 @@ object Form6: TForm6
           Text = '14076000'
         end
         object Button2: TButton
-          Left = 175
+          Left = 174
           Height = 24
-          Top = 3
+          Top = 185
           Width = 75
           Caption = 'Set QRG'
           Font.Height = -13
           Font.Name = 'Arial'
           Font.Style = [fsBold]
-          OnClick = Button2Click
+          OnClick = setHRDQRGClick
           ParentFont = False
           TabOrder = 3
         end
         object sliderRFGain: TTrackBar
           Left = 423
           Height = 25
-          Top = 126
+          Top = 147
           Width = 328
           Max = 255
           OnChange = sliderRFGainChange
@@ -774,7 +799,7 @@ object Form6: TForm6
         object sliderPALevel: TTrackBar
           Left = 423
           Height = 25
-          Top = 214
+          Top = 247
           Width = 328
           Max = 255
           OnChange = sliderPALevelChange
@@ -783,34 +808,34 @@ object Form6: TForm6
           TabOrder = 5
         end
         object pbSMeter: TProgressBar
-          Left = 475
-          Height = 25
-          Top = 30
+          Left = 433
+          Height = 17
+          Top = 8
           Width = 255
           Max = 255
           Smooth = True
           TabOrder = 6
         end
         object pbAULeft: TProgressBar
-          Left = 475
-          Height = 20
-          Top = 3
+          Left = 433
+          Height = 17
+          Top = 51
           Width = 100
           Smooth = True
           TabOrder = 7
         end
         object pbAURight: TProgressBar
           Left = 651
-          Height = 20
-          Top = 3
+          Height = 17
+          Top = 51
           Width = 100
           Smooth = True
           TabOrder = 8
         end
         object chkTxDFVFO: TCheckBox
-          Left = 143
+          Left = 6
           Height = 20
-          Top = 219
+          Top = 252
           Width = 268
           Caption = 'Shift QRG to match DF if DF > +/- 100Hz'
           TabOrder = 9
@@ -818,15 +843,15 @@ object Form6: TForm6
         object chkHRDPTT: TCheckBox
           Left = 7
           Height = 20
-          Top = 219
+          Top = 220
           Width = 124
           Caption = 'Use HRD for PTT'
           TabOrder = 10
         end
         object qsyHour1: TSpinEdit
-          Left = 31
+          Left = 30
           Height = 24
-          Top = 55
+          Top = 28
           Width = 50
           Font.Height = -13
           Font.Name = 'Arial'
@@ -835,9 +860,9 @@ object Form6: TForm6
           TabOrder = 11
         end
         object qsyMinute1: TSpinEdit
-          Left = 80
+          Left = 79
           Height = 24
-          Top = 55
+          Top = 28
           Width = 50
           Font.Height = -13
           Font.Name = 'Arial'
@@ -846,23 +871,23 @@ object Form6: TForm6
           TabOrder = 12
         end
         object edQRGQSY1: TEdit
-          Left = 143
+          Left = 142
           Height = 24
-          Top = 55
+          Top = 28
           Width = 128
           TabOrder = 13
         end
         object cbEnableQSY1: TCheckBox
-          Left = 7
+          Left = 6
           Height = 19
-          Top = 60
+          Top = 30
           Width = 20
           TabOrder = 14
         end
         object qsyHour2: TSpinEdit
-          Left = 31
+          Left = 30
           Height = 24
-          Top = 86
+          Top = 59
           Width = 50
           Font.Height = -13
           Font.Name = 'Arial'
@@ -871,9 +896,9 @@ object Form6: TForm6
           TabOrder = 15
         end
         object qsyMinute2: TSpinEdit
-          Left = 80
+          Left = 79
           Height = 24
-          Top = 86
+          Top = 59
           Width = 50
           Font.Height = -13
           Font.Name = 'Arial'
@@ -882,23 +907,23 @@ object Form6: TForm6
           TabOrder = 16
         end
         object edQRGQSY2: TEdit
-          Left = 143
+          Left = 142
           Height = 24
-          Top = 86
+          Top = 59
           Width = 128
           TabOrder = 17
         end
         object cbEnableQSY2: TCheckBox
-          Left = 7
+          Left = 6
           Height = 19
-          Top = 90
+          Top = 62
           Width = 20
           TabOrder = 18
         end
         object qsyHour3: TSpinEdit
-          Left = 31
+          Left = 30
           Height = 24
-          Top = 116
+          Top = 88
           Width = 50
           Font.Height = -13
           Font.Name = 'Arial'
@@ -907,9 +932,9 @@ object Form6: TForm6
           TabOrder = 19
         end
         object qsyMinute3: TSpinEdit
-          Left = 80
+          Left = 79
           Height = 24
-          Top = 115
+          Top = 87
           Width = 50
           Font.Height = -13
           Font.Name = 'Arial'
@@ -918,23 +943,23 @@ object Form6: TForm6
           TabOrder = 20
         end
         object edQRGQSY3: TEdit
-          Left = 143
+          Left = 142
           Height = 24
-          Top = 116
+          Top = 88
           Width = 128
           TabOrder = 21
         end
         object cbEnableQSY3: TCheckBox
-          Left = 7
+          Left = 6
           Height = 19
-          Top = 120
+          Top = 91
           Width = 20
           TabOrder = 22
         end
         object qsyHour4: TSpinEdit
-          Left = 31
+          Left = 30
           Height = 24
-          Top = 146
+          Top = 118
           Width = 50
           Font.Height = -13
           Font.Name = 'Arial'
@@ -943,9 +968,9 @@ object Form6: TForm6
           TabOrder = 23
         end
         object qsyMinute4: TSpinEdit
-          Left = 80
+          Left = 79
           Height = 24
-          Top = 146
+          Top = 118
           Width = 50
           Font.Height = -13
           Font.Name = 'Arial'
@@ -954,23 +979,23 @@ object Form6: TForm6
           TabOrder = 24
         end
         object edQRGQSY4: TEdit
-          Left = 143
+          Left = 142
           Height = 24
-          Top = 145
+          Top = 117
           Width = 128
           TabOrder = 25
         end
         object cbEnableQSY4: TCheckBox
-          Left = 7
+          Left = 6
           Height = 19
-          Top = 150
+          Top = 119
           Width = 20
           TabOrder = 26
         end
         object qsyHour5: TSpinEdit
-          Left = 31
+          Left = 30
           Height = 24
-          Top = 176
+          Top = 148
           Width = 50
           Font.Height = -13
           Font.Name = 'Arial'
@@ -979,9 +1004,9 @@ object Form6: TForm6
           TabOrder = 27
         end
         object qsyMinute5: TSpinEdit
-          Left = 80
+          Left = 79
           Height = 24
-          Top = 176
+          Top = 148
           Width = 50
           Font.Height = -13
           Font.Name = 'Arial'
@@ -990,51 +1015,51 @@ object Form6: TForm6
           TabOrder = 28
         end
         object edQRGQSY5: TEdit
-          Left = 143
+          Left = 142
           Height = 24
-          Top = 176
+          Top = 148
           Width = 128
           TabOrder = 29
         end
         object cbEnableQSY5: TCheckBox
-          Left = 7
+          Left = 6
           Height = 19
-          Top = 180
+          Top = 150
           Width = 20
           TabOrder = 30
         end
         object cbATQSY1: TCheckBox
-          Left = 279
+          Left = 278
           Height = 19
-          Top = 61
+          Top = 30
           Width = 20
           TabOrder = 31
         end
         object cbATQSY2: TCheckBox
-          Left = 279
+          Left = 278
           Height = 19
-          Top = 91
+          Top = 62
           Width = 20
           TabOrder = 32
         end
         object cbATQSY3: TCheckBox
-          Left = 279
+          Left = 278
           Height = 19
-          Top = 121
+          Top = 91
           Width = 20
           TabOrder = 33
         end
         object cbATQSY4: TCheckBox
-          Left = 279
+          Left = 278
           Height = 19
-          Top = 151
+          Top = 119
           Width = 20
           TabOrder = 34
         end
         object cbATQSY5: TCheckBox
-          Left = 279
+          Left = 278
           Height = 19
-          Top = 181
+          Top = 150
           Width = 20
           TabOrder = 35
         end

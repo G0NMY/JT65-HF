@@ -617,6 +617,8 @@ End;
 procedure catThread.Execute();
 Var
    ifoo : Integer;
+   foo  : WideString;
+   efoo : WideString;
    tqrg : Double;
    bqrg : Boolean;
 begin
@@ -635,10 +637,78 @@ begin
                   End;
                   if cfgvtwo.glcatBy = 'hrd' Then
                   Begin
-                       //ifoo := 0;
-                       //if cfgvtwo.Form6.radioHRD1.Checked Then ifoo := 1;
-                       //if cfgvtwo.Form6.radioHRD2.Checked Then ifoo := 2;
-                       globalData.gqrg := catControl.readHRD();
+                       catControl.hrdrigCAPS();
+                       if globalData.hrdcatControlcurrentRig.hrdAlive Then
+                       Begin
+                            globalData.gqrg := catControl.readHRDQRG();
+
+                            if globalData.hrdcatControlcurrentRig.hasAFGain Then
+                            Begin
+                                 // Read audio level
+                                 cfgvtwo.Form6.sliderAFGain.Min := globalData.hrdcatControlcurrentRig.afgMin;
+                                 cfgvtwo.Form6.sliderAFGain.Max := globalData.hrdcatControlcurrentRig.afgMax;
+                                 foo := catControl.readHRD('[' + globalData.hrdcatControlcurrentRig.radioContext + '] Get slider-pos ' + globalData.hrdcatControlcurrentRig.radioName + ' ' + globalData.hrdcatControlcurrentRig.afgControl);
+                                 efoo := ExtractWord(1,foo,catControl.hrdDelim);
+                                 ifoo := -1;
+                                 If TryStrToInt(efoo, ifoo) Then cfgvtwo.Form6.sliderAFGain.Position := ifoo;
+                                 cfgvtwo.Form6.Label11.Caption := 'Audio Gain (Currently:  ' + ExtractWord(2,foo,catControl.HRDDelim) + '%)';
+                            end;
+                            if globalData.hrdcatControlcurrentRig.hasRFGain Then
+                            Begin
+                                 // Read RF Gain level
+                                 cfgvtwo.Form6.sliderRFGain.Min := globalData.hrdcatControlcurrentRig.rfgMin;
+                                 cfgvtwo.Form6.sliderRFGain.Max := globalData.hrdcatControlcurrentRig.rfgMax;
+                                 foo := catControl.readHRD('[' + globalData.hrdcatControlcurrentRig.radioContext + '] Get slider-pos ' + globalData.hrdcatControlcurrentRig.radioName + ' ' + globalData.hrdcatControlcurrentRig.rfgControl);
+                                 efoo := ExtractWord(1,foo,catControl.hrdDelim);
+                                 ifoo := -1;
+                                 If TryStrToInt(efoo, ifoo) Then cfgvtwo.Form6.sliderRFGain.Position := ifoo;
+                                 cfgvtwo.Form6.Label17.Caption := 'RF Gain (Currently:  ' + ExtractWord(2,foo,catControl.HRDDelim) + '%)';
+                            end;
+                            if globalData.hrdcatControlcurrentRig.hasMicGain Then
+                            Begin
+                                 // Read Mic Gain level
+                                 cfgvtwo.Form6.sliderMicGain.Min := globalData.hrdcatControlcurrentRig.micgMin;
+                                 cfgvtwo.Form6.sliderMicGain.Max := globalData.hrdcatControlcurrentRig.micgMax;
+                                 foo := catControl.readHRD('[' + globalData.hrdcatControlcurrentRig.radioContext + '] Get slider-pos ' + globalData.hrdcatControlcurrentRig.radioName + ' ' + globalData.hrdcatControlcurrentRig.micgControl);
+                                 efoo := ExtractWord(1,foo,catControl.hrdDelim);
+                                 ifoo := -1;
+                                 If TryStrToInt(efoo, ifoo) Then cfgvtwo.Form6.sliderMicGain.Position := ifoo;
+                                 cfgvtwo.Form6.Label15.Caption := 'Mic Gain (Currently:  ' + ExtractWord(2,foo,catControl.HRDDelim) + '%)';
+                            end;
+                            if globalData.hrdcatControlcurrentRig.hasPAGain Then
+                            Begin
+                                 // Read PA limit level
+                                 cfgvtwo.Form6.sliderPALevel.Min := globalData.hrdcatControlcurrentRig.pagMin;
+                                 cfgvtwo.Form6.sliderPALevel.Max := globalData.hrdcatControlcurrentRig.pagMax;
+                                 foo := catControl.readHRD('[' + globalData.hrdcatControlcurrentRig.radioContext + '] Get slider-pos ' + globalData.hrdcatControlcurrentRig.radioName + ' ' + globalData.hrdcatControlcurrentRig.pagControl);
+                                 efoo := ExtractWord(1,foo,catControl.hrdDelim);
+                                 ifoo := -1;
+                                 If TryStrToInt(efoo, ifoo) Then cfgvtwo.Form6.sliderPALevel.Position := ifoo;
+                                 cfgvtwo.Form6.Label18.Caption := 'RF Output Level (Currently:  ' + ExtractWord(2,foo,catControl.HRDDelim) + '%)';
+                            end;
+                            if globalData.hrdcatControlcurrentRig.hasSMeter Then
+                            Begin
+                                 // Read S-Meter level
+                                 // Smeter returns 3 csv values. 1 = Text S level, 2 = raw level and 3 = max level.
+                                 foo := catControl.readHRD('[' + globalData.hrdcatControlcurrentRig.radioContext + ' Get ' + globalData.hrdcatControlcurrentRig.smeterControl);
+
+                                 efoo := ExtractWord(3,foo,catControl.hrdDelim);
+                                 ifoo := -1;
+                                 cfgvtwo.Form6.pbSMeter.Min := 0;
+                                 If TryStrToInt(efoo, ifoo) Then cfgvtwo.Form6.pbSMeter.Max := ifoo;
+
+                                 efoo := ExtractWord(2,foo,catControl.hrdDelim);
+                                 ifoo := -1;
+                                 If TryStrToInt(efoo, ifoo) Then cfgvtwo.Form6.pbSMeter.Position := ifoo;
+
+                                 cfgvtwo.Form6.Label24.Caption := ExtractWord(1,foo,catControl.HRDDelim);
+                            end;
+                       end
+                       else
+                       begin
+                            globalData.gqrg := 0.0;
+                            globalData.strqrg := '0';
+                       end;
                   End;
                   if cfgvtwo.glcatBy = 'commander' Then
                   Begin
@@ -5478,7 +5548,9 @@ initialization
   globalData.si570ptt := False;
   doCWID := False;
   actionSet := False;
-  catControl.autoQSY := False;
-  catControl.catTxDF := False;
+  catControl.catControlautoQSY := False;
+  catControl.catControlcatTxDF := False;
+  globalData.hrdcatControlcurrentRig.hrdAddress := 'localhost';
+  globalData.hrdcatControlcurrentRig.hrdPort := 7809;
 end.
 
