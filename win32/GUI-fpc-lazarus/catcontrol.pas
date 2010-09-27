@@ -25,7 +25,7 @@ unit catControl;
 interface
 
 uses
-  Classes, SysUtils, Process, globalData, dlog, hrdinterface4, hrdinterface5, cfgvtwo, StrUtils;
+  Classes, SysUtils, Process, globalData, hrdinterface4, hrdinterface5, StrUtils;
 
 Const
     hrdDelim = [','];
@@ -88,7 +88,7 @@ Begin
      globalData.hrdcatControlcurrentRig.radioName       := '';
      globalData.hrdcatControlcurrentRig.radioContext    := '';
 
-     if cfgvtwo.Form6.rbHRD4.Checked Then
+     if globalData.hrdVersion=4  Then
      Begin
           // Using HRD Version 4 support.
           hrdon := hrdinterface4.HRDInterfaceConnect(globalData.hrdcatControlcurrentRig.hrdAddress, globalData.hrdcatControlcurrentRig.hrdPort);
@@ -507,7 +507,7 @@ Var
 Begin
      Result := False;
      hrdon := False;
-     if cfgvtwo.Form6.rbHRD4.Checked Then
+     if globalData.hrdVersion=4 Then
      Begin
           hrdon := hrdinterface4.HRDInterfaceConnect(globalData.hrdcatControlcurrentRig.hrdAddress, globalData.hrdcatControlcurrentRig.hrdPort);
           if hrdon then
@@ -547,12 +547,12 @@ Var
    hrdon              : Boolean;
 Begin
      hrdon := False;
-     if cfgvtwo.Form6.rbHRD4.Checked Then
+     if globalData.hrdVersion=4 Then
      Begin
           hrdon := hrdinterface4.HRDInterfaceConnect(globalData.hrdcatControlcurrentRig.hrdAddress, globalData.hrdcatControlcurrentRig.hrdPort);
           if hrdon then
           begin
-               cfgvtwo.Form6.groupHRD.Caption := 'HRD Connected to ' + globalData.hrdcatControlcurrentRig.radioName;
+               //cfgvtwo.Form6.groupHRD.Caption := 'HRD Connected to ' + globalData.hrdcatControlcurrentRig.radioName;
 
                hrdresult := '';
                hrdmsg := 'Get Frequency';
@@ -582,8 +582,6 @@ Begin
           hrdon := hrdinterface5.HRDInterfaceConnect(globalData.hrdcatControlcurrentRig.hrdAddress, globalData.hrdcatControlcurrentRig.hrdPort);
           if hrdon then
           begin
-               cfgvtwo.Form6.groupHRD.Caption := 'HRD Connected to ' + globalData.hrdcatControlcurrentRig.radioName;
-
                hrdresult := '';
                hrdmsg := 'Get Frequency';
                hrdresult := hrdinterface5.HRDInterfaceSendMessage(hrdmsg);
@@ -615,7 +613,7 @@ Var
    hrdon              : Boolean;
 Begin
      hrdon := False;
-     if cfgvtwo.Form6.rbHRD4.Checked Then
+     if globalData.hrdVersion=4 Then
      Begin
           hrdon := hrdinterface4.HRDInterfaceConnect(globalData.hrdcatControlcurrentRig.hrdAddress, globalData.hrdcatControlcurrentRig.hrdPort);
           if hrdon then
@@ -715,7 +713,7 @@ Begin
                end
                else
                Begin
-                    dlog.FileDebug('EConvert: ostat.r1freq = ' + ostat.r1freq);
+                    //dlog.FileDebug('EConvert: ostat.r1freq = ' + ostat.r1freq);
                     globalData.strqrg := '0';
                     Result := 0.0;
                End;
@@ -730,7 +728,7 @@ Begin
                end
                else
                Begin
-                    dlog.FileDebug('EConvert: ostat.r2freq = ' + ostat.r1freq);
+                    //dlog.FileDebug('EConvert: ostat.r2freq = ' + ostat.r1freq);
                     globalData.strqrg := '0';
                     Result := 0.0;
                End;
@@ -738,7 +736,7 @@ Begin
      End
      Else
      Begin
-          dlog.FileDebug('Did not find omniqrg.txt');
+          //dlog.FileDebug('Did not find omniqrg.txt');
           globalData.strqrg := '0';
           Result := 0.0;
      End;

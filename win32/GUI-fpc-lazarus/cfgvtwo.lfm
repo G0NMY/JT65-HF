@@ -537,19 +537,18 @@ object Form6: TForm6
           Top = 6
           Width = 81
           Caption = 'HRD V4'
-          TabOrder = 2
+          TabOrder = 1
           TabStop = False
         end
-        object setHRDQRG: TRadioButton
+        object rbHRD5: TRadioButton
           Left = 175
           Height = 18
           Top = 6
           Width = 79
           Caption = 'HRD V5'
           Checked = True
-          OnClick = setHRDQRGClick
           State = cbChecked
-          TabOrder = 1
+          TabOrder = 2
         end
       end
       object RadioGroup2: TRadioGroup
@@ -734,7 +733,7 @@ object Form6: TForm6
           Left = 245
           Height = 17
           Top = 8
-          Width = 89
+          Width = 90
           Caption = 'Tune Antenna'
           ParentColor = False
         end
@@ -772,11 +771,11 @@ object Form6: TForm6
           TabOrder = 2
           Text = '14076000'
         end
-        object Button2: TButton
+        object setHRDQRG: TButton
           Left = 174
           Height = 24
           Top = 185
-          Width = 75
+          Width = 100
           Caption = 'Set QRG'
           Font.Height = -13
           Font.Name = 'Arial'
@@ -1062,6 +1061,15 @@ object Form6: TForm6
           Top = 150
           Width = 20
           TabOrder = 35
+        end
+        object testHRDPTT: TButton
+          Left = 175
+          Height = 25
+          Top = 217
+          Width = 101
+          Caption = 'Test HRD PTT'
+          OnClick = testHRDPTTClick
+          TabOrder = 36
         end
       end
     end

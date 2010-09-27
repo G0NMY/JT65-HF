@@ -214,7 +214,7 @@ object Form1: TForm1
     Left = 556
     Height = 20
     Top = 233
-    Width = 329
+    Width = 330
     Caption = 'Message To TX:  1234567890123456789012'
     Font.Height = -16
     Font.Name = 'Arial'
@@ -265,7 +265,7 @@ object Form1: TForm1
     Left = 177
     Height = 15
     Top = 211
-    Width = 296
+    Width = 298
     Caption = 'Left click waterfall to set TX CF, Right click sets RX CF.'
     Font.Height = -11
     Font.Name = 'Arial'

@@ -9,7 +9,7 @@
         <IsPartOfProject Value="True"/>
         <CursorPos X="67" Y="33"/>
         <TopLine Value="9"/>
-        <EditorIndex Value="10"/>
+        <EditorIndex Value="8"/>
         <UsageCount Value="215"/>
         <Loaded Value="True"/>
       </Unit0>
@@ -20,13 +20,13 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="maincode"/>
-        <CursorPos X="1" Y="705"/>
-        <TopLine Value="674"/>
-        <EditorIndex Value="8"/>
+        <CursorPos X="79" Y="3180"/>
+        <TopLine Value="3165"/>
+        <EditorIndex Value="5"/>
         <UsageCount Value="215"/>
         <Bookmarks Count="2">
-          <Item0 X="1" Y="3456" ID="0"/>
-          <Item1 X="1" Y="4531" ID="1"/>
+          <Item0 X="1" Y="3458" ID="0"/>
+          <Item1 X="1" Y="4533" ID="1"/>
         </Bookmarks>
         <Loaded Value="True"/>
       </Unit1>
@@ -44,7 +44,7 @@
         <UnitName Value="parseCallSign"/>
         <CursorPos X="1" Y="33"/>
         <TopLine Value="10"/>
-        <EditorIndex Value="16"/>
+        <EditorIndex Value="14"/>
         <UsageCount Value="215"/>
         <Loaded Value="True"/>
       </Unit3>
@@ -54,7 +54,7 @@
         <UnitName Value="encode65"/>
         <CursorPos X="1" Y="57"/>
         <TopLine Value="29"/>
-        <EditorIndex Value="18"/>
+        <EditorIndex Value="16"/>
         <UsageCount Value="215"/>
         <Loaded Value="True"/>
       </Unit4>
@@ -62,9 +62,9 @@
         <Filename Value="globaldata.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="globalData"/>
-        <CursorPos X="39" Y="41"/>
-        <TopLine Value="23"/>
-        <EditorIndex Value="19"/>
+        <CursorPos X="28" Y="77"/>
+        <TopLine Value="59"/>
+        <EditorIndex Value="17"/>
         <UsageCount Value="215"/>
         <Loaded Value="True"/>
       </Unit5>
@@ -74,7 +74,7 @@
         <UnitName Value="spectrum"/>
         <CursorPos X="1" Y="284"/>
         <TopLine Value="254"/>
-        <EditorIndex Value="20"/>
+        <EditorIndex Value="18"/>
         <UsageCount Value="215"/>
         <Loaded Value="True"/>
       </Unit6>
@@ -92,7 +92,7 @@
         <UnitName Value="adc"/>
         <CursorPos X="63" Y="36"/>
         <TopLine Value="16"/>
-        <EditorIndex Value="13"/>
+        <EditorIndex Value="11"/>
         <UsageCount Value="215"/>
         <Loaded Value="True"/>
       </Unit8>
@@ -110,7 +110,7 @@
         <UnitName Value="dac"/>
         <CursorPos X="43" Y="36"/>
         <TopLine Value="17"/>
-        <EditorIndex Value="14"/>
+        <EditorIndex Value="12"/>
         <UsageCount Value="201"/>
         <Loaded Value="True"/>
       </Unit10>
@@ -132,7 +132,7 @@
         <UnitName Value="rawdec"/>
         <CursorPos X="49" Y="29"/>
         <TopLine Value="1"/>
-        <EditorIndex Value="11"/>
+        <EditorIndex Value="9"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
       </Unit12>
@@ -142,9 +142,9 @@
         <ComponentName Value="Form6"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="cfgvtwo"/>
-        <CursorPos X="6" Y="724"/>
-        <TopLine Value="716"/>
-        <EditorIndex Value="2"/>
+        <CursorPos X="1" Y="797"/>
+        <TopLine Value="784"/>
+        <EditorIndex Value="6"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
       </Unit13>
@@ -154,7 +154,7 @@
         <UnitName Value="guiConfig"/>
         <CursorPos X="1" Y="29"/>
         <TopLine Value="3"/>
-        <EditorIndex Value="5"/>
+        <EditorIndex Value="2"/>
         <UsageCount Value="201"/>
         <Loaded Value="True"/>
       </Unit14>
@@ -164,7 +164,7 @@
         <UnitName Value="verHolder"/>
         <CursorPos X="71" Y="22"/>
         <TopLine Value="2"/>
-        <EditorIndex Value="15"/>
+        <EditorIndex Value="13"/>
         <UsageCount Value="201"/>
         <Loaded Value="True"/>
       </Unit15>
@@ -180,8 +180,8 @@
         <Filename Value="catcontrol.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="catControl"/>
-        <CursorPos X="93" Y="490"/>
-        <TopLine Value="532"/>
+        <CursorPos X="13" Y="739"/>
+        <TopLine Value="503"/>
         <EditorIndex Value="0"/>
         <UsageCount Value="266"/>
         <Loaded Value="True"/>
@@ -232,7 +232,7 @@
         <UnitName Value="rbc"/>
         <CursorPos X="20" Y="701"/>
         <TopLine Value="686"/>
-        <EditorIndex Value="9"/>
+        <EditorIndex Value="7"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
       </Unit23>
@@ -241,10 +241,8 @@
         <IsPartOfProject Value="True"/>
         <UnitName Value="adif"/>
         <CursorPos X="31" Y="105"/>
-        <TopLine Value="74"/>
-        <EditorIndex Value="3"/>
+        <TopLine Value="75"/>
         <UsageCount Value="200"/>
-        <Loaded Value="True"/>
       </Unit24>
       <Unit25>
         <Filename Value="log.pas"/>
@@ -254,9 +252,7 @@
         <UnitName Value="log"/>
         <CursorPos X="43" Y="69"/>
         <TopLine Value="50"/>
-        <EditorIndex Value="4"/>
         <UsageCount Value="234"/>
-        <Loaded Value="True"/>
       </Unit25>
       <Unit26>
         <Filename Value="diagout.pas"/>
@@ -266,7 +262,7 @@
         <UnitName Value="diagout"/>
         <CursorPos X="67" Y="15"/>
         <TopLine Value="1"/>
-        <EditorIndex Value="12"/>
+        <EditorIndex Value="10"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
       </Unit26>
@@ -274,9 +270,9 @@
         <Filename Value="fftw_jl.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="fftw_jl"/>
-        <CursorPos X="18" Y="27"/>
-        <TopLine Value="27"/>
-        <EditorIndex Value="22"/>
+        <CursorPos X="30" Y="18"/>
+        <TopLine Value="3"/>
+        <EditorIndex Value="20"/>
         <UsageCount Value="201"/>
         <Loaded Value="True"/>
       </Unit27>
@@ -285,8 +281,8 @@
         <IsPartOfProject Value="True"/>
         <UnitName Value="waterfall"/>
         <CursorPos X="1" Y="70"/>
-        <TopLine Value="37"/>
-        <EditorIndex Value="21"/>
+        <TopLine Value="40"/>
+        <EditorIndex Value="19"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
       </Unit28>
@@ -296,7 +292,7 @@
         <UnitName Value="d65"/>
         <CursorPos X="28" Y="361"/>
         <TopLine Value="346"/>
-        <EditorIndex Value="17"/>
+        <EditorIndex Value="15"/>
         <UsageCount Value="202"/>
         <Loaded Value="True"/>
       </Unit29>
@@ -306,8 +302,8 @@
         <UnitName Value="hrdinterface5"/>
         <CursorPos X="28" Y="3"/>
         <TopLine Value="1"/>
-        <EditorIndex Value="6"/>
-        <UsageCount Value="27"/>
+        <EditorIndex Value="3"/>
+        <UsageCount Value="30"/>
         <Loaded Value="True"/>
       </Unit30>
       <Unit31>
@@ -316,13 +312,13 @@
         <UnitName Value="hrdinterface4"/>
         <CursorPos X="1" Y="1"/>
         <TopLine Value="1"/>
-        <EditorIndex Value="7"/>
-        <UsageCount Value="27"/>
+        <EditorIndex Value="4"/>
+        <UsageCount Value="30"/>
         <Loaded Value="True"/>
       </Unit31>
     </Units>
     <General>
-      <ActiveEditorIndexAtStart Value="2"/>
+      <ActiveEditorIndexAtStart Value="20"/>
     </General>
   </ProjectSession>
   <Debugging>

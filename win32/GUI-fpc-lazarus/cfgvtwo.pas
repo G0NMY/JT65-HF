@@ -27,7 +27,7 @@ interface
 uses
   Classes, SysUtils, LResources, Forms, Controls, Graphics, Dialogs,
   ComCtrls, ExtCtrls, StdCtrls, StrUtils, globalData, CTypes, synaser,
-  EditBtn, Grids, Spin, Si570dev, hrdinterface4, hrdinterface5;
+  EditBtn, Grids, Spin, Si570dev, catControl;
 
 Const
     myWordDelims = [' ',','];
@@ -42,7 +42,8 @@ type
     btnSetSi570: TButton;
     btnClearLog: TButton;
     Button1: TButton;
-    Button2: TButton;
+    testHRDPTT: TButton;
+    setHRDQRG: TButton;
     buttonTestPTT: TButton;
     cbAudioIn: TComboBox;
     cbAudioOut: TComboBox;
@@ -176,7 +177,7 @@ type
     pbAULeft: TProgressBar;
     pbAURight: TProgressBar;
     rbHRD4: TRadioButton;
-    setHRDQRG: TRadioButton;
+    rbHRD5: TRadioButton;
     RadioGroup1: TRadioGroup;
     RadioGroup2: TRadioGroup;
     radioOmni1: TRadioButton;
@@ -247,6 +248,7 @@ type
     procedure sliderMicGainChange(Sender: TObject);
     procedure sliderPALevelChange(Sender: TObject);
     procedure sliderRFGainChange(Sender: TObject);
+    procedure testHRDPTTClick(Sender: TObject);
 
   private
     { private declarations }
@@ -714,342 +716,85 @@ begin
 end;
 
 procedure TForm6.setHRDQRGClick(Sender: TObject);
-Var
-   hrdcontext         : PWIDECHAR;
-   hrdradio           : PWIDECHAR;
-   hrdresult          : PWIDECHAR;
-   hrdmsg             : WideString;
-   hrdon              : Boolean;
 Begin
-     if cfgvtwo.Form6.rbHRD4.Checked Then
+     if cfgvtwo.Form6.rbHRD4.Checked Then globalData.hrdVersion :=4;
+     if cfgvtwo.Form6.rbHRD5.Checked Then globalData.hrdVersion :=5;
+     catControl.hrdrigCAPS();
+     if globalData.hrdcatControlcurrentRig.hrdAlive Then
      Begin
-          hrdon := False;
-          hrdon := hrdinterface4.HRDInterfaceConnect(globalData.hrdcatControlcurrentRig.hrdAddress, globalData.hrdcatControlcurrentRig.hrdPort);
-          if hrdon then
-          begin
-               hrdradio := '';
-               hrdcontext := '';
-               hrdresult := '';
-               hrdmsg := 'Get Radio';
-               hrdradio := hrdinterface4.HRDInterfaceSendMessage(hrdmsg);
-               hrdmsg := 'Get Context';
-               hrdcontext := hrdinterface4.HRDInterfaceSendMessage(hrdmsg);
-               hrdmsg := '[' + hrdcontext + '] set frequency-hz ' + cfgvtwo.Form6.Edit4.Text;
-               hrdresult := hrdinterface4.HRDInterfaceSendMessage(hrdmsg);
-               hrdinterface4.HRDInterfaceFreeString(hrdcontext);
-               hrdinterface4.HRDInterfaceFreeString(hrdradio);
-               hrdinterface4.HRDInterfaceFreeString(hrdresult);
-               hrdinterface4.HRDInterfaceDisconnect();
-          end;
-     end
-     else
-     begin
-          hrdon := False;
-          hrdon := hrdinterface5.HRDInterfaceConnect(globalData.hrdcatControlcurrentRig.hrdAddress, globalData.hrdcatControlcurrentRig.hrdPort);
-          if hrdon then
-          begin
-               hrdradio := '';
-               hrdcontext := '';
-               hrdresult := '';
-               hrdmsg := 'Get Radio';
-               hrdradio := hrdinterface5.HRDInterfaceSendMessage(hrdmsg);
-               hrdmsg := 'Get Context';
-               hrdcontext := hrdinterface5.HRDInterfaceSendMessage(hrdmsg);
-               hrdmsg := '[' + hrdcontext + '] set frequency-hz ' + cfgvtwo.Form6.Edit4.Text;
-               hrdresult := hrdinterface5.HRDInterfaceSendMessage(hrdmsg);
-               hrdinterface5.HRDInterfaceFreeString(hrdcontext);
-               hrdinterface5.HRDInterfaceFreeString(hrdradio);
-               hrdinterface5.HRDInterfaceFreeString(hrdresult);
-               hrdinterface5.HRDInterfaceDisconnect();
-          end;
+          // Need to send a set QRG message
+          catControl.writeHRD('[' + globalData.hrdcatControlcurrentRig.radioContext + '] set frequency-hz ' + cfgvtwo.Form6.Edit4.Text);
      end;
 end;
 
 procedure TForm6.sliderAFGainChange(Sender: TObject);
-Var
-   hrdcontext         : PWIDECHAR;
-   hrdradio           : PWIDECHAR;
-   hrdresult          : PWIDECHAR;
-   hrdmsg             : WideString;
-   hrdon              : Boolean;
-   foo                : WideString;
-   ifoo               : Integer;
 begin
-     // Changes AF Gain via HRD
-     hrdon := False;
-     if cfgvtwo.Form6.rbHRD4.Checked Then
+     if cfgvtwo.Form6.rbHRD4.Checked Then globalData.hrdVersion :=4;
+     if cfgvtwo.Form6.rbHRD5.Checked Then globalData.hrdVersion :=5;
+     catControl.hrdrigCAPS();
+     if globalData.hrdcatControlcurrentRig.hrdAlive Then
      Begin
-          hrdon := hrdinterface4.HRDInterfaceConnect(globalData.hrdcatControlcurrentRig.hrdAddress, globalData.hrdcatControlcurrentRig.hrdPort);
-          if hrdon then
-          begin
-               sleep(10);
-               hrdradio := '';
-               hrdcontext := '';
-               hrdresult := '';
-               hrdmsg := 'Get Radio';
-               hrdradio := hrdinterface4.HRDInterfaceSendMessage(hrdmsg);
-               hrdmsg := 'Get Context';
-               hrdcontext := hrdinterface4.HRDInterfaceSendMessage(hrdmsg);
-               hrdresult := '';
-               //[c] set slider-pos RADIO XXX POS
-               hrdmsg := '[' + hrdcontext + '] set slider-pos ' + hrdradio + ' AF~gain ' + IntToStr(cfgvtwo.Form6.sliderAFGain.Position);
-               hrdresult := hrdinterface4.HRDInterfaceSendMessage(hrdmsg);
-               hrdmsg := '[' + hrdcontext + '] Get slider-pos ' + hrdradio + ' AF~gain';
-               hrdresult := hrdinterface4.HRDInterfaceSendMessage(hrdmsg);
-               foo := ExtractWord(1,hrdresult,HRDDelim);
-               ifoo := -1;
-               If TryStrToInt(foo, ifoo) Then cfgvtwo.Form6.sliderAFGain.Position := ifoo;
-               cfgvtwo.Form6.Label11.Caption := 'Audio Gain (Currently:  ' + ExtractWord(2,hrdresult,HRDDelim) + '%)';
-               hrdinterface4.HRDInterfaceFreeString(hrdcontext);
-               hrdinterface4.HRDInterfaceFreeString(hrdradio);
-               hrdinterface4.HRDInterfaceFreeString(hrdresult);
-               hrdinterface4.HRDInterfaceDisconnect();
-          end;
-     end
-     else
-     begin
-          hrdon := hrdinterface5.HRDInterfaceConnect(globalData.hrdcatControlcurrentRig.hrdAddress, globalData.hrdcatControlcurrentRig.hrdPort);
-          if hrdon then
-          begin
-               sleep(10);
-               hrdradio := '';
-               hrdcontext := '';
-               hrdresult := '';
-               hrdmsg := 'Get Radio';
-               hrdradio := hrdinterface5.HRDInterfaceSendMessage(hrdmsg);
-               hrdmsg := 'Get Context';
-               hrdcontext := hrdinterface5.HRDInterfaceSendMessage(hrdmsg);
-               hrdresult := '';
-               //[c] set slider-pos RADIO XXX POS
-               hrdmsg := '[' + hrdcontext + '] set slider-pos ' + hrdradio + ' AF~gain ' + IntToStr(cfgvtwo.Form6.sliderAFGain.Position);
-               hrdresult := hrdinterface5.HRDInterfaceSendMessage(hrdmsg);
-               hrdmsg := '[' + hrdcontext + '] Get slider-pos ' + hrdradio + ' AF~gain';
-               hrdresult := hrdinterface5.HRDInterfaceSendMessage(hrdmsg);
-               foo := ExtractWord(1,hrdresult,HRDDelim);
-               ifoo := -1;
-               If TryStrToInt(foo, ifoo) Then cfgvtwo.Form6.sliderAFGain.Position := ifoo;
-               cfgvtwo.Form6.Label11.Caption := 'Audio Gain (Currently:  ' + ExtractWord(2,hrdresult,HRDDelim) + '%)';
-               hrdinterface5.HRDInterfaceFreeString(hrdcontext);
-               hrdinterface5.HRDInterfaceFreeString(hrdradio);
-               hrdinterface5.HRDInterfaceFreeString(hrdresult);
-               hrdinterface5.HRDInterfaceDisconnect();
-          end;
+          // Changes AF Gain via HRD
+          sleep(10);
+          //[c] set slider-pos RADIO XXX POS
+          catControl.writeHRD('[' + globalData.hrdcatControlcurrentRig.radioContext + '] set slider-pos ' + globalData.hrdcatControlcurrentRig.radioName + ' ' + globalData.hrdcatControlcurrentRig.afgControl + ' ' + IntToStr(cfgvtwo.Form6.sliderAFGain.Position));
      end;
 end;
 
 procedure TForm6.sliderMicGainChange(Sender: TObject);
-Var
-   hrdcontext         : PWIDECHAR;
-   hrdradio           : PWIDECHAR;
-   hrdresult          : PWIDECHAR;
-   hrdmsg             : WideString;
-   hrdon              : Boolean;
-   foo                : WideString;
-   ifoo               : Integer;
 begin
-     // Changes Mic Gain via HRD
-     hrdon := False;
-     if cfgvtwo.Form6.rbHRD4.Checked Then
+     if cfgvtwo.Form6.rbHRD4.Checked Then globalData.hrdVersion :=4;
+     if cfgvtwo.Form6.rbHRD5.Checked Then globalData.hrdVersion :=5;
+     catControl.hrdrigCAPS();
+     if globalData.hrdcatControlcurrentRig.hrdAlive Then
      Begin
-          hrdon := hrdinterface4.HRDInterfaceConnect(globalData.hrdcatControlcurrentRig.hrdAddress, globalData.hrdcatControlcurrentRig.hrdPort);
-          if hrdon then
-          begin
-               sleep(10);
-               hrdradio := '';
-               hrdcontext := '';
-               hrdresult := '';
-               hrdmsg := 'Get Radio';
-               hrdradio := hrdinterface4.HRDInterfaceSendMessage(hrdmsg);
-               hrdmsg := 'Get Context';
-               hrdcontext := hrdinterface4.HRDInterfaceSendMessage(hrdmsg);
-               hrdresult := '';
-               //[c] set slider-pos RADIO XXX POS
-               hrdmsg := '[' + hrdcontext + '] set slider-pos ' + hrdradio + ' Mic~gain ' + IntToStr(cfgvtwo.Form6.sliderMicGain.Position);
-               hrdresult := hrdinterface4.HRDInterfaceSendMessage(hrdmsg);
-               hrdmsg := '[' + hrdcontext + '] Get slider-pos ' + hrdradio + ' Mic~gain';
-               hrdresult := hrdinterface4.HRDInterfaceSendMessage(hrdmsg);
-               foo := ExtractWord(1,hrdresult,HRDDelim);
-               ifoo := -1;
-               If TryStrToInt(foo, ifoo) Then cfgvtwo.Form6.sliderMicGain.Position := ifoo;
-               cfgvtwo.Form6.Label15.Caption := 'Mic Gain (Currently:  ' + ExtractWord(2,hrdresult,HRDDelim) + '%)';
-               hrdinterface4.HRDInterfaceFreeString(hrdcontext);
-               hrdinterface4.HRDInterfaceFreeString(hrdradio);
-               hrdinterface4.HRDInterfaceFreeString(hrdresult);
-               hrdinterface4.HRDInterfaceDisconnect();
-          end;
-     end
-     else
-     begin
-          hrdon := hrdinterface5.HRDInterfaceConnect(globalData.hrdcatControlcurrentRig.hrdAddress, globalData.hrdcatControlcurrentRig.hrdPort);
-          if hrdon then
-          begin
-               sleep(10);
-               hrdradio := '';
-               hrdcontext := '';
-               hrdresult := '';
-               hrdmsg := 'Get Radio';
-               hrdradio := hrdinterface5.HRDInterfaceSendMessage(hrdmsg);
-               hrdmsg := 'Get Context';
-               hrdcontext := hrdinterface5.HRDInterfaceSendMessage(hrdmsg);
-               hrdresult := '';
-               //[c] set slider-pos RADIO XXX POS
-               hrdmsg := '[' + hrdcontext + '] set slider-pos ' + hrdradio + ' Mic~gain ' + IntToStr(cfgvtwo.Form6.sliderMicGain.Position);
-               hrdresult := hrdinterface5.HRDInterfaceSendMessage(hrdmsg);
-               hrdmsg := '[' + hrdcontext + '] Get slider-pos ' + hrdradio + ' Mic~gain';
-               hrdresult := hrdinterface5.HRDInterfaceSendMessage(hrdmsg);
-               foo := ExtractWord(1,hrdresult,HRDDelim);
-               ifoo := -1;
-               If TryStrToInt(foo, ifoo) Then cfgvtwo.Form6.sliderMicGain.Position := ifoo;
-               cfgvtwo.Form6.Label15.Caption := 'Mic Gain (Currently:  ' + ExtractWord(2,hrdresult,HRDDelim) + '%)';
-               hrdinterface5.HRDInterfaceFreeString(hrdcontext);
-               hrdinterface5.HRDInterfaceFreeString(hrdradio);
-               hrdinterface5.HRDInterfaceFreeString(hrdresult);
-               hrdinterface5.HRDInterfaceDisconnect();
-          end;
+          // Changes Mic Gain via HRD
+          sleep(10);
+          //[c] set slider-pos RADIO XXX POS
+          catControl.writeHRD('[' + globalData.hrdcatControlcurrentRig.radioContext + '] set slider-pos ' + globalData.hrdcatControlcurrentRig.radioName + ' ' + globalData.hrdcatControlcurrentRig.micgControl + ' ' + IntToStr(cfgvtwo.Form6.sliderMicGain.Position));
      end;
 end;
 
 procedure TForm6.sliderPALevelChange(Sender: TObject);
-Var
-   hrdcontext         : PWIDECHAR;
-   hrdradio           : PWIDECHAR;
-   hrdresult          : PWIDECHAR;
-   hrdmsg             : WideString;
-   hrdon              : Boolean;
-   foo                : WideString;
-   ifoo               : Integer;
 begin
-     // Changes PA Output Level via HRD
-     hrdon := False;
-     if cfgvtwo.Form6.rbHRD4.Checked Then
+     if cfgvtwo.Form6.rbHRD4.Checked Then globalData.hrdVersion :=4;
+     if cfgvtwo.Form6.rbHRD5.Checked Then globalData.hrdVersion :=5;
+     catControl.hrdrigCAPS();
+     if globalData.hrdcatControlcurrentRig.hrdAlive Then
      Begin
-          hrdon := hrdinterface4.HRDInterfaceConnect(globalData.hrdcatControlcurrentRig.hrdAddress, globalData.hrdcatControlcurrentRig.hrdPort);
-          if hrdon then
-          begin
-               sleep(10);
-               hrdradio := '';
-               hrdcontext := '';
-               hrdresult := '';
-               hrdmsg := 'Get Radio';
-               hrdradio := hrdinterface4.HRDInterfaceSendMessage(hrdmsg);
-               hrdmsg := 'Get Context';
-               hrdcontext := hrdinterface4.HRDInterfaceSendMessage(hrdmsg);
-               hrdresult := '';
-               //[c] set slider-pos RADIO XXX POS
-               hrdmsg := '[' + hrdcontext + '] set slider-pos ' + hrdradio + ' RF~power ' + IntToStr(cfgvtwo.Form6.sliderPALevel.Position);
-               hrdresult := hrdinterface4.HRDInterfaceSendMessage(hrdmsg);
-               hrdmsg := '[' + hrdcontext + '] Get slider-pos ' + hrdradio + ' RF~power';
-               hrdresult := hrdinterface4.HRDInterfaceSendMessage(hrdmsg);
-               foo := ExtractWord(1,hrdresult,HRDDelim);
-               ifoo := -1;
-               If TryStrToInt(foo, ifoo) Then cfgvtwo.Form6.sliderPALevel.Position := ifoo;
-               cfgvtwo.Form6.Label18.Caption := 'RF Output Level (Currently:  ' + ExtractWord(2,hrdresult,HRDDelim) + '%)';
-               hrdinterface4.HRDInterfaceFreeString(hrdcontext);
-               hrdinterface4.HRDInterfaceFreeString(hrdradio);
-               hrdinterface4.HRDInterfaceFreeString(hrdresult);
-               hrdinterface4.HRDInterfaceDisconnect();
-          end;
-     end
-     else
-     begin
-          hrdon := hrdinterface5.HRDInterfaceConnect(globalData.hrdcatControlcurrentRig.hrdAddress, globalData.hrdcatControlcurrentRig.hrdPort);
-          if hrdon then
-          begin
-               sleep(10);
-               hrdradio := '';
-               hrdcontext := '';
-               hrdresult := '';
-               hrdmsg := 'Get Radio';
-               hrdradio := hrdinterface5.HRDInterfaceSendMessage(hrdmsg);
-               hrdmsg := 'Get Context';
-               hrdcontext := hrdinterface5.HRDInterfaceSendMessage(hrdmsg);
-               hrdresult := '';
-               //[c] set slider-pos RADIO XXX POS
-               hrdmsg := '[' + hrdcontext + '] set slider-pos ' + hrdradio + ' RF~power ' + IntToStr(cfgvtwo.Form6.sliderPALevel.Position);
-               hrdresult := hrdinterface5.HRDInterfaceSendMessage(hrdmsg);
-               hrdmsg := '[' + hrdcontext + '] Get slider-pos ' + hrdradio + ' RF~power';
-               hrdresult := hrdinterface5.HRDInterfaceSendMessage(hrdmsg);
-               foo := ExtractWord(1,hrdresult,HRDDelim);
-               ifoo := -1;
-               If TryStrToInt(foo, ifoo) Then cfgvtwo.Form6.sliderPALevel.Position := ifoo;
-               cfgvtwo.Form6.Label18.Caption := 'RF Output Level (Currently:  ' + ExtractWord(2,hrdresult,HRDDelim) + '%)';
-               hrdinterface5.HRDInterfaceFreeString(hrdcontext);
-               hrdinterface5.HRDInterfaceFreeString(hrdradio);
-               hrdinterface5.HRDInterfaceFreeString(hrdresult);
-               hrdinterface5.HRDInterfaceDisconnect();
-          end;
+          // Changes PA Output level via HRD
+          sleep(10);
+          //[c] set slider-pos RADIO XXX POS
+          catControl.writeHRD('[' + globalData.hrdcatControlcurrentRig.radioContext + '] set slider-pos ' + globalData.hrdcatControlcurrentRig.radioName + ' ' + globalData.hrdcatControlcurrentRig.pagControl + ' ' + IntToStr(cfgvtwo.Form6.sliderPALevel.Position));
      end;
 end;
 
 procedure TForm6.sliderRFGainChange(Sender: TObject);
-Var
-   hrdcontext         : PWIDECHAR;
-   hrdradio           : PWIDECHAR;
-   hrdresult          : PWIDECHAR;
-   hrdmsg             : WideString;
-   hrdon              : Boolean;
-   foo                : WideString;
-   ifoo               : Integer;
 begin
-     // Changes RF Gain via HRD
-     hrdon := False;
-     if cfgvtwo.Form6.rbHRD4.Checked Then
+     if cfgvtwo.Form6.rbHRD4.Checked Then globalData.hrdVersion :=4;
+     if cfgvtwo.Form6.rbHRD5.Checked Then globalData.hrdVersion :=5;
+     catControl.hrdrigCAPS();
+     if globalData.hrdcatControlcurrentRig.hrdAlive Then
      Begin
-          hrdon := hrdinterface4.HRDInterfaceConnect(globalData.hrdcatControlcurrentRig.hrdAddress, globalData.hrdcatControlcurrentRig.hrdPort);
-          if hrdon then
-          begin
-               sleep(10);
-               hrdradio := '';
-               hrdcontext := '';
-               hrdresult := '';
-               hrdmsg := 'Get Radio';
-               hrdradio := hrdinterface4.HRDInterfaceSendMessage(hrdmsg);
-               hrdmsg := 'Get Context';
-               hrdcontext := hrdinterface4.HRDInterfaceSendMessage(hrdmsg);
-               hrdresult := '';
-               //[c] set slider-pos RADIO XXX POS
-               hrdmsg := '[' + hrdcontext + '] set slider-pos ' + hrdradio + ' RF~gain ' + IntToStr(cfgvtwo.Form6.sliderRFGain.Position);
-               hrdresult := hrdinterface4.HRDInterfaceSendMessage(hrdmsg);
-               hrdmsg := '[' + hrdcontext + '] Get slider-pos ' + hrdradio + ' RF~gain';
-               hrdresult := hrdinterface4.HRDInterfaceSendMessage(hrdmsg);
-               foo := ExtractWord(1,hrdresult,HRDDelim);
-               ifoo := -1;
-               If TryStrToInt(foo, ifoo) Then cfgvtwo.Form6.sliderRFGain.Position := ifoo;
-               cfgvtwo.Form6.Label17.Caption := 'RF Gain (Currently:  ' + ExtractWord(2,hrdresult,HRDDelim) + '%)';
-               hrdinterface4.HRDInterfaceFreeString(hrdcontext);
-               hrdinterface4.HRDInterfaceFreeString(hrdradio);
-               hrdinterface4.HRDInterfaceFreeString(hrdresult);
-               hrdinterface4.HRDInterfaceDisconnect();
-          end;
-     end
-     else
-     begin
-          hrdon := hrdinterface5.HRDInterfaceConnect(globalData.hrdcatControlcurrentRig.hrdAddress, globalData.hrdcatControlcurrentRig.hrdPort);
-          if hrdon then
-          begin
-               sleep(10);
-               hrdradio := '';
-               hrdcontext := '';
-               hrdresult := '';
-               hrdmsg := 'Get Radio';
-               hrdradio := hrdinterface5.HRDInterfaceSendMessage(hrdmsg);
-               hrdmsg := 'Get Context';
-               hrdcontext := hrdinterface5.HRDInterfaceSendMessage(hrdmsg);
-               hrdresult := '';
-               //[c] set slider-pos RADIO XXX POS
-               hrdmsg := '[' + hrdcontext + '] set slider-pos ' + hrdradio + ' RF~gain ' + IntToStr(cfgvtwo.Form6.sliderRFGain.Position);
-               hrdresult := hrdinterface5.HRDInterfaceSendMessage(hrdmsg);
-               hrdmsg := '[' + hrdcontext + '] Get slider-pos ' + hrdradio + ' RF~gain';
-               hrdresult := hrdinterface5.HRDInterfaceSendMessage(hrdmsg);
-               foo := ExtractWord(1,hrdresult,HRDDelim);
-               ifoo := -1;
-               If TryStrToInt(foo, ifoo) Then cfgvtwo.Form6.sliderRFGain.Position := ifoo;
-               cfgvtwo.Form6.Label17.Caption := 'RF Gain (Currently:  ' + ExtractWord(2,hrdresult,HRDDelim) + '%)';
-               hrdinterface5.HRDInterfaceFreeString(hrdcontext);
-               hrdinterface5.HRDInterfaceFreeString(hrdradio);
-               hrdinterface5.HRDInterfaceFreeString(hrdresult);
-               hrdinterface5.HRDInterfaceDisconnect();
-          end;
+          // Changes RF gain via HRD
+          sleep(10);
+          //[c] set slider-pos RADIO XXX POS
+          catControl.writeHRD('[' + globalData.hrdcatControlcurrentRig.radioContext + '] set slider-pos ' + globalData.hrdcatControlcurrentRig.radioName + ' ' + globalData.hrdcatControlcurrentRig.rfgControl + ' ' + IntToStr(cfgvtwo.Form6.sliderRFGain.Position));
+     end;
+end;
+
+procedure TForm6.testHRDPTTClick(Sender: TObject);
+begin
+     if cfgvtwo.Form6.rbHRD4.Checked Then globalData.hrdVersion :=4;
+     if cfgvtwo.Form6.rbHRD5.Checked Then globalData.hrdVersion :=5;
+     catControl.hrdrigCAPS();
+     if globalData.hrdcatControlcurrentRig.hrdAlive Then
+     Begin
+          // Need to execute an HRD PTT sequence.
+          // [c] set button-select XXX 0|1
+          catControl.writeHRD('[' + globalData.hrdcatControlcurrentRig.radioContext + '] set button-select ' + ' ' + globalData.hrdcatControlcurrentRig.txControl + ' 1');
+          sleep(500);
+          catControl.writeHRD('[' + globalData.hrdcatControlcurrentRig.radioContext + '] set button-select ' + ' ' + globalData.hrdcatControlcurrentRig.txControl + ' 0');
      end;
 end;
 

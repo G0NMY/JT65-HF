@@ -637,9 +637,12 @@ begin
                   End;
                   if cfgvtwo.glcatBy = 'hrd' Then
                   Begin
+                       if cfgvtwo.Form6.rbHRD4.Checked Then globalData.hrdVersion := 4;
+                       if cfgvtwo.Form6.rbHRD5.Checked Then globalData.hrdVersion := 5;
                        catControl.hrdrigCAPS();
                        if globalData.hrdcatControlcurrentRig.hrdAlive Then
                        Begin
+                            cfgvtwo.Form6.groupHRD.Caption := 'HRD Connected to ' + globalData.hrdcatControlcurrentRig.radioName;
                             globalData.gqrg := catControl.readHRDQRG();
 
                             if globalData.hrdcatControlcurrentRig.hasAFGain Then
@@ -690,8 +693,7 @@ begin
                             Begin
                                  // Read S-Meter level
                                  // Smeter returns 3 csv values. 1 = Text S level, 2 = raw level and 3 = max level.
-                                 foo := catControl.readHRD('[' + globalData.hrdcatControlcurrentRig.radioContext + ' Get ' + globalData.hrdcatControlcurrentRig.smeterControl);
-
+                                 foo := catControl.readHRD('[' + globalData.hrdcatControlcurrentRig.radioContext + '] Get ' + globalData.hrdcatControlcurrentRig.smeterControl);
                                  efoo := ExtractWord(3,foo,catControl.hrdDelim);
                                  ifoo := -1;
                                  cfgvtwo.Form6.pbSMeter.Min := 0;
@@ -3175,7 +3177,7 @@ Begin
      end;
      tstint := 0;
      tstflt := 0.0;
-     Form1.Caption := 'JT65-HF V' + verHolder.verReturn() + ' (c) 2009,2010 W4CQZ.  Free to use/modify/distribute under GPL 2.0 License.';
+     Form1.Caption := 'JT65-HF V' + verHolder.verReturn() + ' (c) 2009,2010 W6CQZ.  Free to use/modify/distribute under GPL 2.0 License.';
      // See comments in procedure code to understand why this is a MUST to use.
      DisableFloatingPointExceptions();
      // Create the decoder thread with param False so it starts.
@@ -5526,7 +5528,7 @@ initialization
   adc.adcRunning := False;
   d65.glnd65firstrun := True;
   d65.glbinspace := 100;
-  globalData.debugOn := True;
+  globalData.debugOn := False;
   globalData.gmode := 65;
   txmode := globalData.gmode;
   mnHavePrefix := False;
@@ -5552,5 +5554,6 @@ initialization
   catControl.catControlcatTxDF := False;
   globalData.hrdcatControlcurrentRig.hrdAddress := 'localhost';
   globalData.hrdcatControlcurrentRig.hrdPort := 7809;
+  globalData.hrdVersion := 5;
 end.
 

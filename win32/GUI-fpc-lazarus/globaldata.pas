@@ -74,6 +74,7 @@ Var
    mtext                   : String;
    si570ptt                : Boolean;
    hrdcatControlcurrentRig : hrdrigCAP;
+   hrdVersion              : Integer;
 
    // The variable list above comprises those variables used in more than two
    // units (inclusive of maincode).  Addition of variables to this list should
