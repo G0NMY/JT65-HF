@@ -20,13 +20,13 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="maincode"/>
-        <CursorPos X="1" Y="435"/>
-        <TopLine Value="414"/>
+        <CursorPos X="59" Y="1730"/>
+        <TopLine Value="1715"/>
         <EditorIndex Value="5"/>
         <UsageCount Value="215"/>
         <Bookmarks Count="2">
-          <Item0 X="1" Y="3489" ID="0"/>
-          <Item1 X="1" Y="4564" ID="1"/>
+          <Item0 X="1" Y="3491" ID="0"/>
+          <Item1 X="1" Y="4566" ID="1"/>
         </Bookmarks>
         <Loaded Value="True"/>
       </Unit1>
@@ -143,7 +143,7 @@
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="cfgvtwo"/>
         <CursorPos X="1" Y="798"/>
-        <TopLine Value="773"/>
+        <TopLine Value="767"/>
         <EditorIndex Value="6"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
@@ -180,8 +180,8 @@
         <Filename Value="catcontrol.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="catControl"/>
-        <CursorPos X="13" Y="739"/>
-        <TopLine Value="709"/>
+        <CursorPos X="1" Y="80"/>
+        <TopLine Value="55"/>
         <EditorIndex Value="0"/>
         <UsageCount Value="266"/>
         <Loaded Value="True"/>
@@ -301,7 +301,7 @@
         <CursorPos X="28" Y="3"/>
         <TopLine Value="1"/>
         <EditorIndex Value="3"/>
-        <UsageCount Value="38"/>
+        <UsageCount Value="39"/>
         <Loaded Value="True"/>
       </Unit30>
       <Unit31>
@@ -311,7 +311,7 @@
         <CursorPos X="1" Y="1"/>
         <TopLine Value="1"/>
         <EditorIndex Value="4"/>
-        <UsageCount Value="38"/>
+        <UsageCount Value="39"/>
         <Loaded Value="True"/>
       </Unit31>
     </Units>

@@ -5,7 +5,7 @@
 
 [Setup]
 AppName=JT65-HF
-AppVerName=JT65-HF 1.0.6
+AppVerName=JT65-HF 1.0.7
 DefaultDirName={pf}\jt65hf
 DefaultGroupName=JT65-HF
 UninstallDisplayIcon={app}\jt65-hf.exe
@@ -26,6 +26,8 @@ Type: files; Name: "{app}\libfftw3f-3.dll"
 Type: files; Name: "{app}\libfftw3f.dll"
 Type: files; Name: "{app}\libusb0.dll"
 Type: files; Name: "{app}\PSKReporter.dll"
+Type: files; Name: "{app}\HRDInterface0014.dll"
+Type: files; Name: "{app}\HRDInterface0015.dll"
 Type: files; Name: "{app}\sg-jt65-hf.exe"
 Type: files; Name: "{app}\KVASD_g95.exe"
 Type: filesandordirs; Name: "{app}\hamlib"

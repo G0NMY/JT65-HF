@@ -1724,9 +1724,11 @@ begin
                foo := foo + IntToStr(cfgvtwo.Form6.qsyMinute5.Value);
           end;
           cfg.StoredValue['autoQSYUTC5'] := foo;
-
           cfg.Save;
           diagout.Form3.ListBox1.Items.Add('Saved configuration');
+
+          if catcontrol.hrdConnected() then catcontrol.hrdDisconnect();
+
           if mnpttOpened Then
           Begin
                diagout.Form3.ListBox1.Items.Add('Closing PTT Port');

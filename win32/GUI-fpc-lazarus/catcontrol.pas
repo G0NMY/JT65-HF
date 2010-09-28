@@ -54,8 +54,35 @@ Type
   function  readHRD(_para1:WideString): WideString;
   function  readDXLabs(): Double;
   function  writeHRD(_para1:WideString): Boolean;
+  function  hrdConnected(): Boolean;
+  procedure hrdDisconnect();
 
 implementation
+
+function hrdConnected(): Boolean;
+begin
+     result := False;
+     if globalData.hrdVersion=4  Then
+     Begin
+          if hrdinterface4.HRDInterfaceIsConnected() Then result := True else result := False;
+     end;
+     if globalData.hrdVersion=5  Then
+     Begin
+          if hrdinterface5.HRDInterfaceIsConnected() Then result := True else result := False;
+     end;
+end;
+
+procedure hrdDisconnect();
+begin
+     if globalData.hrdVersion = 4 Then
+     Begin
+          hrdinterface4.HRDInterfaceDisconnect();
+     end;
+     if globalData.hrdVersion = 5 Then
+     Begin
+          hrdinterface5.HRDInterfaceDisconnect();
+     end;
+end;
 
 procedure hrdrigCAPS();
 Var
@@ -91,7 +118,8 @@ Begin
      if globalData.hrdVersion=4  Then
      Begin
           // Using HRD Version 4 support.
-          hrdon := hrdinterface4.HRDInterfaceConnect(globalData.hrdcatControlcurrentRig.hrdAddress, globalData.hrdcatControlcurrentRig.hrdPort);
+          hrdon := hrdinterface4.HRDInterfaceIsConnected();
+          if not hrdon then hrdon := hrdinterface4.HRDInterfaceConnect(globalData.hrdcatControlcurrentRig.hrdAddress, globalData.hrdcatControlcurrentRig.hrdPort);
           if hrdon then
           begin
                globalData.hrdcatControlcurrentRig.hrdAlive := True;
@@ -101,10 +129,12 @@ Begin
                hrdmsg := 'Get Radio';
                hrdresult := hrdinterface4.HRDInterfaceSendMessage(hrdmsg);
                globalData.hrdcatControlcurrentRig.radioName := hrdresult;
+               hrdinterface4.HRDInterfaceFreeString(hrdresult);
 
                hrdmsg := 'Get Context';
                hrdresult := hrdinterface4.HRDInterfaceSendMessage(hrdmsg);
                globalData.hrdcatControlcurrentRig.radioContext := hrdresult;
+               hrdinterface4.HRDInterfaceFreeString(hrdresult);
 
                // This retrieves the buttons available of interest
                hrdmsg := '[' + globalData.hrdcatControlcurrentRig.radioContext + '] get buttons';
@@ -127,6 +157,8 @@ Begin
                     globalData.hrdcatControlcurrentRig.hasAutoTune := False;
                     globalData.hrdcatControlcurrentRig.hasAutoTuneDo := False;
                end;
+
+               hrdinterface4.HRDInterfaceFreeString(hrdresult);
 
                if globalData.hrdcatControlcurrentRig.hasTX then globalData.hrdcatControlcurrentRig.txControl := 'TX' else globalData.hrdcatControlcurrentRig.txControl := '';
                if globalData.hrdcatControlcurrentRig.hasAutoTune then globalData.hrdcatControlcurrentRig.autotuneControl := 'ATU' else globalData.hrdcatControlcurrentRig.autotuneControl := '';
@@ -180,6 +212,8 @@ Begin
                     globalData.hrdcatControlcurrentRig.pagControl      := '';
                end;
 
+               hrdinterface4.HRDInterfaceFreeString(hrdresult);
+
                globalData.hrdcatControlcurrentRig.hasSMeter       := True;
                globalData.hrdcatControlcurrentRig.smeterControl   := 'SMeter-Main';
 
@@ -203,6 +237,7 @@ Begin
                          globalData.hrdcatControlcurrentRig.afgMin := 0;
                          globalData.hrdcatControlcurrentRig.afgMax := 0;
                     end;
+                    hrdinterface4.HRDInterfaceFreeString(hrdresult);
                end;
 
                if globalData.hrdcatControlcurrentRig.hasRFGain Then
@@ -224,6 +259,7 @@ Begin
                          globalData.hrdcatControlcurrentRig.rfgMin := 0;
                          globalData.hrdcatControlcurrentRig.rfgMax := 0;
                     end;
+                    hrdinterface4.HRDInterfaceFreeString(hrdresult);
                end;
 
                if globalData.hrdcatControlcurrentRig.hasMicGain Then
@@ -245,6 +281,7 @@ Begin
                          globalData.hrdcatControlcurrentRig.micgMin := 0;
                          globalData.hrdcatControlcurrentRig.micgMax := 0;
                     end;
+                    hrdinterface4.HRDInterfaceFreeString(hrdresult);
                end;
 
                if globalData.hrdcatControlcurrentRig.hasPAGain Then
@@ -266,10 +303,9 @@ Begin
                          globalData.hrdcatControlcurrentRig.pagMin := 0;
                          globalData.hrdcatControlcurrentRig.pagMax := 0;
                     end;
+                    hrdinterface4.HRDInterfaceFreeString(hrdresult);
                end;
-
-               hrdinterface4.HRDInterfaceFreeString(hrdresult);
-               hrdinterface4.HRDInterfaceDisconnect();
+               //hrdinterface4.HRDInterfaceDisconnect();
           end
           else
           begin
@@ -296,7 +332,8 @@ Begin
      else
      begin
           // Using HRD Version 5 support.
-          hrdon := hrdinterface5.HRDInterfaceConnect(globalData.hrdcatControlcurrentRig.hrdAddress, globalData.hrdcatControlcurrentRig.hrdPort);
+          hrdon := hrdinterface5.HRDInterfaceIsConnected();
+          if not hrdon then hrdon := hrdinterface5.HRDInterfaceConnect(globalData.hrdcatControlcurrentRig.hrdAddress, globalData.hrdcatControlcurrentRig.hrdPort);
           if hrdon then
           begin
                globalData.hrdcatControlcurrentRig.hrdAlive := True;
@@ -306,10 +343,12 @@ Begin
                hrdmsg := 'Get Radio';
                hrdresult := hrdinterface5.HRDInterfaceSendMessage(hrdmsg);
                globalData.hrdcatControlcurrentRig.radioName := hrdresult;
+               hrdinterface5.HRDInterfaceFreeString(hrdresult);
 
                hrdmsg := 'Get Context';
                hrdresult := hrdinterface5.HRDInterfaceSendMessage(hrdmsg);
                globalData.hrdcatControlcurrentRig.radioContext := hrdresult;
+               hrdinterface5.HRDInterfaceFreeString(hrdresult);
 
                // This retrieves the buttons available of interest
                hrdmsg := '[' + globalData.hrdcatControlcurrentRig.radioContext + '] get buttons';
@@ -332,6 +371,8 @@ Begin
                     globalData.hrdcatControlcurrentRig.hasAutoTune := False;
                     globalData.hrdcatControlcurrentRig.hasAutoTuneDo := False;
                end;
+
+               hrdinterface5.HRDInterfaceFreeString(hrdresult);
 
                if globalData.hrdcatControlcurrentRig.hasTX then globalData.hrdcatControlcurrentRig.txControl := 'TX' else globalData.hrdcatControlcurrentRig.txControl := '';
                if globalData.hrdcatControlcurrentRig.hasAutoTune then globalData.hrdcatControlcurrentRig.autotuneControl := 'ATU' else globalData.hrdcatControlcurrentRig.autotuneControl := '';
@@ -385,6 +426,8 @@ Begin
                     globalData.hrdcatControlcurrentRig.pagControl      := '';
                end;
 
+               hrdinterface5.HRDInterfaceFreeString(hrdresult);
+
                globalData.hrdcatControlcurrentRig.hasSMeter       := True;
                globalData.hrdcatControlcurrentRig.smeterControl   := 'SMeter-Main';
 
@@ -408,6 +451,7 @@ Begin
                          globalData.hrdcatControlcurrentRig.afgMin := 0;
                          globalData.hrdcatControlcurrentRig.afgMax := 0;
                     end;
+                    hrdinterface5.HRDInterfaceFreeString(hrdresult);
                end;
 
                if globalData.hrdcatControlcurrentRig.hasRFGain Then
@@ -429,6 +473,7 @@ Begin
                          globalData.hrdcatControlcurrentRig.rfgMin := 0;
                          globalData.hrdcatControlcurrentRig.rfgMax := 0;
                     end;
+                    hrdinterface5.HRDInterfaceFreeString(hrdresult);
                end;
 
                if globalData.hrdcatControlcurrentRig.hasMicGain Then
@@ -450,6 +495,7 @@ Begin
                          globalData.hrdcatControlcurrentRig.micgMin := 0;
                          globalData.hrdcatControlcurrentRig.micgMax := 0;
                     end;
+                    hrdinterface5.HRDInterfaceFreeString(hrdresult);
                end;
 
                if globalData.hrdcatControlcurrentRig.hasPAGain Then
@@ -471,10 +517,11 @@ Begin
                          globalData.hrdcatControlcurrentRig.pagMin := 0;
                          globalData.hrdcatControlcurrentRig.pagMax := 0;
                     end;
+                    hrdinterface5.HRDInterfaceFreeString(hrdresult);
                end;
 
-               hrdinterface5.HRDInterfaceFreeString(hrdresult);
-               hrdinterface5.HRDInterfaceDisconnect();
+               //hrdinterface5.HRDInterfaceDisconnect();
+
           end
           else
           begin
@@ -509,13 +556,15 @@ Begin
      hrdon := False;
      if globalData.hrdVersion=4 Then
      Begin
-          hrdon := hrdinterface4.HRDInterfaceConnect(globalData.hrdcatControlcurrentRig.hrdAddress, globalData.hrdcatControlcurrentRig.hrdPort);
+          hrdon := hrdinterface4.HRDInterfaceIsConnected();
+          if not hrdon then hrdRigCAPS();
+          hrdon := hrdinterface4.HRDInterfaceIsConnected();
           if hrdon then
           begin
                hrdresult := hrdinterface4.HRDInterfaceSendMessage(_para1);
                if hrdresult='OK' Then Result := True else Result := False;
                hrdinterface4.HRDInterfaceFreeString(hrdresult);
-               hrdinterface4.HRDInterfaceDisconnect();
+               //hrdinterface4.HRDInterfaceDisconnect();
           end
           else
           begin
@@ -524,13 +573,15 @@ Begin
      end
      else
      begin
-          hrdon := hrdinterface5.HRDInterfaceConnect(globalData.hrdcatControlcurrentRig.hrdAddress, globalData.hrdcatControlcurrentRig.hrdPort);
+          hrdon := hrdinterface5.HRDInterfaceIsConnected();
+          if not hrdon then hrdRigCAPS();
+          hrdon := hrdinterface5.HRDInterfaceIsConnected();
           if hrdon then
           begin
                hrdresult := hrdinterface5.HRDInterfaceSendMessage(_para1);
                if hrdresult='OK' Then Result := True else Result := False;
                hrdinterface5.HRDInterfaceFreeString(hrdresult);
-               hrdinterface5.HRDInterfaceDisconnect();
+               //hrdinterface5.HRDInterfaceDisconnect();
           end
           else
           begin
@@ -549,7 +600,9 @@ Begin
      hrdon := False;
      if globalData.hrdVersion=4 Then
      Begin
-          hrdon := hrdinterface4.HRDInterfaceConnect(globalData.hrdcatControlcurrentRig.hrdAddress, globalData.hrdcatControlcurrentRig.hrdPort);
+          hrdon := hrdinterface4.HRDInterfaceIsConnected();
+          if not hrdon then hrdRigCAPS();
+          hrdon := hrdinterface4.HRDInterfaceIsConnected();
           if hrdon then
           begin
                //cfgvtwo.Form6.groupHRD.Caption := 'HRD Connected to ' + globalData.hrdcatControlcurrentRig.radioName;
@@ -570,7 +623,7 @@ Begin
                     globalData.strqrg := '0';
                end;
                hrdinterface4.HRDInterfaceFreeString(hrdresult);
-               hrdinterface4.HRDInterfaceDisconnect();
+               //hrdinterface4.HRDInterfaceDisconnect();
           end
           else
           begin
@@ -579,7 +632,9 @@ Begin
      end
      else
      begin
-          hrdon := hrdinterface5.HRDInterfaceConnect(globalData.hrdcatControlcurrentRig.hrdAddress, globalData.hrdcatControlcurrentRig.hrdPort);
+          hrdon := hrdinterface5.HRDInterfaceIsConnected();
+          if not hrdon then hrdRigCAPS();
+          hrdon := hrdinterface5.HRDInterfaceIsConnected();
           if hrdon then
           begin
                hrdresult := '';
@@ -598,7 +653,7 @@ Begin
                     globalData.strqrg := '0';
                end;
                hrdinterface5.HRDInterfaceFreeString(hrdresult);
-               hrdinterface5.HRDInterfaceDisconnect();
+               //hrdinterface5.HRDInterfaceDisconnect();
           end
           else
           begin
@@ -611,17 +666,21 @@ function readHRD(_para1:WideString): WideString;
 Var
    hrdresult          : PWIDECHAR;
    hrdon              : Boolean;
+   foo                : WideString;
 Begin
      hrdon := False;
      if globalData.hrdVersion=4 Then
      Begin
-          hrdon := hrdinterface4.HRDInterfaceConnect(globalData.hrdcatControlcurrentRig.hrdAddress, globalData.hrdcatControlcurrentRig.hrdPort);
+          hrdon := hrdinterface4.HRDInterfaceIsConnected();
+          if not hrdon then hrdRigCAPS();
+          hrdon := hrdinterface4.HRDInterfaceIsConnected();
           if hrdon then
           begin
                hrdresult := hrdinterface4.HRDInterfaceSendMessage(_para1);
-               Result := hrdresult;
+               foo := hrdresult;
                hrdinterface4.HRDInterfaceFreeString(hrdresult);
-               hrdinterface4.HRDInterfaceDisconnect();
+               //hrdinterface4.HRDInterfaceDisconnect();
+               result := foo;
           end
           else
           begin
@@ -630,13 +689,16 @@ Begin
      end
      else
      begin
-          hrdon := hrdinterface5.HRDInterfaceConnect(globalData.hrdcatControlcurrentRig.hrdAddress, globalData.hrdcatControlcurrentRig.hrdPort);
+          hrdon := hrdinterface5.HRDInterfaceIsConnected();
+          if not hrdon then hrdRigCAPS();
+          hrdon := hrdinterface5.HRDInterfaceIsConnected();
           if hrdon then
           begin
                hrdresult := hrdinterface5.HRDInterfaceSendMessage(_para1);
-               Result := hrdresult;
+               foo := hrdresult;
                hrdinterface5.HRDInterfaceFreeString(hrdresult);
-               hrdinterface5.HRDInterfaceDisconnect();
+               //hrdinterface5.HRDInterfaceDisconnect();
+               result := foo;
           end
           else
           begin
