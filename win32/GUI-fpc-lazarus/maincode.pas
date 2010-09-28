@@ -253,6 +253,7 @@ type
     procedure processOncePerSecond(st : TSystemTime);
     procedure oncePerTick();
     procedure displayAudio(audioAveL : Integer; audioAveR : Integer);
+    function getPTTMethod() : String;
     function BuildRemoteString (call, mode, freq, date, time : String) : WideString;
     function BuildRemoteStringGrid (call, mode, freq, grid, date, time : String) : WideString;
     function BuildLocalString (station_callsign, my_gridsquare, programid, programversion, my_antenna : String) : WideString;
@@ -426,6 +427,14 @@ begin
 end;
 
 procedure ver(vint : Pointer; vstr : Pointer); cdecl; external JT_DLL name 'version_';
+
+function TForm1.getPTTMethod() : String;
+Begin
+     result := '';
+     if cfgvtwo.Form6.cbUseAltPTT.Checked Then result := 'ALT' else result := 'PTT';
+     if cfgvtwo.Form6.cbSi570PTT.Checked Then result := 'SI5';
+     if cfgvtwo.Form6.chkHRDPTT.Checked Then result := 'HRD';
+end;
 
 function TForm1.BuildRemoteString (call, mode, freq, date, time : String) : WideString;
 begin
@@ -1043,31 +1052,22 @@ End;
 
 procedure TForm1.hrdRaisePTT();
 begin
-     if cfgvtwo.Form6.rbHRD4.Checked Then globalData.hrdVersion :=4;
-     if cfgvtwo.Form6.rbHRD5.Checked Then globalData.hrdVersion :=5;
-     //catControl.hrdrigCAPS();
+     if cfgvtwo.Form6.rbHRD4.Checked Then globalData.hrdVersion := 4;
+     if cfgvtwo.Form6.rbHRD5.Checked Then globalData.hrdVersion := 5;
+     mnpttOpened := False;
      if globalData.hrdcatControlcurrentRig.hrdAlive Then
      Begin
-          // Need to execute an HRD PTT sequence.
-          // [c] set button-select XXX 0|1
-          catControl.writeHRD('[' + globalData.hrdcatControlcurrentRig.radioContext + '] set button-select ' + globalData.hrdcatControlcurrentRig.txControl + ' 1');
-          //sleep(500);
-          //catControl.writeHRD('[' + globalData.hrdcatControlcurrentRig.radioContext + '] set button-select ' + globalData.hrdcatControlcurrentRig.txControl + ' 0');
+          mnpttOpened := catControl.writeHRD('[' + globalData.hrdcatControlcurrentRig.radioContext + '] set button-select ' + globalData.hrdcatControlcurrentRig.txControl + ' 1');
      end;
 end;
 
 procedure TForm1.hrdLowerPTT();
 begin
-     if cfgvtwo.Form6.rbHRD4.Checked Then globalData.hrdVersion :=4;
-     if cfgvtwo.Form6.rbHRD5.Checked Then globalData.hrdVersion :=5;
-     //catControl.hrdrigCAPS();
+     if cfgvtwo.Form6.rbHRD4.Checked Then globalData.hrdVersion := 4;
+     if cfgvtwo.Form6.rbHRD5.Checked Then globalData.hrdVersion := 5;
      if globalData.hrdcatControlcurrentRig.hrdAlive Then
      Begin
-          // Need to execute an HRD PTT sequence.
-          // [c] set button-select XXX 0|1
-          //catControl.writeHRD('[' + globalData.hrdcatControlcurrentRig.radioContext + '] set button-select ' + globalData.hrdcatControlcurrentRig.txControl + ' 1');
-          //sleep(500);
-          catControl.writeHRD('[' + globalData.hrdcatControlcurrentRig.radioContext + '] set button-select ' + globalData.hrdcatControlcurrentRig.txControl + ' 0');
+          if catControl.writeHRD('[' + globalData.hrdcatControlcurrentRig.radioContext + '] set button-select ' + globalData.hrdcatControlcurrentRig.txControl + ' 0') then mnpttopened := False;
      end;
 end;
 
@@ -1186,21 +1186,10 @@ begin
        // likely drop synaserial and use wsjt ptt from library.
        globalData.txInProgress := False;
        sleep(100);
-       if not globalData.si570ptt Then
-       Begin
-            if not cfgvtwo.Form6.chkHRDPTT.Checked Then
-            Begin
-                 if cfgvtwo.Form6.cbUseAltPTT.Checked Then altLowerPTT() else lowerPTT();
-            end
-            else
-            begin
-                 hrdLowerPTT();
-            end;
-       End
-       Else
-       Begin
-            si570Lowerptt();
-       End;
+       if getPTTMethod() = 'SI5' Then si570Lowerptt();
+       if getPTTMethod() = 'HRD' Then hrdLowerPTT();
+       if getPTTMethod() = 'ALT' Then altLowerPTT();
+       if getPTTMethod() = 'PTT' Then lowerPTT();
        nextAction := 2;
        txNextPeriod := False;
        Form1.chkEnTX.Checked := False;
@@ -1741,14 +1730,10 @@ begin
           if mnpttOpened Then
           Begin
                diagout.Form3.ListBox1.Items.Add('Closing PTT Port');
-               if not cfgvtwo.Form6.chkHRDPTT.Checked Then
-               Begin
-                    if cfgvtwo.Form6.cbUseAltPTT.Checked Then altLowerPTT() else lowerPTT();
-               end
-               else
-               begin
-                    hrdLowerPTT();
-               end;
+               if getPTTMethod() = 'SI5' Then si570Lowerptt();
+               if getPTTMethod() = 'HRD' Then hrdLowerPTT();
+               if getPTTMethod() = 'ALT' Then altLowerPTT();
+               if getPTTMethod() = 'PTT' Then lowerPTT();
                diagout.Form3.ListBox1.Items.Add('Closed PTT Port');
           end;
           if globalData.rbLoggedIn Then
@@ -4805,21 +4790,10 @@ Begin
                          dac.d65txBufferIdx := 0;
                          dac.d65txBufferPtr := @dac.d65txBuffer[0];
                          rxCount := 0;
-                         if not globalData.si570ptt Then
-                         Begin
-                              if not cfgvtwo.Form6.chkHRDPTT.Checked Then
-                              Begin
-                                   if cfgvtwo.Form6.cbUseAltPTT.Checked Then altRaisePTT() else raisePtt();
-                              end
-                              else
-                              begin
-                                   hrdRaisePTT();
-                              end;
-                         End
-                         Else
-                         Begin
-                              si570Raiseptt();
-                         End;
+                         if getPTTMethod() = 'SI5' Then si570Raiseptt();
+                         if getPTTMethod() = 'HRD' Then hrdRaisePTT();
+                         if getPTTMethod() = 'ALT' Then altRaisePTT();
+                         if getPTTMethod() = 'PTT' Then raisePTT();
                          globalData.txInProgress := True;
                          foo := '';
                          if gst.Hour < 10 then foo := '0' + IntToStr(gst.Hour) + ':' else foo := IntToStr(gst.Hour) + ':';
@@ -4875,21 +4849,10 @@ Begin
                Begin
                     //paResult := portaudio.Pa_StopStream(paOutStream);
                     globalData.txInProgress := False;
-                    if not globalData.si570ptt Then
-                    Begin
-                         if not cfgvtwo.Form6.chkHRDPTT.Checked Then
-                         Begin
-                              if cfgvtwo.Form6.cbUseAltPTT.Checked Then altLowerPTT() else lowerPtt();
-                         end
-                         else
-                         begin
-                              hrdLowerPTT();
-                         end;
-                    End
-                    Else
-                    Begin
-                         si570Lowerptt();
-                    End;
+                    if getPTTMethod() = 'SI5' Then si570Lowerptt();
+                    if getPTTMethod() = 'HRD' Then hrdLowerPTT();
+                    if getPTTMethod() = 'ALT' Then altLowerPTT();
+                    if getPTTMethod() = 'PTT' Then lowerPTT();
                     thisAction := 5;
                     actionSet := False;
                     curMsg := '';
@@ -4943,21 +4906,10 @@ Begin
                          dac.d65txBufferIdx := 0;
                          dac.d65txBufferPtr := @dac.d65txBuffer[0];
                          rxCount := 0;
-                         if not globalData.si570ptt Then
-                         Begin
-                              if not cfgvtwo.Form6.chkHRDPTT.Checked Then
-                              Begin
-                                   if cfgvtwo.Form6.cbUseAltPTT.Checked Then altRaisePTT() else raisePtt();
-                              end
-                              else
-                              begin
-                                   hrdRaisePTT();
-                              end;
-                         End
-                         Else
-                         Begin
-                              si570Raiseptt();
-                         End;
+                         if getPTTMethod() = 'SI5' Then si570Raiseptt();
+                         if getPTTMethod() = 'HRD' Then hrdRaisePTT();
+                         if getPTTMethod() = 'ALT' Then altRaisePTT();
+                         if getPTTMethod() = 'PTT' Then raisePTT();
                          globalData.txInProgress := True;
                          foo := '';
                          if gst.Hour < 10 then foo := '0' + IntToStr(gst.Hour) + ':' else foo := IntToStr(gst.Hour) + ':';
@@ -5013,21 +4965,10 @@ Begin
                //if (dac.d65txBufferIdx >= 538624) Or (thisSecond >= 48) Then
                Begin
                     // I have a full TX cycle when d65txBufferIdx >= 538624 or thisSecond > 48
-                    if not globalData.si570ptt Then
-                    Begin
-                         if not cfgvtwo.Form6.chkHRDPTT.Checked Then
-                         Begin
-                              if cfgvtwo.Form6.cbUseAltPTT.Checked Then altLowerPTT() else lowerPtt();
-                         end
-                         else
-                         begin
-                              hrdLowerPTT();
-                         end;
-                    End
-                    Else
-                    Begin
-                         si570Lowerptt();
-                    End;
+                    if getPTTMethod() = 'SI5' Then si570Lowerptt();
+                    if getPTTMethod() = 'HRD' Then hrdLowerPTT();
+                    if getPTTMethod() = 'ALT' Then altLowerPTT();
+                    if getPTTMethod() = 'PTT' Then lowerPTT();
                     actionSet := False;
                     thisAction := 5;
                     globalData.txInProgress := False;

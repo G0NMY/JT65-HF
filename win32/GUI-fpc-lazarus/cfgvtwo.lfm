@@ -20,7 +20,7 @@ object Form6: TForm6
     Width = 784
     Font.Height = -13
     Font.Name = 'Arial'
-    PageIndex = 1
+    PageIndex = 4
     ParentFont = False
     TabOrder = 0
     object Page1: TPage
@@ -79,7 +79,7 @@ object Form6: TForm6
         Left = 5
         Height = 17
         Top = 104
-        Width = 559
+        Width = 560
         Caption = 'Enter your PTT port into the input box below in the format COM###, for example, COM11'
         Font.Height = -13
         Font.Name = 'Arial'
@@ -157,7 +157,7 @@ object Form6: TForm6
         Left = 108
         Height = 17
         Top = 128
-        Width = 440
+        Width = 442
         Caption = 'Test PTT will Key/Unkey your Transceiver.  No audio will be sent during test.'
         ParentColor = False
       end

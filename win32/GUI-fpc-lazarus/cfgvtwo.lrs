@@ -7,7 +7,7 @@ LazarusResources.Add('TForm6','FORMDATA',[
   +'.MaxWidth'#3' '#3#21'Constraints.MinHeight'#3#30#2#20'Constraints.MinWidth'
   +#3' '#3#8'OnCreate'#7#10'FormCreate'#10'LCLVersion'#6#8'0.9.28.2'#0#9'TNoteb'
   +'ook'#9'Notebook1'#4'Left'#2#0#6'Height'#3#232#1#3'Top'#2#10#5'Width'#3#16#3
-  +#11'Font.Height'#2#243#9'Font.Name'#6#5'Arial'#9'PageIndex'#2#1#10'ParentFon'
+  +#11'Font.Height'#2#243#9'Font.Name'#6#5'Arial'#9'PageIndex'#2#4#10'ParentFon'
   +'t'#8#8'TabOrder'#2#0#0#5'TPage'#5'Page1'#7'Caption'#6#13'Station Setup'#11
   +'ClientWidth'#3#8#3#12'ClientHeight'#3#203#1#0#6'TLabel'#7'Label26'#4'Left'#2
   +#5#6'Height'#2#15#3'Top'#2#6#5'Width'#2'-'#7'Caption'#6#8'Callsign'#11'Font.'
@@ -22,7 +22,7 @@ LazarusResources.Add('TForm6','FORMDATA',[
   +'TLabel'#7'Label23'#4'Left'#3';'#1#6'Height'#2#15#3'Top'#2'5'#5'Width'#2's'#7
   +'Caption'#6#19'Sound Output Device'#11'Font.Height'#2#245#9'Font.Name'#6#5'A'
   +'rial'#10'Font.Style'#11#6'fsBold'#0#11'ParentColor'#8#10'ParentFont'#8#0#0#6
-  +'TLabel'#6'Label9'#4'Left'#2#5#6'Height'#2#17#3'Top'#2'h'#5'Width'#3'/'#2#7
+  +'TLabel'#6'Label9'#4'Left'#2#5#6'Height'#2#17#3'Top'#2'h'#5'Width'#3'0'#2#7
   +'Caption'#6'UEnter your PTT port into the input box below in the format COM#'
   +'##, for example, COM11'#11'Font.Height'#2#243#9'Font.Name'#6#5'Arial'#10'Fo'
   +'nt.Style'#11#6'fsBold'#0#11'ParentColor'#8#10'ParentFont'#8#0#0#6'TLabel'#7
@@ -45,7 +45,7 @@ LazarusResources.Add('TForm6','FORMDATA',[
   +'fsBold'#0#11'ParentColor'#8#10'ParentFont'#8#0#0#6'TLabel'#7'Label10'#4'Lef'
   +'t'#2#5#6'Height'#2#17#3'Top'#3#128#0#5'Width'#2'4'#7'Caption'#6#8'PTT Port'
   +#11'ParentColor'#8#0#0#6'TLabel'#6'Label3'#4'Left'#2'l'#6'Height'#2#17#3'Top'
-  +#3#128#0#5'Width'#3#184#1#7'Caption'#6'MTest PTT will Key/Unkey your Transce'
+  +#3#128#0#5'Width'#3#186#1#7'Caption'#6'MTest PTT will Key/Unkey your Transce'
   +'iver.  No audio will be sent during test.'#11'ParentColor'#8#0#0#6'TLabel'#7
   +'Label28'#4'Left'#2'd'#6'Height'#2#15#3'Top'#2#6#5'Width'#2'!'#7'Caption'#6#6
   +'Prefix'#11'Font.Height'#2#245#9'Font.Name'#6#5'Arial'#10'Font.Style'#11#6'f'
