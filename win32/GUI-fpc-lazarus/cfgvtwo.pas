@@ -792,9 +792,9 @@ begin
      Begin
           // Need to execute an HRD PTT sequence.
           // [c] set button-select XXX 0|1
-          catControl.writeHRD('[' + globalData.hrdcatControlcurrentRig.radioContext + '] set button-select ' + ' ' + globalData.hrdcatControlcurrentRig.txControl + ' 1');
+          catControl.writeHRD('[' + globalData.hrdcatControlcurrentRig.radioContext + '] set button-select ' + globalData.hrdcatControlcurrentRig.txControl + ' 1');
           sleep(500);
-          catControl.writeHRD('[' + globalData.hrdcatControlcurrentRig.radioContext + '] set button-select ' + ' ' + globalData.hrdcatControlcurrentRig.txControl + ' 0');
+          catControl.writeHRD('[' + globalData.hrdcatControlcurrentRig.radioContext + '] set button-select ' + globalData.hrdcatControlcurrentRig.txControl + ' 0');
      end;
 end;
 

@@ -28,10 +28,10 @@ interface
 uses
   Classes, SysUtils, LResources, Forms, Controls, Graphics, Dialogs,
   StdCtrls, CTypes, StrUtils, Math, portaudio, ExtCtrls, ComCtrls, Spin,
-  Windows, DateUtils, encode65, parseCallSign, globalData,
-  XMLPropStorage, adc, dac, ClipBrd, dlog, rawdec, cfgvtwo, guiConfig, verHolder,
-  PSKReporter, catControl, Menus, synaser, rbc, log, diagout, synautil,
-  waterfall, d65, spectrum;
+  Windows, DateUtils, encode65, parseCallSign, globalData, XMLPropStorage, adc,
+  dac, ClipBrd, dlog, rawdec, cfgvtwo, guiConfig, verHolder, PSKReporter,
+  catControl, Menus, synaser, rbc, log, diagout, synautil, waterfall, d65,
+  spectrum;
 
 Const
   JT_DLL = 'jt65.dll';
@@ -240,6 +240,8 @@ type
     procedure lowerPTT();
     procedure altRaisePTT();
     procedure altLowerPTT();
+    procedure hrdRaisePTT();
+    procedure hrdLowerPTT();
     procedure initDecode();
     procedure updateSR();
     procedure genTX1();
@@ -1039,6 +1041,36 @@ Begin
      End;
 End;
 
+procedure TForm1.hrdRaisePTT();
+begin
+     if cfgvtwo.Form6.rbHRD4.Checked Then globalData.hrdVersion :=4;
+     if cfgvtwo.Form6.rbHRD5.Checked Then globalData.hrdVersion :=5;
+     //catControl.hrdrigCAPS();
+     if globalData.hrdcatControlcurrentRig.hrdAlive Then
+     Begin
+          // Need to execute an HRD PTT sequence.
+          // [c] set button-select XXX 0|1
+          catControl.writeHRD('[' + globalData.hrdcatControlcurrentRig.radioContext + '] set button-select ' + globalData.hrdcatControlcurrentRig.txControl + ' 1');
+          //sleep(500);
+          //catControl.writeHRD('[' + globalData.hrdcatControlcurrentRig.radioContext + '] set button-select ' + globalData.hrdcatControlcurrentRig.txControl + ' 0');
+     end;
+end;
+
+procedure TForm1.hrdLowerPTT();
+begin
+     if cfgvtwo.Form6.rbHRD4.Checked Then globalData.hrdVersion :=4;
+     if cfgvtwo.Form6.rbHRD5.Checked Then globalData.hrdVersion :=5;
+     //catControl.hrdrigCAPS();
+     if globalData.hrdcatControlcurrentRig.hrdAlive Then
+     Begin
+          // Need to execute an HRD PTT sequence.
+          // [c] set button-select XXX 0|1
+          //catControl.writeHRD('[' + globalData.hrdcatControlcurrentRig.radioContext + '] set button-select ' + globalData.hrdcatControlcurrentRig.txControl + ' 1');
+          //sleep(500);
+          catControl.writeHRD('[' + globalData.hrdcatControlcurrentRig.radioContext + '] set button-select ' + globalData.hrdcatControlcurrentRig.txControl + ' 0');
+     end;
+end;
+
 procedure TForm1.initDecode();
 Var
    st               : TSYSTEMTIME;
@@ -1156,7 +1188,14 @@ begin
        sleep(100);
        if not globalData.si570ptt Then
        Begin
-            if cfgvtwo.Form6.cbUseAltPTT.Checked Then altLowerPTT() else lowerPTT();
+            if not cfgvtwo.Form6.chkHRDPTT.Checked Then
+            Begin
+                 if cfgvtwo.Form6.cbUseAltPTT.Checked Then altLowerPTT() else lowerPTT();
+            end
+            else
+            begin
+                 hrdLowerPTT();
+            end;
        End
        Else
        Begin
@@ -1702,7 +1741,14 @@ begin
           if mnpttOpened Then
           Begin
                diagout.Form3.ListBox1.Items.Add('Closing PTT Port');
-               if cfgvtwo.Form6.cbUseAltPTT.Checked Then altLowerPTT() else lowerPTT();
+               if not cfgvtwo.Form6.chkHRDPTT.Checked Then
+               Begin
+                    if cfgvtwo.Form6.cbUseAltPTT.Checked Then altLowerPTT() else lowerPTT();
+               end
+               else
+               begin
+                    hrdLowerPTT();
+               end;
                diagout.Form3.ListBox1.Items.Add('Closed PTT Port');
           end;
           if globalData.rbLoggedIn Then
@@ -4761,7 +4807,14 @@ Begin
                          rxCount := 0;
                          if not globalData.si570ptt Then
                          Begin
-                             if cfgvtwo.Form6.cbUseAltPTT.Checked Then altRaisePTT() else raisePtt();
+                              if not cfgvtwo.Form6.chkHRDPTT.Checked Then
+                              Begin
+                                   if cfgvtwo.Form6.cbUseAltPTT.Checked Then altRaisePTT() else raisePtt();
+                              end
+                              else
+                              begin
+                                   hrdRaisePTT();
+                              end;
                          End
                          Else
                          Begin
@@ -4824,7 +4877,14 @@ Begin
                     globalData.txInProgress := False;
                     if not globalData.si570ptt Then
                     Begin
-                         if cfgvtwo.Form6.cbUseAltPTT.Checked Then altLowerPTT() else lowerPtt();
+                         if not cfgvtwo.Form6.chkHRDPTT.Checked Then
+                         Begin
+                              if cfgvtwo.Form6.cbUseAltPTT.Checked Then altLowerPTT() else lowerPtt();
+                         end
+                         else
+                         begin
+                              hrdLowerPTT();
+                         end;
                     End
                     Else
                     Begin
@@ -4885,7 +4945,14 @@ Begin
                          rxCount := 0;
                          if not globalData.si570ptt Then
                          Begin
-                             if cfgvtwo.Form6.cbUseAltPTT.Checked Then altRaisePTT() else raisePtt();
+                              if not cfgvtwo.Form6.chkHRDPTT.Checked Then
+                              Begin
+                                   if cfgvtwo.Form6.cbUseAltPTT.Checked Then altRaisePTT() else raisePtt();
+                              end
+                              else
+                              begin
+                                   hrdRaisePTT();
+                              end;
                          End
                          Else
                          Begin
@@ -4948,7 +5015,14 @@ Begin
                     // I have a full TX cycle when d65txBufferIdx >= 538624 or thisSecond > 48
                     if not globalData.si570ptt Then
                     Begin
-                         if cfgvtwo.Form6.cbUseAltPTT.Checked Then altLowerPTT() else lowerPtt();
+                         if not cfgvtwo.Form6.chkHRDPTT.Checked Then
+                         Begin
+                              if cfgvtwo.Form6.cbUseAltPTT.Checked Then altLowerPTT() else lowerPtt();
+                         end
+                         else
+                         begin
+                              hrdLowerPTT();
+                         end;
                     End
                     Else
                     Begin

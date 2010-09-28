@@ -20,13 +20,13 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="maincode"/>
-        <CursorPos X="79" Y="3180"/>
-        <TopLine Value="3165"/>
+        <CursorPos X="45" Y="4886"/>
+        <TopLine Value="4871"/>
         <EditorIndex Value="5"/>
         <UsageCount Value="215"/>
         <Bookmarks Count="2">
-          <Item0 X="1" Y="3458" ID="0"/>
-          <Item1 X="1" Y="4533" ID="1"/>
+          <Item0 X="1" Y="3504" ID="0"/>
+          <Item1 X="1" Y="4579" ID="1"/>
         </Bookmarks>
         <Loaded Value="True"/>
       </Unit1>
@@ -142,8 +142,8 @@
         <ComponentName Value="Form6"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="cfgvtwo"/>
-        <CursorPos X="1" Y="797"/>
-        <TopLine Value="784"/>
+        <CursorPos X="1" Y="798"/>
+        <TopLine Value="773"/>
         <EditorIndex Value="6"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
@@ -181,7 +181,7 @@
         <IsPartOfProject Value="True"/>
         <UnitName Value="catControl"/>
         <CursorPos X="13" Y="739"/>
-        <TopLine Value="503"/>
+        <TopLine Value="709"/>
         <EditorIndex Value="0"/>
         <UsageCount Value="266"/>
         <Loaded Value="True"/>
@@ -270,11 +270,9 @@
         <Filename Value="fftw_jl.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="fftw_jl"/>
-        <CursorPos X="30" Y="18"/>
+        <CursorPos X="60" Y="22"/>
         <TopLine Value="3"/>
-        <EditorIndex Value="20"/>
         <UsageCount Value="201"/>
-        <Loaded Value="True"/>
       </Unit27>
       <Unit28>
         <Filename Value="waterfall.pas"/>
@@ -303,7 +301,7 @@
         <CursorPos X="28" Y="3"/>
         <TopLine Value="1"/>
         <EditorIndex Value="3"/>
-        <UsageCount Value="30"/>
+        <UsageCount Value="32"/>
         <Loaded Value="True"/>
       </Unit30>
       <Unit31>
@@ -313,12 +311,12 @@
         <CursorPos X="1" Y="1"/>
         <TopLine Value="1"/>
         <EditorIndex Value="4"/>
-        <UsageCount Value="30"/>
+        <UsageCount Value="32"/>
         <Loaded Value="True"/>
       </Unit31>
     </Units>
     <General>
-      <ActiveEditorIndexAtStart Value="20"/>
+      <ActiveEditorIndexAtStart Value="5"/>
     </General>
   </ProjectSession>
   <Debugging>
