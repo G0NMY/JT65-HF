@@ -30,7 +30,7 @@ uses
   Forms, maincode, portaudio, encode65, globalData, spectrum, cmaps, fftw_jl,
   adc, samplerate, dac, LResources, dlog, rawdec, cfgvtwo, guiConfig, verHolder,
   PSKReporter, catControl, Si570Dev, LibUSB, SndTypes, UsbDev, synaser, rbc,
-  adif, log, diagout, waterfall, d65, hrdinterface5, hrdinterface4;
+  adif, log, diagout, waterfall, d65, hrdinterface5, hrdinterface4, about;
 
 {$IFDEF WINDOWS}{$R jt65-hf.rc}{$ENDIF}
 
@@ -43,6 +43,7 @@ begin
   Application.CreateForm(TForm6, Form6);
   Application.CreateForm(TForm2, Form2);
   Application.CreateForm(TForm3, Form3);
+  Application.CreateForm(TForm4, Form4);
   Application.Run;
 end.
 

@@ -31,7 +31,7 @@ uses
   Windows, DateUtils, encode65, parseCallSign, globalData, XMLPropStorage, adc,
   dac, ClipBrd, dlog, rawdec, cfgvtwo, guiConfig, verHolder, PSKReporter,
   catControl, Menus, synaser, rbc, log, diagout, synautil, waterfall, d65,
-  spectrum;
+  spectrum, about;
 
 Const
   JT_DLL = 'jt65.dll';
@@ -42,7 +42,6 @@ type
   TForm1 = class(TForm)
     btnHaltTx: TButton;
     btnEngageTx: TButton;
-    btnRawDecoder: TButton;
     btnDefaults: TButton;
     btnZeroRX: TButton;
     btnZeroTX: TButton;
@@ -50,7 +49,6 @@ type
     btnReDecode: TButton;
     buttonClearList: TButton;
     buttonEndQSO2: TButton;
-    buttonSetup: TButton;
     buttonAckReport2: TButton;
     buttonCQ: TButton;
     buttonAnswerCQ: TButton;
@@ -114,6 +112,7 @@ type
     Label9: TLabel;
     ListBox1: TListBox;
     ListBox2: TListBox;
+    MainMenu1: TMainMenu;
     MenuItem1: TMenuItem;
     MenuItem10: TMenuItem;
     MenuItem11: TMenuItem;
@@ -137,6 +136,12 @@ type
     MenuItem28: TMenuItem;
     MenuItem29: TMenuItem;
     MenuItem3: TMenuItem;
+    menuHeard: TMenuItem;
+    menuSetup: TMenuItem;
+    menuRawDecoder: TMenuItem;
+    menuRigControl: TMenuItem;
+    menuTXLog: TMenuItem;
+    menuAbout: TMenuItem;
     MenuItem4: TMenuItem;
     MenuItem5: TMenuItem;
     MenuItem6: TMenuItem;
@@ -210,7 +215,13 @@ type
     procedure Label22DblClick(Sender: TObject);
     procedure Label30DblClick(Sender: TObject);
     procedure Label31DblClick(Sender: TObject);
+    procedure menuAboutClick(Sender: TObject);
+    procedure menuHeardClick(Sender: TObject);
     procedure MenuItemHandler(Sender: TObject);
+    procedure menuRawDecoderClick(Sender: TObject);
+    procedure menuRigControlClick(Sender: TObject);
+    procedure menuSetupClick(Sender: TObject);
+    procedure menuTXLogClick(Sender: TObject);
     procedure rbFreeMsgChange(Sender: TObject);
     procedure rbM65Change(Sender: TObject);
     procedure spinDecoderBWChange(Sender: TObject);
@@ -1727,8 +1738,6 @@ begin
           cfg.Save;
           diagout.Form3.ListBox1.Items.Add('Saved configuration');
 
-          if catcontrol.hrdConnected() then catcontrol.hrdDisconnect();
-
           if mnpttOpened Then
           Begin
                diagout.Form3.ListBox1.Items.Add('Closing PTT Port');
@@ -1779,6 +1788,7 @@ begin
                if termcount > 9 then break;
           end;
           rigThread.Suspend;
+          if catcontrol.hrdConnected() then catcontrol.hrdDisconnect();
           diagout.Form3.ListBox1.Items.Add('Terminated Rig Control Thread');
 
           diagout.Form3.ListBox1.Items.Add('Freeing Threads');
@@ -1942,6 +1952,18 @@ begin
      spectrum.specVGain := Form1.spinGain.Value + 7;
 end;
 
+procedure TForm1.menuAboutClick(Sender: TObject);
+begin
+     about.Form4.Visible := True;
+end;
+
+procedure TForm1.menuHeardClick(Sender: TObject);
+begin
+     cfgvtwo.Form6.Notebook1.ActivePage := 'Heard List/RB Statistics';
+     cfgvtwo.Form6.Show;
+     cfgvtwo.Form6.BringToFront;
+end;
+
 procedure TForm1.MenuItemHandler(Sender: TObject);
 Begin
 
@@ -1978,6 +2000,32 @@ Begin
      If Sender=Form1.MenuItem27 Then Form1.edFreeText.Text := cfgvtwo.Form6.edUserMsg13.Text;
 
 End;
+
+procedure TForm1.menuRawDecoderClick(Sender: TObject);
+begin
+     diagout.Form3.Visible := True;
+     //rawdec.Form5.Visible := True;
+end;
+
+procedure TForm1.menuRigControlClick(Sender: TObject);
+begin
+     cfgvtwo.Form6.Notebook1.ActivePage := 'RB/PSK Reporter/Rig Control';
+     cfgvtwo.Form6.Show;
+     cfgvtwo.Form6.BringToFront;
+end;
+
+procedure TForm1.menuSetupClick(Sender: TObject);
+begin
+     cfgvtwo.Form6.Notebook1.ActivePage := 'Station Setup';
+     cfgvtwo.Form6.Show;
+     cfgvtwo.Form6.BringToFront;
+end;
+
+procedure TForm1.menuTXLogClick(Sender: TObject);
+begin
+     //diagout.Form3.Visible := True;
+     rawdec.Form5.Visible := True;
+end;
 
 procedure TForm1.ListBox1MouseDown(Sender: TObject; Button: TMouseButton;
   Shift: TShiftState; X, Y: Integer);

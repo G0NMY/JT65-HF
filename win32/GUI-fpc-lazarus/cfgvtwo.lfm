@@ -20,7 +20,7 @@ object Form6: TForm6
     Width = 784
     Font.Height = -13
     Font.Name = 'Arial'
-    PageIndex = 4
+    PageIndex = 2
     ParentFont = False
     TabOrder = 0
     object Page1: TPage
@@ -424,7 +424,7 @@ object Form6: TForm6
         Left = 12
         Height = 17
         Top = 53
-        Width = 282
+        Width = 284
         Caption = '[Optional] Antenna Description for PSK Reporter.'
         ParentColor = False
       end
@@ -837,6 +837,7 @@ object Form6: TForm6
           Top = 252
           Width = 268
           Caption = 'Shift QRG to match DF if DF > +/- 100Hz'
+          Enabled = False
           TabOrder = 9
         end
         object chkHRDPTT: TCheckBox
