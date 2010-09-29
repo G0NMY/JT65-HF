@@ -42,6 +42,8 @@ type
     btnSetSi570: TButton;
     btnClearLog: TButton;
     Button1: TButton;
+    Label65: TLabel;
+    Label67: TLabel;
     testHRDPTT: TButton;
     setHRDQRG: TButton;
     buttonTestPTT: TButton;

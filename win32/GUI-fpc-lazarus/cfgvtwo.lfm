@@ -20,7 +20,7 @@ object Form6: TForm6
     Width = 784
     Font.Height = -13
     Font.Name = 'Arial'
-    PageIndex = 2
+    PageIndex = 0
     ParentFont = False
     TabOrder = 0
     object Page1: TPage
@@ -1707,7 +1707,7 @@ object Form6: TForm6
       object Label5: TLabel
         Left = 12
         Height = 17
-        Top = 329
+        Top = 317
         Width = 176
         Caption = 'Indicated QRG KHz:  000000'
         Font.Height = -13
@@ -1717,12 +1717,36 @@ object Form6: TForm6
         ParentFont = False
       end
       object Label7: TLabel
-        Left = 12
+        Left = 260
         Height = 17
-        Top = 361
+        Top = 317
         Width = 151
         Caption = 'Si570 QRG KHz:  000000'
         Font.Height = -13
+        Font.Name = 'Arial'
+        Font.Style = [fsBold]
+        ParentColor = False
+        ParentFont = False
+      end
+      object Label65: TLabel
+        Left = 12
+        Height = 45
+        Top = 349
+        Width = 723
+        Caption = 'NOTE:  This will only control an Si570 via USB connection.  You must continue'#13#10'to use software such as Rocky or PowerSDR as the radio software!'
+        Font.Height = -19
+        Font.Name = 'Arial'
+        Font.Style = [fsBold]
+        ParentColor = False
+        ParentFont = False
+      end
+      object Label67: TLabel
+        Left = 12
+        Height = 45
+        Top = 397
+        Width = 498
+        Caption = #13#10'JT65-HF does NOT implement an SDR RX/TX platform.'
+        Font.Height = -19
         Font.Name = 'Arial'
         Font.Style = [fsBold]
         ParentColor = False

@@ -64,7 +64,6 @@ type
     chkMultiDecode: TCheckBox;
     chkNB: TCheckBox;
     edFreeText: TEdit;
-    Edit1: TEdit;
     Edit2: TEdit;
     editManQRG: TEdit;
     edSigRep: TEdit;
@@ -95,7 +94,6 @@ type
     Label3: TLabel;
     Label30: TLabel;
     Label31: TLabel;
-    Label32: TLabel;
     Label33: TLabel;
     Label34: TLabel;
     Label35: TLabel;
@@ -168,7 +166,6 @@ type
     spinDecoderBW: TSpinEdit;
     spinDecoderCF: TSpinEdit;
     SpinEdit1: TSpinEdit;
-    spinBin: TSpinEdit;
     spinGain: TSpinEdit;
     spinTXCF: TSpinEdit;
     Timer1: TTimer;
@@ -226,7 +223,7 @@ type
     procedure rbM65Change(Sender: TObject);
     procedure spinDecoderBWChange(Sender: TObject);
     procedure SpinEdit1Change(Sender: TObject);
-    procedure spinBinChange(Sender: TObject);
+    //procedure spinBinChange(Sender: TObject);
     procedure spinGainChange(Sender: TObject);
     procedure spinTXCFChange(Sender: TObject);
     procedure tbBrightChange(Sender: TObject);
@@ -1145,10 +1142,11 @@ Begin
           if spinDecoderBW.Value = 2 Then d65.glDFTolerance := 50;
           if spinDecoderBW.Value = 3 Then d65.glDFTolerance := 100;
           if spinDecoderBW.Value = 4 Then d65.glDFTolerance := 200;
-          if form1.spinBin.Value = 1 Then d65.glbinspace := 20;
-          if form1.spinBin.Value = 2 Then d65.glbinspace := 50;
-          if form1.spinBin.Value = 3 Then d65.glbinspace := 100;
-          if form1.spinBin.Value = 4 Then d65.glbinspace := 200;
+          //if form1.spinBin.Value = 1 Then d65.glbinspace := 20;
+          //if form1.spinBin.Value = 2 Then d65.glbinspace := 50;
+          //if form1.spinBin.Value = 3 Then d65.glbinspace := 100;
+          //if form1.spinBin.Value = 4 Then d65.glbinspace := 200;
+          d65.glbinspace := 100;
           if d65.glDFTolerance > 200 then d65.glDFTolerance := 200;
           if d65.glDFTolerance < 20 then d65.glDFTolerance := 20;
           If Form1.chkNB.Checked then d65.glNblank := 1 Else d65.glNblank := 0;
@@ -1427,17 +1425,17 @@ begin
      spectrum.specSpeed2 := Form1.SpinEdit1.Value;
 end;
 
-procedure TForm1.spinBinChange(Sender: TObject);
-begin
-     if spinBin.Value = 1 Then edit1.Text := '20';
-     if spinBin.Value = 2 Then edit1.Text := '50';
-     if spinBin.Value = 3 Then edit1.Text := '100';
-     if spinBin.Value = 4 Then edit1.Text := '200';
-     if spinBin.Value = 1 Then d65.glbinspace := 20;
-     if spinBin.Value = 2 Then d65.glbinspace := 50;
-     if spinBin.Value = 3 Then d65.glbinspace := 100;
-     if spinBin.Value = 4 Then d65.glbinspace := 200;
-end;
+//procedure TForm1.spinBinChange(Sender: TObject);
+//begin
+//     if spinBin.Value = 1 Then edit1.Text := '20';
+//     if spinBin.Value = 2 Then edit1.Text := '50';
+//     if spinBin.Value = 3 Then edit1.Text := '100';
+//     if spinBin.Value = 4 Then edit1.Text := '200';
+//     if spinBin.Value = 1 Then d65.glbinspace := 20;
+//     if spinBin.Value = 2 Then d65.glbinspace := 50;
+//     if spinBin.Value = 3 Then d65.glbinspace := 100;
+//     if spinBin.Value = 4 Then d65.glbinspace := 200;
+//end;
 
 procedure TForm1.spinGainChange(Sender: TObject);
 begin
@@ -1619,7 +1617,7 @@ begin
           if cfgvtwo.Form6.cbUseAltPTT.Checked Then cfg.StoredValue['useAltPTT'] := 'yes' else cfg.StoredValue['useAltPTT'] := 'no';
           if cfgvtwo.Form6.chkHRDPTT.Checked Then cfg.StoredValue['useHRDPTT'] := 'yes' else cfg.StoredValue['useHRDPTT'] := 'no';
           cfg.StoredValue['specVGain'] := IntToStr(spinGain.Value);
-          cfg.StoredValue['binspace'] := IntToStr(spinBin.Value);
+          cfg.StoredValue['binspace'] := '100';
           cfg.StoredValue['cqColor'] := IntToStr(cfgvtwo.Form6.ComboBox1.ItemIndex);
           cfg.StoredValue['callColor'] := IntToStr(cfgvtwo.Form6.ComboBox2.ItemIndex);
           cfg.StoredValue['qsoColor'] := IntToStr(cfgvtwo.Form6.ComboBox3.ItemIndex);
@@ -2574,12 +2572,13 @@ begin
                if spinDecoderBW.Value = 2 Then d65.glDFTolerance := 50;
                if spinDecoderBW.Value = 3 Then d65.glDFTolerance := 100;
                if spinDecoderBW.Value = 4 Then d65.glDFTolerance := 200;
-               if form1.spinBin.Value = 1 Then d65.glbinspace := 20;
-               if form1.spinBin.Value = 2 Then d65.glbinspace := 50;
-               if form1.spinBin.Value = 3 Then d65.glbinspace := 100;
-               if form1.spinBin.Value = 4 Then d65.glbinspace := 200;
+               //if form1.spinBin.Value = 1 Then d65.glbinspace := 20;
+               //if form1.spinBin.Value = 2 Then d65.glbinspace := 50;
+               //if form1.spinBin.Value = 3 Then d65.glbinspace := 100;
+               //if form1.spinBin.Value = 4 Then d65.glbinspace := 200;
                if d65.glDFTolerance > 200 then d65.glDFTolerance := 200;
                if d65.glDFTolerance < 20 then d65.glDFTolerance := 20;
+               d65.glbinspace := 100;
                If Form1.chkNB.Checked then d65.glNblank := 1 Else d65.glNblank := 0;
                //if Form1.chkSHIFT.Checked then d65.glNshift := 1 Else d65.glNshift := 0;
                d65.glNshift := 0;
@@ -3439,8 +3438,8 @@ Begin
           cfgvtwo.Form6.chkHRDPTT.Checked := False;
           cfgvtwo.Form6.chkTxDFVFO.Checked := False;
           Form1.spinGain.Value := 0;
-          Form1.spinBin.Value := 3;
-          Form1.Edit1.Text := '100';
+          //Form1.spinBin.Value := 3;
+          //Form1.Edit1.Text := '100';
           cfgvtwo.Form6.chkNoOptFFT.Checked := False;
           cfgvtwo.glcatBy := 'none';
           Form1.spinTXCF.Value := 0;
@@ -3523,7 +3522,7 @@ Begin
           cfg.StoredValue['usrMsg8'] := cfgvtwo.Form6.edUserMsg11.Text;
           cfg.StoredValue['usrMsg9'] := cfgvtwo.Form6.edUserMsg12.Text;
           cfg.StoredValue['usrMsg10'] := cfgvtwo.Form6.edUserMsg13.Text;
-          cfg.StoredValue['binspace'] := IntToStr(spinBin.Value);
+          cfg.StoredValue['binspace'] := '100';
           if Form1.cbSmooth.Checked Then cfg.StoredValue['smooth'] := 'on' else cfg.StoredValue['smooth'] := 'off';
           if cfgvtwo.Form6.cbRestoreMulti.Checked Then cfg.StoredValue['restoreMulti'] := 'on' else cfg.StoredValue['restoreMulti'] := 'off';
           cfg.StoredValue['specVGain'] := IntToStr(spinGain.Value);
@@ -4016,15 +4015,16 @@ Begin
      Form1.MenuItem26.Caption := cfg.StoredValue['usrMsg9'];
      Form1.MenuItem27.Caption := cfg.StoredValue['usrMsg10'];
      tstint := 0;
-     If TryStrToInt(cfg.StoredValue['binspace'],tstint) Then spinBin.Value := tstint else spinBin.Value := 3;
-     if spinBin.Value = 1 Then Edit1.Text := '20';
-     if spinBin.Value = 2 Then Edit1.Text := '50';
-     if spinBin.Value = 3 Then Edit1.Text := '100';
-     if spinBin.Value = 4 Then Edit1.Text := '200';
-     if spinBin.Value = 1 Then d65.glbinspace := 20;
-     if spinBin.Value = 2 Then d65.glbinspace := 50;
-     if spinBin.Value = 3 Then d65.glbinspace := 100;
-     if spinBin.Value = 4 Then d65.glbinspace := 200;
+     //If TryStrToInt(cfg.StoredValue['binspace'],tstint) Then spinBin.Value := tstint else spinBin.Value := 3;
+     //if spinBin.Value = 1 Then Edit1.Text := '20';
+     //if spinBin.Value = 2 Then Edit1.Text := '50';
+     //if spinBin.Value = 3 Then Edit1.Text := '100';
+     //if spinBin.Value = 4 Then Edit1.Text := '200';
+     //if spinBin.Value = 1 Then d65.glbinspace := 20;
+     //if spinBin.Value = 2 Then d65.glbinspace := 50;
+     //if spinBin.Value = 3 Then d65.glbinspace := 100;
+     //if spinBin.Value = 4 Then d65.glbinspace := 200;
+     d65.glbinspace := 100;
 
      if cfg.StoredValue['smooth'] = 'on' Then Form1.cbSmooth.Checked := True else Form1.cbSmooth.Checked := False;
      if Form1.cbSmooth.Checked Then spectrum.specSmooth := True else spectrum.specSmooth := False;

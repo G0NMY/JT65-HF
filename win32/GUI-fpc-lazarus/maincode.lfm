@@ -274,18 +274,6 @@ object Form1: TForm1
     ParentColor = False
     ParentFont = False
   end
-  object Label32: TLabel
-    Left = 556
-    Height = 15
-    Top = 580
-    Width = 123
-    Caption = 'Multi Decoder Spacing'
-    Font.Height = -11
-    Font.Name = 'Arial'
-    Font.Style = [fsBold]
-    ParentColor = False
-    ParentFont = False
-  end
   object Label19: TLabel
     Left = 566
     Height = 17
@@ -998,11 +986,11 @@ object Form1: TForm1
     TabOrder = 27
   end
   object chkMultiDecode: TCheckBox
-    Left = 624
+    Left = 556
     Height = 19
-    Top = 599
-    Width = 86
-    Caption = 'Enable Multi'
+    Top = 587
+    Width = 136
+    Caption = 'Enable Multi-decoder'
     Checked = True
     Font.Height = -11
     Font.Name = 'Arial'
@@ -1150,35 +1138,6 @@ object Form1: TForm1
     OnClick = cbEnPSKRClick
     TabOrder = 36
   end
-  object Edit1: TEdit
-    Left = 556
-    Height = 24
-    Top = 599
-    Width = 40
-    Font.Height = -13
-    Font.Name = 'Arial'
-    Font.Style = [fsBold]
-    MaxLength = 3
-    ParentFont = False
-    ReadOnly = True
-    TabStop = False
-    TabOrder = 37
-    Text = '100'
-  end
-  object spinBin: TSpinEdit
-    Left = 595
-    Height = 24
-    Top = 599
-    Width = 18
-    MaxValue = 4
-    MinValue = 1
-    OnChange = spinBinChange
-    ParentShowHint = False
-    ShowHint = True
-    TabStop = False
-    TabOrder = 38
-    Value = 3
-  end
   object Edit2: TEdit
     Left = 556
     Height = 24
@@ -1191,7 +1150,7 @@ object Form1: TForm1
     ParentFont = False
     ReadOnly = True
     TabStop = False
-    TabOrder = 39
+    TabOrder = 37
     Text = '100'
   end
   object RadioGroup2: TRadioGroup
@@ -1212,7 +1171,7 @@ object Form1: TForm1
     ClientHeight = 23
     ClientWidth = 189
     Columns = 3
-    TabOrder = 40
+    TabOrder = 38
     Visible = False
     object rbM65: TRadioButton
       Left = 6
@@ -1269,7 +1228,7 @@ object Form1: TForm1
     Font.Style = [fsBold]
     OnClick = btnReDecodeClick
     ParentFont = False
-    TabOrder = 41
+    TabOrder = 39
   end
   object Timer1: TTimer
     Interval = 220
