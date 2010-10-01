@@ -20,13 +20,13 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="maincode"/>
-        <CursorPos X="1" Y="221"/>
-        <TopLine Value="206"/>
+        <CursorPos X="1" Y="4005"/>
+        <TopLine Value="3986"/>
         <EditorIndex Value="5"/>
         <UsageCount Value="215"/>
         <Bookmarks Count="2">
-          <Item0 X="1" Y="3538" ID="0"/>
-          <Item1 X="1" Y="4614" ID="1"/>
+          <Item0 X="1" Y="3467" ID="0"/>
+          <Item1 X="1" Y="4530" ID="1"/>
         </Bookmarks>
         <Loaded Value="True"/>
       </Unit1>
@@ -142,8 +142,8 @@
         <ComponentName Value="Form6"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="cfgvtwo"/>
-        <CursorPos X="1" Y="800"/>
-        <TopLine Value="770"/>
+        <CursorPos X="13" Y="995"/>
+        <TopLine Value="965"/>
         <EditorIndex Value="7"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
@@ -153,7 +153,7 @@
         <IsPartOfProject Value="True"/>
         <UnitName Value="guiConfig"/>
         <CursorPos X="1" Y="29"/>
-        <TopLine Value="3"/>
+        <TopLine Value="9"/>
         <EditorIndex Value="2"/>
         <UsageCount Value="201"/>
         <Loaded Value="True"/>
@@ -162,8 +162,8 @@
         <Filename Value="verholder.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="verHolder"/>
-        <CursorPos X="71" Y="22"/>
-        <TopLine Value="2"/>
+        <CursorPos X="7" Y="41"/>
+        <TopLine Value="13"/>
         <EditorIndex Value="14"/>
         <UsageCount Value="201"/>
         <Loaded Value="True"/>
@@ -180,8 +180,8 @@
         <Filename Value="catcontrol.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="catControl"/>
-        <CursorPos X="1" Y="80"/>
-        <TopLine Value="55"/>
+        <CursorPos X="6" Y="1"/>
+        <TopLine Value="118"/>
         <EditorIndex Value="0"/>
         <UsageCount Value="266"/>
         <Loaded Value="True"/>
@@ -301,7 +301,7 @@
         <CursorPos X="28" Y="3"/>
         <TopLine Value="1"/>
         <EditorIndex Value="3"/>
-        <UsageCount Value="58"/>
+        <UsageCount Value="96"/>
         <Loaded Value="True"/>
       </Unit30>
       <Unit31>
@@ -311,7 +311,7 @@
         <CursorPos X="1" Y="1"/>
         <TopLine Value="1"/>
         <EditorIndex Value="4"/>
-        <UsageCount Value="58"/>
+        <UsageCount Value="96"/>
         <Loaded Value="True"/>
       </Unit31>
       <Unit32>
@@ -323,12 +323,12 @@
         <CursorPos X="112" Y="21"/>
         <TopLine Value="2"/>
         <EditorIndex Value="6"/>
-        <UsageCount Value="35"/>
+        <UsageCount Value="73"/>
         <Loaded Value="True"/>
       </Unit32>
     </Units>
     <General>
-      <ActiveEditorIndexAtStart Value="7"/>
+      <ActiveEditorIndexAtStart Value="5"/>
     </General>
   </ProjectSession>
   <Debugging>

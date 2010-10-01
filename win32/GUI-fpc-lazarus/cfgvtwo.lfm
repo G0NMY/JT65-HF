@@ -20,7 +20,7 @@ object Form6: TForm6
     Width = 784
     Font.Height = -13
     Font.Name = 'Arial'
-    PageIndex = 0
+    PageIndex = 1
     ParentFont = False
     TabOrder = 0
     object Page1: TPage
@@ -412,9 +412,9 @@ object Form6: TForm6
       ClientWidth = 776
       ClientHeight = 459
       object Label1: TLabel
-        Left = 596
+        Left = 196
         Height = 17
-        Top = 3
+        Top = 269
         Width = 174
         Caption = 'Rig Control Reported QRG Hz'
         ParentColor = False
@@ -423,7 +423,7 @@ object Form6: TForm6
       object Label33: TLabel
         Left = 12
         Height = 17
-        Top = 53
+        Top = 36
         Width = 284
         Caption = '[Optional] Antenna Description for PSK Reporter.'
         ParentColor = False
@@ -431,24 +431,24 @@ object Form6: TForm6
       object Label34: TLabel
         Left = 12
         Height = 17
-        Top = 3
+        Top = 6
         Width = 563
         Caption = '[Optional] Call for PSK Reporter or RB.  Suffixed/Prefixed is allowed here.  DO NOT add -1 -2 etc.'
         ParentColor = False
       end
       object cbUsePSKReporter: TCheckBox
-        Left = 364
+        Left = 553
         Height = 20
-        Top = 21
+        Top = 389
         Width = 219
         Caption = 'Spot Receptions via PSK Reporter'
         TabOrder = 0
         Visible = False
       end
       object rigQRG: TEdit
-        Left = 596
+        Left = 196
         Height = 24
-        Top = 23
+        Top = 289
         Width = 80
         ReadOnly = True
         TabOrder = 1
@@ -456,12 +456,12 @@ object Form6: TForm6
         Visible = False
       end
       object OmniGroup: TRadioGroup
-        Left = 292
-        Height = 48
-        Top = 101
-        Width = 264
+        Left = 404
+        Height = 53
+        Top = 64
+        Width = 219
         AutoFill = True
-        Caption = 'OmniRig Settings'
+        Caption = 'OmniRig'
         ChildSizing.LeftRightSpacing = 6
         ChildSizing.TopBottomSpacing = 6
         ChildSizing.EnlargeHorizontal = crsHomogenousChildResize
@@ -470,46 +470,46 @@ object Form6: TForm6
         ChildSizing.ShrinkVertical = crsScaleChilds
         ChildSizing.Layout = cclLeftToRightThenTopToBottom
         ChildSizing.ControlsPerLine = 3
-        ClientHeight = 30
-        ClientWidth = 260
+        ClientHeight = 35
+        ClientWidth = 215
         Columns = 3
         TabOrder = 2
         object chkUseOmni: TCheckBox
           Left = 6
-          Height = 18
+          Height = 23
           Top = 6
-          Width = 105
-          Caption = 'Use OmniRig'
+          Width = 65
+          Caption = 'Enable'
           OnChange = chkUseOmniChange
           TabOrder = 0
         end
         object radioOmni1: TRadioButton
-          Left = 111
-          Height = 18
+          Left = 71
+          Height = 23
           Top = 6
-          Width = 72
+          Width = 69
           Caption = 'Radio 1'
           Checked = True
           State = cbChecked
           TabOrder = 1
         end
         object radioOmni2: TRadioButton
-          Left = 183
-          Height = 18
+          Left = 140
+          Height = 23
           Top = 6
-          Width = 71
+          Width = 69
           Caption = 'Radio 2'
           TabOrder = 2
           TabStop = False
         end
       end
       object RadioGroup1: TRadioGroup
-        Left = 10
-        Height = 48
-        Top = 101
-        Width = 264
+        Left = 12
+        Height = 53
+        Top = 64
+        Width = 386
         AutoFill = True
-        Caption = 'Ham Radio Deluxe Settings'
+        Caption = 'Ham Radio Deluxe'
         ChildSizing.LeftRightSpacing = 6
         ChildSizing.TopBottomSpacing = 6
         ChildSizing.EnlargeHorizontal = crsHomogenousChildResize
@@ -518,46 +518,46 @@ object Form6: TForm6
         ChildSizing.ShrinkVertical = crsScaleChilds
         ChildSizing.Layout = cclLeftToRightThenTopToBottom
         ChildSizing.ControlsPerLine = 3
-        ClientHeight = 30
-        ClientWidth = 260
+        ClientHeight = 35
+        ClientWidth = 382
         Columns = 3
         TabOrder = 3
         object chkUseHRD: TCheckBox
           Left = 6
-          Height = 18
+          Height = 23
           Top = 6
-          Width = 88
-          Caption = 'Use HRD'
+          Width = 140
+          Caption = 'Enable'
           OnChange = chkUseHRDChange
           TabOrder = 0
         end
         object rbHRD4: TRadioButton
-          Left = 94
-          Height = 18
+          Left = 146
+          Height = 23
           Top = 6
-          Width = 81
-          Caption = 'HRD V4'
+          Width = 116
+          Caption = 'Version 4'
           TabOrder = 1
           TabStop = False
         end
         object rbHRD5: TRadioButton
-          Left = 175
-          Height = 18
+          Left = 262
+          Height = 23
           Top = 6
-          Width = 79
-          Caption = 'HRD V5'
+          Width = 114
+          Caption = 'Version 5'
           Checked = True
           State = cbChecked
           TabOrder = 2
         end
       end
       object RadioGroup2: TRadioGroup
-        Left = 570
-        Height = 48
-        Top = 101
-        Width = 200
+        Left = 628
+        Height = 53
+        Top = 64
+        Width = 142
         AutoFill = True
-        Caption = 'DX Labs Commander Settings'
+        Caption = 'Commander'
         ChildSizing.LeftRightSpacing = 6
         ChildSizing.TopBottomSpacing = 6
         ChildSizing.EnlargeHorizontal = crsHomogenousChildResize
@@ -566,39 +566,39 @@ object Form6: TForm6
         ChildSizing.ShrinkVertical = crsScaleChilds
         ChildSizing.Layout = cclLeftToRightThenTopToBottom
         ChildSizing.ControlsPerLine = 3
-        ClientHeight = 30
-        ClientWidth = 196
+        ClientHeight = 35
+        ClientWidth = 138
         Columns = 3
         TabOrder = 4
         object chkUseCommander: TCheckBox
           Left = 6
-          Height = 18
+          Height = 23
           Top = 6
-          Width = 141
-          Caption = 'Use Commander'
+          Width = 84
+          Caption = 'Enable'
           OnChange = chkUseCommanderChange
           TabOrder = 0
         end
       end
       object editPSKRAntenna: TEdit
-        Left = 10
+        Left = 300
         Height = 24
-        Top = 73
-        Width = 760
+        Top = 33
+        Width = 470
         TabOrder = 5
       end
       object editPSKRCall: TEdit
-        Left = 12
+        Left = 579
         Height = 24
-        Top = 23
+        Top = 3
         Width = 112
         CharCase = ecUppercase
         TabOrder = 6
       end
       object cbUseRB: TCheckBox
-        Left = 140
+        Left = 564
         Height = 20
-        Top = 21
+        Top = 433
         Width = 208
         Caption = 'Spot Receptions via RB Network'
         OnChange = cbUseRBChange
@@ -606,9 +606,9 @@ object Form6: TForm6
         Visible = False
       end
       object cbNoInet: TCheckBox
-        Left = 588
+        Left = 580
         Height = 20
-        Top = 21
+        Top = 349
         Width = 178
         Caption = 'Operate RB in Offline Mode'
         OnChange = cbNoInetChange
@@ -617,11 +617,11 @@ object Form6: TForm6
       end
       object groupHRD: TGroupBox
         Left = 10
-        Height = 296
-        Top = 157
+        Height = 336
+        Top = 117
         Width = 760
         Caption = 'HRD Details'
-        ClientHeight = 278
+        ClientHeight = 318
         ClientWidth = 756
         Font.Height = -13
         Font.Name = 'Arial'
@@ -737,6 +737,22 @@ object Form6: TForm6
           Caption = 'Tune Antenna'
           ParentColor = False
         end
+        object Label68: TLabel
+          Left = 6
+          Height = 17
+          Top = 287
+          Width = 128
+          Caption = 'HRD Server Address'
+          ParentColor = False
+        end
+        object Label69: TLabel
+          Left = 285
+          Height = 17
+          Top = 287
+          Width = 27
+          Caption = 'Port'
+          ParentColor = False
+        end
         object sliderAFGain: TTrackBar
           Left = 423
           Height = 25
@@ -835,9 +851,8 @@ object Form6: TForm6
           Left = 6
           Height = 20
           Top = 252
-          Width = 268
-          Caption = 'Shift QRG to match DF if DF > +/- 100Hz'
-          Enabled = False
+          Width = 330
+          Caption = 'Shift QRG to match DF if TxDF matching enabled'
           TabOrder = 9
         end
         object chkHRDPTT: TCheckBox
@@ -1071,6 +1086,28 @@ object Form6: TForm6
           Caption = 'Test HRD PTT'
           OnClick = testHRDPTTClick
           TabOrder = 36
+        end
+        object hrdAddress: TEdit
+          Left = 140
+          Height = 24
+          Hint = 'This should almost always be localhost'
+          Top = 285
+          Width = 134
+          ParentShowHint = False
+          ShowHint = True
+          TabOrder = 37
+          Text = 'localhost'
+        end
+        object hrdPort: TEdit
+          Left = 317
+          Height = 24
+          Hint = 'Usually 7809'
+          Top = 285
+          Width = 48
+          ParentShowHint = False
+          ShowHint = True
+          TabOrder = 38
+          Text = '7809'
         end
       end
     end
@@ -1846,7 +1883,7 @@ object Form6: TForm6
       ClientHeight = 459
       object Edit1: TEdit
         Left = 12
-        Height = 26
+        Height = 30
         Top = 13
         Width = 168
         Alignment = taCenter
@@ -1897,7 +1934,7 @@ object Form6: TForm6
       end
       object Edit2: TEdit
         Left = 12
-        Height = 24
+        Height = 30
         Top = 59
         Width = 168
         Alignment = taCenter
@@ -1948,7 +1985,7 @@ object Form6: TForm6
       end
       object Edit3: TEdit
         Left = 12
-        Height = 24
+        Height = 30
         Top = 109
         Width = 168
         Alignment = taCenter

@@ -152,10 +152,6 @@ type
     popupMsgs: TPopupMenu;
     popupQRG: TPopupMenu;
     ProgressBar3: TProgressBar;
-    rbMB: TRadioButton;
-    rbM65: TRadioButton;
-    rbM4: TRadioButton;
-    RadioGroup2: TRadioGroup;
     rbFreeMsg: TRadioButton;
     rbGenMsg: TRadioButton;
     RadioGroup1: TRadioGroup;
@@ -220,10 +216,8 @@ type
     procedure menuSetupClick(Sender: TObject);
     procedure menuTXLogClick(Sender: TObject);
     procedure rbFreeMsgChange(Sender: TObject);
-    procedure rbM65Change(Sender: TObject);
     procedure spinDecoderBWChange(Sender: TObject);
     procedure SpinEdit1Change(Sender: TObject);
-    //procedure spinBinChange(Sender: TObject);
     procedure spinGainChange(Sender: TObject);
     procedure spinTXCFChange(Sender: TObject);
     procedure tbBrightChange(Sender: TObject);
@@ -488,8 +482,6 @@ begin
              Begin
                   If (mnrbcReport) And (not rbc.glrbActive) Then
                   Begin
-                       //globalData.rbID := '1';
-                       //if globalData.debugOn Then rbc.glrbCallsign := TrimLeft(TrimRight(cfgvtwo.Form6.editPSKRCall.Text)) + '-2' else rbc.glrbCallsign := TrimLeft(TrimRight(cfgvtwo.Form6.editPSKRCall.Text)) + '-1';
                        rbc.glrbCallsign := TrimLeft(TrimRight(cfgvtwo.Form6.editPSKRCall.Text)) + '-1';
                        rbc.glrbGrid := TrimLeft(TrimRight(cfgvtwo.Form6.edMyGrid.Text));
                        rbc.glrbQRG := Form1.editManQRG.Text;
@@ -499,8 +491,6 @@ begin
                   end;
                   if (cfgvtwo.glrbcLogin) And (not globalData.rbLoggedIn) And (not rbc.glrbActive) Then
                   Begin
-                       //globalData.rbID := '1';
-                       //if globalData.debugOn Then rbc.glrbCallsign := TrimLeft(TrimRight(cfgvtwo.Form6.editPSKRCall.Text)) + '-2' else rbc.glrbCallsign := TrimLeft(TrimRight(cfgvtwo.Form6.editPSKRCall.Text)) + '-1';
                        rbc.glrbCallsign := TrimLeft(TrimRight(cfgvtwo.Form6.editPSKRCall.Text)) + '-1';
                        rbc.glrbQRG := Form1.editManQRG.Text;
                        rbc.glrbGrid := TrimLeft(TrimRight(cfgvtwo.Form6.edMyGrid.Text));
@@ -510,8 +500,6 @@ begin
                   End;
                   if (cfgvtwo.glrbcLogout) And (globalData.rbLoggedIn) And (not rbc.glrbActive) Then
                   Begin
-                       //globalData.rbID := '1';
-                       //if globalData.debugOn Then rbc.glrbCallsign := TrimLeft(TrimRight(cfgvtwo.Form6.editPSKRCall.Text)) + '-2' else rbc.glrbCallsign := TrimLeft(TrimRight(cfgvtwo.Form6.editPSKRCall.Text)) + '-1';
                        rbc.glrbCallsign := TrimLeft(TrimRight(cfgvtwo.Form6.editPSKRCall.Text)) + '-1';
                        rbc.glrbQRG := Form1.editManQRG.Text;
                        rbc.glrbGrid := TrimLeft(TrimRight(cfgvtwo.Form6.edMyGrid.Text));
@@ -521,8 +509,6 @@ begin
                   End;
                   if (rbcPing) And (not rbc.glrbActive) Then
                   Begin
-                       //globalData.rbID := '1';
-                       //if globalData.debugOn Then rbc.glrbCallsign := TrimLeft(TrimRight(cfgvtwo.Form6.editPSKRCall.Text)) + '-2' else rbc.glrbCallsign := TrimLeft(TrimRight(cfgvtwo.Form6.editPSKRCall.Text)) + '-1';
                        rbc.glrbCallsign := TrimLeft(TrimRight(cfgvtwo.Form6.editPSKRCall.Text)) + '-1';
                        rbc.glrbQRG := Form1.editManQRG.Text;
                        rbc.glrbGrid := TrimLeft(TrimRight(cfgvtwo.Form6.edMyGrid.Text));
@@ -1121,9 +1107,6 @@ Begin
             dt := synaUtil.GetUTTime;
             DateTimeToSystemTime(GetUTTime,st);
           {$ENDIF}
-          {$IFDEF darwin}
-            // Unknown at this point and probably moot.  Little chance this will ever run in MacOS X
-          {$ENDIF}
           ost := st;
           d65.gld65timestamp := '';
           d65.gld65timestamp := d65.gld65timestamp + IntToStr(st.Year);
@@ -1142,18 +1125,12 @@ Begin
           if spinDecoderBW.Value = 2 Then d65.glDFTolerance := 50;
           if spinDecoderBW.Value = 3 Then d65.glDFTolerance := 100;
           if spinDecoderBW.Value = 4 Then d65.glDFTolerance := 200;
-          //if form1.spinBin.Value = 1 Then d65.glbinspace := 20;
-          //if form1.spinBin.Value = 2 Then d65.glbinspace := 50;
-          //if form1.spinBin.Value = 3 Then d65.glbinspace := 100;
-          //if form1.spinBin.Value = 4 Then d65.glbinspace := 200;
           d65.glbinspace := 100;
           if d65.glDFTolerance > 200 then d65.glDFTolerance := 200;
           if d65.glDFTolerance < 20 then d65.glDFTolerance := 20;
           If Form1.chkNB.Checked then d65.glNblank := 1 Else d65.glNblank := 0;
-          //if Form1.chkSHIFT.Checked then d65.glNshift := 1 Else d65.glNshift := 0;
           d65.glNshift := 0;
           if Form1.chkAFC.Checked then d65.glNafc := 1 Else d65.glNafc := 0;
-          //if Form1.chkZAP.Checked then globalData.d65Nzap := 1 Else globalData.d65Nzap := 0;
           d65.glNzap := 0;
           d65.gldecoderPass := 0;
           if form1.chkMultiDecode.Checked Then d65.glsteps := 1 else d65.glsteps := 0;
@@ -1176,7 +1153,6 @@ begin
      Form1.spinTXCF.Value := 0;
      Form1.spinDecoderCF.Value := 0;
      Form1.spinDecoderBW.Value := 3;
-     //Form1.edit2.Text := '100';
      Form1.rbGenMsg.Checked := True;
      Form1.chkAutoTxDF.Checked := True;
      Form1.chkEnTX.Checked := False;
@@ -1402,14 +1378,6 @@ begin
      End;
 end;
 
-procedure TForm1.rbM65Change(Sender: TObject);
-begin
-     If form1.rbM65.Checked Then globalData.gmode := 65;
-     If form1.rbM4.Checked Then globalData.gmode := 4;
-     If form1.rbMB.Checked Then globalData.gmode := 0;
-     txMode := globalData.gmode;
-end;
-
 procedure TForm1.spinDecoderBWChange(Sender: TObject);
 begin
      if spinDecoderBW.Value = 1 Then edit2.Text := '20';
@@ -1424,18 +1392,6 @@ begin
      if spinEdit1.Value < 0 then spinEdit1.Value := 0;
      spectrum.specSpeed2 := Form1.SpinEdit1.Value;
 end;
-
-//procedure TForm1.spinBinChange(Sender: TObject);
-//begin
-//     if spinBin.Value = 1 Then edit1.Text := '20';
-//     if spinBin.Value = 2 Then edit1.Text := '50';
-//     if spinBin.Value = 3 Then edit1.Text := '100';
-//     if spinBin.Value = 4 Then edit1.Text := '200';
-//     if spinBin.Value = 1 Then d65.glbinspace := 20;
-//     if spinBin.Value = 2 Then d65.glbinspace := 50;
-//     if spinBin.Value = 3 Then d65.glbinspace := 100;
-//     if spinBin.Value = 4 Then d65.glbinspace := 200;
-//end;
 
 procedure TForm1.spinGainChange(Sender: TObject);
 begin
@@ -1644,6 +1600,8 @@ begin
           cfg.StoredValue['autoQSYQRG3'] := cfgvtwo.Form6.edQRGQSY3.Text;
           cfg.StoredValue['autoQSYQRG4'] := cfgvtwo.Form6.edQRGQSY4.Text;
           cfg.StoredValue['autoQSYQRG5'] := cfgvtwo.Form6.edQRGQSY5.Text;
+          cfg.StoredValue['hrdAddress'] := cfgvtwo.Form6.hrdAddress.Text;
+          cfg.StoredValue['hrdPort'] := cfgvtwo.Form6.hrdPort.Text;
           if cfgvtwo.Form6.qsyHour1.Value < 10 Then
           Begin
                foo := '0' + IntToStr(cfgvtwo.Form6.qsyHour1.Value);
@@ -2001,8 +1959,7 @@ End;
 
 procedure TForm1.menuRawDecoderClick(Sender: TObject);
 begin
-     diagout.Form3.Visible := True;
-     //rawdec.Form5.Visible := True;
+     diagout.Form3.Visible := True; // diagout is the raw decoder output form... it was repurposed for this.
 end;
 
 procedure TForm1.menuRigControlClick(Sender: TObject);
@@ -2021,7 +1978,6 @@ end;
 
 procedure TForm1.menuTXLogClick(Sender: TObject);
 begin
-     //diagout.Form3.Visible := True;
      rawdec.Form5.Visible := True;
 end;
 
@@ -2354,8 +2310,6 @@ begin
                     itxhz := StrToInt(txhz);
                     if form1.chkAutoTxDF.Checked then form1.spinTXCF.Value := itxhz;
                     form1.spinDecoderCF.value := itxhz;
-                    //form1.spinDecoderBW.value := 2;
-                    //form1.Edit2.Text := '50';
                End;
                srxp := Form1.ListBox1.Items[idx];
                srxp := srxp[1..5];
@@ -2572,18 +2526,12 @@ begin
                if spinDecoderBW.Value = 2 Then d65.glDFTolerance := 50;
                if spinDecoderBW.Value = 3 Then d65.glDFTolerance := 100;
                if spinDecoderBW.Value = 4 Then d65.glDFTolerance := 200;
-               //if form1.spinBin.Value = 1 Then d65.glbinspace := 20;
-               //if form1.spinBin.Value = 2 Then d65.glbinspace := 50;
-               //if form1.spinBin.Value = 3 Then d65.glbinspace := 100;
-               //if form1.spinBin.Value = 4 Then d65.glbinspace := 200;
                if d65.glDFTolerance > 200 then d65.glDFTolerance := 200;
                if d65.glDFTolerance < 20 then d65.glDFTolerance := 20;
                d65.glbinspace := 100;
                If Form1.chkNB.Checked then d65.glNblank := 1 Else d65.glNblank := 0;
-               //if Form1.chkSHIFT.Checked then d65.glNshift := 1 Else d65.glNshift := 0;
                d65.glNshift := 0;
                if Form1.chkAFC.Checked then d65.glNafc := 1 Else d65.glNafc := 0;
-               //if Form1.chkZAP.Checked then globalData.d65Nzap := 1 Else globalData.d65Nzap := 0;
                d65.glNzap := 0;
                d65.gldecoderPass := 0;
                if form1.chkMultiDecode.Checked Then d65.glsteps := 1 else d65.glsteps := 0;
@@ -2630,9 +2578,6 @@ Begin
        dt := synaUtil.GetUTTime;
        DateTimeToSystemTime(GetUTTime,st);
      {$ENDIF}
-     {$IFDEF darwin}
-       // Unknown at this point and probably moot.  Little chance this will ever run in MacOS X
-     {$ENDIF}
      foo := '';
      if st.Hour < 10 Then foo := '0' + IntToStr(st.Hour) + ':' else foo := IntToStr(st.Hour) + ':';
      if st.Minute < 10 then foo := foo + '0' + IntToStr(st.Minute) else foo := foo + IntToStr(st.Minute);
@@ -2641,14 +2586,12 @@ Begin
      Begin
           rawdec.Form5.ListBox1.Clear;
           rawdec.Form5.ListBox1.Items.Add(rpt);
-          //Form1.ListBox1.Items.Strings[0] := rpt;
           firstReport := False;
           itemsIn := True;
      End
      Else
      Begin
           rawdec.Form5.ListBox1.Items.Add(rpt);
-          //Form1.ListBox1.Items.Insert(0,rpt);
           itemsIn := True;
      End;
      // Manage size of scrollback
@@ -2713,9 +2656,6 @@ Begin
           if Length(TrimLeft(TrimRight(d65.gld65decodes[i].dtDeltaFreq))) = 2 Then rpt := rpt + '   ' + d65.gld65decodes[i].dtDeltaFreq + ' ';
           if Length(TrimLeft(TrimRight(d65.gld65decodes[i].dtDeltaFreq))) = 1 Then rpt := rpt + '    ' + d65.gld65decodes[i].dtDeltaFreq + ' ';
           csvstr := csvstr + '"' + d65.gld65decodes[i].dtDeltaFreq + '"' + ',';
-          // W
-          //if Length(TrimLeft(TrimRight(d65.gld65decodes[i].dtSigW))) = 2 Then rpt := rpt + d65.gld65decodes[i].dtSigW + ' ';
-          //if Length(TrimLeft(TrimRight(d65.gld65decodes[i].dtSigW))) = 1 Then rpt := rpt + ' ' + d65.gld65decodes[i].dtSigW + ' ';
           rpt := rpt + ' ' + d65.gld65decodes[i].dtType + ' ';
           csvstr := csvstr + '"' + d65.gld65decodes[i].dtType + '"' + ',';
           // Exchange
@@ -3238,8 +3178,8 @@ Begin
      vint := 0;
      vstr := '0.0.0.0';
      ver(@vint, vstr);
-     if vint <> 3000 Then showMessage('wsjt.dll incorrect version.  Program halted.');
-     if vint <> 3000 Then
+     if vint <> verHolder.dllReturn() Then showMessage('wsjt.dll incorrect version.  Program halted.');
+     if vint <> verHolder.dllReturn() Then
      Begin
           halt;
      End;
@@ -3281,9 +3221,6 @@ Begin
      {$IFDEF linux}
        dt := synaUtil.GetUTTime;
        DateTimeToSystemTime(GetUTTime,st);
-     {$ENDIF}
-     {$IFDEF darwin}
-       // Unknown at this point and probably moot.  Little chance this will ever run in MacOS X
      {$ENDIF}
      thisMinute := st.Minute;
      if st.Minute = 0 then
@@ -3369,17 +3306,11 @@ Begin
           dlog.fileDebug('FATAL:  Portaudio DID NOT INIT.  No defapi found.');
      End;
      if globalData.debugOn Then fna := 'D' else fna := '';
+     fname := GetAppConfigDir(False)+'station1.xml' + fna;
      {$IFDEF win32}
-       fname := GetAppConfigDir(False)+'station1.xml' + fna;
        if not fileExists(fname) Then
      {$ENDIF}
      {$IFDEF linux}
-       fname := GetAppConfigDir(False)+'station1.xml' + fna;
-       if not directoryExists(GetAppConfigDir(False) Then createDir(appConfigDir(False));
-       if not fileExists(fname) Then
-     {$ENDIF}
-     {$IFDEF darwin}
-       fname := GetAppConfigDir(False)+'station1.xml' + fna;
        if not directoryExists(GetAppConfigDir(False) Then createDir(appConfigDir(False));
        if not fileExists(fname) Then
      {$ENDIF}
@@ -3437,9 +3368,9 @@ Begin
           cfgvtwo.Form6.cbATQSY5.Checked := False;
           cfgvtwo.Form6.chkHRDPTT.Checked := False;
           cfgvtwo.Form6.chkTxDFVFO.Checked := False;
+          cfgvtwo.Form6.hrdAddress.Text := 'localhost';
+          cfgvtwo.Form6.hrdPort.Text := '7809';
           Form1.spinGain.Value := 0;
-          //Form1.spinBin.Value := 3;
-          //Form1.Edit1.Text := '100';
           cfgvtwo.Form6.chkNoOptFFT.Checked := False;
           cfgvtwo.glcatBy := 'none';
           Form1.spinTXCF.Value := 0;
@@ -3473,7 +3404,6 @@ Begin
           cfg.StoredValue['pfx']          := IntToStr(cfgvtwo.Form6.comboPrefix.ItemIndex);
           cfg.StoredValue['sfx']          := IntToStr(cfgvtwo.Form6.comboSuffix.ItemIndex);
           cfg.StoredValue['grid']         := cfgvtwo.Form6.edMyGrid.Text;
-          //cfg.StoredValue['multirange'] := IntToStr(Form1.spinMultiTotalBW.Value);
           cfg.StoredValue['soundin']      := IntToStr(cfgvtwo.Form6.cbAudioIn.ItemIndex);
           cfg.StoredValue['soundout']     := IntToStr(cfgvtwo.Form6.cbAudioOut.ItemIndex);
           cfg.StoredValue['ldgain']       := IntToStr(Form1.TrackBar1.Position);
@@ -3483,7 +3413,6 @@ Begin
           if Form1.rbUseLeft.Checked Then cfg.StoredValue['audiochan'] := 'L' Else cfg.StoredValue['audiochan'] := 'R';
           If cfgvtwo.Form6.chkEnableAutoSR.Checked Then cfg.StoredValue['autoSR'] := '1' else cfg.StoredValue['autoSR'] := '0';
           cfg.StoredValue['pttPort']      := UpperCase(cfgvtwo.Form6.editUserDefinedPort1.Text);
-          //cfg.StoredValue['catPort']      := UpperCase(cfgvtwo.Form6.editUserDefinedPort2.Text);
           if Form1.chkAFC.Checked Then cfg.StoredValue['afc'] := '1' Else cfg.StoredValue['afc'] := '0';
           If Form1.chkNB.Checked Then cfg.StoredValue['noiseblank'] := '1' Else cfg.StoredValue['noiseblank'] := '0';
           cfg.StoredValue['brightness']   := IntToStr(Form1.tbBright.Position);
@@ -3639,6 +3568,8 @@ Begin
                foo := foo + IntToStr(cfgvtwo.Form6.qsyMinute5.Value);
           end;
           cfg.StoredValue['autoQSYUTC5'] := foo;
+          cfg.StoredValue['hrdAddress'] := cfgvtwo.Form6.hrdAddress.Text;
+          cfg.StoredValue['hrdPort'] := cfgvtwo.Form6.hrdPort.Text;
           cfg.Save;
           dlog.fileDebug('Ran initial configuration.');
      End;
@@ -3668,7 +3599,6 @@ Begin
      tstint := 0;
      if TryStrToInt(cfg.StoredValue['txCF'],tstint) Then Form1.spinTXCF.Value := tstint else Form1.spinTXCF.Value := 0;
      tstint := 0;
-     //if TryStrToInt(cfg.StoredValue['multirange'],tstint) Then Form1.spinMultiTotalBW.Value := tstint else Form1.spinMultiTotalBW.Value := 1000;
      Form1.spinDecoderBW.Value := 3;
      Form1.Edit2.Text := '100';
      tstint := 0;
@@ -3720,7 +3650,6 @@ Begin
           cfgvtwo.glautoSR := False;
      end;
      cfgvtwo.Form6.editUserDefinedPort1.Text := UpperCase(cfg.StoredValue['pttPort']);
-     //cfgvtwo.Form6.editUserDefinedPort2.Text := UpperCase(cfg.StoredValue['catPort']);
      if cfg.StoredValue['afc'] = '1' Then Form1.chkAfc.Checked := True Else Form1.chkAfc.Checked := False;
      If Form1.chkAFC.Checked Then Form1.chkAFC.Font.Color := clRed else Form1.chkAFC.Font.Color := clBlack;
      if Form1.chkAFC.Checked then d65.glNafc := 1 Else d65.glNafc := 0;
@@ -4015,15 +3944,6 @@ Begin
      Form1.MenuItem26.Caption := cfg.StoredValue['usrMsg9'];
      Form1.MenuItem27.Caption := cfg.StoredValue['usrMsg10'];
      tstint := 0;
-     //If TryStrToInt(cfg.StoredValue['binspace'],tstint) Then spinBin.Value := tstint else spinBin.Value := 3;
-     //if spinBin.Value = 1 Then Edit1.Text := '20';
-     //if spinBin.Value = 2 Then Edit1.Text := '50';
-     //if spinBin.Value = 3 Then Edit1.Text := '100';
-     //if spinBin.Value = 4 Then Edit1.Text := '200';
-     //if spinBin.Value = 1 Then d65.glbinspace := 20;
-     //if spinBin.Value = 2 Then d65.glbinspace := 50;
-     //if spinBin.Value = 3 Then d65.glbinspace := 100;
-     //if spinBin.Value = 4 Then d65.glbinspace := 200;
      d65.glbinspace := 100;
 
      if cfg.StoredValue['smooth'] = 'on' Then Form1.cbSmooth.Checked := True else Form1.cbSmooth.Checked := False;
@@ -4068,6 +3988,20 @@ Begin
      foo := cfg.StoredValue['autoQSYUTC5'];
      cfgvtwo.Form6.qsyHour5.Value := StrToInt(foo[1..2]);
      cfgvtwo.Form6.qsyMinute5.Value := StrToInt(foo[3..4]);
+     cfgvtwo.Form6.hrdAddress.Text := cfg.StoredValue['hrdAddress'];
+     globalData.hrdcatControlcurrentRig.hrdAddress := cfgvtwo.Form6.hrdAddress.Text;
+     cfgvtwo.Form6.hrdPort.Text := cfg.StoredValue['hrdPort'];
+     tstint := 0;
+     If TryStrToInt(cfg.StoredValue['hrdPort'],tstint) Then
+     Begin
+          cfgvtwo.Form6.hrdPort.Text := cfg.StoredValue['hrdPort'];
+          globalData.hrdcatControlcurrentRig.hrdPort := tstint;
+     end
+     else
+     begin
+          cfgvtwo.Form6.hrdPort.Text := '7809';
+          globalData.hrdcatControlcurrentRig.hrdPort := 7809;
+     end;
 
      if cfg.StoredValue['version'] <> verHolder.verReturn() Then verUpdate := True else verUpdate := False;
 
@@ -4171,7 +4105,7 @@ Begin
      if cfgvtwo.Form6.cbUseRB.Checked then Form1.cbEnRB.Checked := True else Form1.cbEnRB.Checked := False;
      // Create and initialize TWaterfallControl
      Waterfall := TWaterfallControl.Create(Self);
-     //if guiConfig.getGUIType() Then Waterfall.Height := 105 else Waterfall.Height := 170;
+     //if guiConfig.getGUIType() Then Waterfall.Height := 105 else Waterfall.Height := 180;
      Waterfall.Height := 180;
      Waterfall.Width  := 750;
      Waterfall.Top    := 25;
@@ -4342,22 +4276,6 @@ Begin
           //
           mnlooper := d65nwave;
           // CW ID Handler
-          {
-           wpm=25.
-           freqcw=800.
-           idmsg=MyCall//'          '
-           call gencwid(idmsg,wpm,freqcw,samfacout,icwid,ncwid)
-           k=nwave
-           do i=1,ncwid
-              k=k+1
-              iwave(k)=icwid(i)
-           enddo
-           do i=1,2205                   !Add 0.2 s of silence
-              k=k+1
-              iwave(k)=0
-           enddo
-           nwave=k
-          }
           if doCWID Then
           Begin
                diagout.Form3.ListBox3.Clear;
@@ -4585,11 +4503,9 @@ Begin
                Begin
                     rbc.glrbReports[i].rbProcessed := True;
                End;
-               //globalData.debugLine1 := 'rbc thread was terminated.';
                rbThread := rbcThread.Create(False);
-               //globalData.debugLine2 := 'rbc thread was re-created and started.';
                rbc.glrbActive := False;
-               dlog.fileDebug('RBC Thread was terminated/reinitialized due to detection of lockup.');
+               dlog.fileDebug('RBC Thread was reinitialized due to detection of lockup.');
           End;
      End;
 End;
@@ -4827,8 +4743,6 @@ Begin
                if txCount < 15 Then
                Begin
                     // Flag TX Buffer as valid.
-                    //TxDirty := False;
-                    //TxValid := True;
                     lastMsg := curMsg;
                     // Fire up TX
                     if not TxDirty and TxValid Then
@@ -4894,10 +4808,8 @@ Begin
           Begin
                globalData.txInProgress := True;
                rxInProgress := False;
-               //if dac.d65txBufferIdx >= 538624 Then
                if (dac.d65txBufferIdx >= d65nwave+11025) Or (dac.d65txBufferIdx >= 661503-(11025 DIV 2)) Then
                Begin
-                    //paResult := portaudio.Pa_StopStream(paOutStream);
                     globalData.txInProgress := False;
                     if getPTTMethod() = 'SI5' Then si570Lowerptt();
                     if getPTTMethod() = 'HRD' Then hrdLowerPTT();
@@ -4943,8 +4855,6 @@ Begin
                if txCount < 15 Then
                Begin
                     // Flag TX Buffer as valid.
-                    //TxDirty := False;
-                    //TxValid := True;
                     lastMsg := curMsg;
                     // Fire up TX
                     if not TxDirty and TxValid Then
@@ -5012,7 +4922,6 @@ Begin
                globalData.txInProgress := True;
                rxInProgress := False;
                if (dac.d65txBufferIdx >= d65nwave+11025) Or (dac.d65txBufferIdx >= 661503-(11025 DIV 2)) Or (thisSecond > 48) Then
-               //if (dac.d65txBufferIdx >= 538624) Or (thisSecond >= 48) Then
                Begin
                     // I have a full TX cycle when d65txBufferIdx >= 538624 or thisSecond > 48
                     if getPTTMethod() = 'SI5' Then si570Lowerptt();
@@ -5078,15 +4987,6 @@ Begin
                rawdec.Form5.ListBox1.Items.Delete(idx);
           end;
      End;
-     // Keep log list from getting too large.
-     //If Form1.lbNotices.Items.Count > 100 Then
-     //Begin
-          //for idx := Form1.lbNotices.Items.Count - 1 downto 50 do
-          //Begin
-               //Form1.lbNotices.Items.Delete(idx);
-          //end;
-     //end;
-     // Processing of new minute event complete.
 End;
 
 procedure TForm1.processOncePerSecond(st : TSystemTime);
@@ -5270,9 +5170,6 @@ Begin
        dt := synaUtil.GetUTTime;
        DateTimeToSystemTime(GetUTTime,st);
      {$ENDIF}
-     {$IFDEF darwin}
-       // Unknown at this point and probably moot.  Little chance this will ever run in MacOS X
-     {$ENDIF}
      myCallCheck();
      // Refresh audio level display
      if not primed then updateAudio();
@@ -5320,9 +5217,6 @@ begin
        dt := synaUtil.GetUTTime;
        DateTimeToSystemTime(GetUTTime,st);
      {$ENDIF}
-     {$IFDEF darwin}
-       // Unknown at this point and probably moot.  Little chance this will ever run in MacOS X
-     {$ENDIF}
      gst := st;
      thisSecond := st.Second;
      // Runs at program start only
@@ -5367,9 +5261,6 @@ begin
      {$IFDEF linux}
        dt := synaUtil.GetUTTime;
        DateTimeToSystemTime(GetUTTime,st);
-     {$ENDIF}
-     {$IFDEF darwin}
-       // Unknown at this point and probably moot.  Little chance this will ever run in MacOS X
      {$ENDIF}
      gst := st;
      thisSecond := st.Second;
@@ -5617,8 +5508,6 @@ initialization
   actionSet := False;
   catControl.catControlautoQSY := False;
   catControl.catControlcatTxDF := False;
-  globalData.hrdcatControlcurrentRig.hrdAddress := 'localhost';
-  globalData.hrdcatControlcurrentRig.hrdPort := 7809;
   globalData.hrdVersion := 5;
 end.
 
