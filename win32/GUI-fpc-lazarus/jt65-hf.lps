@@ -142,8 +142,8 @@
         <ComponentName Value="Form6"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="cfgvtwo"/>
-        <CursorPos X="13" Y="995"/>
-        <TopLine Value="965"/>
+        <CursorPos X="13" Y="996"/>
+        <TopLine Value="966"/>
         <EditorIndex Value="7"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
@@ -252,8 +252,8 @@
         <ComponentName Value="Form2"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="log"/>
-        <CursorPos X="60" Y="70"/>
-        <TopLine Value="50"/>
+        <CursorPos X="95" Y="26"/>
+        <TopLine Value="1"/>
         <EditorIndex Value="13"/>
         <UsageCount Value="234"/>
         <Loaded Value="True"/>
@@ -292,8 +292,8 @@
         <Filename Value="d65.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="d65"/>
-        <CursorPos X="1" Y="353"/>
-        <TopLine Value="342"/>
+        <CursorPos X="54" Y="1294"/>
+        <TopLine Value="1279"/>
         <EditorIndex Value="18"/>
         <UsageCount Value="202"/>
         <Loaded Value="True"/>
@@ -305,7 +305,7 @@
         <CursorPos X="28" Y="3"/>
         <TopLine Value="1"/>
         <EditorIndex Value="3"/>
-        <UsageCount Value="98"/>
+        <UsageCount Value="99"/>
         <Loaded Value="True"/>
       </Unit30>
       <Unit31>
@@ -315,7 +315,7 @@
         <CursorPos X="1" Y="1"/>
         <TopLine Value="1"/>
         <EditorIndex Value="4"/>
-        <UsageCount Value="98"/>
+        <UsageCount Value="99"/>
         <Loaded Value="True"/>
       </Unit31>
       <Unit32>
@@ -327,12 +327,12 @@
         <CursorPos X="112" Y="21"/>
         <TopLine Value="2"/>
         <EditorIndex Value="6"/>
-        <UsageCount Value="75"/>
+        <UsageCount Value="76"/>
         <Loaded Value="True"/>
       </Unit32>
     </Units>
     <General>
-      <ActiveEditorIndexAtStart Value="13"/>
+      <ActiveEditorIndexAtStart Value="7"/>
     </General>
   </ProjectSession>
   <Debugging>

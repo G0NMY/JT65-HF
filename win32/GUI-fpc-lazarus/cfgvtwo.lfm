@@ -20,7 +20,7 @@ object Form6: TForm6
     Width = 784
     Font.Height = -13
     Font.Name = 'Arial'
-    PageIndex = 1
+    PageIndex = 0
     ParentFont = False
     TabOrder = 0
     object Page1: TPage
@@ -40,11 +40,11 @@ object Form6: TForm6
         ParentFont = False
       end
       object Label27: TLabel
-        Left = 315
+        Left = 546
         Height = 15
         Top = 6
-        Width = 327
-        Caption = 'Grid (4 or 6 Characters).  Required value to enable transmit.'
+        Width = 223
+        Caption = 'Grid (4 or 6 Characters).  Required value.'
         Font.Height = -11
         Font.Name = 'Arial'
         Font.Style = [fsBold]
@@ -54,7 +54,7 @@ object Form6: TForm6
       object Label22: TLabel
         Left = 4
         Height = 15
-        Top = 53
+        Top = 57
         Width = 106
         Caption = 'Sound Input Device'
         Font.Height = -11
@@ -66,7 +66,7 @@ object Form6: TForm6
       object Label23: TLabel
         Left = 315
         Height = 15
-        Top = 53
+        Top = 57
         Width = 115
         Caption = 'Sound Output Device'
         Font.Height = -11
@@ -185,6 +185,14 @@ object Form6: TForm6
         ParentColor = False
         ParentFont = False
       end
+      object Label70: TLabel
+        Left = 276
+        Height = 49
+        Top = 3
+        Width = 241
+        Caption = 'Suggest NOT using suffix or prefix unless'#13#10'you MUST legally do so.  The protocol'#13#10'works much better without suffix or prefix.'
+        ParentColor = False
+      end
       object edMyCall: TEdit
         Left = 5
         Height = 24
@@ -198,7 +206,7 @@ object Form6: TForm6
         TabOrder = 0
       end
       object edMyGrid: TEdit
-        Left = 315
+        Left = 546
         Height = 24
         Top = 24
         Width = 80
@@ -210,7 +218,7 @@ object Form6: TForm6
       object cbAudioIn: TComboBox
         Left = 4
         Height = 24
-        Top = 69
+        Top = 73
         Width = 300
         Font.Height = -13
         Font.Name = 'Arial'
@@ -228,7 +236,7 @@ object Form6: TForm6
       object cbAudioOut: TComboBox
         Left = 315
         Height = 24
-        Top = 69
+        Top = 73
         Width = 300
         Font.Height = -13
         Font.Name = 'Arial'
@@ -526,25 +534,25 @@ object Form6: TForm6
           Left = 6
           Height = 23
           Top = 6
-          Width = 140
+          Width = 114
           Caption = 'Enable'
           OnChange = chkUseHRDChange
           TabOrder = 0
         end
         object rbHRD4: TRadioButton
-          Left = 146
+          Left = 120
           Height = 23
           Top = 6
-          Width = 116
+          Width = 129
           Caption = 'Version 4'
           TabOrder = 1
           TabStop = False
         end
         object rbHRD5: TRadioButton
-          Left = 262
+          Left = 249
           Height = 23
           Top = 6
-          Width = 114
+          Width = 127
           Caption = 'Version 5'
           Checked = True
           State = cbChecked

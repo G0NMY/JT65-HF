@@ -48,6 +48,7 @@ type
     Label67: TLabel;
     Label68: TLabel;
     Label69: TLabel;
+    Label70: TLabel;
     testHRDPTT: TButton;
     setHRDQRG: TButton;
     buttonTestPTT: TButton;
