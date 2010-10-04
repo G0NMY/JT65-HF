@@ -260,6 +260,7 @@ type
     function BuildRemoteStringGrid (call, mode, freq, grid, date, time : String) : WideString;
     function BuildLocalString (station_callsign, my_gridsquare, programid, programversion, my_antenna : String) : WideString;
     function isSigRep(rep : String) : Boolean;
+    function utcTime() : TSYSTEMTIME;
     procedure addToRBC(i, m : Integer);
     procedure rbcCheck();
     procedure updateList(callsign : String);
@@ -430,12 +431,30 @@ end;
 
 procedure ver(vint : Pointer; vstr : Pointer); cdecl; external JT_DLL name 'version_';
 
+function TForm1.utcTime(): TSYSTEMTIME;
+Var
+   st : TSYSTEMTIME;
+   {$IFDEF linux}
+    dt : TDateTime;
+   {$ENDIF}
+Begin
+     st.Hour:=0;
+     {$IFDEF win32}
+      GetSystemTime(st);
+     {$ENDIF}
+     {$IFDEF linux}
+      dt := synaUtil.GetUTTime;
+      DateTimeToSystemTime(GetUTTime,st);
+     {$ENDIF}
+     result := st;
+End;
+
 function TForm1.getPTTMethod() : String;
 Begin
      result := '';
      if cfgvtwo.Form6.cbUseAltPTT.Checked Then result := 'ALT' else result := 'PTT';
      if cfgvtwo.Form6.cbSi570PTT.Checked Then result := 'SI5';
-     if cfgvtwo.Form6.chkHRDPTT.Checked Then result := 'HRD';
+     if cfgvtwo.Form6.chkHRDPTT.Checked And cfgvtwo.Form6.chkUseHRD.Checked Then result := 'HRD';
 end;
 
 function TForm1.BuildRemoteString (call, mode, freq, date, time : String) : WideString;
@@ -1067,12 +1086,8 @@ end;
 
 procedure TForm1.initDecode();
 Var
-   st               : TSYSTEMTIME;
    sr               : CTypes.cdouble;
    i                : Integer;
-{$IFDEF linux}
-   dt               : TDateTime;
-{$ENDIF}
 Begin
      if not d65.glinprog Then
      Begin
@@ -1099,21 +1114,13 @@ Begin
                     haveOddBuffer := False;
                End;
           end;
-          st.Day := 0;
-          {$IFDEF win32}
-            GetSystemTime(st);
-          {$ENDIF}
-          {$IFDEF linux}
-            dt := synaUtil.GetUTTime;
-            DateTimeToSystemTime(GetUTTime,st);
-          {$ENDIF}
-          ost := st;
+          ost := utcTime();
           d65.gld65timestamp := '';
-          d65.gld65timestamp := d65.gld65timestamp + IntToStr(st.Year);
-          if st.Month < 10 Then d65.gld65timestamp := d65.gld65timestamp + '0' + IntToStr(st.Month) else d65.gld65timestamp := d65.gld65timestamp + IntToStr(st.Month);
-          if st.Day < 10 Then d65.gld65timestamp := d65.gld65timestamp + '0' + IntToStr(st.Day) else d65.gld65timestamp := d65.gld65timestamp + IntToStr(st.Day);
-          if st.Hour < 10 Then d65.gld65timestamp := d65.gld65timestamp + '0' + IntToStr(st.Hour) else d65.gld65timestamp := d65.gld65timestamp + IntToStr(st.Hour);
-          if st.Minute < 10 Then d65.gld65timestamp := d65.gld65timestamp + '0' + IntToStr(st.Minute) else d65.gld65timestamp := d65.gld65timestamp + IntToStr(st.Minute);
+          d65.gld65timestamp := d65.gld65timestamp + IntToStr(ost.Year);
+          if ost.Month < 10 Then d65.gld65timestamp := d65.gld65timestamp + '0' + IntToStr(ost.Month) else d65.gld65timestamp := d65.gld65timestamp + IntToStr(ost.Month);
+          if ost.Day < 10 Then d65.gld65timestamp := d65.gld65timestamp + '0' + IntToStr(ost.Day) else d65.gld65timestamp := d65.gld65timestamp + IntToStr(ost.Day);
+          if ost.Hour < 10 Then d65.gld65timestamp := d65.gld65timestamp + '0' + IntToStr(ost.Hour) else d65.gld65timestamp := d65.gld65timestamp + IntToStr(ost.Hour);
+          if ost.Minute < 10 Then d65.gld65timestamp := d65.gld65timestamp + '0' + IntToStr(ost.Minute) else d65.gld65timestamp := d65.gld65timestamp + IntToStr(ost.Minute);
           d65.gld65timestamp := d65.gld65timestamp + '00';
           sr := 1.0;
           if tryStrToFloat(cfgvtwo.Form6.edRXSRCor.Text,sr) Then globalData.d65samfacin := StrToFloat(cfgvtwo.Form6.edRXSRCor.Text) else globalData.d65samfacin := 1.0;
@@ -1850,12 +1857,7 @@ begin
      if globalData.debugOn Then fna := 'D' else fna := '';
      cfgError := True;
      Try
-        {$IFDEF win32}
-          fname := GetAppConfigDir(False)+'station1.xml' + fna;
-        {$ENDIF}
-        {$IFDEF linux}
-          fname := GetAppConfigDir(False)+'station1.xml' + fna;
-        {$ENDIF}
+        fname := GetAppConfigDir(False)+'station1.xml' + fna;
         cfg.FileName := fname;
         cfgError := False;
      Except
@@ -2570,14 +2572,7 @@ Var
    rpt : String;
    idx : Integer;
 Begin
-     st.Day := 0;
-     {$IFDEF win32}
-       GetSystemTime(st);
-     {$ENDIF}
-     {$IFDEF linux}
-       dt := synaUtil.GetUTTime;
-       DateTimeToSystemTime(GetUTTime,st);
-     {$ENDIF}
+     st := utcTime();
      foo := '';
      if st.Hour < 10 Then foo := '0' + IntToStr(st.Hour) + ':' else foo := IntToStr(st.Hour) + ':';
      if st.Minute < 10 then foo := foo + '0' + IntToStr(st.Minute) else foo := foo + IntToStr(st.Minute);
@@ -3214,14 +3209,7 @@ Begin
      //
      // Initialize various form items to startup values
      //
-     st.Day := 0;
-     {$IFDEF win32}
-       GetSystemTime(st);
-     {$ENDIF}
-     {$IFDEF linux}
-       dt := synaUtil.GetUTTime;
-       DateTimeToSystemTime(GetUTTime,st);
-     {$ENDIF}
+     st := utcTime();
      thisMinute := st.Minute;
      if st.Minute = 0 then
      Begin
@@ -5159,17 +5147,8 @@ end;
 
 procedure TForm1.oncePerTick();
 Var
-   st   : TSYSTEMTIME;
    i    : Integer;
 Begin
-     st.Day := 0;
-     {$IFDEF win32}
-       GetSystemTime(st);
-     {$ENDIF}
-     {$IFDEF linux}
-       dt := synaUtil.GetUTTime;
-       DateTimeToSystemTime(GetUTTime,st);
-     {$ENDIF}
      myCallCheck();
      // Refresh audio level display
      if not primed then updateAudio();
@@ -5204,21 +5183,11 @@ Begin
 End;
 
 procedure TForm1.Timer1Timer(Sender: TObject);
-var
-   st            : TSYSTEMTIME;
 begin
      // Setup to evaluate where I am in the temporal loop.
      statusChange := False;
-     st.Day := 0;
-     {$IFDEF win32}
-       GetSystemTime(st);
-     {$ENDIF}
-     {$IFDEF linux}
-       dt := synaUtil.GetUTTime;
-       DateTimeToSystemTime(GetUTTime,st);
-     {$ENDIF}
-     gst := st;
-     thisSecond := st.Second;
+     gst := utcTime();
+     thisSecond := gst.Second;
      // Runs at program start only
      If runOnce Then
      Begin
@@ -5240,7 +5209,7 @@ begin
           resyncLoop := True;
           diagout.Form3.Show;
           diagout.Form3.BringToFront;
-          diagout.Form3.ListBox1.Items.Add('resync! ' + IntToStr(st.Second));
+          diagout.Form3.ListBox1.Items.Add('resync! ' + IntToStr(gst.Second));
           Form1.Timer1.Enabled := True;
           // TODO Either code a recovery from timer overrun or raise an
           // exception and end the program.
@@ -5252,18 +5221,6 @@ begin
           alreadyHere := True;  // This will be set false at end of procedure.
           // That's it for the timer overrun check.
      End;
-     // Setup to evaluate where I am in the temporal loop.
-     statusChange := False;
-     st.Day := 0;
-     {$IFDEF win32}
-       GetSystemTime(st);
-     {$ENDIF}
-     {$IFDEF linux}
-       dt := synaUtil.GetUTTime;
-       DateTimeToSystemTime(GetUTTime,st);
-     {$ENDIF}
-     gst := st;
-     thisSecond := st.Second;
      // Now to the main loop.
      //
      // When I first start program I need to get into close sync with 1
@@ -5284,12 +5241,12 @@ begin
      // Now I need to look for a transition from HH:MM:59.mmm to HH:MM:00.mmm
      // to detect a start of minute.
      //
-     If st.Second = 59 Then primed := True;
+     If gst.Second = 59 Then primed := True;
      If primed Then
      Begin
           // Kick the timer into 'high resolution' mode.
           Form1.Timer1.Interval := 1;
-          If st.Second = 0 Then
+          If gst.Second = 0 Then
           Begin
                resyncLoop := False;
                // I've gotten to second = 0 so I can reset the timer to 'low
@@ -5311,7 +5268,7 @@ begin
      // This code block handles the start of a new minute.
      If statusChange Then
      Begin
-          processNewMinute(st);
+          processNewMinute(gst);
      end;
      // Handle event processing while NOT start of new minute.
      if not statusChange and not resyncLoop Then
@@ -5321,9 +5278,9 @@ begin
      //
      // Code that executes once per second, but not necessary that it be exact 1
      // second intervals. This happens whether it's the top of a new minute or not.
-     If (st.Second <> lastSecond) And not resyncLoop Then
+     If (gst.Second <> lastSecond) And not resyncLoop Then
      begin
-          processOncePerSecond(st);
+          processOncePerSecond(gst);
      end;
      // Code that runs each timer tick.
      if not resyncLoop then oncePerTick();

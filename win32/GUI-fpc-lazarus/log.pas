@@ -67,6 +67,7 @@ begin
                             edLogRReport.Text,edLogSReport.Text,edLogSTime.Text,
                             edLogETime.Text,edLogPower.Text,edLogDate.Text,edLogComment.Text,
                             logmycall, logmygrid);
+     // TODO Add ifdefs for linux so fname will be correct.
      fname := Form2.DirectoryEdit1.Directory + '\jt65hf_log.adi';
      AssignFile(lfile, fname);
      If FileExists(fname) Then append(lfile) else rewrite(lfile);
