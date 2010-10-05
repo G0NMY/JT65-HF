@@ -305,7 +305,6 @@ Begin
                     end;
                     hrdinterface4.HRDInterfaceFreeString(hrdresult);
                end;
-               //hrdinterface4.HRDInterfaceDisconnect();
           end
           else
           begin
@@ -519,9 +518,6 @@ Begin
                     end;
                     hrdinterface5.HRDInterfaceFreeString(hrdresult);
                end;
-
-               //hrdinterface5.HRDInterfaceDisconnect();
-
           end
           else
           begin
@@ -564,7 +560,6 @@ Begin
                hrdresult := hrdinterface4.HRDInterfaceSendMessage(_para1);
                if hrdresult='OK' Then Result := True else Result := False;
                hrdinterface4.HRDInterfaceFreeString(hrdresult);
-               //hrdinterface4.HRDInterfaceDisconnect();
           end
           else
           begin
@@ -581,7 +576,6 @@ Begin
                hrdresult := hrdinterface5.HRDInterfaceSendMessage(_para1);
                if hrdresult='OK' Then Result := True else Result := False;
                hrdinterface5.HRDInterfaceFreeString(hrdresult);
-               //hrdinterface5.HRDInterfaceDisconnect();
           end
           else
           begin
@@ -605,8 +599,6 @@ Begin
           hrdon := hrdinterface4.HRDInterfaceIsConnected();
           if hrdon then
           begin
-               //cfgvtwo.Form6.groupHRD.Caption := 'HRD Connected to ' + globalData.hrdcatControlcurrentRig.radioName;
-
                hrdresult := '';
                hrdmsg := 'Get Frequency';
                hrdresult := hrdinterface4.HRDInterfaceSendMessage(hrdmsg);
@@ -623,7 +615,6 @@ Begin
                     globalData.strqrg := '0';
                end;
                hrdinterface4.HRDInterfaceFreeString(hrdresult);
-               //hrdinterface4.HRDInterfaceDisconnect();
           end
           else
           begin
@@ -653,7 +644,6 @@ Begin
                     globalData.strqrg := '0';
                end;
                hrdinterface5.HRDInterfaceFreeString(hrdresult);
-               //hrdinterface5.HRDInterfaceDisconnect();
           end
           else
           begin
@@ -679,7 +669,6 @@ Begin
                hrdresult := hrdinterface4.HRDInterfaceSendMessage(_para1);
                foo := hrdresult;
                hrdinterface4.HRDInterfaceFreeString(hrdresult);
-               //hrdinterface4.HRDInterfaceDisconnect();
                result := foo;
           end
           else
@@ -697,7 +686,6 @@ Begin
                hrdresult := hrdinterface5.HRDInterfaceSendMessage(_para1);
                foo := hrdresult;
                hrdinterface5.HRDInterfaceFreeString(hrdresult);
-               //hrdinterface5.HRDInterfaceDisconnect();
                result := foo;
           end
           else
@@ -775,7 +763,6 @@ Begin
                end
                else
                Begin
-                    //dlog.FileDebug('EConvert: ostat.r1freq = ' + ostat.r1freq);
                     globalData.strqrg := '0';
                     Result := 0.0;
                End;
@@ -790,7 +777,6 @@ Begin
                end
                else
                Begin
-                    //dlog.FileDebug('EConvert: ostat.r2freq = ' + ostat.r1freq);
                     globalData.strqrg := '0';
                     Result := 0.0;
                End;
@@ -798,7 +784,6 @@ Begin
      End
      Else
      Begin
-          //dlog.FileDebug('Did not find omniqrg.txt');
           globalData.strqrg := '0';
           Result := 0.0;
      End;

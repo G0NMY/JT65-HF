@@ -672,6 +672,10 @@ begin
                             if globalData.hrdcatControlcurrentRig.hasAFGain Then
                             Begin
                                  // Read audio level
+                                 cfgvtwo.Form6.sliderAFGain.Visible := True;
+                                 cfgvtwo.Form6.Label11.Visible := True;
+                                 cfgvtwo.Form6.pbAULeft.Visible := True;
+                                 cfgvtwo.Form6.pbAURight.Visible := True;
                                  cfgvtwo.Form6.sliderAFGain.Min := globalData.hrdcatControlcurrentRig.afgMin;
                                  cfgvtwo.Form6.sliderAFGain.Max := globalData.hrdcatControlcurrentRig.afgMax;
                                  foo := catControl.readHRD('[' + globalData.hrdcatControlcurrentRig.radioContext + '] Get slider-pos ' + globalData.hrdcatControlcurrentRig.radioName + ' ' + globalData.hrdcatControlcurrentRig.afgControl);
@@ -679,10 +683,19 @@ begin
                                  ifoo := -1;
                                  If TryStrToInt(efoo, ifoo) Then cfgvtwo.Form6.sliderAFGain.Position := ifoo;
                                  cfgvtwo.Form6.Label11.Caption := 'Audio Gain (Currently:  ' + ExtractWord(2,foo,catControl.HRDDelim) + '%)';
+                            end
+                            else
+                            begin
+                                 cfgvtwo.Form6.sliderAFGain.Visible := False;
+                                 cfgvtwo.Form6.Label11.Visible := False;
+                                 cfgvtwo.Form6.pbAULeft.Visible := False;
+                                 cfgvtwo.Form6.pbAURight.Visible := False;
                             end;
                             if globalData.hrdcatControlcurrentRig.hasRFGain Then
                             Begin
                                  // Read RF Gain level
+                                 cfgvtwo.Form6.sliderRFGain.Visible := True;
+                                 cfgvtwo.Form6.Label17.Visible := True;
                                  cfgvtwo.Form6.sliderRFGain.Min := globalData.hrdcatControlcurrentRig.rfgMin;
                                  cfgvtwo.Form6.sliderRFGain.Max := globalData.hrdcatControlcurrentRig.rfgMax;
                                  foo := catControl.readHRD('[' + globalData.hrdcatControlcurrentRig.radioContext + '] Get slider-pos ' + globalData.hrdcatControlcurrentRig.radioName + ' ' + globalData.hrdcatControlcurrentRig.rfgControl);
@@ -690,10 +703,17 @@ begin
                                  ifoo := -1;
                                  If TryStrToInt(efoo, ifoo) Then cfgvtwo.Form6.sliderRFGain.Position := ifoo;
                                  cfgvtwo.Form6.Label17.Caption := 'RF Gain (Currently:  ' + ExtractWord(2,foo,catControl.HRDDelim) + '%)';
+                            end
+                            else
+                            begin
+                                 cfgvtwo.Form6.sliderRFGain.Visible := False;
+                                 cfgvtwo.Form6.Label17.Visible := False;
                             end;
                             if globalData.hrdcatControlcurrentRig.hasMicGain Then
                             Begin
                                  // Read Mic Gain level
+                                 cfgvtwo.Form6.sliderMicGain.Visible := True;
+                                 cfgvtwo.Form6.Label15.Visible := True;
                                  cfgvtwo.Form6.sliderMicGain.Min := globalData.hrdcatControlcurrentRig.micgMin;
                                  cfgvtwo.Form6.sliderMicGain.Max := globalData.hrdcatControlcurrentRig.micgMax;
                                  foo := catControl.readHRD('[' + globalData.hrdcatControlcurrentRig.radioContext + '] Get slider-pos ' + globalData.hrdcatControlcurrentRig.radioName + ' ' + globalData.hrdcatControlcurrentRig.micgControl);
@@ -701,10 +721,17 @@ begin
                                  ifoo := -1;
                                  If TryStrToInt(efoo, ifoo) Then cfgvtwo.Form6.sliderMicGain.Position := ifoo;
                                  cfgvtwo.Form6.Label15.Caption := 'Mic Gain (Currently:  ' + ExtractWord(2,foo,catControl.HRDDelim) + '%)';
+                            end
+                            else
+                            begin
+                                 cfgvtwo.Form6.sliderMicGain.Visible := False;
+                                 cfgvtwo.Form6.Label15.Visible := False;
                             end;
                             if globalData.hrdcatControlcurrentRig.hasPAGain Then
                             Begin
                                  // Read PA limit level
+                                 cfgvtwo.Form6.sliderPALevel.Visible := True;
+                                 cfgvtwo.Form6.Label18.Visible := True;
                                  cfgvtwo.Form6.sliderPALevel.Min := globalData.hrdcatControlcurrentRig.pagMin;
                                  cfgvtwo.Form6.sliderPALevel.Max := globalData.hrdcatControlcurrentRig.pagMax;
                                  foo := catControl.readHRD('[' + globalData.hrdcatControlcurrentRig.radioContext + '] Get slider-pos ' + globalData.hrdcatControlcurrentRig.radioName + ' ' + globalData.hrdcatControlcurrentRig.pagControl);
@@ -712,6 +739,11 @@ begin
                                  ifoo := -1;
                                  If TryStrToInt(efoo, ifoo) Then cfgvtwo.Form6.sliderPALevel.Position := ifoo;
                                  cfgvtwo.Form6.Label18.Caption := 'RF Output Level (Currently:  ' + ExtractWord(2,foo,catControl.HRDDelim) + '%)';
+                            end
+                            else
+                            begin
+                                 cfgvtwo.Form6.sliderPALevel.Visible := False;
+                                 cfgvtwo.Form6.Label18.Visible := False;
                             end;
                             if globalData.hrdcatControlcurrentRig.hasSMeter Then
                             Begin
@@ -722,12 +754,42 @@ begin
                                  ifoo := -1;
                                  cfgvtwo.Form6.pbSMeter.Min := 0;
                                  If TryStrToInt(efoo, ifoo) Then cfgvtwo.Form6.pbSMeter.Max := ifoo;
-
                                  efoo := ExtractWord(2,foo,catControl.hrdDelim);
                                  ifoo := -1;
                                  If TryStrToInt(efoo, ifoo) Then cfgvtwo.Form6.pbSMeter.Position := ifoo;
-
                                  cfgvtwo.Form6.Label24.Caption := ExtractWord(1,foo,catControl.HRDDelim);
+                            end;
+                            if globalData.hrdcatControlcurrentRig.hasTX Then
+                            begin
+                                 cfgvtwo.Form6.chkHRDPTT.Visible := True;
+                                 cfgvtwo.Form6.testHRDPTT.Visible := True;
+                            end
+                            else
+                            begin
+                                 cfgvtwo.Form6.chkHRDPTT.Checked := False;
+                                 cfgvtwo.Form6.chkHRDPTT.Visible := False;
+                                 cfgvtwo.Form6.testHRDPTT.Visible := False;
+                            end;
+                            if globalData.hrdcatControlcurrentRig.hasAutoTune and globalData.hrdcatControlcurrentRig.hasAutoTuneDo Then
+                            Begin
+                                 cfgvtwo.Form6.cbATQSY1.Visible := True;
+                                 cfgvtwo.Form6.cbATQSY2.Visible := True;
+                                 cfgvtwo.Form6.cbATQSY3.Visible := True;
+                                 cfgvtwo.Form6.cbATQSY4.Visible := True;
+                                 cfgvtwo.Form6.cbATQSY5.Visible := True;
+                            end
+                            else
+                            begin
+                                 cfgvtwo.Form6.cbATQSY1.Checked := False;
+                                 cfgvtwo.Form6.cbATQSY2.Checked := False;
+                                 cfgvtwo.Form6.cbATQSY3.Checked := False;
+                                 cfgvtwo.Form6.cbATQSY4.Checked := False;
+                                 cfgvtwo.Form6.cbATQSY5.Checked := False;
+                                 cfgvtwo.Form6.cbATQSY1.Visible := False;
+                                 cfgvtwo.Form6.cbATQSY2.Visible := False;
+                                 cfgvtwo.Form6.cbATQSY3.Visible := False;
+                                 cfgvtwo.Form6.cbATQSY4.Visible := False;
+                                 cfgvtwo.Form6.cbATQSY5.Visible := False;
                             end;
                        end
                        else
@@ -4929,7 +4991,7 @@ End;
 
 procedure TForm1.processNewMinute(st : TSystemTime);
 Var
-   i, idx : Integer;
+   i, idx, ifoo : Integer;
 Begin
      // Get Start of Period QRG
      actionSet := False;
@@ -4975,6 +5037,120 @@ Begin
                rawdec.Form5.ListBox1.Items.Delete(idx);
           end;
      End;
+     // Is it time for an auto QSY? (Abort auto QSY if TX enabled...)
+     if not Form1.chkEnTX.Checked And globalData.hrdcatControlcurrentRig.hrdAlive Then
+     Begin
+          if cfgvtwo.Form6.cbEnableQSY1.Checked Then
+          Begin
+               if (st.Hour = cfgvtwo.Form6.qsyHour1.Value) And (st.Minute = cfgvtwo.Form6.qsyMinute1.Value) Then
+               Begin
+                    // QSY time slot 1
+                    If TryStrToInt(cfgvtwo.Form6.edQRGQSY1.Text, ifoo) Then
+                    Begin
+                         if ifoo > 1799999 Then
+                         Begin
+                              if cfgvtwo.Form6.rbHRD4.Checked Then globalData.hrdVersion :=4;
+                              if cfgvtwo.Form6.rbHRD5.Checked Then globalData.hrdVersion :=5;
+                              if catControl.writeHRD('[' + globalData.hrdcatControlcurrentRig.radioContext + '] set frequency-hz ' + cfgvtwo.Form6.edQRGQSY1.Text) Then
+                              Begin
+                                   if cfgvtwo.Form6.cbATQSY1.Checked Then
+                                   Begin
+                                   // Auto-tune cycle requested
+                                   end;
+                              end;
+                         end;
+                    end;
+               end;
+          end;
+          if cfgvtwo.Form6.cbEnableQSY2.Checked Then
+          Begin
+               if (st.Hour = cfgvtwo.Form6.qsyHour2.Value) And (st.Minute = cfgvtwo.Form6.qsyMinute2.Value) Then
+               Begin
+                    // QSY time slot 2
+                    If TryStrToInt(cfgvtwo.Form6.edQRGQSY2.Text, ifoo) Then
+                    Begin
+                         if ifoo > 1799999 Then
+                         Begin
+                              if cfgvtwo.Form6.rbHRD4.Checked Then globalData.hrdVersion :=4;
+                              if cfgvtwo.Form6.rbHRD5.Checked Then globalData.hrdVersion :=5;
+                              if catControl.writeHRD('[' + globalData.hrdcatControlcurrentRig.radioContext + '] set frequency-hz ' + cfgvtwo.Form6.edQRGQSY2.Text) Then
+                              Begin
+                                   if cfgvtwo.Form6.cbATQSY2.Checked Then
+                                   Begin
+                                   // Auto-tune cycle requested
+                                   end;
+                              end;
+                         end;
+                    end;
+               end;
+          end;
+          if cfgvtwo.Form6.cbEnableQSY3.Checked Then
+          Begin
+               if (st.Hour = cfgvtwo.Form6.qsyHour3.Value) And (st.Minute = cfgvtwo.Form6.qsyMinute3.Value) Then
+               Begin
+                    // QSY time slot 3
+                    If TryStrToInt(cfgvtwo.Form6.edQRGQSY3.Text, ifoo) Then
+                    Begin
+                         if ifoo > 1799999 Then
+                         Begin
+                              if cfgvtwo.Form6.rbHRD4.Checked Then globalData.hrdVersion :=4;
+                              if cfgvtwo.Form6.rbHRD5.Checked Then globalData.hrdVersion :=5;
+                              if catControl.writeHRD('[' + globalData.hrdcatControlcurrentRig.radioContext + '] set frequency-hz ' + cfgvtwo.Form6.edQRGQSY3.Text) Then
+                              Begin
+                                   if cfgvtwo.Form6.cbATQSY3.Checked Then
+                                   Begin
+                                   // Auto-tune cycle requested
+                                   end;
+                              end;
+                         end;
+                    end;
+               end;
+          end;
+          if cfgvtwo.Form6.cbEnableQSY4.Checked Then
+          Begin
+               if (st.Hour = cfgvtwo.Form6.qsyHour4.Value) And (st.Minute = cfgvtwo.Form6.qsyMinute4.Value) Then
+               Begin
+                    // QSY time slot 4
+                    If TryStrToInt(cfgvtwo.Form6.edQRGQSY4.Text, ifoo) Then
+                    Begin
+                         if ifoo > 1799999 Then
+                         Begin
+                              if cfgvtwo.Form6.rbHRD4.Checked Then globalData.hrdVersion :=4;
+                              if cfgvtwo.Form6.rbHRD5.Checked Then globalData.hrdVersion :=5;
+                              if catControl.writeHRD('[' + globalData.hrdcatControlcurrentRig.radioContext + '] set frequency-hz ' + cfgvtwo.Form6.edQRGQSY4.Text) Then
+                              Begin
+                                   if cfgvtwo.Form6.cbATQSY4.Checked Then
+                                   Begin
+                                   // Auto-tune cycle requested
+                                   end;
+                              end;
+                         end;
+                    end;
+               end;
+          end;
+          if cfgvtwo.Form6.cbEnableQSY5.Checked Then
+          Begin
+               if (st.Hour = cfgvtwo.Form6.qsyHour5.Value) And (st.Minute = cfgvtwo.Form6.qsyMinute5.Value) Then
+               Begin
+                    // QSY time slot 5
+                    If TryStrToInt(cfgvtwo.Form6.edQRGQSY5.Text, ifoo) Then
+                    Begin
+                         if ifoo > 1799999 Then
+                         Begin
+                              if cfgvtwo.Form6.rbHRD4.Checked Then globalData.hrdVersion :=4;
+                              if cfgvtwo.Form6.rbHRD5.Checked Then globalData.hrdVersion :=5;
+                              if catControl.writeHRD('[' + globalData.hrdcatControlcurrentRig.radioContext + '] set frequency-hz ' + cfgvtwo.Form6.edQRGQSY5.Text) Then
+                              Begin
+                                   if cfgvtwo.Form6.cbATQSY5.Checked Then
+                                   Begin
+                                   // Auto-tune cycle requested
+                                   end;
+                              end;
+                         end;
+                    end;
+               end;
+          end;
+     end;
 End;
 
 procedure TForm1.processOncePerSecond(st : TSystemTime);
@@ -5465,6 +5641,7 @@ initialization
   actionSet := False;
   catControl.catControlautoQSY := False;
   catControl.catControlcatTxDF := False;
+  globalData.hrdcatControlcurrentRig.hrdAlive := False;
   globalData.hrdVersion := 5;
 end.
 
