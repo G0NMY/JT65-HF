@@ -7,7 +7,7 @@
       <Unit0>
         <Filename Value="jt65-hf.lpr"/>
         <IsPartOfProject Value="True"/>
-        <CursorPos X="3" Y="35"/>
+        <CursorPos X="1" Y="48"/>
         <TopLine Value="19"/>
         <EditorIndex Value="9"/>
         <UsageCount Value="215"/>
@@ -20,8 +20,8 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="maincode"/>
-        <CursorPos X="64" Y="5058"/>
-        <TopLine Value="5040"/>
+        <CursorPos X="98" Y="3124"/>
+        <TopLine Value="3109"/>
         <EditorIndex Value="5"/>
         <UsageCount Value="215"/>
         <Bookmarks Count="2">
@@ -142,7 +142,7 @@
         <ComponentName Value="Form6"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="cfgvtwo"/>
-        <CursorPos X="1" Y="735"/>
+        <CursorPos X="1" Y="736"/>
         <TopLine Value="714"/>
         <EditorIndex Value="7"/>
         <UsageCount Value="200"/>
@@ -181,7 +181,7 @@
         <IsPartOfProject Value="True"/>
         <UnitName Value="catControl"/>
         <CursorPos X="1" Y="308"/>
-        <TopLine Value="535"/>
+        <TopLine Value="308"/>
         <EditorIndex Value="0"/>
         <UsageCount Value="266"/>
         <Loaded Value="True"/>
@@ -230,8 +230,8 @@
         <Filename Value="rbc.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="rbc"/>
-        <CursorPos X="11" Y="700"/>
-        <TopLine Value="685"/>
+        <CursorPos X="32" Y="678"/>
+        <TopLine Value="651"/>
         <EditorIndex Value="8"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
@@ -305,7 +305,7 @@
         <CursorPos X="28" Y="3"/>
         <TopLine Value="1"/>
         <EditorIndex Value="3"/>
-        <UsageCount Value="109"/>
+        <UsageCount Value="114"/>
         <Loaded Value="True"/>
       </Unit30>
       <Unit31>
@@ -315,7 +315,7 @@
         <CursorPos X="1" Y="1"/>
         <TopLine Value="1"/>
         <EditorIndex Value="4"/>
-        <UsageCount Value="109"/>
+        <UsageCount Value="114"/>
         <Loaded Value="True"/>
       </Unit31>
       <Unit32>
@@ -327,12 +327,12 @@
         <CursorPos X="112" Y="21"/>
         <TopLine Value="2"/>
         <EditorIndex Value="6"/>
-        <UsageCount Value="86"/>
+        <UsageCount Value="91"/>
         <Loaded Value="True"/>
       </Unit32>
     </Units>
     <General>
-      <ActiveEditorIndexAtStart Value="5"/>
+      <ActiveEditorIndexAtStart Value="9"/>
     </General>
   </ProjectSession>
   <Debugging>

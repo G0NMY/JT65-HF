@@ -1,7 +1,7 @@
 object Form6: TForm6
-  Left = 10
+  Left = 13
   Height = 542
-  Top = 13
+  Top = 16
   Width = 800
   BorderIcons = []
   Caption = 'Configuration'
@@ -14,13 +14,13 @@ object Form6: TForm6
   OnCreate = FormCreate
   LCLVersion = '0.9.28.2'
   object Notebook1: TNotebook
-    Left = 0
+    Left = 8
     Height = 488
-    Top = 10
+    Top = 8
     Width = 784
     Font.Height = -13
     Font.Name = 'Arial'
-    PageIndex = 1
+    PageIndex = 0
     ParentFont = False
     TabOrder = 0
     object Page1: TPage
@@ -40,9 +40,9 @@ object Form6: TForm6
         ParentFont = False
       end
       object Label27: TLabel
-        Left = 546
+        Left = 4
         Height = 15
-        Top = 6
+        Top = 58
         Width = 223
         Caption = 'Grid (4 or 6 Characters).  Required value.'
         Font.Height = -11
@@ -54,7 +54,7 @@ object Form6: TForm6
       object Label22: TLabel
         Left = 4
         Height = 15
-        Top = 57
+        Top = 105
         Width = 106
         Caption = 'Sound Input Device'
         Font.Height = -11
@@ -66,7 +66,7 @@ object Form6: TForm6
       object Label23: TLabel
         Left = 315
         Height = 15
-        Top = 57
+        Top = 105
         Width = 115
         Caption = 'Sound Output Device'
         Font.Height = -11
@@ -75,22 +75,10 @@ object Form6: TForm6
         ParentColor = False
         ParentFont = False
       end
-      object Label9: TLabel
-        Left = 5
-        Height = 17
-        Top = 104
-        Width = 560
-        Caption = 'Enter your PTT port into the input box below in the format COM###, for example, COM11'
-        Font.Height = -13
-        Font.Name = 'Arial'
-        Font.Style = [fsBold]
-        ParentColor = False
-        ParentFont = False
-      end
       object Label53: TLabel
         Left = 5
         Height = 15
-        Top = 192
+        Top = 160
         Width = 86
         Caption = 'RX Sample Rate'
         Font.Height = -11
@@ -102,7 +90,7 @@ object Form6: TForm6
       object Label54: TLabel
         Left = 121
         Height = 15
-        Top = 192
+        Top = 160
         Width = 86
         Caption = 'TX Sample Rate'
         Font.Height = -11
@@ -111,24 +99,13 @@ object Form6: TForm6
         ParentColor = False
         ParentFont = False
       end
-      object Label13: TLabel
-        Left = 300
-        Height = 29
-        Top = 192
-        Width = 241
-        Caption = 'Enter values shown in main screen if need for SR'#13#10'correction is indicated.'
-        Font.Height = -11
-        Font.Name = 'Arial'
-        ParentColor = False
-        ParentFont = False
-      end
       object Label14: TLabel
-        Left = 300
-        Height = 29
-        Top = 229
-        Width = 272
-        Caption = 'Automatic adjustment may cause some initial skewing of'#13#10'spectrum display until SR settles.  This is harmless.'
-        Font.Height = -11
+        Left = 5
+        Height = 33
+        Top = 203
+        Width = 638
+        Caption = 'Automatic adjustment may cause some initial skewing of spectrum display until SR settles.  This is harmless.'#13#10'In most cases it is suggested that Automatic sample rate correction be enabled.'
+        Font.Height = -13
         Font.Name = 'Arial'
         ParentColor = False
         ParentFont = False
@@ -136,7 +113,7 @@ object Form6: TForm6
       object Label29: TLabel
         Left = 5
         Height = 15
-        Top = 414
+        Top = 407
         Width = 248
         Caption = 'Location of RX/TX history file (JT65hf-log.csv)'
         Font.Height = -11
@@ -144,22 +121,6 @@ object Form6: TForm6
         Font.Style = [fsBold]
         ParentColor = False
         ParentFont = False
-      end
-      object Label10: TLabel
-        Left = 5
-        Height = 17
-        Top = 128
-        Width = 52
-        Caption = 'PTT Port'
-        ParentColor = False
-      end
-      object Label3: TLabel
-        Left = 108
-        Height = 17
-        Top = 128
-        Width = 442
-        Caption = 'Test PTT will Key/Unkey your Transceiver.  No audio will be sent during test.'
-        ParentColor = False
       end
       object Label28: TLabel
         Left = 100
@@ -186,12 +147,16 @@ object Form6: TForm6
         ParentFont = False
       end
       object Label70: TLabel
-        Left = 276
-        Height = 49
-        Top = 3
-        Width = 241
-        Caption = 'Suggest NOT using suffix or prefix unless'#13#10'you MUST legally do so.  The protocol'#13#10'works much better without suffix or prefix.'
+        Left = 284
+        Height = 91
+        Top = 6
+        Width = 479
+        Caption = 'Note:  Suffix/Prefix is suggested to only be used in situations where'#13#10'you have a legal requirement to do so.  You may define a suffix OR'#13#10'a prefix but not both.  Suffix/prefix support in the JT65 protocol is a'#13#10'(very) complex issue.  My suggestion is to avoid its use if at all'#13#10'possible.  Suffix/prefix support in JT65-HF is, at best, incomplete.'
+        Font.Height = -15
+        Font.Name = 'Arial'
+        Font.Style = [fsBold]
         ParentColor = False
+        ParentFont = False
       end
       object edMyCall: TEdit
         Left = 5
@@ -206,9 +171,9 @@ object Form6: TForm6
         TabOrder = 0
       end
       object edMyGrid: TEdit
-        Left = 546
+        Left = 5
         Height = 24
-        Top = 24
+        Top = 75
         Width = 80
         Font.Height = -13
         Font.Name = 'Arial'
@@ -218,7 +183,7 @@ object Form6: TForm6
       object cbAudioIn: TComboBox
         Left = 4
         Height = 24
-        Top = 73
+        Top = 121
         Width = 300
         Font.Height = -13
         Font.Name = 'Arial'
@@ -236,7 +201,7 @@ object Form6: TForm6
       object cbAudioOut: TComboBox
         Left = 315
         Height = 24
-        Top = 73
+        Top = 121
         Width = 300
         Font.Height = -13
         Font.Name = 'Arial'
@@ -254,7 +219,7 @@ object Form6: TForm6
       object edRXSRCor: TEdit
         Left = 5
         Height = 24
-        Top = 208
+        Top = 176
         Width = 63
         Font.Height = -13
         Font.Name = 'Arial'
@@ -266,7 +231,7 @@ object Form6: TForm6
       object edTXSRCor: TEdit
         Left = 121
         Height = 24
-        Top = 208
+        Top = 176
         Width = 63
         Font.Height = -13
         Font.Name = 'Arial'
@@ -276,9 +241,9 @@ object Form6: TForm6
         Text = '1.0000'
       end
       object chkEnableAutoSR: TCheckBox
-        Left = 5
+        Left = 220
         Height = 19
-        Top = 240
+        Top = 177
         Width = 285
         Caption = 'Enable Automatic RX/TX Sample Rate Correction.'
         Font.Height = -11
@@ -293,7 +258,7 @@ object Form6: TForm6
       object cbTXWatchDog: TCheckBox
         Left = 4
         Height = 20
-        Top = 270
+        Top = 250
         Width = 452
         Caption = 'Disable TX after sending same message 15 times. (Runaway TX watchdog)'
         Checked = True
@@ -303,7 +268,7 @@ object Form6: TForm6
       object cbDisableMultiQSO: TCheckBox
         Left = 4
         Height = 20
-        Top = 294
+        Top = 276
         Width = 527
         Caption = 'Disable Multidecoder while in QSO.  Suggested unless you have a fast CPU (>1.5GHz).'
         Checked = True
@@ -313,7 +278,7 @@ object Form6: TForm6
       object cbMultiAutoEnable: TCheckBox
         Left = 4
         Height = 20
-        Top = 318
+        Top = 302
         Width = 446
         Caption = 'Enable Multidecoder after 2 minutes of no TX (If disabled by option above).'
         Checked = True
@@ -323,7 +288,7 @@ object Form6: TForm6
       object cbSaveCSV: TCheckBox
         Left = 4
         Height = 20
-        Top = 389
+        Top = 379
         Width = 290
         Caption = 'Save text of decodes and transmissions to file.'
         Checked = True
@@ -331,50 +296,24 @@ object Form6: TForm6
         TabOrder = 10
       end
       object DirectoryEdit1: TDirectoryEdit
-        Left = 5
+        Left = 4
         Height = 24
-        Top = 433
+        Top = 425
         Width = 711
         ShowHidden = False
         ButtonWidth = 23
         NumGlyphs = 0
         TabOrder = 11
       end
-      object editUserDefinedPort1: TEdit
-        Left = 5
-        Height = 24
-        Top = 148
-        Width = 90
-        CharCase = ecUppercase
-        TabOrder = 12
-        Text = 'NONE'
-      end
-      object buttonTestPTT: TButton
-        Left = 108
-        Height = 24
-        Top = 148
-        Width = 75
-        Caption = 'Test PTT'
-        OnClick = buttonTestPTTClick
-        TabOrder = 13
-      end
-      object cbUseAltPTT: TCheckBox
-        Left = 208
-        Height = 20
-        Top = 152
-        Width = 459
-        Caption = 'Use Alternate PTT Method.  Only enable this if you have problems with PTT.'
-        TabOrder = 14
-      end
       object cbRestoreMulti: TCheckBox
         Left = 4
         Height = 20
-        Top = 343
+        Top = 329
         Width = 242
         Caption = 'Restore defaults sets Multidecoder On'
         Checked = True
         State = cbChecked
-        TabOrder = 15
+        TabOrder = 12
       end
       object comboPrefix: TComboBox
         Left = 100
@@ -388,7 +327,7 @@ object Form6: TForm6
         )
         OnChange = comboPrefixChange
         Style = csDropDownList
-        TabOrder = 16
+        TabOrder = 13
         Text = 'NONE'
       end
       object comboSuffix: TComboBox
@@ -403,20 +342,20 @@ object Form6: TForm6
         )
         OnChange = comboPrefixChange
         Style = csDropDownList
-        TabOrder = 17
+        TabOrder = 14
         Text = 'NONE'
       end
       object cbCWID: TCheckBox
         Left = 4
         Height = 20
-        Top = 365
+        Top = 353
         Width = 272
         Caption = 'Send CW ID With 73 or Free Text Message'
-        TabOrder = 18
+        TabOrder = 15
       end
     end
     object Page2: TPage
-      Caption = 'RB/PSK Reporter/Rig Control'
+      Caption = 'Rig Control/PTT'
       ClientWidth = 776
       ClientHeight = 459
       object Label1: TLabel
@@ -428,30 +367,33 @@ object Form6: TForm6
         ParentColor = False
         Visible = False
       end
-      object Label33: TLabel
-        Left = 12
+      object Label10: TLabel
+        Left = 10
         Height = 17
-        Top = 36
-        Width = 284
-        Caption = '[Optional] Antenna Description for PSK Reporter.'
+        Top = 23
+        Width = 52
+        Caption = 'PTT Port'
         ParentColor = False
       end
-      object Label34: TLabel
-        Left = 12
+      object Label3: TLabel
+        Left = 113
         Height = 17
-        Top = 6
-        Width = 563
-        Caption = '[Optional] Call for PSK Reporter or RB.  Suffixed/Prefixed is allowed here.  DO NOT add -1 -2 etc.'
+        Top = 23
+        Width = 442
+        Caption = 'Test PTT will Key/Unkey your Transceiver.  No audio will be sent during test.'
         ParentColor = False
       end
-      object cbUsePSKReporter: TCheckBox
-        Left = 553
-        Height = 20
-        Top = 389
-        Width = 219
-        Caption = 'Spot Receptions via PSK Reporter'
-        TabOrder = 0
-        Visible = False
+      object Label9: TLabel
+        Left = 10
+        Height = 17
+        Top = 2
+        Width = 560
+        Caption = 'Enter your PTT port into the input box below in the format COM###, for example, COM11'
+        Font.Height = -13
+        Font.Name = 'Arial'
+        Font.Style = [fsBold]
+        ParentColor = False
+        ParentFont = False
       end
       object rigQRG: TEdit
         Left = 196
@@ -459,14 +401,14 @@ object Form6: TForm6
         Top = 289
         Width = 80
         ReadOnly = True
-        TabOrder = 1
+        TabOrder = 0
         Text = '0'
         Visible = False
       end
       object OmniGroup: TRadioGroup
         Left = 404
         Height = 53
-        Top = 64
+        Top = 72
         Width = 219
         AutoFill = True
         Caption = 'OmniRig'
@@ -481,7 +423,7 @@ object Form6: TForm6
         ClientHeight = 35
         ClientWidth = 215
         Columns = 3
-        TabOrder = 2
+        TabOrder = 1
         object chkUseOmni: TCheckBox
           Left = 6
           Height = 23
@@ -512,9 +454,9 @@ object Form6: TForm6
         end
       end
       object RadioGroup1: TRadioGroup
-        Left = 12
+        Left = 10
         Height = 53
-        Top = 64
+        Top = 72
         Width = 386
         AutoFill = True
         Caption = 'Ham Radio Deluxe'
@@ -529,7 +471,7 @@ object Form6: TForm6
         ClientHeight = 35
         ClientWidth = 382
         Columns = 3
-        TabOrder = 3
+        TabOrder = 2
         object chkUseHRD: TCheckBox
           Left = 6
           Height = 23
@@ -560,9 +502,9 @@ object Form6: TForm6
         end
       end
       object RadioGroup2: TRadioGroup
-        Left = 628
+        Left = 630
         Height = 53
-        Top = 64
+        Top = 72
         Width = 142
         AutoFill = True
         Caption = 'Commander'
@@ -577,7 +519,7 @@ object Form6: TForm6
         ClientHeight = 35
         ClientWidth = 138
         Columns = 3
-        TabOrder = 4
+        TabOrder = 3
         object chkUseCommander: TCheckBox
           Left = 6
           Height = 23
@@ -588,54 +530,19 @@ object Form6: TForm6
           TabOrder = 0
         end
       end
-      object editPSKRAntenna: TEdit
-        Left = 300
-        Height = 24
-        Top = 33
-        Width = 470
-        TabOrder = 5
-      end
-      object editPSKRCall: TEdit
-        Left = 579
-        Height = 24
-        Top = 3
-        Width = 112
-        CharCase = ecUppercase
-        TabOrder = 6
-      end
-      object cbUseRB: TCheckBox
-        Left = 564
-        Height = 20
-        Top = 433
-        Width = 208
-        Caption = 'Spot Receptions via RB Network'
-        OnChange = cbUseRBChange
-        TabOrder = 7
-        Visible = False
-      end
-      object cbNoInet: TCheckBox
-        Left = 580
-        Height = 20
-        Top = 349
-        Width = 178
-        Caption = 'Operate RB in Offline Mode'
-        OnChange = cbNoInetChange
-        TabOrder = 8
-        Visible = False
-      end
       object groupHRD: TGroupBox
         Left = 10
-        Height = 336
-        Top = 117
-        Width = 760
+        Height = 330
+        Top = 127
+        Width = 762
         Caption = 'HRD Details'
-        ClientHeight = 318
-        ClientWidth = 756
+        ClientHeight = 312
+        ClientWidth = 758
         Font.Height = -13
         Font.Name = 'Arial'
         Font.Style = [fsBold]
         ParentFont = False
-        TabOrder = 9
+        TabOrder = 4
         Visible = False
         object Label11: TLabel
           Left = 433
@@ -1118,11 +1025,53 @@ object Form6: TForm6
           Text = '7809'
         end
       end
+      object editUserDefinedPort1: TEdit
+        Left = 10
+        Height = 24
+        Top = 43
+        Width = 90
+        CharCase = ecUppercase
+        TabOrder = 5
+        Text = 'NONE'
+      end
+      object buttonTestPTT: TButton
+        Left = 113
+        Height = 24
+        Top = 43
+        Width = 75
+        Caption = 'Test PTT'
+        OnClick = buttonTestPTTClick
+        TabOrder = 6
+      end
+      object cbUseAltPTT: TCheckBox
+        Left = 213
+        Height = 20
+        Top = 47
+        Width = 459
+        Caption = 'Use Alternate PTT Method.  Only enable this if you have problems with PTT.'
+        TabOrder = 7
+      end
     end
     object Page6: TPage
-      Caption = 'Heard List/RB Statistics'
+      Caption = 'Heard List/PSKR Setup/RB Setup'
       ClientWidth = 776
       ClientHeight = 459
+      object Label34: TLabel
+        Left = 228
+        Height = 17
+        Top = 13
+        Width = 534
+        Caption = '[Optional] Call for PSK Reporter or RB.  Suffixed/Prefixed is allowed.  DO NOT add -1 -2 etc.'
+        ParentColor = False
+      end
+      object Label33: TLabel
+        Left = 228
+        Height = 17
+        Top = 85
+        Width = 284
+        Caption = '[Optional] Antenna Description for PSK Reporter.'
+        ParentColor = False
+      end
       object sgCallsHeard: TStringGrid
         Left = 4
         Height = 448
@@ -1150,13 +1099,57 @@ object Form6: TForm6
         TitleFont.Height = -13
         TitleFont.Name = 'Arial'
       end
+      object editPSKRCall: TEdit
+        Left = 228
+        Height = 24
+        Top = 37
+        Width = 112
+        CharCase = ecUppercase
+        TabOrder = 1
+      end
+      object editPSKRAntenna: TEdit
+        Left = 228
+        Height = 24
+        Top = 109
+        Width = 470
+        TabOrder = 2
+      end
+      object cbNoInet: TCheckBox
+        Left = 228
+        Height = 20
+        Top = 325
+        Width = 178
+        Caption = 'Operate RB in Offline Mode'
+        OnChange = cbNoInetChange
+        TabOrder = 3
+        Visible = False
+      end
+      object cbUsePSKReporter: TCheckBox
+        Left = 228
+        Height = 20
+        Top = 261
+        Width = 219
+        Caption = 'Spot Receptions via PSK Reporter'
+        TabOrder = 4
+        Visible = False
+      end
+      object cbUseRB: TCheckBox
+        Left = 228
+        Height = 20
+        Top = 293
+        Width = 208
+        Caption = 'Spot Receptions via RB Network'
+        OnChange = cbUseRBChange
+        TabOrder = 5
+        Visible = False
+      end
     end
     object Page5: TPage
       Caption = 'Macros'
       ClientWidth = 776
       ClientHeight = 459
       object Label2: TLabel
-        Left = 12
+        Left = 1
         Height = 20
         Top = 13
         Width = 127
@@ -1168,7 +1161,7 @@ object Form6: TForm6
         ParentFont = False
       end
       object Label35: TLabel
-        Left = 19
+        Left = 3
         Height = 17
         Top = 37
         Width = 77
@@ -1180,7 +1173,7 @@ object Form6: TForm6
         ParentFont = False
       end
       object Label36: TLabel
-        Left = 19
+        Left = 3
         Height = 17
         Top = 61
         Width = 77
@@ -1192,7 +1185,7 @@ object Form6: TForm6
         ParentFont = False
       end
       object Label37: TLabel
-        Left = 19
+        Left = 3
         Height = 17
         Top = 85
         Width = 77
@@ -1204,7 +1197,7 @@ object Form6: TForm6
         ParentFont = False
       end
       object Label39: TLabel
-        Left = 19
+        Left = 3
         Height = 17
         Top = 109
         Width = 77
@@ -1216,7 +1209,7 @@ object Form6: TForm6
         ParentFont = False
       end
       object Label41: TLabel
-        Left = 19
+        Left = 3
         Height = 17
         Top = 133
         Width = 84
@@ -1228,7 +1221,7 @@ object Form6: TForm6
         ParentFont = False
       end
       object Label42: TLabel
-        Left = 19
+        Left = 3
         Height = 17
         Top = 157
         Width = 84
@@ -1240,7 +1233,7 @@ object Form6: TForm6
         ParentFont = False
       end
       object Label43: TLabel
-        Left = 19
+        Left = 3
         Height = 17
         Top = 181
         Width = 84
@@ -1252,7 +1245,7 @@ object Form6: TForm6
         ParentFont = False
       end
       object Label44: TLabel
-        Left = 19
+        Left = 3
         Height = 17
         Top = 205
         Width = 84
@@ -1264,7 +1257,7 @@ object Form6: TForm6
         ParentFont = False
       end
       object Label45: TLabel
-        Left = 19
+        Left = 3
         Height = 17
         Top = 229
         Width = 84
@@ -1276,7 +1269,7 @@ object Form6: TForm6
         ParentFont = False
       end
       object Label46: TLabel
-        Left = 12
+        Left = 3
         Height = 17
         Top = 253
         Width = 91
@@ -1288,10 +1281,10 @@ object Form6: TForm6
         ParentFont = False
       end
       object Label47: TLabel
-        Left = 12
+        Left = 3
         Height = 17
         Top = 277
-        Width = 90
+        Width = 91
         Caption = '11 - 24920 KHz'
         Font.Height = -13
         Font.Name = 'Arial'
@@ -1300,7 +1293,7 @@ object Form6: TForm6
         ParentFont = False
       end
       object Label48: TLabel
-        Left = 12
+        Left = 3
         Height = 17
         Top = 301
         Width = 91
@@ -1312,7 +1305,7 @@ object Form6: TForm6
         ParentFont = False
       end
       object Label49: TLabel
-        Left = 12
+        Left = 3
         Height = 17
         Top = 327
         Width = 23
@@ -1324,7 +1317,7 @@ object Form6: TForm6
         ParentFont = False
       end
       object Label50: TLabel
-        Left = 12
+        Left = 3
         Height = 17
         Top = 359
         Width = 23
@@ -1336,7 +1329,7 @@ object Form6: TForm6
         ParentFont = False
       end
       object Label51: TLabel
-        Left = 12
+        Left = 3
         Height = 17
         Top = 391
         Width = 23
@@ -1348,7 +1341,7 @@ object Form6: TForm6
         ParentFont = False
       end
       object Label52: TLabel
-        Left = 12
+        Left = 3
         Height = 17
         Top = 424
         Width = 23
@@ -1360,7 +1353,7 @@ object Form6: TForm6
         ParentFont = False
       end
       object Label55: TLabel
-        Left = 180
+        Left = 365
         Height = 20
         Top = 13
         Width = 155
@@ -1372,7 +1365,7 @@ object Form6: TForm6
         ParentFont = False
       end
       object Label56: TLabel
-        Left = 187
+        Left = 365
         Height = 17
         Top = 37
         Width = 114
@@ -1384,7 +1377,7 @@ object Form6: TForm6
         ParentFont = False
       end
       object Label57: TLabel
-        Left = 187
+        Left = 365
         Height = 17
         Top = 61
         Width = 122
@@ -1396,7 +1389,7 @@ object Form6: TForm6
         ParentFont = False
       end
       object Label58: TLabel
-        Left = 187
+        Left = 365
         Height = 17
         Top = 85
         Width = 109
@@ -1408,7 +1401,7 @@ object Form6: TForm6
         ParentFont = False
       end
       object Label59: TLabel
-        Left = 187
+        Left = 365
         Height = 17
         Top = 109
         Width = 16
@@ -1420,7 +1413,7 @@ object Form6: TForm6
         ParentFont = False
       end
       object Label60: TLabel
-        Left = 187
+        Left = 365
         Height = 17
         Top = 142
         Width = 16
@@ -1432,7 +1425,7 @@ object Form6: TForm6
         ParentFont = False
       end
       object Label61: TLabel
-        Left = 187
+        Left = 365
         Height = 17
         Top = 175
         Width = 16
@@ -1444,7 +1437,7 @@ object Form6: TForm6
         ParentFont = False
       end
       object Label62: TLabel
-        Left = 187
+        Left = 365
         Height = 17
         Top = 206
         Width = 16
@@ -1456,7 +1449,7 @@ object Form6: TForm6
         ParentFont = False
       end
       object Label63: TLabel
-        Left = 187
+        Left = 365
         Height = 17
         Top = 242
         Width = 16
@@ -1468,7 +1461,7 @@ object Form6: TForm6
         ParentFont = False
       end
       object Label64: TLabel
-        Left = 187
+        Left = 365
         Height = 17
         Top = 275
         Width = 16
@@ -1480,7 +1473,7 @@ object Form6: TForm6
         ParentFont = False
       end
       object Label122: TLabel
-        Left = 180
+        Left = 358
         Height = 17
         Top = 308
         Width = 23
@@ -1492,10 +1485,10 @@ object Form6: TForm6
         ParentFont = False
       end
       object Label123: TLabel
-        Left = 180
+        Left = 358
         Height = 17
         Top = 341
-        Width = 22
+        Width = 23
         Caption = '11 -'
         Font.Height = -13
         Font.Name = 'Arial'
@@ -1504,7 +1497,7 @@ object Form6: TForm6
         ParentFont = False
       end
       object Label124: TLabel
-        Left = 180
+        Left = 358
         Height = 17
         Top = 375
         Width = 23
@@ -1516,7 +1509,7 @@ object Form6: TForm6
         ParentFont = False
       end
       object Label125: TLabel
-        Left = 180
+        Left = 358
         Height = 17
         Top = 409
         Width = 23
@@ -1527,24 +1520,12 @@ object Form6: TForm6
         ParentColor = False
         ParentFont = False
       end
-      object Label12: TLabel
-        Left = 476
-        Height = 97
-        Top = 16
-        Width = 277
-        Caption = 'QRG Definition is used when entering QRG'#13#10'manually.  When Rig Control is off the input'#13#10'box for QRG becomes editable.  You may'#13#10'enter QRG directly (in Hz, KHz or MHz) or'#13#10'by right clicking up the values in the QRG'#13#10'definitions.'
-        Font.Height = -13
-        Font.Name = 'Arial'
-        Font.Style = [fsBold]
-        ParentColor = False
-        ParentFont = False
-      end
       object Label20: TLabel
-        Left = 476
-        Height = 129
-        Top = 132
-        Width = 281
-        Caption = 'Message definitions is used for entering free'#13#10'text messages.  You may define up to ten of'#13#10'these each limited to 13 characters and may'#13#10'only contain the 43 characters of the JT65'#13#10'character set, which is;'#13#10#13#10'0123456789ABCDEFGHIJKLMNOPQRSTU'#13#10'VWXYZ +-./?'
+        Left = 543
+        Height = 145
+        Top = 37
+        Width = 222
+        Caption = 'Message definitions is used for'#13#10'entering free text messages.  You'#13#10'may define up to ten of these'#13#10'each limited to 13 characters and'#13#10'may only contain the 43 characters'#13#10'of the JT65 character set, which is;'#13#10#13#10'0123456789ABCDEFGHIJKLMNO'#13#10'PQRSTUVWXYZ +-./?'
         Font.Height = -13
         Font.Name = 'Arial'
         Font.Style = [fsBold]
@@ -1552,11 +1533,11 @@ object Form6: TForm6
         ParentFont = False
       end
       object Label38: TLabel
-        Left = 476
-        Height = 81
-        Top = 273
-        Width = 294
-        Caption = 'Right clicking in the Free Text entry box will'#13#10'present a dialog of these message definitions.'#13#10'Note.  The first 3 fixed entries send the JT65'#13#10'shorthand sequences and should only be used'#13#10'when absolutely necessary.'
+        Left = 543
+        Height = 129
+        Top = 191
+        Width = 210
+        Caption = 'Right clicking in the Free Text'#13#10'entry box in the main program'#13#10'screen will present a dialog'#13#10'of these message definitions.'#13#10'Note.  The first 3 fixed entries'#13#10'send the JT65 shorthand'#13#10'sequences and should only be'#13#10'used when absolutely necessary.'
         Font.Height = -13
         Font.Name = 'Arial'
         Font.Style = [fsBold]
@@ -1576,8 +1557,32 @@ object Form6: TForm6
         ParentFont = False
         Visible = False
       end
+      object Label71: TLabel
+        Left = 543
+        Height = 97
+        Top = 334
+        Width = 214
+        Caption = 'Do not begin a free text message'#13#10'with RRR, RO or 73 as it will be'#13#10'sent as shorthand even if you add'#13#10'text to the first ''word'' (RRR, RO,'#13#10'73).  This will be corrected in'#13#10'future versions.'
+        Font.Height = -13
+        Font.Name = 'Arial'
+        Font.Style = [fsBold]
+        ParentColor = False
+        ParentFont = False
+      end
+      object Label72: TLabel
+        Left = 107
+        Height = 113
+        Top = 37
+        Width = 242
+        Caption = 'Commonly used JT65 dial QRG values'#13#10'have been predefined for the first 12'#13#10'slots.  You may define 4 custom'#13#10'values.  These will be usable when'#13#10'setting QRG from the main program'#13#10'screen by right clicking on the QRG'#13#10'entry box.'
+        Font.Height = -13
+        Font.Name = 'Arial'
+        Font.Style = [fsBold]
+        ParentColor = False
+        ParentFont = False
+      end
       object edUserQRG1: TEdit
-        Left = 40
+        Left = 31
         Height = 24
         Top = 325
         Width = 64
@@ -1585,7 +1590,7 @@ object Form6: TForm6
         Text = '0'
       end
       object edUserQRG2: TEdit
-        Left = 40
+        Left = 31
         Height = 24
         Top = 357
         Width = 64
@@ -1593,7 +1598,7 @@ object Form6: TForm6
         Text = '0'
       end
       object edUserQRG3: TEdit
-        Left = 40
+        Left = 31
         Height = 24
         Top = 388
         Width = 64
@@ -1601,7 +1606,7 @@ object Form6: TForm6
         Text = '0'
       end
       object edUserQRG4: TEdit
-        Left = 40
+        Left = 31
         Height = 24
         Top = 421
         Width = 64
@@ -1609,100 +1614,100 @@ object Form6: TForm6
         Text = '0'
       end
       object edUserMsg4: TEdit
-        Left = 208
+        Left = 385
         Height = 24
         Top = 107
-        Width = 252
+        Width = 144
         CharCase = ecUppercase
         MaxLength = 13
         OnChange = edUserMsgChange
         TabOrder = 4
       end
       object edUserMsg5: TEdit
-        Left = 208
+        Left = 386
         Height = 24
         Top = 140
-        Width = 252
+        Width = 143
         CharCase = ecUppercase
         MaxLength = 13
         OnChange = edUserMsgChange
         TabOrder = 5
       end
       object edUserMsg6: TEdit
-        Left = 208
+        Left = 385
         Height = 24
         Top = 173
-        Width = 252
+        Width = 144
         CharCase = ecUppercase
         MaxLength = 13
         OnChange = edUserMsgChange
         TabOrder = 6
       end
       object edUserMsg7: TEdit
-        Left = 208
+        Left = 385
         Height = 24
         Top = 206
-        Width = 252
+        Width = 144
         CharCase = ecUppercase
         MaxLength = 13
         OnChange = edUserMsgChange
         TabOrder = 7
       end
       object edUserMsg8: TEdit
-        Left = 208
+        Left = 385
         Height = 24
         Top = 240
-        Width = 252
+        Width = 144
         CharCase = ecUppercase
         MaxLength = 13
         OnChange = edUserMsgChange
         TabOrder = 8
       end
       object edUserMsg9: TEdit
-        Left = 208
+        Left = 385
         Height = 24
         Top = 273
-        Width = 252
+        Width = 144
         CharCase = ecUppercase
         MaxLength = 13
         OnChange = edUserMsgChange
         TabOrder = 9
       end
       object edUserMsg10: TEdit
-        Left = 208
+        Left = 386
         Height = 24
         Top = 306
-        Width = 252
+        Width = 143
         CharCase = ecUppercase
         MaxLength = 13
         OnChange = edUserMsgChange
         TabOrder = 10
       end
       object edUserMsg11: TEdit
-        Left = 208
+        Left = 386
         Height = 24
         Top = 339
-        Width = 252
+        Width = 143
         CharCase = ecUppercase
         MaxLength = 13
         OnChange = edUserMsgChange
         TabOrder = 11
       end
       object edUserMsg12: TEdit
-        Left = 208
+        Left = 386
         Height = 24
         Top = 373
-        Width = 252
+        Width = 143
         CharCase = ecUppercase
         MaxLength = 13
         OnChange = edUserMsgChange
         TabOrder = 12
       end
       object edUserMsg13: TEdit
-        Left = 208
+        Left = 385
         Height = 24
         Top = 407
-        Width = 252
+        Width = 144
         CharCase = ecUppercase
         MaxLength = 13
         OnChange = edUserMsgChange
@@ -1789,8 +1794,8 @@ object Form6: TForm6
         Left = 12
         Height = 45
         Top = 397
-        Width = 498
-        Caption = #13#10'JT65-HF does NOT implement an SDR RX/TX platform.'
+        Width = 603
+        Caption = #13#10'JT65-HF does NOT implement an SDR RX/TX platform at this time.'
         Font.Height = -19
         Font.Name = 'Arial'
         Font.Style = [fsBold]
@@ -1889,6 +1894,18 @@ object Form6: TForm6
       Caption = 'Colors'
       ClientWidth = 776
       ClientHeight = 459
+      object Label73: TLabel
+        Left = 12
+        Height = 113
+        Top = 167
+        Width = 677
+        Caption = 'JT65-HF uses color coding to assist in picking out receptions that may be of greater interest.'#13#10#13#10'Messages evaluated as being a CQ will be displayed as in the example for CQ TEXT.'#13#10#13#10'Messages evaluated as being to your callsign  will be displayed as in the example for HAS MY CALL.'#13#10#13#10'Messages evaluated as being neither of the above  will be displayed as in the example for ONGOING QSO.'
+        Font.Height = -13
+        Font.Name = 'Arial'
+        Font.Style = [fsBold]
+        ParentColor = False
+        ParentFont = False
+      end
       object Edit1: TEdit
         Left = 12
         Height = 30

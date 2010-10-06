@@ -1,5 +1,5 @@
 object Form4: TForm4
-  Left = 7
+  Left = 10
   Height = 300
   Top = 3
   Width = 400

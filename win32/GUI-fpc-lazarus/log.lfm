@@ -1,7 +1,7 @@
 object Form2: TForm2
-  Left = 17
+  Left = 20
   Height = 350
-  Top = 15
+  Top = 17
   Width = 385
   BorderIcons = []
   Caption = 'Log Contact'

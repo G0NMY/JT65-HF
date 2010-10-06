@@ -3300,7 +3300,7 @@ Begin
      end;
      rbc.glrbsSentCount := 0;
      //globalData.rbID := '1';
-     rbc.glrbCallsign := TrimLeft(TrimRight(cfgvtwo.Form6.editPSKRCall.Text)) + '-1';
+     rbc.glrbCallsign := TrimLeft(TrimRight(cfgvtwo.Form6.editPSKRCall.Text)) + '-2';
      // Init PA.  If this doesn't work there's no reason to continue.
      PaResult := portaudio.Pa_Initialize();
      If PaResult <> 0 Then ShowMessage('Fatal Error.  Could not initialize portaudio.');

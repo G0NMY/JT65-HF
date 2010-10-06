@@ -1,7 +1,7 @@
 object Form1: TForm1
   Left = 0
   Height = 690
-  Top = 7
+  Top = 9
   Width = 935
   ActiveControl = btnReDecode
   Caption = 'JT65-HF'
