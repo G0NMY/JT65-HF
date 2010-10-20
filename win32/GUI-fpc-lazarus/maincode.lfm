@@ -215,7 +215,7 @@ object Form1: TForm1
     Left = 556
     Height = 20
     Top = 228
-    Width = 330
+    Width = 329
     Caption = 'Message To TX:  1234567890123456789012'
     Font.Height = -16
     Font.Name = 'Arial'
@@ -261,12 +261,13 @@ object Form1: TForm1
     Font.Style = [fsBold]
     ParentColor = False
     ParentFont = False
+    OnClick = Label39Click
   end
   object Label38: TLabel
     Left = 177
     Height = 15
     Top = 210
-    Width = 298
+    Width = 296
     Caption = 'Left click waterfall to set TX CF, Right click sets RX CF.'
     Font.Height = -11
     Font.Name = 'Arial'

@@ -21,7 +21,7 @@
       <AutoIncrementBuild Value="True"/>
       <CurrentVersionNr Value="1"/>
       <CurrentMinorRevNr Value="7"/>
-      <CurrentBuildNr Value="247"/>
+      <CurrentBuildNr Value="273"/>
       <FileDescription Value="Amateur Radio communications using JT65A"/>
       <LegalCopyright Value="2009..2010 - J C Large - W6CQZ - GPL 2"/>
     </VersionInfo>
@@ -46,7 +46,7 @@
         <PackageName Value="LCL"/>
       </Item2>
     </RequiredPackages>
-    <Units Count="33">
+    <Units Count="35">
       <Unit0>
         <Filename Value="jt65-hf.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -224,6 +224,16 @@
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="about"/>
       </Unit32>
+      <Unit33>
+        <Filename Value="madc.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="madc"/>
+      </Unit33>
+      <Unit34>
+        <Filename Value="mdac.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="mdac"/>
+      </Unit34>
     </Units>
   </ProjectOptions>
   <CompilerOptions>
