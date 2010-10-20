@@ -1997,7 +1997,7 @@ end;
 
 procedure TForm1.menuHeardClick(Sender: TObject);
 begin
-     cfgvtwo.Form6.Notebook1.ActivePage := 'Heard List/RB Statistics';
+     cfgvtwo.Form6.Notebook1.ActivePage := 'Heard List/PSKR Setup/RB Setup';
      cfgvtwo.Form6.Show;
      cfgvtwo.Form6.BringToFront;
 end;
@@ -2046,7 +2046,7 @@ end;
 
 procedure TForm1.menuRigControlClick(Sender: TObject);
 begin
-     cfgvtwo.Form6.Notebook1.ActivePage := 'RB/PSK Reporter/Rig Control';
+     cfgvtwo.Form6.Notebook1.ActivePage := 'Rig Control/PTT';
      cfgvtwo.Form6.Show;
      cfgvtwo.Form6.BringToFront;
 end;

@@ -6,6 +6,7 @@
       character*255 kvfile
       integer era(51),dat4(12),indx(64)
       integer mrsym(63),mr2sym(63),mrprob(63),mr2prob(63)
+      integer nhist(0:63)
       logical first
       integer system
       common/extcom/ntdecode
@@ -13,6 +14,14 @@
       save
 
       nfail=0
+C     Clearing the decode holders.
+      do i=1,63
+         mrsym(i)=0
+         mr2sym(i)=0
+         mrprob(i)=0
+         mr2prob(i)=0
+      enddo
+
  1    call demod64a(s3,nadd,mrsym,mrprob,mr2sym,mr2prob,ntest,nlow)
 
       if(ntest.lt.50 .or. nlow.gt.20) then

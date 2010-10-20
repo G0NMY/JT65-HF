@@ -20,8 +20,8 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="maincode"/>
-        <CursorPos X="1" Y="1821"/>
-        <TopLine Value="1798"/>
+        <CursorPos X="75" Y="2000"/>
+        <TopLine Value="1998"/>
         <EditorIndex Value="5"/>
         <UsageCount Value="215"/>
         <Bookmarks Count="2">
@@ -354,7 +354,7 @@
       </Unit34>
     </Units>
     <General>
-      <ActiveEditorIndexAtStart Value="5"/>
+      <ActiveEditorIndexAtStart Value="7"/>
     </General>
   </ProjectSession>
   <Debugging>

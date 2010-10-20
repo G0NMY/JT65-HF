@@ -7,16 +7,19 @@ C      http://developer.berlios.de/projects/wsjt/.
 
       integer mrsym(63)
       integer hist(0:63)
+      integer ipk
 
       do i=0,63
          hist(i)=0
       enddo
+
       do j=1,63
          i=mrsym(j)
          hist(i)=hist(i)+1
       enddo
 
       nmax=0
+
       do i=0,63
          if(hist(i).gt.nmax) then
             nmax=hist(i)

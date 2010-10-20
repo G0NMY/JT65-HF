@@ -20,10 +20,10 @@ object Form4: TForm4
     Lines.Strings = (
       'JT65-HF (c)2008...2010 Joe Large W6CQZ'
       ''
-      'JT65-HF is an adaptation of the JT65 protocol with an emphasis'
-      'upon its usage in the HF Amateur Radio bands.'
+      'JT65-HF is an implementation of the JT65 protocol with an'
+      'emphasis upon its usage in the HF Amateur Radio bands.'
       ''
-      'The JT65 protocol is the creation of Dr Joe Taylor - K1JT and is'
+      'The JT65 protocol is the creation of Joe Taylor - K1JT and is'
       'documented at;'
       ''
       'http://physics.princeton.edu/pulsar/K1JT/JT65.pdf'
