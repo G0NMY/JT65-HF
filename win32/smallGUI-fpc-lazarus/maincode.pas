@@ -28,10 +28,10 @@ interface
 uses
   Classes, SysUtils, LResources, Forms, Controls, Graphics, Dialogs,
   StdCtrls, CTypes, StrUtils, Math, portaudio, ExtCtrls, ComCtrls, Spin,
-  Windows, DateUtils, encode65, parseCallSign, globalData,
-  XMLPropStorage, adc, dac, ClipBrd, dlog, rawdec, cfgvtwo, guiConfig, verHolder,
+  Windows, DateUtils, encode65, parseCallSign, globalData, XMLPropStorage, adc,
+  dac, madc, mdac, ClipBrd, dlog, rawdec, cfgvtwo, guiConfig, verHolder,
   PSKReporter, catControl, Menus, synaser, rbc, log, diagout, synautil,
-  waterfall, d65, d4, spectrum;
+  waterfall, d65, spectrum, about;
 
 Const
   JT_DLL = 'jt65.dll';
@@ -42,7 +42,6 @@ type
   TForm1 = class(TForm)
     btnHaltTx: TButton;
     btnEngageTx: TButton;
-    btnRawDecoder: TButton;
     btnDefaults: TButton;
     btnZeroRX: TButton;
     btnZeroTX: TButton;
@@ -50,7 +49,6 @@ type
     btnReDecode: TButton;
     buttonClearList: TButton;
     buttonEndQSO2: TButton;
-    buttonSetup: TButton;
     buttonAckReport2: TButton;
     buttonCQ: TButton;
     buttonAnswerCQ: TButton;
@@ -66,7 +64,6 @@ type
     chkMultiDecode: TCheckBox;
     chkNB: TCheckBox;
     edFreeText: TEdit;
-    Edit1: TEdit;
     Edit2: TEdit;
     editManQRG: TEdit;
     edSigRep: TEdit;
@@ -87,7 +84,6 @@ type
     Label19: TLabel;
     Label20: TLabel;
     Label22: TLabel;
-    Label23: TLabel;
     Label24: TLabel;
     Label25: TLabel;
     Label26: TLabel;
@@ -97,7 +93,6 @@ type
     Label3: TLabel;
     Label30: TLabel;
     Label31: TLabel;
-    Label32: TLabel;
     Label33: TLabel;
     Label34: TLabel;
     Label35: TLabel;
@@ -114,6 +109,7 @@ type
     Label9: TLabel;
     ListBox1: TListBox;
     ListBox2: TListBox;
+    MainMenu1: TMainMenu;
     MenuItem1: TMenuItem;
     MenuItem10: TMenuItem;
     MenuItem11: TMenuItem;
@@ -137,6 +133,12 @@ type
     MenuItem28: TMenuItem;
     MenuItem29: TMenuItem;
     MenuItem3: TMenuItem;
+    menuHeard: TMenuItem;
+    menuSetup: TMenuItem;
+    menuRawDecoder: TMenuItem;
+    menuRigControl: TMenuItem;
+    menuTXLog: TMenuItem;
+    menuAbout: TMenuItem;
     MenuItem4: TMenuItem;
     MenuItem5: TMenuItem;
     MenuItem6: TMenuItem;
@@ -149,10 +151,6 @@ type
     popupMsgs: TPopupMenu;
     popupQRG: TPopupMenu;
     ProgressBar3: TProgressBar;
-    rbMB: TRadioButton;
-    rbM65: TRadioButton;
-    rbM4: TRadioButton;
-    RadioGroup2: TRadioGroup;
     rbFreeMsg: TRadioButton;
     rbGenMsg: TRadioButton;
     RadioGroup1: TRadioGroup;
@@ -163,7 +161,6 @@ type
     spinDecoderBW: TSpinEdit;
     spinDecoderCF: TSpinEdit;
     SpinEdit1: TSpinEdit;
-    spinBin: TSpinEdit;
     spinGain: TSpinEdit;
     spinTXCF: TSpinEdit;
     Timer1: TTimer;
@@ -210,12 +207,17 @@ type
     procedure Label22DblClick(Sender: TObject);
     procedure Label30DblClick(Sender: TObject);
     procedure Label31DblClick(Sender: TObject);
+    procedure Label39Click(Sender: TObject);
+    procedure menuAboutClick(Sender: TObject);
+    procedure menuHeardClick(Sender: TObject);
     procedure MenuItemHandler(Sender: TObject);
+    procedure menuRawDecoderClick(Sender: TObject);
+    procedure menuRigControlClick(Sender: TObject);
+    procedure menuSetupClick(Sender: TObject);
+    procedure menuTXLogClick(Sender: TObject);
     procedure rbFreeMsgChange(Sender: TObject);
-    procedure rbM65Change(Sender: TObject);
     procedure spinDecoderBWChange(Sender: TObject);
     procedure SpinEdit1Change(Sender: TObject);
-    procedure spinBinChange(Sender: TObject);
     procedure spinGainChange(Sender: TObject);
     procedure spinTXCFChange(Sender: TObject);
     procedure tbBrightChange(Sender: TObject);
@@ -240,6 +242,8 @@ type
     procedure lowerPTT();
     procedure altRaisePTT();
     procedure altLowerPTT();
+    procedure hrdRaisePTT();
+    procedure hrdLowerPTT();
     procedure initDecode();
     procedure updateSR();
     procedure genTX1();
@@ -251,10 +255,12 @@ type
     procedure processOncePerSecond(st : TSystemTime);
     procedure oncePerTick();
     procedure displayAudio(audioAveL : Integer; audioAveR : Integer);
+    function getPTTMethod() : String;
     function BuildRemoteString (call, mode, freq, date, time : String) : WideString;
     function BuildRemoteStringGrid (call, mode, freq, grid, date, time : String) : WideString;
     function BuildLocalString (station_callsign, my_gridsquare, programid, programversion, my_antenna : String) : WideString;
     function isSigRep(rep : String) : Boolean;
+    function utcTime() : TSYSTEMTIME;
     procedure addToRBC(i, m : Integer);
     procedure rbcCheck();
     procedure updateList(callsign : String);
@@ -359,7 +365,7 @@ type
      d65doDecodePass            : Boolean;
      d4doDecodePass             : Boolean;
      catInProgress              : Boolean;
-     rxInProgress               : Boolean;
+     rxInProgress, doCWID       : Boolean;
      useBuffer                  : Integer;
      pskrstat                   : Integer;
      rbRunOnce                  : Boolean;
@@ -367,11 +373,13 @@ type
      d65nwave, d65nmsg          : CTypes.cint;
      d65sendingsh               : CTypes.cint;
      d65txmsg                   : PChar;
+     cwidMsg                    : PChar;
      d65sending                 : PChar;
      cfgerror, cfgRecover       : Boolean;
      mnHavePrefix, mnHaveSuffix : Boolean;
      txmode                     : Integer;
      reDecode, haveEvenBuffer   : Boolean;
+     actionSet                  : Boolean;
 
 implementation
 
@@ -423,6 +431,32 @@ end;
 
 procedure ver(vint : Pointer; vstr : Pointer); cdecl; external JT_DLL name 'version_';
 
+function TForm1.utcTime(): TSYSTEMTIME;
+Var
+   st : TSYSTEMTIME;
+   {$IFDEF linux}
+    dt : TDateTime;
+   {$ENDIF}
+Begin
+     st.Hour:=0;
+     {$IFDEF win32}
+      GetSystemTime(st);
+     {$ENDIF}
+     {$IFDEF linux}
+      dt := synaUtil.GetUTTime;
+      DateTimeToSystemTime(GetUTTime,st);
+     {$ENDIF}
+     result := st;
+End;
+
+function TForm1.getPTTMethod() : String;
+Begin
+     result := '';
+     if cfgvtwo.Form6.cbUseAltPTT.Checked Then result := 'ALT' else result := 'PTT';
+     if cfgvtwo.Form6.cbSi570PTT.Checked Then result := 'SI5';
+     if cfgvtwo.Form6.chkHRDPTT.Checked And cfgvtwo.Form6.chkUseHRD.Checked Then result := 'HRD';
+end;
+
 function TForm1.BuildRemoteString (call, mode, freq, date, time : String) : WideString;
 begin
      If freq='0' Then
@@ -467,8 +501,6 @@ begin
              Begin
                   If (mnrbcReport) And (not rbc.glrbActive) Then
                   Begin
-                       //globalData.rbID := '1';
-                       //if globalData.debugOn Then rbc.glrbCallsign := TrimLeft(TrimRight(cfgvtwo.Form6.editPSKRCall.Text)) + '-2' else rbc.glrbCallsign := TrimLeft(TrimRight(cfgvtwo.Form6.editPSKRCall.Text)) + '-1';
                        rbc.glrbCallsign := TrimLeft(TrimRight(cfgvtwo.Form6.editPSKRCall.Text)) + '-1';
                        rbc.glrbGrid := TrimLeft(TrimRight(cfgvtwo.Form6.edMyGrid.Text));
                        rbc.glrbQRG := Form1.editManQRG.Text;
@@ -478,8 +510,6 @@ begin
                   end;
                   if (cfgvtwo.glrbcLogin) And (not globalData.rbLoggedIn) And (not rbc.glrbActive) Then
                   Begin
-                       //globalData.rbID := '1';
-                       //if globalData.debugOn Then rbc.glrbCallsign := TrimLeft(TrimRight(cfgvtwo.Form6.editPSKRCall.Text)) + '-2' else rbc.glrbCallsign := TrimLeft(TrimRight(cfgvtwo.Form6.editPSKRCall.Text)) + '-1';
                        rbc.glrbCallsign := TrimLeft(TrimRight(cfgvtwo.Form6.editPSKRCall.Text)) + '-1';
                        rbc.glrbQRG := Form1.editManQRG.Text;
                        rbc.glrbGrid := TrimLeft(TrimRight(cfgvtwo.Form6.edMyGrid.Text));
@@ -489,8 +519,6 @@ begin
                   End;
                   if (cfgvtwo.glrbcLogout) And (globalData.rbLoggedIn) And (not rbc.glrbActive) Then
                   Begin
-                       //globalData.rbID := '1';
-                       //if globalData.debugOn Then rbc.glrbCallsign := TrimLeft(TrimRight(cfgvtwo.Form6.editPSKRCall.Text)) + '-2' else rbc.glrbCallsign := TrimLeft(TrimRight(cfgvtwo.Form6.editPSKRCall.Text)) + '-1';
                        rbc.glrbCallsign := TrimLeft(TrimRight(cfgvtwo.Form6.editPSKRCall.Text)) + '-1';
                        rbc.glrbQRG := Form1.editManQRG.Text;
                        rbc.glrbGrid := TrimLeft(TrimRight(cfgvtwo.Form6.edMyGrid.Text));
@@ -500,8 +528,6 @@ begin
                   End;
                   if (rbcPing) And (not rbc.glrbActive) Then
                   Begin
-                       //globalData.rbID := '1';
-                       //if globalData.debugOn Then rbc.glrbCallsign := TrimLeft(TrimRight(cfgvtwo.Form6.editPSKRCall.Text)) + '-2' else rbc.glrbCallsign := TrimLeft(TrimRight(cfgvtwo.Form6.editPSKRCall.Text)) + '-1';
                        rbc.glrbCallsign := TrimLeft(TrimRight(cfgvtwo.Form6.editPSKRCall.Text)) + '-1';
                        rbc.glrbQRG := Form1.editManQRG.Text;
                        rbc.glrbGrid := TrimLeft(TrimRight(cfgvtwo.Form6.edMyGrid.Text));
@@ -525,50 +551,19 @@ end;
 
 procedure decodeThread.Execute;
 begin
-     while not Terminated and not Suspended and not d65.glinprog and not d4.gl4inprog do
+     while not Terminated and not Suspended and not d65.glinprog do
      begin
           Try
-             If globalData.gmode = 65 Then
-             Begin
-                  if d65doDecodePass And not d65.glinprog Then
-                  Begin
-                       d65.gldecoderPass := 0;
-                       d65.doDecode(0,533504);
-                       d65doDecodePass := False;
-                  End
-                  Else
-                  Begin
-                       d65doDecodePass := False;
-                  End;
-             End;
-             if globalData.gmode = 4 Then
-             Begin
-                  if d65doDecodePass And not d4.gl4inprog Then
-                  Begin
-                       d4.gl4decoderPass := 0;
-                       d4.doDecode4(0,533504);
-                       d65doDecodePass := False;
-                  End
-                  Else
-                  Begin
-                       d65doDecodePass := False;
-                  End;
-             End;
-             If globalData.gmode = 0 Then
-             Begin
-                  if d65doDecodePass And not d65.glinprog And not d4.gl4inprog Then
-                  Begin
-                       d65.gldecoderPass := 0;
-                       d4.gl4decoderPass := 0;
-                       d65.doDecode(0,533504);
-                       d4.doDecode4(0,533504);
-                       d65doDecodePass := False;
-                  End
-                  Else
-                  Begin
-                       d65doDecodePass := False;
-                  End;
-             End;
+          if d65doDecodePass And not d65.glinprog Then
+          Begin
+               d65.gldecoderPass := 0;
+               d65.doDecode(0,533504);
+               d65doDecodePass := False;
+          End
+          Else
+          Begin
+               d65doDecodePass := False;
+          End;
           Except
              dlog.fileDebug('Exception in decoder thread');
              if reDecode then reDecode := False;
@@ -646,6 +641,8 @@ End;
 procedure catThread.Execute();
 Var
    ifoo : Integer;
+   foo  : WideString;
+   efoo : WideString;
    tqrg : Double;
    bqrg : Boolean;
 begin
@@ -664,10 +661,142 @@ begin
                   End;
                   if cfgvtwo.glcatBy = 'hrd' Then
                   Begin
-                       ifoo := 0;
-                       if cfgvtwo.Form6.radioHRD1.Checked Then ifoo := 1;
-                       if cfgvtwo.Form6.radioHRD2.Checked Then ifoo := 2;
-                       globalData.gqrg := catControl.readHRD(ifoo);
+                       if cfgvtwo.Form6.rbHRD4.Checked Then globalData.hrdVersion := 4;
+                       if cfgvtwo.Form6.rbHRD5.Checked Then globalData.hrdVersion := 5;
+                       catControl.hrdrigCAPS();
+                       if globalData.hrdcatControlcurrentRig.hrdAlive Then
+                       Begin
+                            cfgvtwo.Form6.groupHRD.Caption := 'HRD Connected to ' + globalData.hrdcatControlcurrentRig.radioName;
+                            globalData.gqrg := catControl.readHRDQRG();
+
+                            if globalData.hrdcatControlcurrentRig.hasAFGain Then
+                            Begin
+                                 // Read audio level
+                                 cfgvtwo.Form6.sliderAFGain.Visible := True;
+                                 cfgvtwo.Form6.Label11.Visible := True;
+                                 cfgvtwo.Form6.pbAULeft.Visible := True;
+                                 cfgvtwo.Form6.pbAURight.Visible := True;
+                                 cfgvtwo.Form6.sliderAFGain.Min := globalData.hrdcatControlcurrentRig.afgMin;
+                                 cfgvtwo.Form6.sliderAFGain.Max := globalData.hrdcatControlcurrentRig.afgMax;
+                                 foo := catControl.readHRD('[' + globalData.hrdcatControlcurrentRig.radioContext + '] Get slider-pos ' + globalData.hrdcatControlcurrentRig.radioName + ' ' + globalData.hrdcatControlcurrentRig.afgControl);
+                                 efoo := ExtractWord(1,foo,catControl.hrdDelim);
+                                 ifoo := -1;
+                                 If TryStrToInt(efoo, ifoo) Then cfgvtwo.Form6.sliderAFGain.Position := ifoo;
+                                 cfgvtwo.Form6.Label11.Caption := 'Audio Gain (Currently:  ' + ExtractWord(2,foo,catControl.HRDDelim) + '%)';
+                            end
+                            else
+                            begin
+                                 cfgvtwo.Form6.sliderAFGain.Visible := False;
+                                 cfgvtwo.Form6.Label11.Visible := False;
+                                 cfgvtwo.Form6.pbAULeft.Visible := False;
+                                 cfgvtwo.Form6.pbAURight.Visible := False;
+                            end;
+                            if globalData.hrdcatControlcurrentRig.hasRFGain Then
+                            Begin
+                                 // Read RF Gain level
+                                 cfgvtwo.Form6.sliderRFGain.Visible := True;
+                                 cfgvtwo.Form6.Label17.Visible := True;
+                                 cfgvtwo.Form6.sliderRFGain.Min := globalData.hrdcatControlcurrentRig.rfgMin;
+                                 cfgvtwo.Form6.sliderRFGain.Max := globalData.hrdcatControlcurrentRig.rfgMax;
+                                 foo := catControl.readHRD('[' + globalData.hrdcatControlcurrentRig.radioContext + '] Get slider-pos ' + globalData.hrdcatControlcurrentRig.radioName + ' ' + globalData.hrdcatControlcurrentRig.rfgControl);
+                                 efoo := ExtractWord(1,foo,catControl.hrdDelim);
+                                 ifoo := -1;
+                                 If TryStrToInt(efoo, ifoo) Then cfgvtwo.Form6.sliderRFGain.Position := ifoo;
+                                 cfgvtwo.Form6.Label17.Caption := 'RF Gain (Currently:  ' + ExtractWord(2,foo,catControl.HRDDelim) + '%)';
+                            end
+                            else
+                            begin
+                                 cfgvtwo.Form6.sliderRFGain.Visible := False;
+                                 cfgvtwo.Form6.Label17.Visible := False;
+                            end;
+                            if globalData.hrdcatControlcurrentRig.hasMicGain Then
+                            Begin
+                                 // Read Mic Gain level
+                                 cfgvtwo.Form6.sliderMicGain.Visible := True;
+                                 cfgvtwo.Form6.Label15.Visible := True;
+                                 cfgvtwo.Form6.sliderMicGain.Min := globalData.hrdcatControlcurrentRig.micgMin;
+                                 cfgvtwo.Form6.sliderMicGain.Max := globalData.hrdcatControlcurrentRig.micgMax;
+                                 foo := catControl.readHRD('[' + globalData.hrdcatControlcurrentRig.radioContext + '] Get slider-pos ' + globalData.hrdcatControlcurrentRig.radioName + ' ' + globalData.hrdcatControlcurrentRig.micgControl);
+                                 efoo := ExtractWord(1,foo,catControl.hrdDelim);
+                                 ifoo := -1;
+                                 If TryStrToInt(efoo, ifoo) Then cfgvtwo.Form6.sliderMicGain.Position := ifoo;
+                                 cfgvtwo.Form6.Label15.Caption := 'Mic Gain (Currently:  ' + ExtractWord(2,foo,catControl.HRDDelim) + '%)';
+                            end
+                            else
+                            begin
+                                 cfgvtwo.Form6.sliderMicGain.Visible := False;
+                                 cfgvtwo.Form6.Label15.Visible := False;
+                            end;
+                            if globalData.hrdcatControlcurrentRig.hasPAGain Then
+                            Begin
+                                 // Read PA limit level
+                                 cfgvtwo.Form6.sliderPALevel.Visible := True;
+                                 cfgvtwo.Form6.Label18.Visible := True;
+                                 cfgvtwo.Form6.sliderPALevel.Min := globalData.hrdcatControlcurrentRig.pagMin;
+                                 cfgvtwo.Form6.sliderPALevel.Max := globalData.hrdcatControlcurrentRig.pagMax;
+                                 foo := catControl.readHRD('[' + globalData.hrdcatControlcurrentRig.radioContext + '] Get slider-pos ' + globalData.hrdcatControlcurrentRig.radioName + ' ' + globalData.hrdcatControlcurrentRig.pagControl);
+                                 efoo := ExtractWord(1,foo,catControl.hrdDelim);
+                                 ifoo := -1;
+                                 If TryStrToInt(efoo, ifoo) Then cfgvtwo.Form6.sliderPALevel.Position := ifoo;
+                                 cfgvtwo.Form6.Label18.Caption := 'RF Output Level (Currently:  ' + ExtractWord(2,foo,catControl.HRDDelim) + '%)';
+                            end
+                            else
+                            begin
+                                 cfgvtwo.Form6.sliderPALevel.Visible := False;
+                                 cfgvtwo.Form6.Label18.Visible := False;
+                            end;
+                            if globalData.hrdcatControlcurrentRig.hasSMeter Then
+                            Begin
+                                 // Read S-Meter level
+                                 // Smeter returns 3 csv values. 1 = Text S level, 2 = raw level and 3 = max level.
+                                 foo := catControl.readHRD('[' + globalData.hrdcatControlcurrentRig.radioContext + '] Get ' + globalData.hrdcatControlcurrentRig.smeterControl);
+                                 efoo := ExtractWord(3,foo,catControl.hrdDelim);
+                                 ifoo := -1;
+                                 cfgvtwo.Form6.pbSMeter.Min := 0;
+                                 If TryStrToInt(efoo, ifoo) Then cfgvtwo.Form6.pbSMeter.Max := ifoo;
+                                 efoo := ExtractWord(2,foo,catControl.hrdDelim);
+                                 ifoo := -1;
+                                 If TryStrToInt(efoo, ifoo) Then cfgvtwo.Form6.pbSMeter.Position := ifoo;
+                                 cfgvtwo.Form6.Label24.Caption := ExtractWord(1,foo,catControl.HRDDelim);
+                            end;
+                            if globalData.hrdcatControlcurrentRig.hasTX Then
+                            begin
+                                 cfgvtwo.Form6.chkHRDPTT.Visible := True;
+                                 cfgvtwo.Form6.testHRDPTT.Visible := True;
+                            end
+                            else
+                            begin
+                                 cfgvtwo.Form6.chkHRDPTT.Checked := False;
+                                 cfgvtwo.Form6.chkHRDPTT.Visible := False;
+                                 cfgvtwo.Form6.testHRDPTT.Visible := False;
+                            end;
+                            if globalData.hrdcatControlcurrentRig.hasAutoTune and globalData.hrdcatControlcurrentRig.hasAutoTuneDo Then
+                            Begin
+                                 cfgvtwo.Form6.cbATQSY1.Visible := True;
+                                 cfgvtwo.Form6.cbATQSY2.Visible := True;
+                                 cfgvtwo.Form6.cbATQSY3.Visible := True;
+                                 cfgvtwo.Form6.cbATQSY4.Visible := True;
+                                 cfgvtwo.Form6.cbATQSY5.Visible := True;
+                            end
+                            else
+                            begin
+                                 cfgvtwo.Form6.cbATQSY1.Checked := False;
+                                 cfgvtwo.Form6.cbATQSY2.Checked := False;
+                                 cfgvtwo.Form6.cbATQSY3.Checked := False;
+                                 cfgvtwo.Form6.cbATQSY4.Checked := False;
+                                 cfgvtwo.Form6.cbATQSY5.Checked := False;
+                                 cfgvtwo.Form6.cbATQSY1.Visible := False;
+                                 cfgvtwo.Form6.cbATQSY2.Visible := False;
+                                 cfgvtwo.Form6.cbATQSY3.Visible := False;
+                                 cfgvtwo.Form6.cbATQSY4.Visible := False;
+                                 cfgvtwo.Form6.cbATQSY5.Visible := False;
+                            end;
+                       end
+                       else
+                       begin
+                            globalData.gqrg := 0.0;
+                            globalData.strqrg := '0';
+                       end;
                   End;
                   if cfgvtwo.glcatBy = 'commander' Then
                   Begin
@@ -996,100 +1125,87 @@ Begin
      End;
 End;
 
+procedure TForm1.hrdRaisePTT();
+begin
+     if cfgvtwo.Form6.rbHRD4.Checked Then globalData.hrdVersion := 4;
+     if cfgvtwo.Form6.rbHRD5.Checked Then globalData.hrdVersion := 5;
+     mnpttOpened := False;
+     if globalData.hrdcatControlcurrentRig.hrdAlive Then
+     Begin
+          mnpttOpened := catControl.writeHRD('[' + globalData.hrdcatControlcurrentRig.radioContext + '] set button-select ' + globalData.hrdcatControlcurrentRig.txControl + ' 1');
+     end;
+end;
+
+procedure TForm1.hrdLowerPTT();
+begin
+     if cfgvtwo.Form6.rbHRD4.Checked Then globalData.hrdVersion := 4;
+     if cfgvtwo.Form6.rbHRD5.Checked Then globalData.hrdVersion := 5;
+     if globalData.hrdcatControlcurrentRig.hrdAlive Then
+     Begin
+          if catControl.writeHRD('[' + globalData.hrdcatControlcurrentRig.radioContext + '] set button-select ' + globalData.hrdcatControlcurrentRig.txControl + ' 0') then mnpttopened := False;
+     end;
+end;
+
 procedure TForm1.initDecode();
 Var
-   st               : TSYSTEMTIME;
    sr               : CTypes.cdouble;
    i                : Integer;
-{$IFDEF linux}
-   dt               : TDateTime;
-{$ENDIF}
 Begin
-     if not d65.glinprog or not d4.gl4inprog Then
+     if not d65.glinprog Then
      Begin
           if cfgvtwo.Form6.chkNoOptFFT.Checked Then
           Begin
                d65.glfftFWisdom := 0;
                d65.glfftSWisdom := 0;
-               d4.gl4fftFWisdom := 0;
-               d4.gl4fftSWisdom := 0;
           End;
           bStart := 0;
           bEnd := 533504;
           for i := bStart to bEnd do
           Begin
-               d65.glinBuffer[i] := min(32766,max(-32766,adc.d65rxBuffer[i]));
-               d4.gl4inBuffer[i] := min(32766,max(-32766,adc.d65rxBuffer[i]));
+               if paInParams.channelCount = 2 then d65.glinBuffer[i] := min(32766,max(-32766,adc.d65rxBuffer[i]));
+               if paInParams.channelCount = 1 then d65.glinBuffer[i] := min(32766,max(-32766,madc.d65rxBuffer[i]));
                if Odd(thisMinute) Then
                Begin
-                    auOddBuffer[i] := min(32766,max(-32766,adc.d65rxBuffer[i]));
+                    if paInParams.channelCount = 2 then auOddBuffer[i] := min(32766,max(-32766,adc.d65rxBuffer[i]));
+                    if paInParams.channelCount = 1 then auOddBuffer[i] := min(32766,max(-32766,madc.d65rxBuffer[i]));
                     haveOddBuffer := True;
                     haveEvenBuffer := False;
                End
                else
                Begin
-                    auEvenBuffer[i] := min(32766,max(-32766,adc.d65rxBuffer[i]));
+                    if paInParams.channelCount = 2 then auEvenBuffer[i] := min(32766,max(-32766,adc.d65rxBuffer[i]));
+                    if paInParams.channelCount = 1 then auEvenBuffer[i] := min(32766,max(-32766,madc.d65rxBuffer[i]));
                     haveEvenBuffer := True;
                     haveOddBuffer := False;
                End;
           end;
-          st.Day := 0;
-          {$IFDEF win32}
-            GetSystemTime(st);
-          {$ENDIF}
-          {$IFDEF linux}
-            dt := synaUtil.GetUTTime;
-            DateTimeToSystemTime(GetUTTime,st);
-          {$ENDIF}
-          {$IFDEF darwin}
-            // Unknown at this point and probably moot.  Little chance this will ever run in MacOS X
-          {$ENDIF}
-          ost := st;
+          ost := utcTime();
           d65.gld65timestamp := '';
-          d4.gl4timestamp := '';
-          d65.gld65timestamp := d65.gld65timestamp + IntToStr(st.Year);
-          if st.Month < 10 Then d65.gld65timestamp := d65.gld65timestamp + '0' + IntToStr(st.Month) else d65.gld65timestamp := d65.gld65timestamp + IntToStr(st.Month);
-          if st.Day < 10 Then d65.gld65timestamp := d65.gld65timestamp + '0' + IntToStr(st.Day) else d65.gld65timestamp := d65.gld65timestamp + IntToStr(st.Day);
-          if st.Hour < 10 Then d65.gld65timestamp := d65.gld65timestamp + '0' + IntToStr(st.Hour) else d65.gld65timestamp := d65.gld65timestamp + IntToStr(st.Hour);
-          if st.Minute < 10 Then d65.gld65timestamp := d65.gld65timestamp + '0' + IntToStr(st.Minute) else d65.gld65timestamp := d65.gld65timestamp + IntToStr(st.Minute);
+          d65.gld65timestamp := d65.gld65timestamp + IntToStr(ost.Year);
+          if ost.Month < 10 Then d65.gld65timestamp := d65.gld65timestamp + '0' + IntToStr(ost.Month) else d65.gld65timestamp := d65.gld65timestamp + IntToStr(ost.Month);
+          if ost.Day < 10 Then d65.gld65timestamp := d65.gld65timestamp + '0' + IntToStr(ost.Day) else d65.gld65timestamp := d65.gld65timestamp + IntToStr(ost.Day);
+          if ost.Hour < 10 Then d65.gld65timestamp := d65.gld65timestamp + '0' + IntToStr(ost.Hour) else d65.gld65timestamp := d65.gld65timestamp + IntToStr(ost.Hour);
+          if ost.Minute < 10 Then d65.gld65timestamp := d65.gld65timestamp + '0' + IntToStr(ost.Minute) else d65.gld65timestamp := d65.gld65timestamp + IntToStr(ost.Minute);
           d65.gld65timestamp := d65.gld65timestamp + '00';
-          d4.gl4timestamp := d65.gld65timestamp;
           sr := 1.0;
           if tryStrToFloat(cfgvtwo.Form6.edRXSRCor.Text,sr) Then globalData.d65samfacin := StrToFloat(cfgvtwo.Form6.edRXSRCor.Text) else globalData.d65samfacin := 1.0;
           d65samfacout := 1.0;
           d65.glMouseDF := Form1.spinDecoderCF.Value;
-          d4.gl4MouseDF := d65.glMouseDF;
           if d65.glMouseDF > 1000 then d65.glMouseDF := 1000;
           if d65.glMouseDF < -1000 then d65.glMouseDF := -1000;
-          d4.gl4MouseDF := d65.glMouseDF;
           if spinDecoderBW.Value = 1 Then d65.glDFTolerance := 20;
           if spinDecoderBW.Value = 2 Then d65.glDFTolerance := 50;
           if spinDecoderBW.Value = 3 Then d65.glDFTolerance := 100;
           if spinDecoderBW.Value = 4 Then d65.glDFTolerance := 200;
-          if form1.spinBin.Value = 1 Then d65.glbinspace := 20;
-          if form1.spinBin.Value = 2 Then d65.glbinspace := 50;
-          if form1.spinBin.Value = 3 Then d65.glbinspace := 100;
-          if form1.spinBin.Value = 4 Then d65.glbinspace := 200;
-          //if d65.glbinspace > 20 then d4.gl4binspace := 20;
-          //if d65.glbinspace < 21 then d4.gl4binspace := 10;
-          d4.gl4binspace := d65.glbinspace;
+          d65.glbinspace := 100;
           if d65.glDFTolerance > 200 then d65.glDFTolerance := 200;
           if d65.glDFTolerance < 20 then d65.glDFTolerance := 20;
-          d4.gl4DFTolerance := d65.glDFTolerance;
           If Form1.chkNB.Checked then d65.glNblank := 1 Else d65.glNblank := 0;
-          d4.gl4Nblank := d65.glNblank;
-          //if Form1.chkSHIFT.Checked then d65.glNshift := 1 Else d65.glNshift := 0;
           d65.glNshift := 0;
-          d4.gl4Nshift := 0;
           if Form1.chkAFC.Checked then d65.glNafc := 1 Else d65.glNafc := 0;
-          d4.gl4Nafc := d65.glNafc;
-          //if Form1.chkZAP.Checked then globalData.d65Nzap := 1 Else globalData.d65Nzap := 0;
           d65.glNzap := 0;
-          d4.gl4Nzap := 0;
           d65.gldecoderPass := 0;
-          d4.gl4decoderPass := 0;
           if form1.chkMultiDecode.Checked Then d65.glsteps := 1 else d65.glsteps := 0;
-          d4.gl4steps := d65.glsteps;
           d65doDecodePass := True;
      End;
 end;
@@ -1109,7 +1225,6 @@ begin
      Form1.spinTXCF.Value := 0;
      Form1.spinDecoderCF.Value := 0;
      Form1.spinDecoderBW.Value := 3;
-     //Form1.edit2.Text := '100';
      Form1.rbGenMsg.Checked := True;
      Form1.chkAutoTxDF.Checked := True;
      Form1.chkEnTX.Checked := False;
@@ -1128,18 +1243,15 @@ begin
        // likely drop synaserial and use wsjt ptt from library.
        globalData.txInProgress := False;
        sleep(100);
-       if not globalData.si570ptt Then
-       Begin
-            if cfgvtwo.Form6.cbUseAltPTT.Checked Then altLowerPTT() else lowerPTT();
-       End
-       Else
-       Begin
-            si570Lowerptt();
-       End;
+       if getPTTMethod() = 'SI5' Then si570Lowerptt();
+       if getPTTMethod() = 'HRD' Then hrdLowerPTT();
+       if getPTTMethod() = 'ALT' Then altLowerPTT();
+       if getPTTMethod() = 'PTT' Then lowerPTT();
        nextAction := 2;
        txNextPeriod := False;
        Form1.chkEnTX.Checked := False;
        thisAction := 2;
+       actionSet := False;
        txCount := 0;
   end
   else
@@ -1148,6 +1260,7 @@ begin
        if nextAction = 3 then nextAction := 2;
        if txNextPeriod Then txNextPeriod := False;
        Form1.chkEnTX.Checked := False;
+       actionSet := False;
        txCount := 0;
   end;
 end;
@@ -1182,6 +1295,7 @@ begin
           Form1.rbGenMsg.Font.Color := clRed;
           Form1.rbFreeMsg.Font.Color  := clBlack;
           useBuffer := 0;
+          doCWID := False;
      End;
 end;
 
@@ -1201,6 +1315,7 @@ begin
           Form1.rbGenMsg.Font.Color := clRed;
           Form1.rbFreeMsg.Font.Color  := clBlack;
           useBuffer := 0;
+          doCWID := False;
      end;
 end;
 
@@ -1216,6 +1331,7 @@ begin
           Begin
                Form1.edMsg.Text := 'CQ ' + globalData.fullcall + ' ' + cfgvtwo.Form6.edMyGrid.Text[1..4];
           End;
+          doCWID := False;
           Form1.rbGenMsg.Checked := True;
           Form1.rbGenMsg.Font.Color := clRed;
           Form1.rbFreeMsg.Font.Color  := clBlack;
@@ -1239,6 +1355,7 @@ begin
           Form1.rbGenMsg.Font.Color := clRed;
           Form1.rbFreeMsg.Font.Color  := clBlack;
           useBuffer := 0;
+          doCWID := False;
      End;
 end;
 
@@ -1258,6 +1375,7 @@ begin
           Form1.rbGenMsg.Font.Color := clRed;
           Form1.rbFreeMsg.Font.Color  := clBlack;
           useBuffer := 0;
+          if cfgvtwo.Form6.cbCWID.Checked Then doCWID := True else doCWID := False;
      End;
 end;
 
@@ -1277,6 +1395,7 @@ begin
           Form1.rbGenMsg.Font.Color := clRed;
           Form1.rbFreeMsg.Font.Color  := clBlack;
           useBuffer := 0;
+          doCWID := False;
      End;
 end;
 
@@ -1331,14 +1450,6 @@ begin
      End;
 end;
 
-procedure TForm1.rbM65Change(Sender: TObject);
-begin
-     If form1.rbM65.Checked Then globalData.gmode := 65;
-     If form1.rbM4.Checked Then globalData.gmode := 4;
-     If form1.rbMB.Checked Then globalData.gmode := 0;
-     txMode := globalData.gmode;
-end;
-
 procedure TForm1.spinDecoderBWChange(Sender: TObject);
 begin
      if spinDecoderBW.Value = 1 Then edit2.Text := '20';
@@ -1352,18 +1463,6 @@ begin
      if spinEdit1.Value > 5 then spinEdit1.Value := 5;
      if spinEdit1.Value < 0 then spinEdit1.Value := 0;
      spectrum.specSpeed2 := Form1.SpinEdit1.Value;
-end;
-
-procedure TForm1.spinBinChange(Sender: TObject);
-begin
-     if spinBin.Value = 1 Then edit1.Text := '20';
-     if spinBin.Value = 2 Then edit1.Text := '50';
-     if spinBin.Value = 3 Then edit1.Text := '100';
-     if spinBin.Value = 4 Then edit1.Text := '200';
-     if spinBin.Value = 1 Then d65.glbinspace := 20;
-     if spinBin.Value = 2 Then d65.glbinspace := 50;
-     if spinBin.Value = 3 Then d65.glbinspace := 100;
-     if spinBin.Value = 4 Then d65.glbinspace := 200;
 end;
 
 procedure TForm1.spinGainChange(Sender: TObject);
@@ -1481,7 +1580,8 @@ end;
 
 procedure TForm1.FormClose(Sender: TObject; var CloseAction: TCloseAction);
 var
-   i : Integer;
+   i, termcount : Integer;
+   foo          : String;
 begin
      Form1.Timer1.Enabled := False;
      diagout.Form3.ListBox1.Clear;
@@ -1543,8 +1643,9 @@ begin
           if cfgvtwo.Form6.cbRestoreMulti.Checked Then cfg.StoredValue['restoreMulti'] := 'on' else cfg.StoredValue['restoreMulti'] := 'off';
           if cfgvtwo.Form6.chkNoOptFFT.Checked Then cfg.StoredValue['optFFT'] := 'off' else cfg.StoredValue['optFFT'] := 'on';
           if cfgvtwo.Form6.cbUseAltPTT.Checked Then cfg.StoredValue['useAltPTT'] := 'yes' else cfg.StoredValue['useAltPTT'] := 'no';
+          if cfgvtwo.Form6.chkHRDPTT.Checked Then cfg.StoredValue['useHRDPTT'] := 'yes' else cfg.StoredValue['useHRDPTT'] := 'no';
           cfg.StoredValue['specVGain'] := IntToStr(spinGain.Value);
-          cfg.StoredValue['binspace'] := IntToStr(spinBin.Value);
+          cfg.StoredValue['binspace'] := '100';
           cfg.StoredValue['cqColor'] := IntToStr(cfgvtwo.Form6.ComboBox1.ItemIndex);
           cfg.StoredValue['callColor'] := IntToStr(cfgvtwo.Form6.ComboBox2.ItemIndex);
           cfg.StoredValue['qsoColor'] := IntToStr(cfgvtwo.Form6.ComboBox3.ItemIndex);
@@ -1554,23 +1655,139 @@ begin
           cfg.StoredValue['si570cor'] := cfgvtwo.Form6.editSI570FreqOffset.Text;
           cfg.StoredValue['si570qrg'] := cfgvtwo.Form6.editSI570Freq.Text;
           if cfgvtwo.Form6.cbSi570PTT.Checked Then cfg.StoredValue['si570ptt'] := 'y' else cfg.StoredValue['si570ptt'] := 'n';
+          if cfgvtwo.Form6.cbCWID.Checked Then cfg.StoredValue['useCWID'] := 'y' else cfg.StoredValue['useCWID'] := 'n';
+          if cfgvtwo.Form6.chkTxDFVFO.Checked Then cfg.StoredValue['useCATTxDF'] := 'yes' else cfg.StoredValue['useCATTxDF'] := 'no';
+          if cfgvtwo.Form6.cbEnableQSY1.Checked Then cfg.StoredValue['enAutoQSY1'] := 'yes' else cfg.StoredValue['enAutoQSY1'] := 'no';
+          if cfgvtwo.Form6.cbEnableQSY2.Checked Then cfg.StoredValue['enAutoQSY2'] := 'yes' else cfg.StoredValue['enAutoQSY2'] := 'no';
+          if cfgvtwo.Form6.cbEnableQSY3.Checked Then cfg.StoredValue['enAutoQSY3'] := 'yes' else cfg.StoredValue['enAutoQSY3'] := 'no';
+          if cfgvtwo.Form6.cbEnableQSY4.Checked Then cfg.StoredValue['enAutoQSY4'] := 'yes' else cfg.StoredValue['enAutoQSY4'] := 'no';
+          if cfgvtwo.Form6.cbEnableQSY5.Checked Then cfg.StoredValue['enAutoQSY5'] := 'yes' else cfg.StoredValue['enAutoQSY5'] := 'no';
+          if cfgvtwo.Form6.cbATQSY1.Checked Then cfg.StoredValue['autoQSYAT1'] := 'yes' else cfg.StoredValue['autoQSYAT1'] := 'no';
+          if cfgvtwo.Form6.cbATQSY2.Checked Then cfg.StoredValue['autoQSYAT2'] := 'yes' else cfg.StoredValue['autoQSYAT2'] := 'no';
+          if cfgvtwo.Form6.cbATQSY3.Checked Then cfg.StoredValue['autoQSYAT3'] := 'yes' else cfg.StoredValue['autoQSYAT3'] := 'no';
+          if cfgvtwo.Form6.cbATQSY4.Checked Then cfg.StoredValue['autoQSYAT4'] := 'yes' else cfg.StoredValue['autoQSYAT4'] := 'no';
+          if cfgvtwo.Form6.cbATQSY5.Checked Then cfg.StoredValue['autoQSYAT5'] := 'yes' else cfg.StoredValue['autoQSYAT5'] := 'no';
+          cfg.StoredValue['autoQSYQRG1'] := cfgvtwo.Form6.edQRGQSY1.Text;
+          cfg.StoredValue['autoQSYQRG2'] := cfgvtwo.Form6.edQRGQSY2.Text;
+          cfg.StoredValue['autoQSYQRG3'] := cfgvtwo.Form6.edQRGQSY3.Text;
+          cfg.StoredValue['autoQSYQRG4'] := cfgvtwo.Form6.edQRGQSY4.Text;
+          cfg.StoredValue['autoQSYQRG5'] := cfgvtwo.Form6.edQRGQSY5.Text;
+          cfg.StoredValue['hrdAddress'] := cfgvtwo.Form6.hrdAddress.Text;
+          cfg.StoredValue['hrdPort'] := cfgvtwo.Form6.hrdPort.Text;
+          if cfgvtwo.Form6.qsyHour1.Value < 10 Then
+          Begin
+               foo := '0' + IntToStr(cfgvtwo.Form6.qsyHour1.Value);
+          End
+          Else
+          Begin
+               foo := IntToStr(cfgvtwo.Form6.qsyHour1.Value);
+          end;
+          if cfgvtwo.Form6.qsyMinute1.Value < 10 Then
+          Begin
+               foo := foo + '0' + IntToStr(cfgvtwo.Form6.qsyMinute1.Value);
+          End
+          Else
+          Begin
+               foo := foo + IntToStr(cfgvtwo.Form6.qsyMinute1.Value);
+          end;
+          cfg.StoredValue['autoQSYUTC1'] := foo;
+
+          if cfgvtwo.Form6.qsyHour2.Value < 10 Then
+          Begin
+               foo := '0' + IntToStr(cfgvtwo.Form6.qsyHour2.Value);
+          End
+          Else
+          Begin
+               foo := IntToStr(cfgvtwo.Form6.qsyHour2.Value);
+          end;
+          if cfgvtwo.Form6.qsyMinute2.Value < 10 Then
+          Begin
+               foo := foo + '0' + IntToStr(cfgvtwo.Form6.qsyMinute2.Value);
+          End
+          Else
+          Begin
+               foo := foo + IntToStr(cfgvtwo.Form6.qsyMinute2.Value);
+          end;
+          cfg.StoredValue['autoQSYUTC2'] := foo;
+
+          if cfgvtwo.Form6.qsyHour3.Value < 10 Then
+          Begin
+               foo := '0' + IntToStr(cfgvtwo.Form6.qsyHour3.Value);
+          End
+          Else
+          Begin
+               foo := IntToStr(cfgvtwo.Form6.qsyHour3.Value);
+          end;
+          if cfgvtwo.Form6.qsyMinute3.Value < 10 Then
+          Begin
+               foo := foo + '0' + IntToStr(cfgvtwo.Form6.qsyMinute3.Value);
+          End
+          Else
+          Begin
+               foo := foo + IntToStr(cfgvtwo.Form6.qsyMinute3.Value);
+          end;
+          cfg.StoredValue['autoQSYUTC3'] := foo;
+
+          if cfgvtwo.Form6.qsyHour4.Value < 10 Then
+          Begin
+               foo := '0' + IntToStr(cfgvtwo.Form6.qsyHour4.Value);
+          End
+          Else
+          Begin
+               foo := IntToStr(cfgvtwo.Form6.qsyHour4.Value);
+          end;
+          if cfgvtwo.Form6.qsyMinute4.Value < 10 Then
+          Begin
+               foo := foo + '0' + IntToStr(cfgvtwo.Form6.qsyMinute4.Value);
+          End
+          Else
+          Begin
+               foo := foo + IntToStr(cfgvtwo.Form6.qsyMinute4.Value);
+          end;
+          cfg.StoredValue['autoQSYUTC4'] := foo;
+
+          if cfgvtwo.Form6.qsyHour5.Value < 10 Then
+          Begin
+               foo := '0' + IntToStr(cfgvtwo.Form6.qsyHour5.Value);
+          End
+          Else
+          Begin
+               foo := IntToStr(cfgvtwo.Form6.qsyHour5.Value);
+          end;
+          if cfgvtwo.Form6.qsyMinute5.Value < 10 Then
+          Begin
+               foo := foo + '0' + IntToStr(cfgvtwo.Form6.qsyMinute5.Value);
+          End
+          Else
+          Begin
+               foo := foo + IntToStr(cfgvtwo.Form6.qsyMinute5.Value);
+          end;
+          cfg.StoredValue['autoQSYUTC5'] := foo;
           cfg.Save;
           diagout.Form3.ListBox1.Items.Add('Saved configuration');
+
           if mnpttOpened Then
           Begin
                diagout.Form3.ListBox1.Items.Add('Closing PTT Port');
-               if cfgvtwo.Form6.cbUseAltPTT.Checked Then altLowerPTT() else lowerPTT();
+               if getPTTMethod() = 'SI5' Then si570Lowerptt();
+               if getPTTMethod() = 'HRD' Then hrdLowerPTT();
+               if getPTTMethod() = 'ALT' Then altLowerPTT();
+               if getPTTMethod() = 'PTT' Then lowerPTT();
                diagout.Form3.ListBox1.Items.Add('Closed PTT Port');
           end;
           if globalData.rbLoggedIn Then
           Begin
                diagout.Form3.ListBox1.Items.Add('Closing RB');
                cfgvtwo.glrbcLogout := True;
+               sleep(1000);
           end;
+          termcount := 0;
           While rbc.glrbActive Do
           Begin
                application.ProcessMessages;
-               sleep(1);
+               sleep(1000);
+               inc(termcount);
+               if termcount > 9 then break;
           end;
           diagout.Form3.ListBox1.Items.Add('Closed RB');
           diagout.Form3.ListBox1.Items.Add('Terminating RB Thread');
@@ -1578,19 +1795,35 @@ begin
           diagout.Form3.ListBox1.Items.Add('Terminated RB Thread');
 
           diagout.Form3.ListBox1.Items.Add('Terminating Decoder Thread');
+          termcount := 0;
           while d65.glinProg Do
           Begin
                application.ProcessMessages;
-               sleep(1);
+               sleep(1000);
+               inc(termcount);
+               if termcount > 9 then break;
           end;
           decoderThread.Suspend;
           diagout.Form3.ListBox1.Items.Add('Terminated Decoder Thread');
 
           diagout.Form3.ListBox1.Items.Add('Terminating Rig Control Thread');
+          termcount :=0;
+          if catcontrol.hrdConnected() then diagout.Form3.ListBox1.Items.Add('Disconnecting HRD');
+          while catcontrol.hrdConnected() do
+          Begin
+               application.ProcessMessages;
+               catcontrol.hrdDisconnect();
+               sleep(1000);
+               inc(termcount);
+               if termcount > 9 Then break;
+          end;
+          termcount := 0;
           while catInProgress Do
           Begin
                application.ProcessMessages;
-               sleep(1);
+               sleep(1000);
+               inc(termcount);
+               if termcount > 9 then break;
           end;
           rigThread.Suspend;
           diagout.Form3.ListBox1.Items.Add('Terminated Rig Control Thread');
@@ -1607,12 +1840,15 @@ begin
           diagout.Form3.ListBox1.Items.Add('Cleaning up Audio Streams');
           portAudio.Pa_StopStream(paInStream);
           portAudio.Pa_StopStream(paOutStream);
+          termcount := 0;
           while (portAudio.Pa_IsStreamActive(paInStream) > 0) or (portAudio.Pa_IsStreamActive(paOutStream) > 0) Do
           Begin
                application.ProcessMessages;
                if portAudio.Pa_IsStreamActive(paInStream) > 0 Then portAudio.Pa_StopStream(paInStream);
                if portAudio.Pa_IsStreamActive(paOutStream) > 0 Then portAudio.Pa_StopStream(paOutStream);
-               sleep(5);
+               sleep(1000);
+               inc(termcount);
+               if termcount > 9 then break;
           end;
           diagout.Form3.ListBox1.Items.Add('Stopped Audio Streams');
           diagout.Form3.ListBox1.Items.Add('Terminating PortAudio');
@@ -1633,7 +1869,7 @@ begin
           Waterfall.Free;
           diagout.Form3.ListBox1.Items.Add('Released waterfall');
           diagout.Form3.ListBox1.Items.Add('JT65-HF Shutdown complete.  Exiting.');
-          For i := 0 to 10 do
+          For i := 0 to 9 do
           begin
                application.ProcessMessages;
                sleep(100);
@@ -1670,22 +1906,6 @@ begin
                               rbc.glrbReports[ii].rbProcessed := False;
                               rbc.glrbReports[ii].rbCached    := False;
                          End;
-                         if m=4 then
-                         begin
-                              // If rbProcessed then safe to overwrite previous contents
-                              rbc.glrbReports[ii].rbTimeStamp := d4.gl4decodes[i].dtTimeStamp;
-                              rbc.glrbReports[ii].rbNumSync   := d4.gl4decodes[i].dtNumSync;
-                              rbc.glrbReports[ii].rbSigLevel  := d4.gl4decodes[i].dtSigLevel;
-                              rbc.glrbReports[ii].rbDeltaTime := d4.gl4decodes[i].dtDeltaTime;
-                              rbc.glrbReports[ii].rbDeltaFreq := d4.gl4decodes[i].dtDeltaFreq;
-                              rbc.glrbReports[ii].rbSigW      := d4.gl4decodes[i].dtSigW;
-                              rbc.glrbReports[ii].rbCharSync  := d4.gl4decodes[i].dtCharSync;
-                              rbc.glrbReports[ii].rbDecoded   := d4.gl4decodes[i].dtDecoded;
-                              rbc.glrbReports[ii].rbFrequency := FloatToStr(eopQRG/1000);
-                              rbc.glrbReports[ii].rbMode      := m;
-                              rbc.glrbReports[ii].rbProcessed := False;
-                              rbc.glrbReports[ii].rbCached    := False;
-                         end;
                     End
                     Else
                     Begin
@@ -1711,12 +1931,7 @@ begin
      if globalData.debugOn Then fna := 'D' else fna := '';
      cfgError := True;
      Try
-        {$IFDEF win32}
-          fname := GetAppConfigDir(False)+'\station1.xml' + fna;
-        {$ENDIF}
-        {$IFDEF linux}
-          fname := GetAppConfigDir(False)+'station1.xml' + fna;
-        {$ENDIF}
+        fname := GetAppConfigDir(False)+'station1.xml' + fna;
         cfg.FileName := fname;
         cfgError := False;
      Except
@@ -1769,6 +1984,23 @@ begin
      spectrum.specVGain := Form1.spinGain.Value + 7;
 end;
 
+procedure TForm1.Label39Click(Sender: TObject);
+begin
+     if chkAutoTxDF.Checked Then chkAutoTxDF.Checked := False else chkAutoTxDF.Checked := True;
+end;
+
+procedure TForm1.menuAboutClick(Sender: TObject);
+begin
+     about.Form4.Visible := True;
+end;
+
+procedure TForm1.menuHeardClick(Sender: TObject);
+begin
+     cfgvtwo.Form6.Notebook1.ActivePage := 'Heard List/PSKR Setup/RB Setup';
+     cfgvtwo.Form6.Show;
+     cfgvtwo.Form6.BringToFront;
+end;
+
 procedure TForm1.MenuItemHandler(Sender: TObject);
 Begin
 
@@ -1806,6 +2038,30 @@ Begin
 
 End;
 
+procedure TForm1.menuRawDecoderClick(Sender: TObject);
+begin
+     diagout.Form3.Visible := True; // diagout is the raw decoder output form... it was repurposed for this.
+end;
+
+procedure TForm1.menuRigControlClick(Sender: TObject);
+begin
+     cfgvtwo.Form6.Notebook1.ActivePage := 'Rig Control/PTT';
+     cfgvtwo.Form6.Show;
+     cfgvtwo.Form6.BringToFront;
+end;
+
+procedure TForm1.menuSetupClick(Sender: TObject);
+begin
+     cfgvtwo.Form6.Notebook1.ActivePage := 'Station Setup';
+     cfgvtwo.Form6.Show;
+     cfgvtwo.Form6.BringToFront;
+end;
+
+procedure TForm1.menuTXLogClick(Sender: TObject);
+begin
+     rawdec.Form5.Visible := True;
+end;
+
 procedure TForm1.ListBox1MouseDown(Sender: TObject; Button: TMouseButton;
   Shift: TShiftState; X, Y: Integer);
 Var
@@ -1841,344 +2097,350 @@ begin
           End;
 
           idx := Form1.ListBox1.ItemIndex;
-
-          // On a double click I need to figure out the form of the message text..
-          // CQ CALL GRID, SOMECALL MYCALL SOMEGRID, SOMECALL MYCALL SOMEREPORT,
-          // SOMECALL SOMECALL SOMETEXT, SOMETEXT.  Dependingn upon the form I will
-          // setup a specific exchange.
-          //
-          // Need to determine which line clicked and generate appropriate TX msg for it
-          // First thing to do is try to determine what message to generate... in general
-          // this would be an answer to a CQ or a reply to a station answering my CQ.
-          // I can look to see if the double clicked exchange is a CQ CALLSIGN GRID as
-          // a hint, then suggest the proper response.  No matter what I think the proper
-          // response is I need to at least fill in the Remote callsign and grid fields
-          // or just a callsign if no grid available.  I'll start with that.
-
-          resolved := False;
-          doQSO    := False;
-          wcount   := 0;
-          itxhz    := 0;
-
-          exchange := Form1.ListBox1.Items[idx];
-          if globalData.gmode = 0 Then
+          if idx > -1 Then
           Begin
-               if exchange[26..27] = 'B6' Then txMode := 65;
-               if exchange[26..27] = 'K6' Then txMode := 65;
-               if exchange[26..27] = 'S ' Then txMode := 65;
-               if exchange[26..27] = 'B4' Then txMode := 4;
-               if exchange[26..27] = 'K4' Then txMode := 4;
-          End
-          Else
-          Begin
-               txMode := globalData.gmode;
-          End;
-          exchange := exchange[28..Length(exchange)];
-          exchange := TrimLeft(TrimRight(exchange));
-          exchange := DelSpace1(exchange);
+               // On a double click I need to figure out the form of the message text..
+               // CQ CALL GRID, SOMECALL MYCALL SOMEGRID, SOMECALL MYCALL SOMEREPORT,
+               // SOMECALL SOMECALL SOMETEXT, SOMETEXT.  Dependingn upon the form I will
+               // setup a specific exchange.
+               //
+               // Need to determine which line clicked and generate appropriate TX msg for it
+               // First thing to do is try to determine what message to generate... in general
+               // this would be an answer to a CQ or a reply to a station answering my CQ.
+               // I can look to see if the double clicked exchange is a CQ CALLSIGN GRID as
+               // a hint, then suggest the proper response.  No matter what I think the proper
+               // response is I need to at least fill in the Remote callsign and grid fields
+               // or just a callsign if no grid available.  I'll start with that.
 
-          siglevel := Form1.ListBox1.Items[idx];
-          siglevel := siglevel[10..12];
-          siglevel := TrimLeft(TrimRight(siglevel));
+               resolved := False;
+               doQSO    := False;
+               wcount   := 0;
+               itxhz    := 0;
 
+               exchange := Form1.ListBox1.Items[idx];
+               txMode := 65;
 
-          isiglevel := -30;
-          if not tryStrToInt(siglevel,isiglevel) Then
-          Begin
-               isiglevel := -25;
-               siglevel := '-25';
-          End
-          Else
-          Begin
-               if isiglevel > -1 Then
+               exchange := exchange[28..Length(exchange)];
+               exchange := TrimLeft(TrimRight(exchange));
+               exchange := DelSpace1(exchange);
+
+               siglevel := Form1.ListBox1.Items[idx];
+               siglevel := siglevel[10..12];
+               siglevel := TrimLeft(TrimRight(siglevel));
+
+               isiglevel := -30;
+               if not tryStrToInt(siglevel,isiglevel) Then
                Begin
-                    isiglevel := -1;
-                    siglevel := '-1';
-               End;
-          End;
-          if (isiglevel > -10) and (isiglevel < 0) Then
-          Begin
-               foo := '-0';
-               siglevel := IntToStr(isiglevel);
-               foo := foo + siglevel[2];
-               siglevel := foo;
-          end;
-          txhz := Form1.ListBox1.Items[idx];
-          txhz := txhz[19..23];
-          txhz := TrimLeft(TrimRight(txhz));
-          txhz := DelSpace1(txhz);
-
-          wcount := WordCount(exchange,parseCallSign.WordDelimiter);
-          if wcount = 3 Then
-          Begin
-               // Since I have three words I can potentially work with this...
-               word1 := ExtractWord(1,exchange,parseCallSign.WordDelimiter);
-               word2 := ExtractWord(2,exchange,parseCallSign.WordDelimiter);
-               word3 := ExtractWord(3,exchange,parseCallSign.WordDelimiter);
-               If (word1 = 'CQ') Or (word1 = 'QRZ') Or (word1 = 'CQDX') Then
-               Begin
-                    If word2 = 'DX' Then
-                    Begin
-                         If length(word3)> 2 Then
-                         begin
-                              if parseCallSign.validateCallsign(word3) Then Form1.edHisCall.Text := word3 Else Form1.edHisCall.Text := '';
-                              Form1.edHisGrid.Text := '';
-                              resolved := True;
-                              answeringCQ := True;
-                              doQSO := True;
-                              msgToSend := word3 + ' ' + globalData.fullcall + ' ' + cfgvtwo.Form6.edMyGrid.Text[1..4];
-                         end;
-                    end
-                    else
-                    begin
-                         if length(word2)>2 Then
-                         Begin
-                              If parseCallSign.validateCallsign(word2) Then Form1.edHisCall.Text := word2 Else Form1.edHisCall.Text := '';
-                         end
-                         else
-                         begin
-                              Form1.edHisCall.Text := '';
-                         end;
-                         if length(word3)>3 Then
-                         Begin
-                              If parseCallSign.isGrid(word3) Then Form1.edHisGrid.Text := word3 Else Form1.edHisGrid.Text := '';
-                         end
-                         else
-                         begin
-                              Form1.edHisGrid.Text := '';
-                         end;
-                         resolved    := True;
-                         answeringCQ := True;
-                         doQSO       := True;
-                         msgToSend   := word2 + ' ' + globalData.fullcall + ' ' + cfgvtwo.Form6.edMyGrid.Text[1..4];
-                    end;
+                    isiglevel := -25;
+                    siglevel := '-25';
                End
                Else
                Begin
-                    If word1 = globalData.fullcall Then
+                    if isiglevel > -1 Then
                     Begin
-                         // Seems to be a call to me.
-                         // word3 could/should be as follows...
-                         // Grid, signal report, R signal report, an RRR or a 73
-                         resolved := False;
-                         if parseCallSign.isGrid(word3) And not resolved Then
+                         isiglevel := -1;
+                         siglevel := '-1';
+                    End;
+               End;
+               if (isiglevel > -10) and (isiglevel < 0) Then
+               Begin
+                    foo := '-0';
+                    siglevel := IntToStr(isiglevel);
+                    foo := foo + siglevel[2];
+                    siglevel := foo;
+               end;
+               txhz := Form1.ListBox1.Items[idx];
+               txhz := txhz[19..23];
+               txhz := TrimLeft(TrimRight(txhz));
+               txhz := DelSpace1(txhz);
+
+               wcount := WordCount(exchange,parseCallSign.WordDelimiter);
+               if wcount = 3 Then
+               Begin
+                    // Since I have three words I can potentially work with this...
+                    word1 := ExtractWord(1,exchange,parseCallSign.WordDelimiter);
+                    word2 := ExtractWord(2,exchange,parseCallSign.WordDelimiter);
+                    word3 := ExtractWord(3,exchange,parseCallSign.WordDelimiter);
+                    If (word1 = 'CQ') Or (word1 = 'QRZ') Or (word1 = 'CQDX') Then
+                    Begin
+                         If word2 = 'DX' Then
                          Begin
-                              // This seems to be a callsign calling me with a grid
-                              // The usual response would be a signal report back
-                              If parseCallSign.validateCallsign(word2) Then Form1.edHisCall.Text := word2 Else Form1.edHisCall.Text := '';
-                              If parseCallSign.isGrid(word3) Then Form1.edHisGrid.Text := word3 Else Form1.edHisGrid.Text := '';
+                              If length(word3)> 2 Then
+                              begin
+                                   if parseCallSign.validateCallsign(word3) Then Form1.edHisCall.Text := word3 Else Form1.edHisCall.Text := '';
+                                   Form1.edHisGrid.Text := '';
+                                   resolved := True;
+                                   answeringCQ := True;
+                                   doQSO := True;
+                                   msgToSend := word3 + ' ' + globalData.fullcall + ' ' + cfgvtwo.Form6.edMyGrid.Text[1..4];
+                                   doCWID := False;
+                              end;
+                         end
+                         else
+                         begin
+                              if length(word2)>2 Then
+                              Begin
+                                   If parseCallSign.validateCallsign(word2) Then Form1.edHisCall.Text := word2 Else Form1.edHisCall.Text := '';
+                              end
+                              else
+                              begin
+                                   Form1.edHisCall.Text := '';
+                              end;
+                              if length(word3)>3 Then
+                              Begin
+                                   If parseCallSign.isGrid(word3) Then Form1.edHisGrid.Text := word3 Else Form1.edHisGrid.Text := '';
+                              end
+                              else
+                              begin
+                                   Form1.edHisGrid.Text := '';
+                              end;
                               resolved    := True;
-                              answeringCQ := False;
+                              answeringCQ := True;
                               doQSO       := True;
-                              msgToSend := word2 + ' ' + globalData.fullcall + ' ' + siglevel;
-                         End;
-                         if (word3[1] = '-') And not resolved Then
-                         Begin
-                              // This seems an -## signal report
-                              // The usual response would be an R-##
-                              If parseCallSign.validateCallsign(word2) Then Form1.edHisCall.Text := word2 Else Form1.edHisCall.Text := '';
-                              resolved    := True;
-                              answeringCQ := False;
-                              doQSO       := True;
-                              msgToSend := word2 + ' ' + globalData.fullcall + ' R' + siglevel;
-                         End;
-                         if (word3[1..2] = 'R-') And not resolved Then
-                         Begin
-                              // This seems an R-## response to my report
-                              // The usual response would be an RRR
-                              If parseCallSign.validateCallsign(word2) Then Form1.edHisCall.Text := word2 Else Form1.edHisCall.Text := '';
-                              resolved    := True;
-                              answeringCQ := False;
-                              doQSO       := True;
-                              msgToSend := word2 + ' ' + globalData.fullcall + ' RRR';
-                         End;
-                         if (word3 = 'RRR') And not resolved Then
-                         Begin
-                              // This is an ack.  The usual response would be 73
-                              If parseCallSign.validateCallsign(word2) Then Form1.edHisCall.Text := word2 Else Form1.edHisCall.Text := '';
-                              resolved    := True;
-                              answeringCQ := False;
-                              doQSO       := True;
-                              msgToSend := word2 + ' ' + globalData.fullcall + ' 73';
-                         End;
-                         if (word3 = '73') And not resolved Then
-                         Begin
-                              // The usual response to a 73 is a 73
-                              If parseCallSign.validateCallsign(word2) Then Form1.edHisCall.Text := word2 Else Form1.edHisCall.Text := '';
-                              resolved    := True;
-                              answeringCQ := False;
-                              doQSO       := True;
-                              msgToSend := word2 + ' ' + globalData.fullcall + ' 73';
-                         End;
+                              msgToSend   := word2 + ' ' + globalData.fullcall + ' ' + cfgvtwo.Form6.edMyGrid.Text[1..4];
+                              doCWID := False;
+                         end;
                     End
                     Else
                     Begin
-                         // A call to someone else, lets not break into that, but prep to tail in once the existing QSO is complete.
-                         If parseCallSign.validateCallsign(word2) Then Form1.edHisCall.Text := word2 Else Form1.edHisCall.Text := '';
-                         If parseCallSign.isGrid(word3) Then Form1.edHisGrid.Text := word3 Else Form1.edHisGrid.Text := '';
-                         If Length(Form1.edHisCall.Text)>1 Then
+                         If word1 = globalData.fullcall Then
                          Begin
-                              resolved    := True;
-                              answeringCQ := False;
-                              doQSO       := False;
-                              msgToSend   := word2 + ' ' + globalData.fullcall + ' ' + cfgvtwo.Form6.edMyGrid.Text[1..4];
+                              // Seems to be a call to me.
+                              // word3 could/should be as follows...
+                              // Grid, signal report, R signal report, an RRR or a 73
+                              resolved := False;
+                              if parseCallSign.isGrid(word3) And not resolved Then
+                              Begin
+                                   // This seems to be a callsign calling me with a grid
+                                   // The usual response would be a signal report back
+                                   If parseCallSign.validateCallsign(word2) Then Form1.edHisCall.Text := word2 Else Form1.edHisCall.Text := '';
+                                   If parseCallSign.isGrid(word3) Then Form1.edHisGrid.Text := word3 Else Form1.edHisGrid.Text := '';
+                                   resolved    := True;
+                                   answeringCQ := False;
+                                   doQSO       := True;
+                                   msgToSend := word2 + ' ' + globalData.fullcall + ' ' + siglevel;
+                                   doCWID := False;
+                              End;
+                              if (word3[1] = '-') And not resolved Then
+                              Begin
+                                   // This seems an -## signal report
+                                   // The usual response would be an R-##
+                                   If parseCallSign.validateCallsign(word2) Then Form1.edHisCall.Text := word2 Else Form1.edHisCall.Text := '';
+                                   resolved    := True;
+                                   answeringCQ := False;
+                                   doQSO       := True;
+                                   msgToSend := word2 + ' ' + globalData.fullcall + ' R' + siglevel;
+                                   doCWID := False;
+                              End;
+                              if (word3[1..2] = 'R-') And not resolved Then
+                              Begin
+                                   // This seems an R-## response to my report
+                                   // The usual response would be an RRR
+                                   If parseCallSign.validateCallsign(word2) Then Form1.edHisCall.Text := word2 Else Form1.edHisCall.Text := '';
+                                   resolved    := True;
+                                   answeringCQ := False;
+                                   doQSO       := True;
+                                   msgToSend := word2 + ' ' + globalData.fullcall + ' RRR';
+                                   doCWID := False;
+                              End;
+                              if (word3 = 'RRR') And not resolved Then
+                              Begin
+                                   // This is an ack.  The usual response would be 73
+                                   If parseCallSign.validateCallsign(word2) Then Form1.edHisCall.Text := word2 Else Form1.edHisCall.Text := '';
+                                   resolved    := True;
+                                   answeringCQ := False;
+                                   doQSO       := True;
+                                   msgToSend := word2 + ' ' + globalData.fullcall + ' 73';
+                                   if cfgvtwo.Form6.cbCWID.Checked Then doCWID := True else doCWID := False;
+                              End;
+                              if (word3 = '73') And not resolved Then
+                              Begin
+                                   // The usual response to a 73 is a 73
+                                   If parseCallSign.validateCallsign(word2) Then Form1.edHisCall.Text := word2 Else Form1.edHisCall.Text := '';
+                                   resolved    := True;
+                                   answeringCQ := False;
+                                   doQSO       := True;
+                                   msgToSend := word2 + ' ' + globalData.fullcall + ' 73';
+                                   if cfgvtwo.Form6.cbCWID.Checked Then doCWID := True else doCWID := False;
+                              End;
+                         End
+                         Else
+                         Begin
+                              // A call to someone else, lets not break into that, but prep to tail in once the existing QSO is complete.
+                              If parseCallSign.validateCallsign(word2) Then Form1.edHisCall.Text := word2 Else Form1.edHisCall.Text := '';
+                              If parseCallSign.isGrid(word3) Then Form1.edHisGrid.Text := word3 Else Form1.edHisGrid.Text := '';
+                              If Length(Form1.edHisCall.Text)>1 Then
+                              Begin
+                                   resolved    := True;
+                                   answeringCQ := False;
+                                   doQSO       := False;
+                                   msgToSend   := word2 + ' ' + globalData.fullcall + ' ' + cfgvtwo.Form6.edMyGrid.Text[1..4];
+                                   doCWID := False;
+                              End;
                          End;
                     End;
                End;
-          End;
 
-          if wcount = 2 Then
-          Begin
-               // CQ W6CQZ/4, QRZ W6CQZ/4, SOMECALL W6CQZ/4, W6CQZ/4 -22, W6CQZ/4 R-22, W6CQZ/4 73
-               // OK... The first three forms are of use.  SOMECALL/SOMESUFFIX Calling CQ, QRZ or
-               // another call.  The last 3 are not of use at all... those don't show the callsign
-               // of the TX station.
-               word1 := ExtractWord(1,exchange,parseCallSign.WordDelimiter);
-               word2 := ExtractWord(2,exchange,parseCallSign.WordDelimiter);
-               If (word1='QRZ') or (word1='CQ') Then
+               if wcount = 2 Then
                Begin
-                    If parseCallSign.validateCallsign(word2) Then
-                    Begin
-                         Form1.edHisCall.Text := word2;
-                         Form1.edHisGrid.Text := '';
-                         msgToSend := word2 + ' ' + globalData.fullcall;
-                         resolved := True;
-                         answeringCQ := True;
-                    end
-                    else
-                    begin
-                         resolved := False;
-                         exchange := '';
-                    end;
-               End
-               Else
-               Begin
-                    exchange := '';
-                    resolved := False;
-               End;
-               // Now looking for my callsign with -##, R-##, RRR or 73
-               if not resolved then
-               Begin
-                    If word1=globalData.fullCall Then
+                    // CQ W6CQZ/4, QRZ W6CQZ/4, SOMECALL W6CQZ/4, W6CQZ/4 -22, W6CQZ/4 R-22, W6CQZ/4 73
+                    // OK... The first three forms are of use.  SOMECALL/SOMESUFFIX Calling CQ, QRZ or
+                    // another call.  The last 3 are not of use at all... those don't show the callsign
+                    // of the TX station.
+                    word1 := ExtractWord(1,exchange,parseCallSign.WordDelimiter);
+                    word2 := ExtractWord(2,exchange,parseCallSign.WordDelimiter);
+                    If (word1='QRZ') or (word1='CQ') Then
                     Begin
                          If parseCallSign.validateCallsign(word2) Then
                          Begin
                               Form1.edHisCall.Text := word2;
-                              msgToSend := word2 + ' ' + siglevel;
+                              Form1.edHisGrid.Text := '';
+                              msgToSend := word2 + ' ' + globalData.fullcall;
                               resolved := True;
+                              doQSO       := True;
+                              answeringCQ := True;
+                              doCWID := False;
+                         end
+                         else
+                         begin
+                              resolved := False;
+                              exchange := '';
+                         end;
+                    End
+                    Else
+                    Begin
+                         exchange := '';
+                         resolved := False;
+                    End;
+                    // Now looking for my callsign with -##, R-##, RRR or 73
+                    if not resolved then
+                    Begin
+                         If word1=globalData.fullCall Then
+                         Begin
+                              If parseCallSign.validateCallsign(word2) Then
+                              Begin
+                                   Form1.edHisCall.Text := word2;
+                                   msgToSend := word2 + ' ' + siglevel;
+                                   resolved := True;
+                                   doCWID := False;
+                              End
+                              Else
+                              Begin
+                                   resolved := False;
+                              End;
+                              if not resolved then
+                              Begin
+                                   if word2 = 'RRR'Then
+                                   Begin
+                                        msgToSend := edHisCall.Text + ' 73';
+                                        Resolved := True;
+                                        doQSO       := True;
+                                        if cfgvtwo.Form6.cbCWID.Checked then doCWID := True else doCWID := False;
+                                   End
+                                   Else
+                                   Begin
+                                        resolved := False;
+                                   End;
+                              End;
+                              if not resolved Then
+                              Begin
+                                   if word2[1] = '-' Then
+                                   Begin
+                                        msgToSend := edHisCall.Text + ' R' + siglevel;
+                                        resolved := True;
+                                        doQSO       := True;
+                                        doCWID := False;
+                                   End
+                                   Else
+                                   Begin
+                                        resolved := False;
+                                   End;
+                              End;
+                              If not resolved Then
+                              Begin
+                                   if word2[1..2] = 'R-' Then
+                                   Begin
+                                        msgToSend := edHisCall.Text + ' RRR';
+                                        resolved := True;
+                                        doQSO       := True;
+                                        doCWID := False;
+                                   End
+                                   Else
+                                   Begin
+                                        resolved := False;
+                                   End;
+                              End;
                          End
                          Else
                          Begin
                               resolved := False;
                          End;
-                         if not resolved then
-                         Begin
-                              if word2 = 'RRR'Then
-                              Begin
-                                   msgToSend := edHisCall.Text + ' 73';
-                                   Resolved := True;
-                              End
-                              Else
-                              Begin
-                                   resolved := False;
-                              End;
-                         End;
-                         if not resolved Then
-                         Begin
-                              if word2[1] = '-' Then
-                              Begin
-                                   msgToSend := edHisCall.Text + ' R' + siglevel;
-                                   resolved := True;
-                              End
-                              Else
-                              Begin
-                                   resolved := False;
-                              End;
-                         End;
-                         If not resolved Then
-                         Begin
-                              if word2[1..2] = 'R-' Then
-                              Begin
-                                   msgToSend := edHisCall.Text + ' RRR';
-                                   resolved := True;
-                              End
-                              Else
-                              Begin
-                                   resolved := False;
-                              End;
-                         End;
+                    End;
+               End;
+
+               If (wcount < 2) Or (wcount > 3) Then
+               Begin
+                    exchange := '';
+                    resolved := False;
+               End;
+
+               If resolved Then
+               Begin
+                    form1.edSigRep.Text := siglevel;
+                    if TryStrToInt(txhz, itxhz) Then
+                    Begin
+                         itxhz := StrToInt(txhz);
+                         if form1.chkAutoTxDF.Checked then form1.spinTXCF.Value := itxhz;
+                         form1.spinDecoderCF.value := itxhz;
+                    End;
+                    srxp := Form1.ListBox1.Items[idx];
+                    srxp := srxp[1..5];
+                    srxp := TrimLeft(TrimRight(srxp));
+                    srxp := DelSpace1(srxp);
+                    srxp := srxp[4..5];
+                    irxp := StrToInt(srxp);
+                    itxp := irxp+1;
+                    if itxp = 60 Then itxp := 0;
+                    if Odd(itxp) Then
+                    Begin
+                         Form1.rbTX1.Checked := False;
+                         Form1.rbTX2.Checked := True;
                     End
                     Else
                     Begin
-                         resolved := False;
+                         Form1.rbTX2.Checked := False;
+                         Form1.rbTX1.Checked := True;
                     End;
-               End;
-          End;
-
-          If (wcount < 2) Or (wcount > 3) Then
-          Begin
-               exchange := '';
-               resolved := False;
-          End;
-
-          If resolved Then
-          Begin
-               form1.edSigRep.Text := siglevel;
-               if TryStrToInt(txhz, itxhz) Then
-               Begin
-                    itxhz := StrToInt(txhz);
-                    if form1.chkAutoTxDF.Checked then form1.spinTXCF.Value := itxhz;
-                    form1.spinDecoderCF.value := itxhz;
-                    //form1.spinDecoderBW.value := 2;
-                    //form1.Edit2.Text := '50';
-               End;
-               srxp := Form1.ListBox1.Items[idx];
-               srxp := srxp[1..5];
-               srxp := TrimLeft(TrimRight(srxp));
-               srxp := DelSpace1(srxp);
-               srxp := srxp[4..5];
-               irxp := StrToInt(srxp);
-               itxp := irxp+1;
-               if itxp = 60 Then itxp := 0;
-               if Odd(itxp) Then
-               Begin
-                    Form1.rbTX1.Checked := False;
-                    Form1.rbTX2.Checked := True;
-               End
-               Else
-               Begin
-                    Form1.rbTX2.Checked := False;
-                    Form1.rbTX1.Checked := True;
-               End;
-               form1.edMsg.Text := msgToSend;
-               if doQSO Then
-               Begin
-                    watchMulti := False;
-                    if cfgvtwo.Form6.cbDisableMultiQSO.Checked And Form1.chkMultiDecode.Checked Then
+                    form1.edMsg.Text := msgToSend;
+                    if doQSO Then
                     Begin
-                         preTXCF := entTXCF;
-                         preRXCF := entRXCF;
-                         if Form1.chkMultiDecode.Checked Then Form1.chkMultiDecode.Checked := False;
-                         rxCount := 0;
-                         if cfgvtwo.Form6.cbMultiAutoEnable.Checked Then watchMulti := True else watchMulti := False;
+                         watchMulti := False;
+                         if cfgvtwo.Form6.cbDisableMultiQSO.Checked And Form1.chkMultiDecode.Checked Then
+                         Begin
+                              preTXCF := entTXCF;
+                              preRXCF := entRXCF;
+                              if Form1.chkMultiDecode.Checked Then Form1.chkMultiDecode.Checked := False;
+                              rxCount := 0;
+                              if cfgvtwo.Form6.cbMultiAutoEnable.Checked Then watchMulti := True else watchMulti := False;
+                         End;
+                         Form1.chkEnTX.Checked := True;
+                         Form1.rbGenMsg.Checked := True;
+                         Form1.rbGenMsg.Font.Color := clRed;
+                         Form1.rbFreeMsg.Font.Color  := clBlack;
+                         useBuffer := 0;
+                         ss := '';
+                         if gst.Hour < 10 Then ss := '0' + IntToStr(gst.Hour) else ss := ss + IntToStr(gst.Hour);
+                         if gst.Minute < 10 Then ss := ss + '0' + IntToStr(gst.Minute) else ss := ss + IntToStr(gst.Minute);
+                         qsoSTime := ss;
+                         ss := '';
+                         ss := IntToStr(gst.Year);
+                         if gst.Month < 10 Then ss := ss + '0' + IntToStr(gst.Month) else ss := ss + IntToStr(gst.Month);
+                         if gst.Day < 10 Then ss := ss + '0' + IntToStr(gst.Day) else ss := ss + IntToStr(gst.Day);
+                         qsoSDate := ss;
                     End;
-                    Form1.chkEnTX.Checked := True;
-                    Form1.rbGenMsg.Checked := True;
-                    Form1.rbGenMsg.Font.Color := clRed;
-                    Form1.rbFreeMsg.Font.Color  := clBlack;
-                    useBuffer := 0;
-                    ss := '';
-                    if gst.Hour < 10 Then ss := '0' + IntToStr(gst.Hour) else ss := ss + IntToStr(gst.Hour);
-                    if gst.Minute < 10 Then ss := ss + '0' + IntToStr(gst.Minute) else ss := ss + IntToStr(gst.Minute);
-                    qsoSTime := ss;
-                    ss := '';
-                    ss := IntToStr(gst.Year);
-                    if gst.Month < 10 Then ss := ss + '0' + IntToStr(gst.Month) else ss := ss + IntToStr(gst.Month);
-                    if gst.Day < 10 Then ss := ss + '0' + IntToStr(gst.Day) else ss := ss + IntToStr(gst.Day);
-                    qsoSDate := ss;
                End;
           End;
-     End;
+     end;
 end;
 
 procedure TForm1.ListBox1DrawItem(Control: TWinControl; Index: Integer;
@@ -2191,22 +2453,25 @@ Var
 begin
      lineCQ := False;
      lineMyCall := False;
-     foo := Form1.ListBox1.Items[Index];
-     if IsWordPresent('CQ', foo, parseCallSign.WordDelimiter) Then lineCQ := True;
-     if IsWordPresent('QRZ', foo, parseCallSign.WordDelimiter) Then lineCQ := True;
-     if IsWordPresent(globalData.fullcall, foo, parseCallsign.WordDelimiter) Then lineMyCall := True;
-     myBrush := TBrush.Create;
-     with (Control as TListBox).Canvas do
-     begin
-          myColor := cfgvtwo.glqsoColor;
-          if lineCQ Then myColor := cfgvtwo.glcqColor;
-          if lineMyCall Then myColor := cfgvtwo.glcallColor;
-          myBrush.Style := bsSolid;
-          myBrush.Color := myColor;
-          Windows.FillRect(handle, ARect, myBrush.Reference.Handle);
-          Brush.Style := bsClear;
-          TextOut(ARect.Left, ARect.Top,(Control as TListBox).Items[Index]);
-          MyBrush.Free;
+     if Index > -1 Then
+     Begin
+          foo := Form1.ListBox1.Items[Index];
+          if IsWordPresent('CQ', foo, parseCallSign.WordDelimiter) Then lineCQ := True;
+          if IsWordPresent('QRZ', foo, parseCallSign.WordDelimiter) Then lineCQ := True;
+          if IsWordPresent(globalData.fullcall, foo, parseCallsign.WordDelimiter) Then lineMyCall := True;
+          myBrush := TBrush.Create;
+          with (Control as TListBox).Canvas do
+          begin
+               myColor := cfgvtwo.glqsoColor;
+               if lineCQ Then myColor := cfgvtwo.glcqColor;
+               if lineMyCall Then myColor := cfgvtwo.glcallColor;
+               myBrush.Style := bsSolid;
+               myBrush.Color := myColor;
+               Windows.FillRect(handle, ARect, myBrush.Reference.Handle);
+               Brush.Style := bsClear;
+               TextOut(ARect.Left, ARect.Top,(Control as TListBox).Items[Index]);
+               MyBrush.Free;
+          end;
      end;
 end;
 
@@ -2230,7 +2495,9 @@ end;
 procedure TForm1.rbUseMixChange(Sender: TObject);
 begin
   If Form1.rbUseLeft.Checked Then adc.adcChan  := 1;
+  If Form1.rbUseLeft.Checked Then madc.adcChan  := 1;
   If Form1.rbUseRight.Checked Then adc.adcChan := 2;
+  If Form1.rbUseRight.Checked Then madc.adcChan := 2;
 end;
 
 
@@ -2292,6 +2559,8 @@ begin
      fqrg := fqrg/1000000;
      sqrg := FloatToStr(fqrg);
      log.Form2.edLogFrequency.Text := sqrg;
+     log.logmycall := globalData.fullcall;
+     log.logmygrid := cfgvtwo.Form6.edMyGrid.Text;
      log.Form2.Visible := True;
      log.Form2.Show;
      log.Form2.BringToFront;
@@ -2314,69 +2583,52 @@ begin
      End;
      if proceed Then
      Begin
-          if not d65.glinprog or not d4.gl4inprog Then
+          if not d65.glinprog Then
           Begin
                if cfgvtwo.Form6.chkNoOptFFT.Checked Then
                Begin
                     d65.glfftFWisdom := 0;
                     d65.glfftSWisdom := 0;
-                    d4.gl4fftFWisdom := 0;
-                    d4.gl4fftSWisdom := 0;
                End;
                bStart := 0;
                bEnd := 533504;
                for i := bStart to bEnd do
                Begin
-                    if haveOddBuffer then d65.glinBuffer[i] := min(32766,max(-32766,adc.d65rxBuffer[i]));
-                    if haveOddBuffer then d4.gl4inBuffer[i] := min(32766,max(-32766,adc.d65rxBuffer[i]));
-                    if haveEvenBuffer then d65.glinBuffer[i] := min(32766,max(-32766,adc.d65rxBuffer[i]));
-                    if haveEvenBuffer then d4.gl4inBuffer[i] := min(32766,max(-32766,adc.d65rxBuffer[i]));
+                    if paInParams.channelCount = 2 then
+                    begin
+                         if haveOddBuffer then d65.glinBuffer[i] := min(32766,max(-32766,adc.d65rxBuffer[i]));
+                    end;
+                    if paInParams.channelCount = 1 then
+                    begin
+                         if haveEvenBuffer then d65.glinBuffer[i] := min(32766,max(-32766,madc.d65rxBuffer[i]));
+                    end;
                end;
                d65.gld65timestamp := '';
-               d4.gl4timestamp := '';
                d65.gld65timestamp := d65.gld65timestamp + IntToStr(ost.Year);
                if ost.Month < 10 Then d65.gld65timestamp := d65.gld65timestamp + '0' + IntToStr(ost.Month) else d65.gld65timestamp := d65.gld65timestamp + IntToStr(ost.Month);
                if ost.Day < 10 Then d65.gld65timestamp := d65.gld65timestamp + '0' + IntToStr(ost.Day) else d65.gld65timestamp := d65.gld65timestamp + IntToStr(ost.Day);
                if ost.Hour < 10 Then d65.gld65timestamp := d65.gld65timestamp + '0' + IntToStr(ost.Hour) else d65.gld65timestamp := d65.gld65timestamp + IntToStr(ost.Hour);
                if ost.Minute < 10 Then d65.gld65timestamp := d65.gld65timestamp + '0' + IntToStr(ost.Minute) else d65.gld65timestamp := d65.gld65timestamp + IntToStr(ost.Minute);
                d65.gld65timestamp := d65.gld65timestamp + '00';
-               d4.gl4timestamp := d65.gld65timestamp;
                sr := 1.0;
                if tryStrToFloat(cfgvtwo.Form6.edRXSRCor.Text,sr) Then globalData.d65samfacin := StrToFloat(cfgvtwo.Form6.edRXSRCor.Text) else globalData.d65samfacin := 1.0;
                d65samfacout := 1.0;
                d65.glMouseDF := Form1.spinDecoderCF.Value;
-               d4.gl4MouseDF := d65.glMouseDF;
                if d65.glMouseDF > 1000 then d65.glMouseDF := 1000;
                if d65.glMouseDF < -1000 then d65.glMouseDF := -1000;
-               d4.gl4MouseDF := d65.glMouseDF;
                if spinDecoderBW.Value = 1 Then d65.glDFTolerance := 20;
                if spinDecoderBW.Value = 2 Then d65.glDFTolerance := 50;
                if spinDecoderBW.Value = 3 Then d65.glDFTolerance := 100;
                if spinDecoderBW.Value = 4 Then d65.glDFTolerance := 200;
-               if form1.spinBin.Value = 1 Then d65.glbinspace := 20;
-               if form1.spinBin.Value = 2 Then d65.glbinspace := 50;
-               if form1.spinBin.Value = 3 Then d65.glbinspace := 100;
-               if form1.spinBin.Value = 4 Then d65.glbinspace := 200;
-               //if d65.glbinspace > 20 then d4.gl4binspace := 20;
-               //if d65.glbinspace < 21 then d4.gl4binspace := 10;
-               d4.gl4binspace := d65.glbinspace;
                if d65.glDFTolerance > 200 then d65.glDFTolerance := 200;
                if d65.glDFTolerance < 20 then d65.glDFTolerance := 20;
-               d4.gl4DFTolerance := d65.glDFTolerance;
+               d65.glbinspace := 100;
                If Form1.chkNB.Checked then d65.glNblank := 1 Else d65.glNblank := 0;
-               d4.gl4Nblank := d65.glNblank;
-               //if Form1.chkSHIFT.Checked then d65.glNshift := 1 Else d65.glNshift := 0;
                d65.glNshift := 0;
-               d4.gl4Nshift := 0;
                if Form1.chkAFC.Checked then d65.glNafc := 1 Else d65.glNafc := 0;
-               d4.gl4Nafc := d65.glNafc;
-               //if Form1.chkZAP.Checked then globalData.d65Nzap := 1 Else globalData.d65Nzap := 0;
                d65.glNzap := 0;
-               d4.gl4Nzap := 0;
                d65.gldecoderPass := 0;
-               d4.gl4decoderPass := 0;
                if form1.chkMultiDecode.Checked Then d65.glsteps := 1 else d65.glsteps := 0;
-               d4.gl4steps := d65.glsteps;
                reDecode := True;
                d65doDecodePass := True;
           End;
@@ -2412,17 +2664,7 @@ Var
    rpt : String;
    idx : Integer;
 Begin
-     st.Day := 0;
-     {$IFDEF win32}
-       GetSystemTime(st);
-     {$ENDIF}
-     {$IFDEF linux}
-       dt := synaUtil.GetUTTime;
-       DateTimeToSystemTime(GetUTTime,st);
-     {$ENDIF}
-     {$IFDEF darwin}
-       // Unknown at this point and probably moot.  Little chance this will ever run in MacOS X
-     {$ENDIF}
+     st := utcTime();
      foo := '';
      if st.Hour < 10 Then foo := '0' + IntToStr(st.Hour) + ':' else foo := IntToStr(st.Hour) + ':';
      if st.Minute < 10 then foo := foo + '0' + IntToStr(st.Minute) else foo := foo + IntToStr(st.Minute);
@@ -2431,14 +2673,12 @@ Begin
      Begin
           rawdec.Form5.ListBox1.Clear;
           rawdec.Form5.ListBox1.Items.Add(rpt);
-          //Form1.ListBox1.Items.Strings[0] := rpt;
           firstReport := False;
           itemsIn := True;
      End
      Else
      Begin
           rawdec.Form5.ListBox1.Items.Add(rpt);
-          //Form1.ListBox1.Items.Insert(0,rpt);
           itemsIn := True;
      End;
      // Manage size of scrollback
@@ -2503,9 +2743,6 @@ Begin
           if Length(TrimLeft(TrimRight(d65.gld65decodes[i].dtDeltaFreq))) = 2 Then rpt := rpt + '   ' + d65.gld65decodes[i].dtDeltaFreq + ' ';
           if Length(TrimLeft(TrimRight(d65.gld65decodes[i].dtDeltaFreq))) = 1 Then rpt := rpt + '    ' + d65.gld65decodes[i].dtDeltaFreq + ' ';
           csvstr := csvstr + '"' + d65.gld65decodes[i].dtDeltaFreq + '"' + ',';
-          // W
-          //if Length(TrimLeft(TrimRight(d65.gld65decodes[i].dtSigW))) = 2 Then rpt := rpt + d65.gld65decodes[i].dtSigW + ' ';
-          //if Length(TrimLeft(TrimRight(d65.gld65decodes[i].dtSigW))) = 1 Then rpt := rpt + ' ' + d65.gld65decodes[i].dtSigW + ' ';
           rpt := rpt + ' ' + d65.gld65decodes[i].dtType + ' ';
           csvstr := csvstr + '"' + d65.gld65decodes[i].dtType + '"' + ',';
           // Exchange
@@ -2661,199 +2898,13 @@ Begin
                End;
           end;
      end;
-     if m = 4 Then
-     Begin
-          foo := d4.gl4decodes[i].dtTimeStamp;
-          // UTC
-          rpt := foo[9..10] + ':' + foo[11..12] + ' ';
-          csvstr := csvstr + '"' + foo[1..4] + '-' + foo[5..6] + '-' + foo[7..8] + '"' + ',';
-          csvstr := csvstr + '"' + foo[9..10] + ':' + foo[11..12] + '"' + ',';
-          // QRG
-          csvstr := csvstr + '"' + FloatToStr(globalData.gqrg) + '"' + ',';
-          // Sync
-          if Length(TrimLeft(TrimRight(d4.gl4decodes[i].dtNumSync))) = 1 Then rpt := rpt + ' ' + d4.gl4decodes[i].dtNumSync + ' ';
-          if Length(TrimLeft(TrimRight(d4.gl4decodes[i].dtNumSync))) = 2 Then rpt := rpt + d4.gl4decodes[i].dtNumSync + ' ';
-          csvstr := csvstr + '"' + d4.gl4decodes[i].dtNumSync + '"' + ',';
-          // dB
-          if Length(TrimLeft(TrimRight(d4.gl4decodes[i].dtSigLevel))) = 1 Then rpt := rpt + '  ' + d4.gl4decodes[i].dtSigLevel + ' ';
-          if Length(TrimLeft(TrimRight(d4.gl4decodes[i].dtSigLevel))) = 2 Then rpt := rpt + ' ' + d4.gl4decodes[i].dtSigLevel + ' ';
-          if Length(TrimLeft(TrimRight(d4.gl4decodes[i].dtSigLevel))) = 3 Then rpt := rpt + d4.gl4decodes[i].dtSigLevel + ' ';
-          csvstr := csvstr + '"' + d4.gl4decodes[i].dtSigLevel + '"' + ',';
-          // DT
-          if Length(TrimLeft(TrimRight(d4.gl4decodes[i].dtDeltaTime))) = 3 Then rpt := rpt + ' ' + d4.gl4decodes[i].dtDeltaTime + ' ';
-          if Length(TrimLeft(TrimRight(d4.gl4decodes[i].dtDeltaTime))) = 4 Then rpt := rpt + d4.gl4decodes[i].dtDeltaTime + ' ';
-          csvstr := csvstr + '"' + d4.gl4decodes[i].dtDeltaTime + '"' + ',';
-          // DF
-          if Length(TrimLeft(TrimRight(d4.gl4decodes[i].dtDeltaFreq))) = 5 Then rpt := rpt + d4.gl4decodes[i].dtDeltaFreq + ' ';
-          if Length(TrimLeft(TrimRight(d4.gl4decodes[i].dtDeltaFreq))) = 4 Then rpt := rpt + ' ' + d4.gl4decodes[i].dtDeltaFreq + ' ';
-          if Length(TrimLeft(TrimRight(d4.gl4decodes[i].dtDeltaFreq))) = 3 Then rpt := rpt + '  ' + d4.gl4decodes[i].dtDeltaFreq + ' ';
-          if Length(TrimLeft(TrimRight(d4.gl4decodes[i].dtDeltaFreq))) = 2 Then rpt := rpt + '   ' + d4.gl4decodes[i].dtDeltaFreq + ' ';
-          if Length(TrimLeft(TrimRight(d4.gl4decodes[i].dtDeltaFreq))) = 1 Then rpt := rpt + '    ' + d4.gl4decodes[i].dtDeltaFreq + ' ';
-          csvstr := csvstr + '"' + d4.gl4decodes[i].dtDeltaFreq + '"' + ',';
-          // W
-          //if Length(TrimLeft(TrimRight(d4.gl4decodes[i].dtSigW))) = 2 Then rpt := rpt + d4.gl4decodes[i].dtSigW + ' ';
-          //if Length(TrimLeft(TrimRight(d4.gl4decodes[i].dtSigW))) = 1 Then rpt := rpt + ' ' + d4.gl4decodes[i].dtSigW + ' ';
-          rpt := rpt + ' ' + d4.gl4decodes[i].dtType + ' ';
-          csvstr := csvstr + '"' + d4.gl4decodes[i].dtType + '"' + ',';
-          // Exchange
-          rpt := rpt + d4.gl4decodes[i].dtDecoded;
-          csvstr := csvstr + '"' + TrimLeft(TrimRight(d4.gl4decodes[i].dtDecoded)) + '","4B"';
-          // csvstr now contains a possible report to file if user wishes.
-          // Do actual display
-          If firstReport Then
-          Begin
-               Form1.ListBox1.Items.Strings[0] := rpt;
-               firstReport := False;
-               itemsIn := True;
-          End
-          Else
-          Begin
-               Form1.ListBox1.Items.Insert(0,rpt);
-               itemsIn := True;
-          End;
-          // Manage size of scrollback
-          If Form1.ListBox1.Items.Count > 500 Then
-          Begin
-               for idx := ListBox1.Items.Count - 1 downto 100 do
-               Begin
-                    ListBox1.Items.Delete(idx);
-               end;
-          End;
-          d4.gl4decodes[i].dtDisplayed := True;
-          d4.gl4decodes[i].dtProcessed := True;
-          // Save to RX/TX log if user has selected such.
-          if cfgvtwo.Form6.cbSaveCSV.Checked Then
-          Begin
-               for ii := 0 to 99 do
-               begin
-                    if csvEntries[ii] = '' Then
-                    begin
-                         csvEntries[ii] := csvstr;
-                         break;
-                    end;
-               end;
-               form1.saveCSV();
-          end;
-          // Trying to find a signal report value
-          wcount := 0;
-          wcount := WordCount(d4.gl4decodes[i].dtDecoded,parseCallSign.WordDelimiter);
-          if wcount = 3 Then
-          Begin
-               word1 := ExtractWord(1,d4.gl4decodes[i].dtDecoded,parseCallSign.WordDelimiter); // CQ or a call sign
-               word2 := ExtractWord(2,d4.gl4decodes[i].dtDecoded,parseCallSign.WordDelimiter); // call sign
-               word3 := ExtractWord(3,d4.gl4decodes[i].dtDecoded,parseCallSign.WordDelimiter); // could be grid or report.
-          End
-          Else
-          Begin
-               word1 := '';
-               word2 := '';
-               word3 := '';
-          end;
-          If wcount > 1 Then
-          Begin
-               if (Length(word1)> 2) And (Length(word3)>2) Then
-               Begin
-                    if (word1 = globalData.fullcall) And isSigRep(word3) Then
-                    Begin
-                         if TrimLeft(TrimRight(word3))[1] = 'R' Then log.Form2.edLogRReport.Text := TrimLeft(TrimRight(word3))[2..4];
-                         if TrimLeft(TrimRight(word3))[1] = '-' Then log.Form2.edLogRReport.Text := TrimLeft(TrimRight(word3))[1..3];
-                    end;
-               end;
-          end;
-          // Process for PSKReporter if enabled.
-          //if not (sopQRG=eopQRG) and cfgvtwo.Form6.cbUsePSKReporter.Checked Then dlog.fileDebug('End of sequence QRG not same as start QRG. Report discarded.');
-          //If (wcount > 1) And cfgvtwo.Form6.cbUsePSKReporter.Checked And (sopQRG=eopQRG) Then
-          //Begin
-               //if (length(word1)>1) And (length(word2)>2) Then
-               //Begin
-                    //tmpDouble1 := -1.0;
-                    //tmpDouble2 := 0;
-                    //if sopQRG > 0.0 Then
-                    //Begin
-                         //tmpDouble1 := sopQRG;
-                         //if tryStrToFloat(TrimLeft(TrimRight(d65.gld65decodes[i].dtDeltaFreq)),tmpDouble2) Then tmpDouble1 := tmpDouble1 + tmpDouble2;
-                    //End;
-                    //if tmpDouble1 > 0 Then lstrQRG := FloatToStr(tmpDouble1) Else lstrQRG := '0';
-                    //If (word1 = 'CQ') or (word1 = 'cq') or (word1 = 'QRZ') or (word1 = 'qrz') or (word1 = 'TEST') or (word1 = 'test') Then
-                    //Begin
-                         //If parseCallSign.validateCallsign(word2) Then
-                         //Begin
-                              //// Seems to be a valid call calling CQ.  Word2=Call sign.
-                              //// dtTimestamp is like 20100113165400
-                              //// d65.gld65decodes[i].dtTimeStamp;
-                              //if length(word3)=4 Then
-                              //Begin
-                                   //if parseCallSign.isGrid(word3) Then
-                                   //PSKReporter.ReporterSeenCallsign(BuildRemoteStringGrid(word2,mode,lstrQRG,word3,
-                                                                    //d65.gld65decodes[i].dtTimeStamp[1..8],
-                                                                    //d65.gld65decodes[i].dtTimeStamp[9..12]),
-                                                                    //BuildLocalString(cfgvtwo.Form6.editPSKRCall.Text,
-                                                                    //cfgvtwo.Form6.edMyGrid.Text,'JT65-HF',verHolder.verReturn(),
-                                                                    //cfgvtwo.Form6.editPSKRAntenna.Text),
-                                                                    //PSKReporter.REPORTER_SOURCE_AUTOMATIC)
-                                   //else
-                                   //PSKReporter.ReporterSeenCallsign(BuildRemoteString(word2,mode,lstrQRG,d65.gld65decodes[i].dtTimeStamp[1..8],
-                                                                    //d65.gld65decodes[i].dtTimeStamp[9..12]),
-                                                                    //BuildLocalString(cfgvtwo.Form6.editPSKRCall.Text,
-                                                                    //cfgvtwo.Form6.edMyGrid.Text,'JT65-HF',verHolder.verReturn(),
-                                                                    //cfgvtwo.Form6.editPSKRAntenna.Text),PSKReporter.REPORTER_SOURCE_AUTOMATIC);
-                                   //end
-                              //else
-                              //begin
-                                   //PSKReporter.ReporterSeenCallsign(BuildRemoteString(word2,mode,lstrQRG,d65.gld65decodes[i].dtTimeStamp[1..8],
-                                                                                      //d65.gld65decodes[i].dtTimeStamp[9..12]),
-                                                                                      //BuildLocalString(cfgvtwo.Form6.editPSKRCall.Text,
-                                                                                      //cfgvtwo.Form6.edMyGrid.Text,'JT65-HF',verHolder.verReturn(),
-                                                                                      //cfgvtwo.Form6.editPSKRAntenna.Text),PSKReporter.REPORTER_SOURCE_AUTOMATIC);
-                              //end;
-                         //End;
-                    //End
-                    //Else
-                    //Begin
-                         //If (Length(word1)>2) And (Length(word2)>2) Then
-                         //Begin
-                              //If (parseCallSign.validateCallsign(word1)) And (parseCallSign.validateCallsign(word2)) Then
-                              //Begin
-                                   //// Seems to be a valid call working a valid call.  Word2= TX Call sign.
-                                   //if Length(Word3)=4 Then
-                                   //Begin
-                                        //if parseCallsign.isGrid(word3) Then
-                                        //PSKReporter.ReporterSeenCallsign(BuildRemoteStringGrid(word2,mode,lstrQRG,word3,
-                                                                                               //d65.gld65decodes[i].dtTimeStamp[1..8],
-                                                                                               //d65.gld65decodes[i].dtTimeStamp[9..12]),
-                                                                                               //BuildLocalString(cfgvtwo.Form6.editPSKRCall.Text,
-                                                                                               //cfgvtwo.Form6.edMyGrid.Text,'JT65-HF',verHolder.verReturn(),
-                                                                                               //cfgvtwo.Form6.editPSKRAntenna.Text),
-                                                                                               //PSKReporter.REPORTER_SOURCE_AUTOMATIC)
-                                        //else
-                                        //PSKReporter.ReporterSeenCallsign(BuildRemoteString(word2,mode,lstrQRG,d65.gld65decodes[i].dtTimeStamp[1..8],
-                                                                                           //d65.gld65decodes[i].dtTimeStamp[9..12]),
-                                                                                           //BuildLocalString(cfgvtwo.Form6.editPSKRCall.Text,
-                                                                                           //cfgvtwo.Form6.edMyGrid.Text,'JT65-HF',verHolder.verReturn(),
-                                                                                           //cfgvtwo.Form6.editPSKRAntenna.Text),
-                                                                                           //PSKReporter.REPORTER_SOURCE_AUTOMATIC);
-                                   //end
-                                   //else
-                                   //begin
-                                        //PSKReporter.ReporterSeenCallsign(BuildRemoteString(word2,mode,lstrQRG,d65.gld65decodes[i].dtTimeStamp[1..8],
-                                                                                           //d65.gld65decodes[i].dtTimeStamp[9..12]),
-                                                                                           //BuildLocalString(cfgvtwo.Form6.editPSKRCall.Text,
-                                                                                           //cfgvtwo.Form6.edMyGrid.Text,'JT65-HF',verHolder.verReturn(),
-                                                                                           //cfgvtwo.Form6.editPSKRAntenna.Text),
-                                                                                           //PSKReporter.REPORTER_SOURCE_AUTOMATIC);
-                                   //end;
-                              //End;
-                         //End;
-                    //End;
-               //End;
-          //end;
-     end;
 End;
 
 procedure TForm1.TrackBar1Change(Sender: TObject);
 begin
   // Handle change to Digital Gain
   adc.adcLDgain := Form1.TrackBar1.Position;
+  madc.adcLDgain := Form1.TrackBar1.Position;
   Form1.Label10.Caption := 'L: ' + IntToStr(Form1.TrackBar1.Position);
   If Form1.TrackBar1.Position <> 0 Then Form1.Label10.Font.Color := clRed else Form1.Label10.Font.Color := clBlack;
 end;
@@ -2861,6 +2912,7 @@ end;
 procedure TForm1.TrackBar2Change(Sender: TObject);
 begin
   adc.adcRDgain := Form1.TrackBar2.Position;
+  madc.adcRDgain := Form1.TrackBar2.Position;
   Form1.Label11.Caption := 'R: ' + IntToStr(Form1.TrackBar2.Position);
   If Form1.TrackBar2.Position <> 0 Then Form1.Label11.Font.Color := clRed else Form1.Label11.Font.Color := clBlack;
 end;
@@ -3084,8 +3136,22 @@ Begin
                End;
           End;
      End;
-     if audioAve1 > 0 Then audioAve1 := (audioAve1+adc.specLevel1) DIV 2 else audioAve1 := adc.specLevel1;
-     if audioAve2 > 0 Then audioAve2 := (audioAve1+adc.specLevel2) DIV 2 else audioAve2 := adc.specLevel2;
+     if paInParams.channelCount = 2 then
+     begin
+          if audioAve1 > 0 Then audioAve1 := (audioAve1+adc.specLevel1) DIV 2 else audioAve1 := adc.specLevel1;
+     end;
+     if paInParams.channelCount = 1 then
+     begin
+          if audioAve1 > 0 Then audioAve1 := (audioAve1+madc.specLevel1) DIV 2 else audioAve1 := madc.specLevel1;
+     end;
+     if paInParams.channelCount = 2 then
+     Begin
+          if audioAve2 > 0 Then audioAve2 := (audioAve1+adc.specLevel2) DIV 2 else audioAve2 := adc.specLevel2;
+     end;
+     if paInParams.channelCount = 1 then
+     begin
+          if audioAve2 > 0 Then audioAve2 := (audioAve1+madc.specLevel2) DIV 2 else audioAve2 := madc.specLevel2;
+     end;
 End;
 
 procedure TForm1.displayAudio(audioAveL : Integer; audioAveR : Integer);
@@ -3097,11 +3163,73 @@ Begin
      // No warning range -10 .. +10 dB or 25 .. 75 sLevel
      Form1.pbAu1.Position := audioAveL;
      Form1.pbAu2.Position := audioAveR;
+     cfgvtwo.Form6.pbAULeft.Position := audioAveL;
+     cfgvtwo.Form6.pbAURight.Position := audioAveR;
      // Convert S Level to dB for text display
-     if adc.specLevel1 > 0 Then Form1.rbUseLeft.Caption := 'L ' + IntToStr(Round((audioAveL*0.4)-20)) Else Form1.rbUseLeft.Caption := 'L -20';
-     if adc.specLevel2 > 0 Then Form1.rbUseRight.Caption := 'R ' + IntToStr(Round((audioAveR*0.4)-20)) Else Form1.rbUseRight.Caption := 'R -20';
-     if (adc.specLevel1 < 40) Or (adc.specLevel1 > 60) Then rbUseLeft.Font.Color := clRed else rbUseLeft.Font.Color := clBlack;
-     if (adc.specLevel2 < 40) Or (adc.specLevel2 > 60) Then rbUseRight.Font.Color := clRed else rbUseRight.Font.Color := clBlack;
+     if paInParams.channelCount = 2 then
+     Begin
+          if adc.specLevel1 > 0 Then Form1.rbUseLeft.Caption := 'L ' + IntToStr(Round((audioAveL*0.4)-20)) Else Form1.rbUseLeft.Caption := 'L -20';
+     end;
+     if paInParams.channelCount = 1 then
+     Begin
+          if madc.specLevel1 > 0 Then Form1.rbUseLeft.Caption := 'L ' + IntToStr(Round((audioAveL*0.4)-20)) Else Form1.rbUseLeft.Caption := 'L -20';
+     end;
+     if paInParams.channelCount = 2 then
+     Begin
+          if adc.specLevel2 > 0 Then Form1.rbUseRight.Caption := 'R ' + IntToStr(Round((audioAveR*0.4)-20)) Else Form1.rbUseRight.Caption := 'R -20';
+     end;
+     if paInParams.channelCount = 1 then
+     Begin
+          if madc.specLevel2 > 0 Then Form1.rbUseRight.Caption := 'R ' + IntToStr(Round((audioAveR*0.4)-20)) Else Form1.rbUseRight.Caption := 'R -20';
+     end;
+     if paInParams.channelCount = 2 then
+     begin
+          if (adc.specLevel1 < 40) Or (adc.specLevel1 > 60) Then rbUseLeft.Font.Color := clRed else rbUseLeft.Font.Color := clBlack;
+     end;
+     if paInParams.channelCount = 1 then
+     begin
+          if (madc.specLevel1 < 40) Or (madc.specLevel1 > 60) Then rbUseLeft.Font.Color := clRed else rbUseLeft.Font.Color := clBlack;
+     end;
+     if paInParams.channelCount = 2 then
+     begin
+          if (adc.specLevel2 < 40) Or (adc.specLevel2 > 60) Then rbUseRight.Font.Color := clRed else rbUseRight.Font.Color := clBlack;
+     end;
+     if paInParams.channelCount = 1 then
+     begin
+          if (madc.specLevel2 < 40) Or (madc.specLevel2 > 60) Then rbUseRight.Font.Color := clRed else rbUseRight.Font.Color := clBlack;
+     end;
+     if paInParams.channelCount = 2 then
+     begin
+          if adc.specLevel1 > 0 Then cfgvtwo.Form6.Label25.Caption := 'L ' + IntToStr(Round((audioAveL*0.4)-20)) Else cfgvtwo.Form6.Label25.Caption := 'L -20';
+     end;
+     if paInParams.channelCount = 1 then
+     begin
+          if madc.specLevel1 > 0 Then cfgvtwo.Form6.Label25.Caption := 'L ' + IntToStr(Round((audioAveL*0.4)-20)) Else cfgvtwo.Form6.Label25.Caption := 'L -20';
+     end;
+     if paInParams.channelCount = 2 then
+     begin
+          if adc.specLevel2 > 0 Then cfgvtwo.Form6.Label31.Caption := 'R ' + IntToStr(Round((audioAveR*0.4)-20)) Else cfgvtwo.Form6.Label31.Caption := 'R -20';
+     end;
+     if paInParams.channelCount = 1 then
+     begin
+          if madc.specLevel2 > 0 Then cfgvtwo.Form6.Label31.Caption := 'R ' + IntToStr(Round((audioAveR*0.4)-20)) Else cfgvtwo.Form6.Label31.Caption := 'R -20';
+     end;
+     if paInParams.channelCount = 2 then
+     begin
+          if (adc.specLevel1 < 40) Or (adc.specLevel1 > 60) Then cfgvtwo.Form6.Label25.Font.Color := clRed else cfgvtwo.Form6.Label25.Font.Color := clBlack;
+     end;
+     if paInParams.channelCount = 1 then
+     begin
+          if (madc.specLevel1 < 40) Or (madc.specLevel1 > 60) Then cfgvtwo.Form6.Label25.Font.Color := clRed else cfgvtwo.Form6.Label25.Font.Color := clBlack;
+     end;
+     if paInParams.channelCount = 2 then
+     begin
+          if (adc.specLevel2 < 40) Or (adc.specLevel2 > 60) Then cfgvtwo.Form6.Label31.Font.Color := clRed else cfgvtwo.Form6.Label31.Font.Color := clBlack;
+     end;
+     if paInParams.channelCount = 1 then
+     begin
+          if (madc.specLevel2 < 40) Or (madc.specLevel2 > 60) Then cfgvtwo.Form6.Label31.Font.Color := clRed else cfgvtwo.Form6.Label31.Font.Color := clBlack;
+     end;
 End;
 
 procedure TForm1.updateStatus(i : Integer);
@@ -3209,12 +3337,14 @@ Begin
      vint := 0;
      vstr := '0.0.0.0';
      ver(@vint, vstr);
-     if vint <> 3000 Then showMessage('wsjt.dll incorrect version.  Program halted.');
-     if vint <> 3000 Then
+     if vint <> verHolder.dllReturn() Then showMessage('wsjt.dll incorrect version.  Program halted.');
+     if vint <> verHolder.dllReturn() Then
      Begin
           halt;
      End;
      dlog.fileDebug('JT65.dll version check OK.');
+     //showmessage('JT65.dll version check OK.');
+
      // Initialize prefix/suffix support
      encode65.pfxBuild();
      for i := 0 to 338 do
@@ -3227,34 +3357,32 @@ Begin
      end;
      tstint := 0;
      tstflt := 0.0;
-     Form1.Caption := 'JT65-HF V' + verHolder.verReturn() + ' (c) 2009,2010 W4CQZ.  Free to use/modify/distribute under GPL 2.0 License.';
+     Form1.Caption := 'JT65-HF V' + verHolder.verReturn() + ' (c) 2009,2010 W6CQZ.  Free to use/modify/distribute under GPL 2.0 License.';
      // See comments in procedure code to understand why this is a MUST to use.
+     //showmessage('calling DisableFloatingPointExceptions');
      DisableFloatingPointExceptions();
+     //showmessage('called DisableFloatingPointExceptions');
      // Create the decoder thread with param False so it starts.
+     //showmessage('creating decoder thread');
      d65.glinProg := False;
      decoderThread := decodeThread.Create(False);
+     //showmessage('created decoder thread');
      // Create the CAT control thread with param True so it starts.
+     //showmessage('creating rig control thread');
      rigThread := catThread.Create(False);
+     //showmessage('created rig control thread');
      // Create RB thread with param False so it starts.
+     //showmessage('creating RB thread');
      cfgvtwo.glrbcLogin := False;
      cfgvtwo.glrbcLogout := False;
      rbcPing := False;
      mnrbcReport := False;
      rbThread := rbcThread.Create(False);
+     //showmessage('created RB thread');
      //
      // Initialize various form items to startup values
      //
-     st.Day := 0;
-     {$IFDEF win32}
-       GetSystemTime(st);
-     {$ENDIF}
-     {$IFDEF linux}
-       dt := synaUtil.GetUTTime;
-       DateTimeToSystemTime(GetUTTime,st);
-     {$ENDIF}
-     {$IFDEF darwin}
-       // Unknown at this point and probably moot.  Little chance this will ever run in MacOS X
-     {$ENDIF}
+     st := utcTime();
      thisMinute := st.Minute;
      if st.Minute = 0 then
      Begin
@@ -3283,22 +3411,29 @@ Begin
      end;
      rbc.glrbsSentCount := 0;
      //globalData.rbID := '1';
-     rbc.glrbCallsign := TrimLeft(TrimRight(cfgvtwo.Form6.editPSKRCall.Text)) + '-1';
+     rbc.glrbCallsign := TrimLeft(TrimRight(cfgvtwo.Form6.editPSKRCall.Text)) + '-2';
      // Init PA.  If this doesn't work there's no reason to continue.
+     //showmessage('initializing portaudio');
      PaResult := portaudio.Pa_Initialize();
      If PaResult <> 0 Then ShowMessage('Fatal Error.  Could not initialize portaudio.');
      If PaResult = 0 Then dlog.fileDebug('Portaudio initialized OK.');
+     //showmessage('initialized portaudio');
      // Now I need to populate the Sound In/Out pulldowns.  First I'm going to get
      // a list of the portaudio API descriptions.  For now I'm going to stick with
      // the default windows interface, but in the future I may look at directsound
      // usage as well.
+     //showmessage('getting portaudio default api');
      paDefApi := portaudio.Pa_GetDefaultHostApi();
      if paDefApi >= 0 Then
      Begin
+          //showmessage('portaudio default api retrieved.  Getting device list');
           cfgvtwo.Form6.cbAudioIn.Clear;
           cfgvtwo.Form6.cbAudioOut.Clear;
           paDefApiDevCount := portaudio.Pa_GetHostApiInfo(paDefApi)^.deviceCount;
           i := paDefApiDevCount-1;
+
+          //showmessage('portaudio reports ' + intToStr(paDefApiDevCount) + ' device nodes');
+
           While i >= 0 do
           Begin
                // I need to populate the pulldowns with the devices supported by
@@ -3330,6 +3465,7 @@ Begin
           cfgvtwo.Form6.cbAudioIn.ItemIndex := portaudio.Pa_GetHostApiInfo(paDefApi)^.defaultInputDevice;
           cfgvtwo.Form6.cbAudioOut.ItemIndex := portaudio.Pa_GetHostApiInfo(paDefApi)^.defaultOutputDevice-2;
           dlog.fileDebug('Audio Devices added to pulldowns.');
+          //showmessage('portaudio device list placed in configuration selectors');
      End
      Else
      Begin
@@ -3337,23 +3473,25 @@ Begin
           // can't provide a default API value >= 0.  TODO Handle this should it
           // happen.
           dlog.fileDebug('FATAL:  Portaudio DID NOT INIT.  No defapi found.');
+          ShowMessage('FATAL:  Portaudio DID NOT INIT.  No defapi found, program closing.');
+          halt;
      End;
+
+     //showmessage('portaudio initialization completed...');
+
      if globalData.debugOn Then fna := 'D' else fna := '';
+     fname := GetAppConfigDir(False)+'station1.xml' + fna;
      {$IFDEF win32}
-       fname := GetAppConfigDir(False)+'\station1.xml' + fna;
        if not fileExists(fname) Then
      {$ENDIF}
      {$IFDEF linux}
-       fname := GetAppConfigDir(False)+'station1.xml' + fna;
-       if not directoryExists(GetAppConfigDir(False) Then createDir(appConfigDir(False));
-       if not fileExists(fname) Then
-     {$ENDIF}
-     {$IFDEF darwin}
-       fname := GetAppConfigDir(False)+'station1.xml' + fna;
        if not directoryExists(GetAppConfigDir(False) Then createDir(appConfigDir(False));
        if not fileExists(fname) Then
      {$ENDIF}
      Begin
+
+          //showmessage('Running initial configuration...');
+
           cfgvtwo.glmustConfig := True;
           // Setup default sane value for config form.
           cfgvtwo.Form6.edMyCall.Clear;
@@ -3380,9 +3518,36 @@ Begin
           cfgvtwo.glcqColor := clLime;
           cfgvtwo.glcallColor := clRed;
           cfgvtwo.glqsoColor := clSilver;
+          cfgvtwo.Form6.cbEnableQSY1.Checked := False;
+          cfgvtwo.Form6.cbEnableQSY2.Checked := False;
+          cfgvtwo.Form6.cbEnableQSY3.Checked := False;
+          cfgvtwo.Form6.cbEnableQSY4.Checked := False;
+          cfgvtwo.Form6.cbEnableQSY5.Checked := False;
+          cfgvtwo.Form6.qsyHour1.Value := 0;
+          cfgvtwo.Form6.qsyHour2.Value := 0;
+          cfgvtwo.Form6.qsyHour3.Value := 0;
+          cfgvtwo.Form6.qsyHour4.Value := 0;
+          cfgvtwo.Form6.qsyHour5.Value := 0;
+          cfgvtwo.Form6.qsyMinute1.Value := 0;
+          cfgvtwo.Form6.qsyMinute2.Value := 0;
+          cfgvtwo.Form6.qsyMinute3.Value := 0;
+          cfgvtwo.Form6.qsyMinute4.Value := 0;
+          cfgvtwo.Form6.qsyMinute5.Value := 0;
+          cfgvtwo.Form6.edQRGQSY1.Text := '14076000';
+          cfgvtwo.Form6.edQRGQSY2.Text := '14076000';
+          cfgvtwo.Form6.edQRGQSY3.Text := '14076000';
+          cfgvtwo.Form6.edQRGQSY4.Text := '14076000';
+          cfgvtwo.Form6.edQRGQSY5.Text := '14076000';
+          cfgvtwo.Form6.cbATQSY1.Checked := False;
+          cfgvtwo.Form6.cbATQSY2.Checked := False;
+          cfgvtwo.Form6.cbATQSY3.Checked := False;
+          cfgvtwo.Form6.cbATQSY4.Checked := False;
+          cfgvtwo.Form6.cbATQSY5.Checked := False;
+          cfgvtwo.Form6.chkHRDPTT.Checked := False;
+          cfgvtwo.Form6.chkTxDFVFO.Checked := False;
+          cfgvtwo.Form6.hrdAddress.Text := 'localhost';
+          cfgvtwo.Form6.hrdPort.Text := '7809';
           Form1.spinGain.Value := 0;
-          Form1.spinBin.Value := 3;
-          Form1.Edit1.Text := '100';
           cfgvtwo.Form6.chkNoOptFFT.Checked := False;
           cfgvtwo.glcatBy := 'none';
           Form1.spinTXCF.Value := 0;
@@ -3416,7 +3581,6 @@ Begin
           cfg.StoredValue['pfx']          := IntToStr(cfgvtwo.Form6.comboPrefix.ItemIndex);
           cfg.StoredValue['sfx']          := IntToStr(cfgvtwo.Form6.comboSuffix.ItemIndex);
           cfg.StoredValue['grid']         := cfgvtwo.Form6.edMyGrid.Text;
-          //cfg.StoredValue['multirange'] := IntToStr(Form1.spinMultiTotalBW.Value);
           cfg.StoredValue['soundin']      := IntToStr(cfgvtwo.Form6.cbAudioIn.ItemIndex);
           cfg.StoredValue['soundout']     := IntToStr(cfgvtwo.Form6.cbAudioOut.ItemIndex);
           cfg.StoredValue['ldgain']       := IntToStr(Form1.TrackBar1.Position);
@@ -3426,7 +3590,6 @@ Begin
           if Form1.rbUseLeft.Checked Then cfg.StoredValue['audiochan'] := 'L' Else cfg.StoredValue['audiochan'] := 'R';
           If cfgvtwo.Form6.chkEnableAutoSR.Checked Then cfg.StoredValue['autoSR'] := '1' else cfg.StoredValue['autoSR'] := '0';
           cfg.StoredValue['pttPort']      := UpperCase(cfgvtwo.Form6.editUserDefinedPort1.Text);
-          //cfg.StoredValue['catPort']      := UpperCase(cfgvtwo.Form6.editUserDefinedPort2.Text);
           if Form1.chkAFC.Checked Then cfg.StoredValue['afc'] := '1' Else cfg.StoredValue['afc'] := '0';
           If Form1.chkNB.Checked Then cfg.StoredValue['noiseblank'] := '1' Else cfg.StoredValue['noiseblank'] := '0';
           cfg.StoredValue['brightness']   := IntToStr(Form1.tbBright.Position);
@@ -3450,6 +3613,7 @@ Begin
           cfg.StoredValue['pskrAntenna'] := cfgvtwo.Form6.editPSKRAntenna.Text;
           if cfgvtwo.Form6.chkNoOptFFT.Checked Then cfg.StoredValue['optFFT'] := 'off' else cfg.StoredValue['optFFT'] := 'on';
           if cfgvtwo.Form6.cbUseAltPTT.Checked Then cfg.StoredValue['useAltPTT'] := 'yes' else cfg.StoredValue['useAltPTT'] := 'no';
+          if cfgvtwo.Form6.chkHRDPTT.Checked Then cfg.StoredValue['useHRDPTT'] := 'yes' else cfg.StoredValue['useHRDPTT'] := 'no';
           cfg.StoredValue['userQRG1'] := cfgvtwo.Form6.edUserQRG1.Text;
           cfg.StoredValue['userQRG2'] := cfgvtwo.Form6.edUserQRG2.Text;
           cfg.StoredValue['userQRG3'] := cfgvtwo.Form6.edUserQRG3.Text;
@@ -3464,7 +3628,7 @@ Begin
           cfg.StoredValue['usrMsg8'] := cfgvtwo.Form6.edUserMsg11.Text;
           cfg.StoredValue['usrMsg9'] := cfgvtwo.Form6.edUserMsg12.Text;
           cfg.StoredValue['usrMsg10'] := cfgvtwo.Form6.edUserMsg13.Text;
-          cfg.StoredValue['binspace'] := IntToStr(spinBin.Value);
+          cfg.StoredValue['binspace'] := '100';
           if Form1.cbSmooth.Checked Then cfg.StoredValue['smooth'] := 'on' else cfg.StoredValue['smooth'] := 'off';
           if cfgvtwo.Form6.cbRestoreMulti.Checked Then cfg.StoredValue['restoreMulti'] := 'on' else cfg.StoredValue['restoreMulti'] := 'off';
           cfg.StoredValue['specVGain'] := IntToStr(spinGain.Value);
@@ -3475,11 +3639,123 @@ Begin
           cfg.StoredValue['si570qrg'] := cfgvtwo.Form6.editSI570Freq.Text;
           if cfgvtwo.Form6.cbSi570PTT.Checked Then cfg.StoredValue['si570ptt'] := 'y' else cfg.StoredValue['si570ptt'] := 'n';
           if cfgvtwo.Form6.cbSi570PTT.Checked Then cfg.StoredValue['si570ptt'] := 'y' else cfg.StoredValue['si570ptt'] := 'n';
+          if cfgvtwo.Form6.cbCWID.Checked Then cfg.StoredValue['useCWID'] := 'y' else cfg.StoredValue['useCWID'] := 'n';
+          if cfgvtwo.Form6.chkTxDFVFO.Checked Then cfg.StoredValue['useCATTxDF'] := 'yes' else cfg.StoredValue['useCATTxDF'] := 'no';
+          if cfgvtwo.Form6.cbEnableQSY1.Checked Then cfg.StoredValue['enAutoQSY1'] := 'yes' else cfg.StoredValue['enAutoQSY1'] := 'no';
+          if cfgvtwo.Form6.cbEnableQSY2.Checked Then cfg.StoredValue['enAutoQSY2'] := 'yes' else cfg.StoredValue['enAutoQSY2'] := 'no';
+          if cfgvtwo.Form6.cbEnableQSY3.Checked Then cfg.StoredValue['enAutoQSY3'] := 'yes' else cfg.StoredValue['enAutoQSY3'] := 'no';
+          if cfgvtwo.Form6.cbEnableQSY4.Checked Then cfg.StoredValue['enAutoQSY4'] := 'yes' else cfg.StoredValue['enAutoQSY4'] := 'no';
+          if cfgvtwo.Form6.cbEnableQSY5.Checked Then cfg.StoredValue['enAutoQSY5'] := 'yes' else cfg.StoredValue['enAutoQSY5'] := 'no';
+          if cfgvtwo.Form6.cbATQSY1.Checked Then cfg.StoredValue['autoQSYAT1'] := 'yes' else cfg.StoredValue['autoQSYAT1'] := 'no';
+          if cfgvtwo.Form6.cbATQSY2.Checked Then cfg.StoredValue['autoQSYAT2'] := 'yes' else cfg.StoredValue['autoQSYAT2'] := 'no';
+          if cfgvtwo.Form6.cbATQSY3.Checked Then cfg.StoredValue['autoQSYAT3'] := 'yes' else cfg.StoredValue['autoQSYAT3'] := 'no';
+          if cfgvtwo.Form6.cbATQSY4.Checked Then cfg.StoredValue['autoQSYAT4'] := 'yes' else cfg.StoredValue['autoQSYAT4'] := 'no';
+          if cfgvtwo.Form6.cbATQSY5.Checked Then cfg.StoredValue['autoQSYAT5'] := 'yes' else cfg.StoredValue['autoQSYAT5'] := 'no';
+          cfg.StoredValue['autoQSYQRG1'] := cfgvtwo.Form6.edQRGQSY1.Text;
+          cfg.StoredValue['autoQSYQRG2'] := cfgvtwo.Form6.edQRGQSY2.Text;
+          cfg.StoredValue['autoQSYQRG3'] := cfgvtwo.Form6.edQRGQSY3.Text;
+          cfg.StoredValue['autoQSYQRG4'] := cfgvtwo.Form6.edQRGQSY4.Text;
+          cfg.StoredValue['autoQSYQRG5'] := cfgvtwo.Form6.edQRGQSY5.Text;
+          if cfgvtwo.Form6.qsyHour1.Value < 10 Then
+          Begin
+               foo := '0' + IntToStr(cfgvtwo.Form6.qsyHour1.Value);
+          End
+          Else
+          Begin
+               foo := IntToStr(cfgvtwo.Form6.qsyHour1.Value);
+          end;
+          if cfgvtwo.Form6.qsyMinute1.Value < 10 Then
+          Begin
+               foo := foo + '0' + IntToStr(cfgvtwo.Form6.qsyMinute1.Value);
+          End
+          Else
+          Begin
+               foo := foo + IntToStr(cfgvtwo.Form6.qsyMinute1.Value);
+          end;
+          cfg.StoredValue['autoQSYUTC1'] := foo;
+
+          if cfgvtwo.Form6.qsyHour2.Value < 10 Then
+          Begin
+               foo := '0' + IntToStr(cfgvtwo.Form6.qsyHour2.Value);
+          End
+          Else
+          Begin
+               foo := IntToStr(cfgvtwo.Form6.qsyHour2.Value);
+          end;
+          if cfgvtwo.Form6.qsyMinute2.Value < 10 Then
+          Begin
+               foo := foo + '0' + IntToStr(cfgvtwo.Form6.qsyMinute2.Value);
+          End
+          Else
+          Begin
+               foo := foo + IntToStr(cfgvtwo.Form6.qsyMinute2.Value);
+          end;
+          cfg.StoredValue['autoQSYUTC2'] := foo;
+
+          if cfgvtwo.Form6.qsyHour3.Value < 10 Then
+          Begin
+               foo := '0' + IntToStr(cfgvtwo.Form6.qsyHour3.Value);
+          End
+          Else
+          Begin
+               foo := IntToStr(cfgvtwo.Form6.qsyHour3.Value);
+          end;
+          if cfgvtwo.Form6.qsyMinute3.Value < 10 Then
+          Begin
+               foo := foo + '0' + IntToStr(cfgvtwo.Form6.qsyMinute3.Value);
+          End
+          Else
+          Begin
+               foo := foo + IntToStr(cfgvtwo.Form6.qsyMinute3.Value);
+          end;
+          cfg.StoredValue['autoQSYUTC3'] := foo;
+
+          if cfgvtwo.Form6.qsyHour4.Value < 10 Then
+          Begin
+               foo := '0' + IntToStr(cfgvtwo.Form6.qsyHour4.Value);
+          End
+          Else
+          Begin
+               foo := IntToStr(cfgvtwo.Form6.qsyHour4.Value);
+          end;
+          if cfgvtwo.Form6.qsyMinute4.Value < 10 Then
+          Begin
+               foo := foo + '0' + IntToStr(cfgvtwo.Form6.qsyMinute4.Value);
+          End
+          Else
+          Begin
+               foo := foo + IntToStr(cfgvtwo.Form6.qsyMinute4.Value);
+          end;
+          cfg.StoredValue['autoQSYUTC4'] := foo;
+
+          if cfgvtwo.Form6.qsyHour5.Value < 10 Then
+          Begin
+               foo := '0' + IntToStr(cfgvtwo.Form6.qsyHour5.Value);
+          End
+          Else
+          Begin
+               foo := IntToStr(cfgvtwo.Form6.qsyHour5.Value);
+          end;
+          if cfgvtwo.Form6.qsyMinute5.Value < 10 Then
+          Begin
+               foo := foo + '0' + IntToStr(cfgvtwo.Form6.qsyMinute5.Value);
+          End
+          Else
+          Begin
+               foo := foo + IntToStr(cfgvtwo.Form6.qsyMinute5.Value);
+          end;
+          cfg.StoredValue['autoQSYUTC5'] := foo;
+          cfg.StoredValue['hrdAddress'] := cfgvtwo.Form6.hrdAddress.Text;
+          cfg.StoredValue['hrdPort'] := cfgvtwo.Form6.hrdPort.Text;
           cfg.Save;
           dlog.fileDebug('Ran initial configuration.');
+          //showmessage('Ran initial configuration...');
      End;
 
      // Read configuration data from XMLpropstorage (cfg.)
+
+     //showmessage('Reading configuration...');
+
      cfgvtwo.glmycall := cfg.StoredValue['call'];
      tstint := 0;
      if TryStrToInt(cfg.storedValue['pfx'],tstint) Then cfgvtwo.Form6.comboPrefix.ItemIndex := tstint else cfgvtwo.Form6.comboPrefix.ItemIndex := 0;
@@ -3504,7 +3780,6 @@ Begin
      tstint := 0;
      if TryStrToInt(cfg.StoredValue['txCF'],tstint) Then Form1.spinTXCF.Value := tstint else Form1.spinTXCF.Value := 0;
      tstint := 0;
-     //if TryStrToInt(cfg.StoredValue['multirange'],tstint) Then Form1.spinMultiTotalBW.Value := tstint else Form1.spinMultiTotalBW.Value := 1000;
      Form1.spinDecoderBW.Value := 3;
      Form1.Edit2.Text := '100';
      tstint := 0;
@@ -3516,22 +3791,26 @@ Begin
      Begin
           Form1.TrackBar1.Position := tstint;
           adc.adcLDgain := Form1.TrackBar1.Position;
+          madc.adcLDgain := Form1.TrackBar1.Position;
      End
      else
      Begin
           Form1.TrackBar1.Position := 0;
           adc.adcLDgain := Form1.TrackBar1.Position;
+          madc.adcLDgain := Form1.TrackBar1.Position;
      End;
      tstint := 0;
      if TryStrToInt(cfg.StoredValue['rdgain'],tstint) Then
      Begin
           Form1.TrackBar2.Position := tstint;
           adc.adcRDgain := Form1.TrackBar2.Position;
+          madc.adcRDgain := Form1.TrackBar2.Position;
      End
      else
      Begin
           Form1.TrackBar2.Position := 0;
           adc.adcRDgain := Form1.TrackBar2.Position;
+          madc.adcRDgain := Form1.TrackBar2.Position;
      End;
      Form1.Label10.Caption := 'L: ' + IntToStr(Form1.TrackBar1.Position);
      Form1.Label11.Caption := 'R: ' + IntToStr(Form1.TrackBar2.Position);
@@ -3544,7 +3823,9 @@ Begin
      if cfg.StoredValue['audiochan'] = 'L' Then Form1.rbUseLeft.Checked := True;
      if cfg.StoredValue['audiochan'] = 'R' Then Form1.rbUseRight.Checked := True;
      If Form1.rbUseLeft.Checked Then adc.adcChan  := 1;
+     If Form1.rbUseLeft.Checked Then madc.adcChan  := 1;
      If Form1.rbUseRight.Checked Then adc.adcChan := 2;
+     If Form1.rbUseRight.Checked Then madc.adcChan := 2;
      if cfg.StoredValue['autoSR'] = '1' Then
      Begin
           cfgvtwo.Form6.chkEnableAutoSR.Checked := True;
@@ -3556,7 +3837,6 @@ Begin
           cfgvtwo.glautoSR := False;
      end;
      cfgvtwo.Form6.editUserDefinedPort1.Text := UpperCase(cfg.StoredValue['pttPort']);
-     //cfgvtwo.Form6.editUserDefinedPort2.Text := UpperCase(cfg.StoredValue['catPort']);
      if cfg.StoredValue['afc'] = '1' Then Form1.chkAfc.Checked := True Else Form1.chkAfc.Checked := False;
      If Form1.chkAFC.Checked Then Form1.chkAFC.Font.Color := clRed else Form1.chkAFC.Font.Color := clBlack;
      if Form1.chkAFC.Checked then d65.glNafc := 1 Else d65.glNafc := 0;
@@ -3614,8 +3894,6 @@ Begin
      If TryStrToInt(cfg.StoredValue['callColor'],tstint) Then cfgvtwo.Form6.ComboBox2.ItemIndex := tstint else cfgvtwo.Form6.ComboBox2.ItemIndex := 7;
      tstint := 0;
      If TryStrToInt(cfg.StoredValue['qsoColor'],tstint) Then cfgvtwo.Form6.ComboBox3.ItemIndex := tstint else cfgvtwo.Form6.ComboBox1.ItemIndex := 6;
-
-
      Case cfgvtwo.Form6.ComboBox1.ItemIndex of
           0  : cfgvtwo.Form6.Edit1.Color := clGreen;
           1  : cfgvtwo.Form6.Edit1.Color := clOlive;
@@ -3798,7 +4076,7 @@ Begin
           cfgvtwo.Form6.chkUseOmni.Checked := False;
           cfgvtwo.Form6.chkUseHRD.Checked := False;
           cfgvtwo.glcatBy := 'none';
-          ShowMessage('To prevent a very difficult to correct bug I have disabled HamLib support in JT65-HF.  Rig Control has been set to None.');
+          //ShowMessage('To prevent a very difficult to correct bug I have disabled HamLib support in JT65-HF.  Rig Control has been set to None.');
      End;
      if cfg.StoredValue['catBy'] = 'hrd' Then
      Begin
@@ -3818,10 +4096,10 @@ Begin
      if cfg.StoredValue['usePSKR'] = 'yes' Then cfgvtwo.Form6.cbUsePSKReporter.Checked := True else cfgvtwo.Form6.cbUsePSKReporter.Checked := False;
      if cfg.StoredValue['useRB'] = 'yes' Then cfgvtwo.Form6.cbUseRB.Checked := True else cfgvtwo.Form6.cbUseRB.Checked := False;
      cfgvtwo.Form6.editPSKRAntenna.Text := cfg.StoredValue['pskrAntenna'];
-     if cfg.StoredValue['optFFT'] = 'on' Then cfgvtwo.Form6.chkNoOptFFT.Checked := False;
-     if cfg.StoredValue['optFFT'] = 'off' Then cfgvtwo.Form6.chkNoOptFFT.Checked := True;
-     if cfg.StoredValue['useAltPTT'] = 'yes' Then cfgvtwo.Form6.cbUseAltPTT.Checked := True;
-     if cfg.StoredValue['useAltPTT'] = 'no' Then cfgvtwo.Form6.cbUseAltPTT.Checked := False;
+     if cfg.StoredValue['optFFT'] = 'on' Then cfgvtwo.Form6.chkNoOptFFT.Checked := False else cfgvtwo.Form6.chkNoOptFFT.Checked := True;
+     if cfg.StoredValue['useAltPTT'] = 'yes' Then cfgvtwo.Form6.cbUseAltPTT.Checked else cfgvtwo.Form6.cbUseAltPTT.Checked := False;
+     if cfg.StoredValue['useHRDPTT'] = 'yes' Then cfgvtwo.Form6.chkHRDPTT.Checked := True else cfgvtwo.Form6.chkHRDPTT.Checked := False;
+     if cfg.StoredValue['useCATTxDF'] = 'yes' Then cfgvtwo.Form6.chkTxDFVFO.Checked := True else cfgvtwo.Form6.chkTxDFVFO.Checked := False;
 
      cfgvtwo.Form6.edUserQRG1.Text := cfg.StoredValue['userQRG1'];
      cfgvtwo.Form6.edUserQRG2.Text := cfg.StoredValue['userQRG2'];
@@ -3853,15 +4131,7 @@ Begin
      Form1.MenuItem26.Caption := cfg.StoredValue['usrMsg9'];
      Form1.MenuItem27.Caption := cfg.StoredValue['usrMsg10'];
      tstint := 0;
-     If TryStrToInt(cfg.StoredValue['binspace'],tstint) Then spinBin.Value := tstint else spinBin.Value := 3;
-     if spinBin.Value = 1 Then Edit1.Text := '20';
-     if spinBin.Value = 2 Then Edit1.Text := '50';
-     if spinBin.Value = 3 Then Edit1.Text := '100';
-     if spinBin.Value = 4 Then Edit1.Text := '200';
-     if spinBin.Value = 1 Then d65.glbinspace := 20;
-     if spinBin.Value = 2 Then d65.glbinspace := 50;
-     if spinBin.Value = 3 Then d65.glbinspace := 100;
-     if spinBin.Value = 4 Then d65.glbinspace := 200;
+     d65.glbinspace := 100;
 
      if cfg.StoredValue['smooth'] = 'on' Then Form1.cbSmooth.Checked := True else Form1.cbSmooth.Checked := False;
      if Form1.cbSmooth.Checked Then spectrum.specSmooth := True else spectrum.specSmooth := False;
@@ -3873,10 +4143,61 @@ Begin
      cfgvtwo.Form6.editSI570Freq.Text := cfg.StoredValue['si570qrg'];
      if cfg.storedValue['si570ptt'] = 'y' then cfgvtwo.Form6.cbSi570PTT.Checked := True else cfgvtwo.Form6.cbSi570PTT.Checked := False;
      if cfg.storedValue['si570ptt'] = 'y' then globalData.si570ptt := True else globalData.si570ptt := False;
+     if cfg.storedValue['useCWID'] = 'y' then cfgvtwo.Form6.cbCWID.Checked := True else cfgvtwo.Form6.cbCWID.Checked := False;
+     if cfg.StoredValue['useCATTxDF'] = 'yes' then cfgvtwo.Form6.chkTxDFVFO.Checked := True else cfgvtwo.Form6.chkTxDFVFO.Checked := False;
+     if cfg.StoredValue['enAutoQSY1'] = 'yes' then cfgvtwo.Form6.cbEnableQSY1.Checked := True else cfgvtwo.Form6.cbEnableQSY1.Checked := False;
+     if cfg.StoredValue['enAutoQSY2'] = 'yes' then cfgvtwo.Form6.cbEnableQSY2.Checked := True else cfgvtwo.Form6.cbEnableQSY2.Checked := False;
+     if cfg.StoredValue['enAutoQSY3'] = 'yes' then cfgvtwo.Form6.cbEnableQSY3.Checked := True else cfgvtwo.Form6.cbEnableQSY3.Checked := False;
+     if cfg.StoredValue['enAutoQSY4'] = 'yes' then cfgvtwo.Form6.cbEnableQSY4.Checked := True else cfgvtwo.Form6.cbEnableQSY4.Checked := False;
+     if cfg.StoredValue['enAutoQSY5'] = 'yes' then cfgvtwo.Form6.cbEnableQSY5.Checked := True else cfgvtwo.Form6.cbEnableQSY5.Checked := False;
+     if cfg.StoredValue['autoQSYAT1'] = 'yes' then cfgvtwo.Form6.cbATQSY1.Checked := True else cfgvtwo.Form6.cbATQSY1.Checked := False;
+     if cfg.StoredValue['autoQSYAT2'] = 'yes' then cfgvtwo.Form6.cbATQSY2.Checked := True else cfgvtwo.Form6.cbATQSY2.Checked := False;
+     if cfg.StoredValue['autoQSYAT3'] = 'yes' then cfgvtwo.Form6.cbATQSY3.Checked := True else cfgvtwo.Form6.cbATQSY3.Checked := False;
+     if cfg.StoredValue['autoQSYAT4'] = 'yes' then cfgvtwo.Form6.cbATQSY4.Checked := True else cfgvtwo.Form6.cbATQSY4.Checked := False;
+     if cfg.StoredValue['autoQSYAT5'] = 'yes' then cfgvtwo.Form6.cbATQSY5.Checked := True else cfgvtwo.Form6.cbATQSY5.Checked := False;
+     cfgvtwo.Form6.edQRGQSY1.Text := cfg.StoredValue['autoQSYQRG1'];
+     cfgvtwo.Form6.edQRGQSY2.Text := cfg.StoredValue['autoQSYQRG2'];
+     cfgvtwo.Form6.edQRGQSY3.Text := cfg.StoredValue['autoQSYQRG3'];
+     cfgvtwo.Form6.edQRGQSY4.Text := cfg.StoredValue['autoQSYQRG4'];
+     cfgvtwo.Form6.edQRGQSY5.Text := cfg.StoredValue['autoQSYQRG5'];
+     foo := cfg.StoredValue['autoQSYUTC1'];
+     cfgvtwo.Form6.qsyHour1.Value := StrToInt(foo[1..2]);
+     cfgvtwo.Form6.qsyMinute1.Value := StrToInt(foo[3..4]);
+     foo := cfg.StoredValue['autoQSYUTC2'];
+     cfgvtwo.Form6.qsyHour2.Value := StrToInt(foo[1..2]);
+     cfgvtwo.Form6.qsyMinute2.Value := StrToInt(foo[3..4]);
+     foo := cfg.StoredValue['autoQSYUTC3'];
+     cfgvtwo.Form6.qsyHour3.Value := StrToInt(foo[1..2]);
+     cfgvtwo.Form6.qsyMinute3.Value := StrToInt(foo[3..4]);
+     foo := cfg.StoredValue['autoQSYUTC4'];
+     cfgvtwo.Form6.qsyHour4.Value := StrToInt(foo[1..2]);
+     cfgvtwo.Form6.qsyMinute4.Value := StrToInt(foo[3..4]);
+     foo := cfg.StoredValue['autoQSYUTC5'];
+     cfgvtwo.Form6.qsyHour5.Value := StrToInt(foo[1..2]);
+     cfgvtwo.Form6.qsyMinute5.Value := StrToInt(foo[3..4]);
+     cfgvtwo.Form6.hrdAddress.Text := cfg.StoredValue['hrdAddress'];
+     globalData.hrdcatControlcurrentRig.hrdAddress := cfgvtwo.Form6.hrdAddress.Text;
+     cfgvtwo.Form6.hrdPort.Text := cfg.StoredValue['hrdPort'];
+     tstint := 0;
+     If TryStrToInt(cfg.StoredValue['hrdPort'],tstint) Then
+     Begin
+          cfgvtwo.Form6.hrdPort.Text := cfg.StoredValue['hrdPort'];
+          globalData.hrdcatControlcurrentRig.hrdPort := tstint;
+     end
+     else
+     begin
+          cfgvtwo.Form6.hrdPort.Text := '7809';
+          globalData.hrdcatControlcurrentRig.hrdPort := 7809;
+     end;
+
      if cfg.StoredValue['version'] <> verHolder.verReturn() Then verUpdate := True else verUpdate := False;
+
+     //showmessage('Read configuration complete...');
 
      if verUpdate Then
      Begin
+          //showmessage('Review configuration required for update...');
+
           cfgvtwo.glmustConfig := True;
           cfgvtwo.Form6.Show;
           cfgvtwo.Form6.BringToFront;
@@ -3887,33 +4208,35 @@ Begin
           cfg.StoredValue['version'] := verHolder.verReturn();
           cfg.Save;
           dlog.fileDebug('Ran configuration update.');
+
+          //showmessage('Update configuration review complete...');
+
      End;
 
      globalData.mtext := '/Multi%20On%202K%20BW';
 
      //With wisdom comes speed.
+
+     //showmessage('Evaluating optimal FFT data...');
+
      d65.glfftFWisdom := 0;
      d65.glfftSWisdom := 0;
      if not cfgvtwo.Form6.chkNoOptFFT.Checked Then
      Begin
-          {$IFDEF win32}
-            fname := GetAppConfigDir(False)+'\wisdom2.dat';
-            if FileExists(fname) Then
-          {$ENDIF}
-          {$IFDEF linux}
-            fname := GetAppConfigDir(False)+'wisdom2.dat';
-            if FileExists(fname) Then
-          {$ENDIF}
+          fname := GetAppConfigDir(False)+'wisdom2.dat';
+          if FileExists(fname) Then
           Begin
                // I have data for FFTW_MEASURE metrics use ical settings in
                // decode65 for measure.
                d65.glfftFWisdom := 1;  // Causes measure wisdom to be loaded on first pass of decode65
                d65.glfftSWisdom := 11; // uses measure wisdom (no load/no save) on != first pass of decode65
                dlog.fileDebug('Imported FFTW3 Wisdom.');
+               //showmessage('Imported optimal FFT data...');
           End
           Else
           Begin
                dlog.fileDebug('FFT Wisdom missing... you should run optfft');
+               //showmessage('Failed to import optimal FFT data as it does not exist...');
           End;
      End
      Else
@@ -3921,10 +4244,15 @@ Begin
           d65.glfftFWisdom := 0;
           d65.glfftSWisdom := 0;
           dlog.fileDebug('Running without optimal FFT enabled by user request.');
+          //showmessage('Running WITHOUT optimal FFT data via user choice...');
      End;
      // Setup input device
      dlog.fileDebug('Setting up ADC.');
-     paInParams.channelCount := 2;
+     //showmessage('Setting up audio input');
+
+     // Working in for handling mono.  Need to try to open stereo then, if fail,
+     // attempt mono.
+
      foo := cfgvtwo.Form6.cbAudioIn.Items.Strings[cfgvtwo.Form6.cbAudioIn.ItemIndex];
      paInParams.device := StrToInt(foo[1..2]);
      paInParams.sampleFormat := paInt16;
@@ -3933,18 +4261,46 @@ Begin
      ppaInParams := @paInParams;
      // Set rxBuffer index to start of array.
      adc.d65rxBufferIdx := 0;
+     madc.d65rxBufferIdx := 0;
+
      adc.adcT := 0;
+     madc.adcT := 0;
+
      // Set ptr to start of buffer.
      adc.d65rxBufferPtr := @adc.d65rxBuffer[0];
+     madc.d65rxBufferPtr := @madc.d65rxBuffer[0];
+
      // Initialize rx stream.
+     paInParams.channelCount := 2;
      paResult := portaudio.Pa_OpenStream(paInStream,ppaInParams,Nil,11025,2048,0,@adc.adcCallback,Pointer(Self));
-     if paResult <> 0 Then ShowMessage('PA Error:  ' + StrPas(portaudio.Pa_GetErrorText(paResult)));
+     if paResult <> 0 Then
+     Begin
+          paInParams.channelCount := 1;
+          paResult := portaudio.Pa_OpenStream(paInStream,ppaInParams,Nil,11025,2048,0,@madc.adcCallback,Pointer(Self));
+     end;
+     if paResult <> 0 Then
+     Begin
+          ShowMessage('PA Error:  ' + StrPas(portaudio.Pa_GetErrorText(paResult)) + ' Could not setup for mono or stereo input.  Program will exit.');
+          halt;
+     end
+     else
+     begin
+         paResult := portaudio.Pa_StartStream(paInStream);
+     end;
      // Start the stream.
-     paResult := portaudio.Pa_StartStream(paInStream);
-     if paResult <> 0 Then ShowMessage('PA Error:  ' + StrPas(portaudio.Pa_GetErrorText(paResult)));
+     if paResult <> 0 Then
+     Begin
+          ShowMessage('PA Error:  ' + StrPas(portaudio.Pa_GetErrorText(paResult)));
+          halt;
+     End;
+     //showmessage('Setting up audio input completed...');
+
      // Setup output device
+
      dlog.fileDebug('Setting up DAC.');
-     paOutParams.channelCount := 2;
+     //showmessage('Setting up audio output');
+
+
      foo := cfgvtwo.Form6.cbAudioOut.Items.Strings[cfgvtwo.Form6.cbAudioOut.ItemIndex];
      paOutParams.device := StrToInt(foo[1..2]);
      paOutParams.sampleFormat := paInt16;
@@ -3953,35 +4309,58 @@ Begin
      ppaOutParams := @paOutParams;
      // Set txBuffer index to start of array.
      dac.d65txBufferIdx := 0;
+     mdac.d65txBufferIdx := 0;
+
      dac.dacT := 0;
+     mdac.dacT := 0;
+
      // Set ptr to start of buffer.
      dac.d65txBufferPtr := @dac.d65txBuffer[0];
+     mdac.d65txBufferPtr := @mdac.d65txBuffer[0];
+
      // Initialize tx stream.
+     paOutParams.channelCount := 2;
      paResult := portaudio.Pa_OpenStream(paOutStream,Nil,ppaOutParams,11025,2048,0,@dac.dacCallback,Pointer(Self));
-     if paResult <> 0 Then ShowMessage('PA Error:  ' + StrPas(portaudio.Pa_GetErrorText(paResult)));
+     if paResult <> 0 Then
+     Begin
+          paOutParams.channelCount := 1;
+          paResult := portaudio.Pa_OpenStream(paOutStream,Nil,ppaOutParams,11025,2048,0,@mdac.dacCallback,Pointer(Self));
+     End;
+     if paResult <> 0 Then
+     Begin
+          ShowMessage('PA Error:  ' + StrPas(portaudio.Pa_GetErrorText(paResult)));
+          //Need to exit this puppy, pa is dead.
+     End;
+
      // Start the stream.
      paResult := portaudio.Pa_StartStream(paOutStream);
-     if paResult <> 0 Then ShowMessage('PA Error:  ' + StrPas(portaudio.Pa_GetErrorText(paResult)));
-     runOnce := False;
-     dlog.fileDebug('Initializer code complete.  Entering main timing loop.');
-     Form1.Timer1.Enabled := True;
-     // Go ahead and mark the stream as active.  It won't run a decode, but it will paint the spectrum during init.
-     rxInProgress := True;
-     // End of run once code.
+     if paResult <> 0 Then
+     Begin
+          ShowMessage('PA Error:  ' + StrPas(portaudio.Pa_GetErrorText(paResult)));
+          //Need to exit this puppy, pa is dead.
+     End;
+     //showmessage('Setting up audio output completed...');
+
      if cfgvtwo.Form6.cbUsePSKReporter.Checked Then
      Begin
+          //showmessage('Initializing PSK Reporter...');
           // Initialize PSK Reporter DLL
           If PSKReporter.ReporterInitialize('report.pskreporter.info','4739') = 0 Then pskrstat := 1 else pskrstat := 0;
           Form1.cbEnPSKR.Checked := True;
+          //showmessage('PSK Reporter initialized...');
      End
      Else
      Begin
           Form1.cbEnPSKR.Checked := False;
      end;
+
      if cfgvtwo.Form6.cbUseRB.Checked then Form1.cbEnRB.Checked := True else Form1.cbEnRB.Checked := False;
+
      // Create and initialize TWaterfallControl
+     //showmessage('Initializing spectrum display');
+
      Waterfall := TWaterfallControl.Create(Self);
-     //if guiConfig.getGUIType() Then Waterfall.Height := 105 else Waterfall.Height := 170;
+     //if guiConfig.getGUIType() Then Waterfall.Height := 105 else Waterfall.Height := 180;
      Waterfall.Height := 180;
      Waterfall.Width  := 750;
      Waterfall.Top    := 25;
@@ -3989,11 +4368,12 @@ Begin
      Waterfall.Parent := Self;
      Waterfall.OnMouseDown := waterfallMouseDown;
      Waterfall.DoubleBuffered := True;
+     //showmessage('Initialized spectrum display...');
 End;
 
 procedure TForm1.updateSR();
 Var
-   errthresh, sr, aerr, derr : CTypes.cdouble;
+   errthresh, sr, aerr, derr, erate : CTypes.cdouble;
 Begin
      // globalData.erate represents the sampling error rate for the last call to
      // adc unit.  This moves around a lot so one needs to take an average to
@@ -4056,16 +4436,18 @@ Begin
      // Update TX Sample Error Rate display.
      If (dErrError = 0) and (thisAction > 1) Then txsrs := '';
      If (dErrError = 0) and (thisAction = 1) Then txsrs := '';
-     If dac.dacErate <> 0 Then
+     if paOutParams.channelCount = 1 then erate := mdac.dacErate;
+     if paOutParams.channelCount = 2 then erate := dac.dacErate;
+     If erate <> 0 Then
      Begin
           if dErrCount = 0 Then dErrCount := 1;
-          if dErrLErate <> dac.dacErate Then
+          if dErrLErate <> erate Then
           Begin
                // New error rate available.
-               if (dac.dacErate < 100) And (dac.dacErate > -100) Then
+               if (erate < 100) And (erate > -100) Then
                Begin
-                    dErrAErate := dErrAErate + dac.dacErate;
-                    dErrLErate := dac.dacErate;
+                    dErrAErate := dErrAErate + erate;
+                    dErrLErate := erate;
                     inc(dErrCount);
                     dErrError := dErrAErate / dErrCount;
                     if dErrCount >=50 Then
@@ -4097,13 +4479,12 @@ Begin
         globalData.d65samfacin := StrToFloat(cfgvtwo.Form6.edRXSRCor.Text)
      else
         globalData.d65samfacin := 1.0;
-
 End;
 
 procedure TForm1.genTX1();
 Var
-   txdf : CTypes.cint;
-   txsr : CTypes.cdouble;
+   txdf, nwave, i : CTypes.cint;
+   txsr, freqcw   : CTypes.cdouble;
 Begin
      // Generate TX samples for a normal TX Cycle.
      // curMsg holds text to TX
@@ -4122,6 +4503,7 @@ Begin
      if useBuffer = 1 Then
      Begin
           curMsg := UpCase(padRight(Form1.edFreeText.Text,22));
+          if cfgvtwo.Form6.cbCWID.Checked Then doCWID := True else doCWID := False;
      End;
      if Length(TrimLeft(TrimRight(curMsg)))>1 Then
      Begin
@@ -4141,24 +4523,93 @@ Begin
           for mnlooper := 0 to  3306 do
           begin
                dac.d65txBuffer[mnlooper] := 0;
+               mdac.d65txBuffer[mnlooper] := 0;
           end;
-          if txMode = 65 Then encode65.gen65(d65txmsg,@txdf,@dac.d65txBuffer[0],@d65nwave,@d65sendingsh,d65sending,@d65nmsg);
-          if txMode =  4 Then  encode65.gen4(d65txmsg,@txdf,@dac.d65txBuffer[0],@d65nwave,@d65sendingsh,d65sending,@d65nmsg);
+          if (paOutParams.channelCount = 2) And (txMode = 65) then encode65.gen65(d65txmsg,@txdf,@dac.d65txBuffer[0],@d65nwave,@d65sendingsh,d65sending,@d65nmsg);
+          if (paOutParams.channelCount = 1) And (txMode = 65) Then encode65.gen65(d65txmsg,@txdf,@mdac.d65txBuffer[0],@d65nwave,@d65sendingsh,d65sending,@d65nmsg);
+
+          //if txMode =  4 Then  encode65.gen4(d65txmsg,@txdf,@dac.d65txBuffer[0],@d65nwave,@d65sendingsh,d65sending,@d65nmsg);
+          //if txMode =  4 Then  encode65.gen4(d65txmsg,@txdf,@mdac.d65txBuffer[0],@d65nwave,@d65sendingsh,d65sending,@d65nmsg);
+
           //
           // Now I want to pad the data to length of txBuffer with silence
           // so there's no chance of sending anything other than generated
           // samples or silence...
           //
           mnlooper := d65nwave;
-          while mnlooper < 661504 do
-          begin
-               dac.d65txBuffer[mnlooper] := 0;
-               inc(mnlooper);
-          end;
+          // CW ID Handler
+          if doCWID Then
+          Begin
+               diagout.Form3.ListBox3.Clear;
+               doCWID := False;
+               // Add 1s silence between end of JT65 and start of CW ID
+               for mnlooper := mnlooper to mnlooper + 11025 do
+               begin
+                    dac.d65txBuffer[mnlooper] := 0;
+                    mdac.d65txBuffer[mnlooper] := 0;
+               end;
+               // Gen CW ID
+               for i := 0 to 110249 do
+               begin
+                    encode65.e65cwid[i] := 0; // Clear CW ID Buffer
+               end;
+               StrPCopy(cwidMsg,UpCase(padRight(globalData.fullcall,22)));
+               if txdf < 0 Then
+               Begin
+                    freqcw := (1270-abs(txdf))-50;
+               End;
+               if txdf > 0 Then
+               Begin
+                    freqcw := (1270+txdf)-50;
+               End;
+               if txdf = 0 Then
+               Begin
+                    freqcw := 1220.0;
+               End;
+               if freqcw < 300.0 then freqcw := 300.0;
+               if freqcw > 2270.0 then freqcw := 2270.0;
+               diagout.Form3.ListBox3.Items.Add('CW ID Au=' + FloatToStr(freqcw) + ' Hz');
+               nwave := 0;
+               encode65.genCW(cwidMsg,@freqcw,@encode65.e65cwid[0],@nwave);
+               //subroutine gencwid(msg,freqcw,iwave,nwave)
+               // Append CW ID.  nwave is length of CWID samples buffer.
+               if mnlooper+nwave < 661504 Then
+               Begin
+                    for i := 0 to nwave-1 do
+                    begin
+                         dac.d65txBuffer[mnlooper] := encode65.e65cwid[i];
+                         mdac.d65txBuffer[mnlooper] := encode65.e65cwid[i];
+                         inc(mnlooper);
+                    end;
+               End
+               Else
+               Begin
+                    // CW ID too long... so we will not do it.
+                    for i := mnlooper to 661503 do
+                    begin
+                         dac.d65txBuffer[i] := 0;
+                         mdac.d65txBuffer[i] := 0;
+                    end;
+               End;
+               // Finish buffer to end with silence.
+               for i := mnlooper to 661503 do
+               begin
+                    dac.d65txBuffer[i] := 0;
+                    mdac.d65txBuffer[i] := 0;
+               end;
+          End
+          Else
+          Begin
+               for i := mnlooper to 661503 do
+               begin
+                    dac.d65txBuffer[i] := 0;
+                    mdac.d65txBuffer[i] := 0;
+               end;
+          End;
           // I now have a set of samples representing the JT65A audio
           // tones in txBuffer with nwave indicating number of samples
           // generated.
-          d65nwave := 538624;
+          d65nwave := mnlooper;
           TxValid := True;
           TxDirty := False;
           thisTX := curMsg + IntToStr(txdf);
@@ -4171,6 +4622,8 @@ Begin
           Begin
                inc(txCount);
           End;
+          thisAction := 3;
+          actionSet := True;
      End
      Else
      Begin
@@ -4181,6 +4634,7 @@ Begin
           TxDirty := True;
           thisAction := 2;
           lastTX := '';
+          actionSet := False;
      End;
 End;
 
@@ -4210,13 +4664,18 @@ Begin
           txsr := 1.0;
           if tryStrToFloat(cfgvtwo.Form6.edTXSRCor.Text,txsr) Then d65samfacout := StrToFloat(cfgvtwo.Form6.edTXSRCor.Text) else d65samfacout := 1.0;
           // Generate samples.
-          if txMode = 65 Then encode65.gen65(d65txmsg,@txdf,@dac.d65txBuffer[0],@d65nwave,@d65sendingsh,d65sending,@d65nmsg);
-          if txMode =  4 Then  encode65.gen4(d65txmsg,@txdf,@dac.d65txBuffer[0],@d65nwave,@d65sendingsh,d65sending,@d65nmsg);
+          if (paOutParams.channelCount = 2) And (txMode = 65) Then encode65.gen65(d65txmsg,@txdf,@dac.d65txBuffer[0],@d65nwave,@d65sendingsh,d65sending,@d65nmsg);
+          if (paOutParams.channelCount = 1) And (txMode = 65) Then encode65.gen65(d65txmsg,@txdf,@mdac.d65txBuffer[0],@d65nwave,@d65sendingsh,d65sending,@d65nmsg);
+
+          //if txMode =  4 Then  encode65.gen4(d65txmsg,@txdf,@dac.d65txBuffer[0],@d65nwave,@d65sendingsh,d65sending,@d65nmsg);
+          //if txMode =  4 Then  encode65.gen4(d65txmsg,@txdf,@mdac.d65txBuffer[0],@d65nwave,@d65sendingsh,d65sending,@d65nmsg);
+
           // Now I want to pad the data to length of txBuffer with silence
           mnlooper := d65nwave;
           while mnlooper < 661504 do
           begin
                dac.d65txBuffer[mnlooper] := 0;
+               mdac.d65txBuffer[mnlooper] := 0;
                inc(mnlooper);
           end;
           d65nwave := 538624;
@@ -4232,6 +4691,8 @@ Begin
           Begin
                inc(txCount);
           End;
+          thisAction := 6;
+          actionSet := True;
      End
      Else
      Begin
@@ -4241,6 +4702,7 @@ Begin
           TxValid := False;
           TxDirty := True;
           thisAction := 2;
+          actionSet := False;
           lastTX := '';
      End;
 End;
@@ -4251,7 +4713,6 @@ Var
 Begin
      // Need to change audio input device
      paResult := portaudio.Pa_AbortStream(paInStream);
-     paInParams.channelCount := 2;
      foo := cfgvtwo.Form6.cbAudioIn.Items.Strings[cfgvtwo.Form6.cbAudioIn.ItemIndex];
      paInParams.device := StrToInt(foo[1..2]);
      paInParams.sampleFormat := paInt16;
@@ -4259,13 +4720,31 @@ Begin
      paInParams.hostApiSpecificStreamInfo := Nil;
      ppaInParams := @paInParams;
      adc.d65rxBufferIdx := 0;
+     madc.d65rxBufferIdx := 0;
+
      adc.adcT := 0;
+     madc.adcT := 0;
+
+     paInParams.channelCount := 2;
      paResult := portaudio.Pa_OpenStream(paInStream,ppaInParams,Nil,11025,2048,0,@adc.adcCallback,Pointer(Self));
-     paResult := portaudio.Pa_StartStream(paInStream);
+     if paResult <> 0 Then
+     Begin
+          paInParams.channelCount := 1;
+          paResult := portaudio.Pa_OpenStream(paInStream,ppaInParams,Nil,11025,2048,0,@madc.adcCallback,Pointer(Self));
+     end;
+     if paResult = 0 Then
+     Begin
+          paResult := portaudio.Pa_StartStream(paInStream);
+     end
+     else
+     begin
+          ShowMessage('Unable to open audio device properly.  Please select another then restart program.');
+     end;
+
      // Need to change audio output device
      paResult := portaudio.Pa_AbortStream(paOutStream);
      paResult := portaudio.Pa_CloseStream(paOutStream);
-     paOutParams.channelCount := 2;
+
      foo := cfgvtwo.Form6.cbAudioOut.Items.Strings[cfgvtwo.Form6.cbAudioOut.ItemIndex];
      paOutParams.device := StrToInt(foo[1..2]);
      paOutParams.sampleFormat := paInt16;
@@ -4273,11 +4752,28 @@ Begin
      paOutParams.hostApiSpecificStreamInfo := Nil;
      ppaOutParams := @paOutParams;
      dac.d65txBufferIdx := 0;
+     mdac.d65txBufferIdx := 0;
+
      dErrCount := 0;
      adCount := 0;
      dac.dacT := 0;
+     mdac.dacT := 0;
+
+     paOutParams.channelCount := 2;
      paResult := portaudio.Pa_OpenStream(paOutStream,Nil,ppaOutParams,11025,2048,0,@dac.dacCallback,Pointer(Self));
-     paResult := portaudio.Pa_StartStream(paOutStream);
+     if paResult <> 0 Then
+     Begin
+          paOutParams.channelCount := 1;
+          paResult := portaudio.Pa_OpenStream(paOutStream,Nil,ppaOutParams,11025,2048,0,@mdac.dacCallback,Pointer(Self));
+     End;
+     if paresult = 0 Then
+     Begin
+          paResult := portaudio.Pa_StartStream(paOutStream);
+     End
+     Else
+     Begin
+          ShowMessage('Unable to open audio device properly.  Please select another then restart program.');
+     End;
      cfgvtwo.gld65AudioChange := False;
 End;
 
@@ -4313,11 +4809,9 @@ Begin
                Begin
                     rbc.glrbReports[i].rbProcessed := True;
                End;
-               //globalData.debugLine1 := 'rbc thread was terminated.';
                rbThread := rbcThread.Create(False);
-               //globalData.debugLine2 := 'rbc thread was re-created and started.';
                rbc.glrbActive := False;
-               dlog.fileDebug('RBC Thread was terminated/reinitialized due to detection of lockup.');
+               dlog.fileDebug('RBC Thread was reinitialized due to detection of lockup.');
           End;
      End;
 End;
@@ -4385,7 +4879,7 @@ Begin
           // evil.
           txOdd  := False;
           if form1.rbTX2.Checked Then txOdd := True else txOdd := False;
-          if thisSecond < 16 Then
+          if (thisSecond < 16) and not actionSet Then
           Begin
                // Since thisSecond is 0..15 we can check to see if a late TX start
                // could work.
@@ -4433,7 +4927,6 @@ Begin
      if globalData.txInProgress then enredec := False;
      if (thisSecond > 30) and (thisSecond < 50) then enredec := False;
      if d65.glinprog then enredec := False;
-     if d4.gl4inprog then enredec := False;
      if not haveOddBuffer and not haveEvenBuffer then enredec := False;
      if enredec then Form1.btnReDecode.Enabled := True else Form1.btnReDecode.Enabled := False;
      if (globalData.gmode = 0) and (txMode = 0) Then btnEngageTx.enabled := False;
@@ -4503,6 +4996,8 @@ Begin
                globalData.txInProgress := False;
                rxInProgress := True;
                adc.d65rxBufferIdx := 0;
+               madc.d65rxBufferIdx := 0;
+
                nextAction := 2; // As always, RX assumed to be next.
                inc(rxCount);
                if watchMulti and cfgvtwo.Form6.cbMultiAutoEnable.Checked and (rxCount > 2) Then
@@ -4522,18 +5017,36 @@ Begin
           Else
           Begin
                // Code that only executes while in an active RX cycle.
-               Form1.ProgressBar3.Position := adc.d65rxBufferIdx;
+               if paInParams.channelCount = 2 Then Form1.ProgressBar3.Position := adc.d65rxBufferIdx;
+               if paInParams.channelCount = 1 Then Form1.ProgressBar3.Position := madc.d65rxBufferIdx;
+
                rxInProgress := True;
                globalData.txInProgress := False;
-               If adc.d65rxBufferIdx >= 533504 Then
+
+               if paInParams.channelCount = 2 Then
                Begin
-                    // Get End of Period QRG
-                    eopQRG := globalData.gqrg;
-                    // Switch to decoder action
-                    thisAction := 4;
-                    rxInProgress := False;
-                    globalData.txInProgress := False;
-               End;
+                    If adc.d65rxBufferIdx >= 533504 Then
+                    Begin
+                         // Get End of Period QRG
+                         eopQRG := globalData.gqrg;
+                         // Switch to decoder action
+                         thisAction := 4;
+                         rxInProgress := False;
+                         globalData.txInProgress := False;
+                    End;
+               end;
+               if paInParams.channelCount = 1 Then
+               Begin
+                    If madc.d65rxBufferIdx >= 533504 Then
+                    Begin
+                         // Get End of Period QRG
+                         eopQRG := globalData.gqrg;
+                         // Switch to decoder action
+                         thisAction := 4;
+                         rxInProgress := False;
+                         globalData.txInProgress := False;
+                    End;
+               end;
           End;
      End;
      //
@@ -4556,27 +5069,25 @@ Begin
                if txCount < 15 Then
                Begin
                     // Flag TX Buffer as valid.
-                    //TxDirty := False;
-                    //TxValid := True;
                     lastMsg := curMsg;
                     // Fire up TX
                     if not TxDirty and TxValid Then
                     Begin
                          // For TX I need to scale progress bar for TX display
-                         Form1.ProgressBar3.Max := 538624;
+                         Form1.ProgressBar3.Max := d65nwave;
                          rxInProgress := False;
                          nextAction := 2;
                          dac.d65txBufferIdx := 0;
+                         mdac.d65txBufferIdx := 0;
+
                          dac.d65txBufferPtr := @dac.d65txBuffer[0];
+                         mdac.d65txBufferPtr := @mdac.d65txBuffer[0];
+
                          rxCount := 0;
-                         if not globalData.si570ptt Then
-                         Begin
-                             if cfgvtwo.Form6.cbUseAltPTT.Checked Then altRaisePTT() else raisePtt();
-                         End
-                         Else
-                         Begin
-                              si570Raiseptt();
-                         End;
+                         if getPTTMethod() = 'SI5' Then si570Raiseptt();
+                         if getPTTMethod() = 'HRD' Then hrdRaisePTT();
+                         if getPTTMethod() = 'ALT' Then altRaisePTT();
+                         if getPTTMethod() = 'PTT' Then raisePTT();
                          globalData.txInProgress := True;
                          foo := '';
                          if gst.Hour < 10 then foo := '0' + IntToStr(gst.Hour) + ':' else foo := IntToStr(gst.Hour) + ':';
@@ -4627,23 +5138,37 @@ Begin
           Begin
                globalData.txInProgress := True;
                rxInProgress := False;
-               if dac.d65txBufferIdx >= 538624 Then
+               if paOutParams.channelCount = 2 Then
                Begin
-                    //paResult := portaudio.Pa_StopStream(paOutStream);
-                    globalData.txInProgress := False;
-                    if not globalData.si570ptt Then
+                    if (dac.d65txBufferIdx >= d65nwave+11025) Or (dac.d65txBufferIdx >= 661503-(11025 DIV 2)) Then
                     Begin
-                         if cfgvtwo.Form6.cbUseAltPTT.Checked Then altLowerPTT() else lowerPtt();
-                    End
-                    Else
-                    Begin
-                         si570Lowerptt();
+                         globalData.txInProgress := False;
+                         if getPTTMethod() = 'SI5' Then si570Lowerptt();
+                         if getPTTMethod() = 'HRD' Then hrdLowerPTT();
+                         if getPTTMethod() = 'ALT' Then altLowerPTT();
+                         if getPTTMethod() = 'PTT' Then lowerPTT();
+                         thisAction := 5;
+                         actionSet := False;
+                         curMsg := '';
                     End;
-                    thisAction := 5;
-                    curMsg := '';
-               End;
+               end;
+               if paOutParams.channelCount = 1 Then
+               Begin
+                    if (mdac.d65txBufferIdx >= d65nwave+11025) Or (mdac.d65txBufferIdx >= 661503-(11025 DIV 2)) Then
+                    Begin
+                         globalData.txInProgress := False;
+                         if getPTTMethod() = 'SI5' Then si570Lowerptt();
+                         if getPTTMethod() = 'HRD' Then hrdLowerPTT();
+                         if getPTTMethod() = 'ALT' Then altLowerPTT();
+                         if getPTTMethod() = 'PTT' Then lowerPTT();
+                         thisAction := 5;
+                         actionSet := False;
+                         curMsg := '';
+                    End;
+               end;
                // Update the progress indicator for this sequence.
-               Form1.ProgressBar3.Position := dac.d65txBufferIdx;
+               if paOutParams.channelCount = 2 Then Form1.ProgressBar3.Position := dac.d65txBufferIdx;
+               if paOutParams.channelCount = 1 Then Form1.ProgressBar3.Position := mdac.d65txBufferIdx;
           End;
      End;
      //
@@ -4678,8 +5203,6 @@ Begin
                if txCount < 15 Then
                Begin
                     // Flag TX Buffer as valid.
-                    //TxDirty := False;
-                    //TxValid := True;
                     lastMsg := curMsg;
                     // Fire up TX
                     if not TxDirty and TxValid Then
@@ -4689,16 +5212,16 @@ Begin
                          rxInProgress := False;
                          nextAction := 2;
                          dac.d65txBufferIdx := 0;
+                         mdac.d65txBufferIdx := 0;
+
                          dac.d65txBufferPtr := @dac.d65txBuffer[0];
+                         mdac.d65txBufferPtr := @mdac.d65txBuffer[0];
+
                          rxCount := 0;
-                         if not globalData.si570ptt Then
-                         Begin
-                             if cfgvtwo.Form6.cbUseAltPTT.Checked Then altRaisePTT() else raisePtt();
-                         End
-                         Else
-                         Begin
-                              si570Raiseptt();
-                         End;
+                         if getPTTMethod() = 'SI5' Then si570Raiseptt();
+                         if getPTTMethod() = 'HRD' Then hrdRaisePTT();
+                         if getPTTMethod() = 'ALT' Then altRaisePTT();
+                         if getPTTMethod() = 'PTT' Then raisePTT();
                          globalData.txInProgress := True;
                          foo := '';
                          if gst.Hour < 10 then foo := '0' + IntToStr(gst.Hour) + ':' else foo := IntToStr(gst.Hour) + ':';
@@ -4750,32 +5273,49 @@ Begin
                // Continuing a late sequence TX
                globalData.txInProgress := True;
                rxInProgress := False;
-               if (dac.d65txBufferIdx >= 538624) Or (thisSecond >= 48) Then
+               if paOutParams.channelCount = 2 Then
                Begin
-                    // I have a full TX cycle when d65txBufferIdx >= 538624 or thisSecond > 48
-                    if not globalData.si570ptt Then
+                    if (dac.d65txBufferIdx >= d65nwave+11025) Or (dac.d65txBufferIdx >= 661503-(11025 DIV 2)) Or (thisSecond > 48) Then
                     Begin
-                         if cfgvtwo.Form6.cbUseAltPTT.Checked Then altLowerPTT() else lowerPtt();
-                    End
-                    Else
-                    Begin
-                         si570Lowerptt();
+                         // I have a full TX cycle when d65txBufferIdx >= 538624 or thisSecond > 48
+                         if getPTTMethod() = 'SI5' Then si570Lowerptt();
+                         if getPTTMethod() = 'HRD' Then hrdLowerPTT();
+                         if getPTTMethod() = 'ALT' Then altLowerPTT();
+                         if getPTTMethod() = 'PTT' Then lowerPTT();
+                         actionSet := False;
+                         thisAction := 5;
+                         globalData.txInProgress := False;
+                         curMsg := '';
                     End;
-                    thisAction := 5;
-                    globalData.txInProgress := False;
-                    curMsg := '';
-               End;
+               end;
+               if paOutParams.channelCount = 1 Then
+               Begin
+                    if (mdac.d65txBufferIdx >= d65nwave+11025) Or (mdac.d65txBufferIdx >= 661503-(11025 DIV 2)) Or (thisSecond > 48) Then
+                    Begin
+                         // I have a full TX cycle when d65txBufferIdx >= 538624 or thisSecond > 48
+                         if getPTTMethod() = 'SI5' Then si570Lowerptt();
+                         if getPTTMethod() = 'HRD' Then hrdLowerPTT();
+                         if getPTTMethod() = 'ALT' Then altLowerPTT();
+                         if getPTTMethod() = 'PTT' Then lowerPTT();
+                         actionSet := False;
+                         thisAction := 5;
+                         globalData.txInProgress := False;
+                         curMsg := '';
+                    End;
+               end;
                // Update the progress indicator for this sequence.
-               Form1.ProgressBar3.Position := dac.d65txBufferIdx;
+               if paOutParams.channelCount = 2 Then Form1.ProgressBar3.Position := dac.d65txBufferIdx;
+               if paOutParams.channelCount = 1 Then Form1.ProgressBar3.Position := mdac.d65txBufferIdx;
           End;
      End;
 End;
 
 procedure TForm1.processNewMinute(st : TSystemTime);
 Var
-   i, idx : Integer;
+   i, idx, ifoo : Integer;
 Begin
      // Get Start of Period QRG
+     actionSet := False;
      sopQRG := globalData.gqrg;
      rxInProgress := False;
      globalData.txInProgress := False;
@@ -4818,15 +5358,120 @@ Begin
                rawdec.Form5.ListBox1.Items.Delete(idx);
           end;
      End;
-     // Keep log list from getting too large.
-     //If Form1.lbNotices.Items.Count > 100 Then
-     //Begin
-          //for idx := Form1.lbNotices.Items.Count - 1 downto 50 do
-          //Begin
-               //Form1.lbNotices.Items.Delete(idx);
-          //end;
-     //end;
-     // Processing of new minute event complete.
+     // Is it time for an auto QSY? (Abort auto QSY if TX enabled...)
+     if not Form1.chkEnTX.Checked And globalData.hrdcatControlcurrentRig.hrdAlive Then
+     Begin
+          if cfgvtwo.Form6.cbEnableQSY1.Checked Then
+          Begin
+               if (st.Hour = cfgvtwo.Form6.qsyHour1.Value) And (st.Minute = cfgvtwo.Form6.qsyMinute1.Value) Then
+               Begin
+                    // QSY time slot 1
+                    If TryStrToInt(cfgvtwo.Form6.edQRGQSY1.Text, ifoo) Then
+                    Begin
+                         if ifoo > 1799999 Then
+                         Begin
+                              if cfgvtwo.Form6.rbHRD4.Checked Then globalData.hrdVersion :=4;
+                              if cfgvtwo.Form6.rbHRD5.Checked Then globalData.hrdVersion :=5;
+                              if catControl.writeHRD('[' + globalData.hrdcatControlcurrentRig.radioContext + '] set frequency-hz ' + cfgvtwo.Form6.edQRGQSY1.Text) Then
+                              Begin
+                                   if cfgvtwo.Form6.cbATQSY1.Checked Then
+                                   Begin
+                                   // Auto-tune cycle requested
+                                   end;
+                              end;
+                         end;
+                    end;
+               end;
+          end;
+          if cfgvtwo.Form6.cbEnableQSY2.Checked Then
+          Begin
+               if (st.Hour = cfgvtwo.Form6.qsyHour2.Value) And (st.Minute = cfgvtwo.Form6.qsyMinute2.Value) Then
+               Begin
+                    // QSY time slot 2
+                    If TryStrToInt(cfgvtwo.Form6.edQRGQSY2.Text, ifoo) Then
+                    Begin
+                         if ifoo > 1799999 Then
+                         Begin
+                              if cfgvtwo.Form6.rbHRD4.Checked Then globalData.hrdVersion :=4;
+                              if cfgvtwo.Form6.rbHRD5.Checked Then globalData.hrdVersion :=5;
+                              if catControl.writeHRD('[' + globalData.hrdcatControlcurrentRig.radioContext + '] set frequency-hz ' + cfgvtwo.Form6.edQRGQSY2.Text) Then
+                              Begin
+                                   if cfgvtwo.Form6.cbATQSY2.Checked Then
+                                   Begin
+                                   // Auto-tune cycle requested
+                                   end;
+                              end;
+                         end;
+                    end;
+               end;
+          end;
+          if cfgvtwo.Form6.cbEnableQSY3.Checked Then
+          Begin
+               if (st.Hour = cfgvtwo.Form6.qsyHour3.Value) And (st.Minute = cfgvtwo.Form6.qsyMinute3.Value) Then
+               Begin
+                    // QSY time slot 3
+                    If TryStrToInt(cfgvtwo.Form6.edQRGQSY3.Text, ifoo) Then
+                    Begin
+                         if ifoo > 1799999 Then
+                         Begin
+                              if cfgvtwo.Form6.rbHRD4.Checked Then globalData.hrdVersion :=4;
+                              if cfgvtwo.Form6.rbHRD5.Checked Then globalData.hrdVersion :=5;
+                              if catControl.writeHRD('[' + globalData.hrdcatControlcurrentRig.radioContext + '] set frequency-hz ' + cfgvtwo.Form6.edQRGQSY3.Text) Then
+                              Begin
+                                   if cfgvtwo.Form6.cbATQSY3.Checked Then
+                                   Begin
+                                   // Auto-tune cycle requested
+                                   end;
+                              end;
+                         end;
+                    end;
+               end;
+          end;
+          if cfgvtwo.Form6.cbEnableQSY4.Checked Then
+          Begin
+               if (st.Hour = cfgvtwo.Form6.qsyHour4.Value) And (st.Minute = cfgvtwo.Form6.qsyMinute4.Value) Then
+               Begin
+                    // QSY time slot 4
+                    If TryStrToInt(cfgvtwo.Form6.edQRGQSY4.Text, ifoo) Then
+                    Begin
+                         if ifoo > 1799999 Then
+                         Begin
+                              if cfgvtwo.Form6.rbHRD4.Checked Then globalData.hrdVersion :=4;
+                              if cfgvtwo.Form6.rbHRD5.Checked Then globalData.hrdVersion :=5;
+                              if catControl.writeHRD('[' + globalData.hrdcatControlcurrentRig.radioContext + '] set frequency-hz ' + cfgvtwo.Form6.edQRGQSY4.Text) Then
+                              Begin
+                                   if cfgvtwo.Form6.cbATQSY4.Checked Then
+                                   Begin
+                                   // Auto-tune cycle requested
+                                   end;
+                              end;
+                         end;
+                    end;
+               end;
+          end;
+          if cfgvtwo.Form6.cbEnableQSY5.Checked Then
+          Begin
+               if (st.Hour = cfgvtwo.Form6.qsyHour5.Value) And (st.Minute = cfgvtwo.Form6.qsyMinute5.Value) Then
+               Begin
+                    // QSY time slot 5
+                    If TryStrToInt(cfgvtwo.Form6.edQRGQSY5.Text, ifoo) Then
+                    Begin
+                         if ifoo > 1799999 Then
+                         Begin
+                              if cfgvtwo.Form6.rbHRD4.Checked Then globalData.hrdVersion :=4;
+                              if cfgvtwo.Form6.rbHRD5.Checked Then globalData.hrdVersion :=5;
+                              if catControl.writeHRD('[' + globalData.hrdcatControlcurrentRig.radioContext + '] set frequency-hz ' + cfgvtwo.Form6.edQRGQSY5.Text) Then
+                              Begin
+                                   if cfgvtwo.Form6.cbATQSY5.Checked Then
+                                   Begin
+                                   // Auto-tune cycle requested
+                                   end;
+                              end;
+                         end;
+                    end;
+               end;
+          end;
+     end;
 End;
 
 procedure TForm1.processOncePerSecond(st : TSystemTime);
@@ -4873,7 +5518,7 @@ Begin
      if (st.Second mod 3 = 0) And not primed Then doCAT := True;
      // Set manual entry ability.
      if (cfgvtwo.glcatBy = 'none') and not cfgvtwo.glsi57Set Then Form1.editManQRG.Enabled := True else Form1.editManQRG.Enabled := False;
-     if (cfgvtwo.glcatBy = 'none') and not cfgvtwo.glsi57Set Then Form1.Label23.Visible := True else Form1.Label23.Visible := False;
+     //if (cfgvtwo.glcatBy = 'none') and not cfgvtwo.glsi57Set Then Form1.Label23.Visible := True else Form1.Label23.Visible := False;
      // Deal with QRG display
      if (cfgvtwo.glcatBy = 'none') Then
      Begin
@@ -4889,13 +5534,13 @@ Begin
      Begin
           Form1.Label12.Font.Color := clRed;
           Form1.editManQRG.Font.Color := clRed;
-          Form1.Label23.Font.Color := clRed;
+          //Form1.Label23.Font.Color := clRed;
      end
      else
      begin
          Form1.Label12.Font.Color := clBlack;
          Form1.editManQRG.Font.Color := clBlack;
-         Form1.Label23.Font.Color := clBlack;
+         //Form1.Label23.Font.Color := clBlack;
      end;
      If globalData.rbLoggedIn Then Form1.Label30.Font.Color := clBlack else Form1.Label30.Font.Color := clRed;
      // Update AU Levels display
@@ -4999,20 +5644,8 @@ end;
 
 procedure TForm1.oncePerTick();
 Var
-   st   : TSYSTEMTIME;
    i    : Integer;
 Begin
-     st.Day := 0;
-     {$IFDEF win32}
-       GetSystemTime(st);
-     {$ENDIF}
-     {$IFDEF linux}
-       dt := synaUtil.GetUTTime;
-       DateTimeToSystemTime(GetUTTime,st);
-     {$ENDIF}
-     {$IFDEF darwin}
-       // Unknown at this point and probably moot.  Little chance this will ever run in MacOS X
-     {$ENDIF}
      myCallCheck();
      // Refresh audio level display
      if not primed then updateAudio();
@@ -5032,7 +5665,7 @@ Begin
      if Form1.chkMultiDecode.Checked Then Form1.chkMultiDecode.Font.Color := clBlack else Form1.chkMultiDecode.Font.Color := clRed;
      // Display any decodes that may have been returned from the decoder thread.
      // Only run this block if decoder thread is inactive.
-     If not d65.glinProg and not d4.gl4inProg and d65.gld65HaveDecodes Then
+     If not d65.glinProg and d65.gld65HaveDecodes Then
      Begin
           for i := 0 to 49 do
           Begin
@@ -5044,44 +5677,31 @@ Begin
           End;
           if reDecode then reDecode := False;
      End;
-     If not d65.glinProg and not d4.gl4inProg and d4.gl4HaveDecodes Then
-     Begin
-          for i := 0 to 49 do
-          Begin
-               if (not d4.gl4decodes[i].dtProcessed) And (not d4.gl4decodes[i].dtDisplayed) Then
-               begin
-                    addToDisplay(i,4);
-                    addToRBC(i,4);
-               end;
-          End;
-     End;
 End;
 
 procedure TForm1.Timer1Timer(Sender: TObject);
-var
-   st            : TSYSTEMTIME;
 begin
      // Setup to evaluate where I am in the temporal loop.
      statusChange := False;
-     st.Day := 0;
-     {$IFDEF win32}
-       GetSystemTime(st);
-     {$ENDIF}
-     {$IFDEF linux}
-       dt := synaUtil.GetUTTime;
-       DateTimeToSystemTime(GetUTTime,st);
-     {$ENDIF}
-     {$IFDEF darwin}
-       // Unknown at this point and probably moot.  Little chance this will ever run in MacOS X
-     {$ENDIF}
-     gst := st;
-     thisSecond := st.Second;
+     gst := utcTime();
+     thisSecond := gst.Second;
      // Runs at program start only
      If runOnce Then
      Begin
           Form1.Timer1.Enabled := False;
+          //ShowMessage('Main loop entered, calling initializer code...');
           // Read in initializer code items that can't be run from form create.
           initializerCode();
+
+          runOnce := False;
+          dlog.fileDebug('Initializer code complete.  Entering main timing loop.');
+          //ShowMessage('Initializer code completed entering main execution loop...');
+
+          Form1.Timer1.Enabled := True;
+          // Go ahead and mark the stream as active.  It won't run a decode, but it will paint the spectrum during init.
+          // rxInProgress := True;
+          // End of run once code.
+
           rxInProgress := False;
           globalData.txInProgress := False;
           thisAction   := 2;
@@ -5097,7 +5717,7 @@ begin
           resyncLoop := True;
           diagout.Form3.Show;
           diagout.Form3.BringToFront;
-          diagout.Form3.ListBox1.Items.Add('resync! ' + IntToStr(st.Second));
+          diagout.Form3.ListBox1.Items.Add('resync! ' + IntToStr(gst.Second));
           Form1.Timer1.Enabled := True;
           // TODO Either code a recovery from timer overrun or raise an
           // exception and end the program.
@@ -5109,21 +5729,6 @@ begin
           alreadyHere := True;  // This will be set false at end of procedure.
           // That's it for the timer overrun check.
      End;
-     // Setup to evaluate where I am in the temporal loop.
-     statusChange := False;
-     st.Day := 0;
-     {$IFDEF win32}
-       GetSystemTime(st);
-     {$ENDIF}
-     {$IFDEF linux}
-       dt := synaUtil.GetUTTime;
-       DateTimeToSystemTime(GetUTTime,st);
-     {$ENDIF}
-     {$IFDEF darwin}
-       // Unknown at this point and probably moot.  Little chance this will ever run in MacOS X
-     {$ENDIF}
-     gst := st;
-     thisSecond := st.Second;
      // Now to the main loop.
      //
      // When I first start program I need to get into close sync with 1
@@ -5144,12 +5749,12 @@ begin
      // Now I need to look for a transition from HH:MM:59.mmm to HH:MM:00.mmm
      // to detect a start of minute.
      //
-     If st.Second = 59 Then primed := True;
+     If gst.Second = 59 Then primed := True;
      If primed Then
      Begin
           // Kick the timer into 'high resolution' mode.
           Form1.Timer1.Interval := 1;
-          If st.Second = 0 Then
+          If gst.Second = 0 Then
           Begin
                resyncLoop := False;
                // I've gotten to second = 0 so I can reset the timer to 'low
@@ -5171,7 +5776,7 @@ begin
      // This code block handles the start of a new minute.
      If statusChange Then
      Begin
-          processNewMinute(st);
+          processNewMinute(gst);
      end;
      // Handle event processing while NOT start of new minute.
      if not statusChange and not resyncLoop Then
@@ -5181,9 +5786,9 @@ begin
      //
      // Code that executes once per second, but not necessary that it be exact 1
      // second intervals. This happens whether it's the top of a new minute or not.
-     If (st.Second <> lastSecond) And not resyncLoop Then
+     If (gst.Second <> lastSecond) And not resyncLoop Then
      begin
-          processOncePerSecond(st);
+          processOncePerSecond(gst);
      end;
      // Code that runs each timer tick.
      if not resyncLoop then oncePerTick();
@@ -5225,7 +5830,6 @@ initialization
   d65doDecodePass := False;
   d4doDecodePass := False;
   d65.gldecoderPass := 0;
-  d4.gl4decoderPass := 0;
   // Clear the decodes array structure
   for mnlooper := 0 to 49 do
   Begin
@@ -5239,16 +5843,6 @@ initialization
        d65.gld65decodes[mnlooper].dtDecoded := '';
        d65.gld65decodes[mnlooper].dtDisplayed := True;
        d65.gld65decodes[mnlooper].dtProcessed := True;
-       d4.gl4decodes[mnlooper].dtTimeStamp := '';
-       d4.gl4decodes[mnlooper].dtNumSync := '';
-       d4.gl4decodes[mnlooper].dtSigLevel := '';
-       d4.gl4decodes[mnlooper].dtDeltaTime := '';
-       d4.gl4decodes[mnlooper].dtDeltaFreq := '';
-       d4.gl4decodes[mnlooper].dtSigW := '';
-       d4.gl4decodes[mnlooper].dtCharSync := '';
-       d4.gl4decodes[mnlooper].dtDecoded := '';
-       d4.gl4decodes[mnlooper].dtDisplayed := True;
-       d4.gl4decodes[mnlooper].dtProcessed := True;
   End;
   // Initialize the spectrum display bufffer to 0 values
   for mnlooper := 0 to 179 do
@@ -5262,13 +5856,22 @@ initialization
   End;
   // Initialize rxBuffer and its pointer, rxBuffer holds incoming sample data from PA
   adc.d65rxBufferPtr := @adc.d65rxBuffer[0];  // pointer set to start of rxBuffer
+  madc.d65rxBufferPtr := @madc.d65rxBuffer[0];  // pointer set to start of rxBuffer
+
   adc.d65rxBufferIdx := 0;
+  madc.d65rxBufferIdx := 0;
+
   // Initialize txBuffer and its pointer, txBuffer holds outgoing sample data for PA
   dac.d65txBufferPtr := @dac.d65txBuffer[0];  // pointer set to start of txBuffer
+  mdac.d65txBufferPtr := @mdac.d65txBuffer[0];  // pointer set to start of txBuffer
+
   dac.d65txBufferIdx := 0;
+  mdac.d65txBufferIdx := 0;
+
   // Setup PChar type variables.
   d65txmsg := StrAlloc(28);
   d65sending := StrAlloc(28);
+  cwidMsg := StrAlloc(22);
   // Miscelanious operational vars.
   runOnce := True;
   spectrum.specFirstRun := True;
@@ -5282,7 +5885,11 @@ initialization
   sLevelM := 0;
   smeterIdx := 0;
   adc.adcSpecCount := 0;
+  madc.adcSpecCount := 0;
+
   adc.adcChan := 1;
+  madc.adcChan := 1;
+
   globalData.specNewSpec65 := False;
   primed       := False; // This is part of the time sync code.
   txPeriod     := 0;     // 0 is even and 1 is odd minutes
@@ -5311,12 +5918,20 @@ initialization
   //
   exchange     := '';
   adc.adcT         := 0;
+  madc.adcT         := 0;
+
   adc.adcE         := 0;
+  madc.adcE         := 0;
+
   mnpttOpened    := False;
   firstReport  := True;
   useBuffer := 0;
   adc.adcLDgain := 0;
+  madc.adcLDgain := 0;
+
   adc.adcRDgain := 0;
+  madc.adcRDgain := 0;
+
   lastMsg := '';
   curMsg := '';
   cfgvtwo.glautoSR := False;
@@ -5347,16 +5962,15 @@ initialization
        csvEntries[mnlooper] := '';
   end;
   d65.glInProg := False;
-  d4.gl4Inprog := False;
   spectrum.specVGain := 7;
   globalData.spectrumComputing65 := False;
   globalData.audioComputing := False;
   resyncLoop := False;
   adc.adcRunning := False;
+  madc.adcRunning := False;
+
   d65.glnd65firstrun := True;
-  d4.gl4firstrun := True;
   d65.glbinspace := 100;
-  d4.gl4binspace := 20;
   globalData.debugOn := False;
   globalData.gmode := 65;
   txmode := globalData.gmode;
@@ -5366,6 +5980,8 @@ initialization
   // Create stream for spectrum image
   globalData.specMs65 := TMemoryStream.Create;
   adc.adcECount := 0;
+  madc.adcECount := 0;
+
   reDecode := False;
   // Clear rewind buffers
   For mnlooper := 0 to 661503 do
@@ -5377,5 +5993,11 @@ initialization
   haveEvenBuffer := False;
   globalData.mtext := '/Multi%20On%202K%20BW';
   globalData.si570ptt := False;
+  doCWID := False;
+  actionSet := False;
+  catControl.catControlautoQSY := False;
+  catControl.catControlcatTxDF := False;
+  globalData.hrdcatControlcurrentRig.hrdAlive := False;
+  globalData.hrdVersion := 5;
 end.
 

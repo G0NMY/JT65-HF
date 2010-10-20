@@ -28,12 +28,12 @@ type
       tx_pwr  : String;
     end;
 
-function adifString(call, freq, grid, mode, rstrx, rsttx, timeon, timeoff, txpower, qdate: String): String;
+function adifString(call, freq, grid, mode, rstrx, rsttx, timeon, timeoff, txpower, qdate, comment, mycall, mygrid: String): String;
 
 
 implementation
 
-function adifString(call, freq, grid, mode, rstrx, rsttx, timeon, timeoff, txpower, qdate: String): String;
+function adifString(call, freq, grid, mode, rstrx, rsttx, timeon, timeoff, txpower, qdate, comment, mycall, mygrid: String): String;
 var
    foo  : String;
    qrg  : Integer;
@@ -92,7 +92,7 @@ Begin
           End;
           if fqrg > 0 Then foo := foo + '<FREQ:' + IntToStr(Length(freq)) + '>' + freq;
      End;
-     if (Length(grid)>3) And (Length(grid)<7) Then foo := foo + '<GRID:' + IntToStr(Length(grid)) + '>' + grid;
+     if (Length(grid)>3) And (Length(grid)<7) Then foo := foo + '<GRIDSQUARE:' + IntToStr(Length(grid)) + '>' + grid;
      foo := foo + '<MODE:' + IntToStr(Length(mode)) + '>' + mode;
      if Length(rstrx)>0 Then foo := foo + '<RST_RCVD:' + IntToStr(Length(rstrx)) + '>' + rstrx;
      if Length(rsttx)>0 Then foo := foo + '<RST_SENT:' + IntToStr(Length(rsttx)) + '>' + rsttx;
@@ -100,6 +100,9 @@ Begin
      foo := foo + '<TIME_ON:' + IntToStr(Length(timeon)) + '>' + timeon;
      foo := foo + '<TIME_OFF:' + IntToStr(Length(timeoff)) + '>' + timeoff;
      if Length(txpower)>0 Then foo := foo + '<TX_PWR:' + IntToStr(Length(txpower)) + '>' + txpower;
+     if Length(comment)>0 Then foo := foo + '<COMMENT:' + IntToStr(Length(comment)) + '>' + comment;
+     if Length(mycall)>0 Then foo := foo + '<STATION_CALLSIGN:' + IntToStr(Length(mycall)) + '>' + mycall;
+     if Length(mygrid)>0 Then foo := foo + '<MY_GRIDSQUARE:' + IntToStr(Length(mygrid)) + '>' + mygrid;
      foo := foo + '<eor>';
      result := foo;
 End;

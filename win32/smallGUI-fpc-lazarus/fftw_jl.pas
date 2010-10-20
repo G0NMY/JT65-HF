@@ -15,7 +15,7 @@ unit fftw_jl;
    Note that the FFTW library itself carries the GPL license
    and can therefore not be used in non-GPL software.
 
-   Modified by Joe Large - W4CQZ 20/Feb/2010
+   Modified by Joe Large - W6CQZ 20/Feb/2010
 }
 
 {*****************************************************************************}

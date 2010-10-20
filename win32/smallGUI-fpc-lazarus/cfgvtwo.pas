@@ -27,10 +27,12 @@ interface
 uses
   Classes, SysUtils, LResources, Forms, Controls, Graphics, Dialogs,
   ComCtrls, ExtCtrls, StdCtrls, StrUtils, globalData, CTypes, synaser,
-  EditBtn, Grids, Si570dev;
+  EditBtn, Grids, Spin, Si570dev, catControl;
 
-const myWordDelims = [' ',','];
-Const JT_DLL = 'jt65.dll';
+Const
+    myWordDelims = [' ',','];
+    hrdDelim = [','];
+    JT_DLL = 'jt65.dll';
 
 type
 
@@ -41,18 +43,51 @@ type
     btnClearLog: TButton;
     Button1: TButton;
     buttonTestPTT: TButton;
+    cbNoInet: TCheckBox;
+    cbUseAltPTT: TCheckBox;
+    cbUsePSKReporter: TCheckBox;
+    cbUseRB: TCheckBox;
+    editPSKRAntenna: TEdit;
+    editPSKRCall: TEdit;
+    editUserDefinedPort1: TEdit;
+    hrdAddress: TEdit;
+    hrdPort: TEdit;
+    Label10: TLabel;
+    Label3: TLabel;
+    Label33: TLabel;
+    Label34: TLabel;
+    Label65: TLabel;
+    Label67: TLabel;
+    Label68: TLabel;
+    Label69: TLabel;
+    Label70: TLabel;
+    Label71: TLabel;
+    Label72: TLabel;
+    Label73: TLabel;
+    Label9: TLabel;
+    testHRDPTT: TButton;
+    setHRDQRG: TButton;
     cbAudioIn: TComboBox;
     cbAudioOut: TComboBox;
     cbDisableMultiQSO: TCheckBox;
     cbMultiAutoEnable: TCheckBox;
     cbSaveCSV: TCheckBox;
     cbTXWatchDog: TCheckBox;
-    cbUsePSKReporter: TCheckBox;
-    cbUseRB: TCheckBox;
-    cbUseAltPTT: TCheckBox;
-    cbNoInet: TCheckBox;
     cbRestoreMulti: TCheckBox;
     cbSi570PTT: TCheckBox;
+    cbCWID: TCheckBox;
+    cbEnableQSY1: TCheckBox;
+    cbATQSY5: TCheckBox;
+    cbEnableQSY2: TCheckBox;
+    cbEnableQSY3: TCheckBox;
+    cbEnableQSY4: TCheckBox;
+    cbEnableQSY5: TCheckBox;
+    cbATQSY1: TCheckBox;
+    cbATQSY2: TCheckBox;
+    cbATQSY3: TCheckBox;
+    cbATQSY4: TCheckBox;
+    chkHRDPTT: TCheckBox;
+    chkTxDFVFO: TCheckBox;
     checkSi570: TCheckBox;
     chkNoOptFFT: TCheckBox;
     chkUseCommander: TCheckBox;
@@ -68,6 +103,12 @@ type
     Edit1: TEdit;
     Edit2: TEdit;
     Edit3: TEdit;
+    Edit4: TEdit;
+    edQRGQSY1: TEdit;
+    edQRGQSY2: TEdit;
+    edQRGQSY3: TEdit;
+    edQRGQSY4: TEdit;
+    edQRGQSY5: TEdit;
     editSI570Freq: TEdit;
     editSI570FreqOffset: TEdit;
     edUserMsg10: TEdit;
@@ -83,23 +124,26 @@ type
     edUserQRG2: TEdit;
     edUserQRG3: TEdit;
     edUserQRG4: TEdit;
-    editPSKRCall: TEdit;
-    editPSKRAntenna: TEdit;
-    editUserDefinedPort1: TEdit;
     edUserMsg4: TEdit;
-    Label10: TLabel;
-    Label12: TLabel;
+    groupHRD: TGroupBox;
+    Label11: TLabel;
+    Label15: TLabel;
+    Label16: TLabel;
     Label122: TLabel;
     Label123: TLabel;
     Label124: TLabel;
     Label125: TLabel;
+    Label17: TLabel;
+    Label18: TLabel;
     Label2: TLabel;
     Label20: TLabel;
+    Label21: TLabel;
+    Label24: TLabel;
+    Label25: TLabel;
     Label28: TLabel;
-    Label3: TLabel;
     Label30: TLabel;
-    Label33: TLabel;
-    Label34: TLabel;
+    Label31: TLabel;
+    Label32: TLabel;
     Label35: TLabel;
     Label36: TLabel;
     Label37: TLabel;
@@ -131,6 +175,7 @@ type
     Label62: TLabel;
     Label63: TLabel;
     Label64: TLabel;
+    Label66: TLabel;
     Label7: TLabel;
     Label8: TLabel;
     OmniGroup: TRadioGroup;
@@ -138,8 +183,11 @@ type
     Page5: TPage;
     Page6: TPage;
     Colors: TPage;
-    radioHRD1: TRadioButton;
-    radioHRD2: TRadioButton;
+    pbSMeter: TProgressBar;
+    pbAULeft: TProgressBar;
+    pbAURight: TProgressBar;
+    rbHRD4: TRadioButton;
+    rbHRD5: TRadioButton;
     RadioGroup1: TRadioGroup;
     RadioGroup2: TRadioGroup;
     radioOmni1: TRadioButton;
@@ -153,7 +201,6 @@ type
     edRXSRCor: TEdit;
     edTXSRCor: TEdit;
     Label1: TLabel;
-    Label13: TLabel;
     Label14: TLabel;
     Label19: TLabel;
     Label22: TLabel;
@@ -163,13 +210,26 @@ type
     Label29: TLabel;
     Label53: TLabel;
     Label54: TLabel;
-    Label9: TLabel;
     lbDiagLog: TListBox;
     Notebook1: TNotebook;
     Page1: TPage;
     Page2: TPage;
     Page4: TPage;
     sgCallsHeard: TStringGrid;
+    sliderAFGain: TTrackBar;
+    sliderPALevel: TTrackBar;
+    sliderRFGain: TTrackBar;
+    sliderMicGain: TTrackBar;
+    qsyHour1: TSpinEdit;
+    qsyMinute5: TSpinEdit;
+    qsyMinute1: TSpinEdit;
+    qsyHour2: TSpinEdit;
+    qsyMinute2: TSpinEdit;
+    qsyHour3: TSpinEdit;
+    qsyMinute3: TSpinEdit;
+    qsyHour4: TSpinEdit;
+    qsyMinute4: TSpinEdit;
+    qsyHour5: TSpinEdit;
     procedure btnClearLogClick(Sender: TObject);
     procedure Button1Click(Sender: TObject);
     procedure buttonTestPTTClick(Sender: TObject);
@@ -191,6 +251,12 @@ type
     procedure edMyCallChange(Sender: TObject);
     procedure edUserMsgChange(Sender: TObject);
     procedure FormCreate(Sender: TObject);
+    procedure setHRDQRGClick(Sender: TObject);
+    procedure sliderAFGainChange(Sender: TObject);
+    procedure sliderMicGainChange(Sender: TObject);
+    procedure sliderPALevelChange(Sender: TObject);
+    procedure sliderRFGainChange(Sender: TObject);
+    procedure testHRDPTTClick(Sender: TObject);
 
   private
     { private declarations }
@@ -463,12 +529,15 @@ procedure TForm6.chkUseHRDChange(Sender: TObject);
 begin
      If chkUseHRD.Checked Then
      Begin
+          cfgvtwo.Form6.groupHRD.Caption := 'Waiting for data from HRD';
+          cfgvtwo.Form6.groupHRD.Visible := True;
           chkUseOmni.Checked := False;
           chkUseCommander.Checked := False;
           glcatBy := 'hrd';
      End
      Else
      Begin
+          cfgvtwo.Form6.groupHRD.Visible := False;
           glcatBy := 'none';
           globalData.gqrg := 0.0;
           globalData.strqrg := '0';
@@ -652,6 +721,89 @@ end;
 procedure TForm6.FormCreate(Sender: TObject);
 begin
      Form6.DirectoryEdit1.Directory := GetAppConfigDir(False);
+end;
+
+procedure TForm6.setHRDQRGClick(Sender: TObject);
+Begin
+     if cfgvtwo.Form6.rbHRD4.Checked Then globalData.hrdVersion :=4;
+     if cfgvtwo.Form6.rbHRD5.Checked Then globalData.hrdVersion :=5;
+     catControl.hrdrigCAPS();
+     if globalData.hrdcatControlcurrentRig.hrdAlive Then
+     Begin
+          // Need to send a set QRG message
+          catControl.writeHRD('[' + globalData.hrdcatControlcurrentRig.radioContext + '] set frequency-hz ' + cfgvtwo.Form6.Edit4.Text);
+     end;
+end;
+
+procedure TForm6.sliderAFGainChange(Sender: TObject);
+begin
+     if cfgvtwo.Form6.rbHRD4.Checked Then globalData.hrdVersion :=4;
+     if cfgvtwo.Form6.rbHRD5.Checked Then globalData.hrdVersion :=5;
+     catControl.hrdrigCAPS();
+     if globalData.hrdcatControlcurrentRig.hrdAlive Then
+     Begin
+          // Changes AF Gain via HRD
+          sleep(10);
+          //[c] set slider-pos RADIO XXX POS
+          catControl.writeHRD('[' + globalData.hrdcatControlcurrentRig.radioContext + '] set slider-pos ' + globalData.hrdcatControlcurrentRig.radioName + ' ' + globalData.hrdcatControlcurrentRig.afgControl + ' ' + IntToStr(cfgvtwo.Form6.sliderAFGain.Position));
+     end;
+end;
+
+procedure TForm6.sliderMicGainChange(Sender: TObject);
+begin
+     if cfgvtwo.Form6.rbHRD4.Checked Then globalData.hrdVersion :=4;
+     if cfgvtwo.Form6.rbHRD5.Checked Then globalData.hrdVersion :=5;
+     catControl.hrdrigCAPS();
+     if globalData.hrdcatControlcurrentRig.hrdAlive Then
+     Begin
+          // Changes Mic Gain via HRD
+          sleep(10);
+          //[c] set slider-pos RADIO XXX POS
+          catControl.writeHRD('[' + globalData.hrdcatControlcurrentRig.radioContext + '] set slider-pos ' + globalData.hrdcatControlcurrentRig.radioName + ' ' + globalData.hrdcatControlcurrentRig.micgControl + ' ' + IntToStr(cfgvtwo.Form6.sliderMicGain.Position));
+     end;
+end;
+
+procedure TForm6.sliderPALevelChange(Sender: TObject);
+begin
+     if cfgvtwo.Form6.rbHRD4.Checked Then globalData.hrdVersion :=4;
+     if cfgvtwo.Form6.rbHRD5.Checked Then globalData.hrdVersion :=5;
+     catControl.hrdrigCAPS();
+     if globalData.hrdcatControlcurrentRig.hrdAlive Then
+     Begin
+          // Changes PA Output level via HRD
+          sleep(10);
+          //[c] set slider-pos RADIO XXX POS
+          catControl.writeHRD('[' + globalData.hrdcatControlcurrentRig.radioContext + '] set slider-pos ' + globalData.hrdcatControlcurrentRig.radioName + ' ' + globalData.hrdcatControlcurrentRig.pagControl + ' ' + IntToStr(cfgvtwo.Form6.sliderPALevel.Position));
+     end;
+end;
+
+procedure TForm6.sliderRFGainChange(Sender: TObject);
+begin
+     if cfgvtwo.Form6.rbHRD4.Checked Then globalData.hrdVersion :=4;
+     if cfgvtwo.Form6.rbHRD5.Checked Then globalData.hrdVersion :=5;
+     catControl.hrdrigCAPS();
+     if globalData.hrdcatControlcurrentRig.hrdAlive Then
+     Begin
+          // Changes RF gain via HRD
+          sleep(10);
+          //[c] set slider-pos RADIO XXX POS
+          catControl.writeHRD('[' + globalData.hrdcatControlcurrentRig.radioContext + '] set slider-pos ' + globalData.hrdcatControlcurrentRig.radioName + ' ' + globalData.hrdcatControlcurrentRig.rfgControl + ' ' + IntToStr(cfgvtwo.Form6.sliderRFGain.Position));
+     end;
+end;
+
+procedure TForm6.testHRDPTTClick(Sender: TObject);
+begin
+     if cfgvtwo.Form6.rbHRD4.Checked Then globalData.hrdVersion :=4;
+     if cfgvtwo.Form6.rbHRD5.Checked Then globalData.hrdVersion :=5;
+     catControl.hrdrigCAPS();
+     if globalData.hrdcatControlcurrentRig.hrdAlive Then
+     Begin
+          // Need to execute an HRD PTT sequence.
+          // [c] set button-select XXX 0|1
+          catControl.writeHRD('[' + globalData.hrdcatControlcurrentRig.radioContext + '] set button-select ' + globalData.hrdcatControlcurrentRig.txControl + ' 1');
+          sleep(500);
+          catControl.writeHRD('[' + globalData.hrdcatControlcurrentRig.radioContext + '] set button-select ' + globalData.hrdcatControlcurrentRig.txControl + ' 0');
+     end;
 end;
 
 procedure TForm6.ComboBox1Change(Sender: TObject);

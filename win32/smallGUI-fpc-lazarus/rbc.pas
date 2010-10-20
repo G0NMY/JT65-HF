@@ -190,6 +190,9 @@ End;
 function stToString() : String;
 var
    st : TSYSTEMTIME;
+   {$IFDEF linux}
+    dt : TDateTime;
+   {$ENDIF}
    sTime : String;
 begin
      st.Day := 0;
@@ -199,9 +202,6 @@ begin
      {$IFDEF linux}
        dt := synaUtil.GetUTTime;
        DateTimeToSystemTime(GetUTTime,st);
-     {$ENDIF}
-     {$IFDEF darwin}
-       // Unknown at this point and probably moot.  Little chance this will ever run in MacOS X
      {$ENDIF}
      sTime := IntToStr(st.Year) + '-';
      If st.Month < 10 Then sTime := sTime + '0' + IntToStr(st.Month) + '-' else
@@ -694,12 +694,7 @@ Var
    fname   : String;
 Begin
      Try
-        {$IFDEF win32}
-          fname := GetAppConfigDir(False)+'\rbcache.txt';
-        {$ENDIF}
-        {$IFDEF linux}
-          fname := GetAppConfigDir(False)+'rbcache.txt';
-        {$ENDIF}
+        fname := GetAppConfigDir(False)+'rbcache.txt';
         AssignFile(rbCache,fname);
         If FileExists(fname) Then Append(rbCache) Else Rewrite(rbCache);
         WriteLn(rbCache,url+',F');

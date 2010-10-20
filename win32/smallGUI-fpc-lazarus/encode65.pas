@@ -25,7 +25,7 @@ unit encode65;
 interface
 
 uses
-  Classes, SysUtils, StrUtils;
+  Classes, SysUtils, StrUtils, CTypes;
 
 Const
   JT_DLL = 'jt65.dll';
@@ -49,11 +49,18 @@ procedure  gen4(PMsg,
                 PNmsg : Pointer
                ); cdecl; external JT_DLL name 'gen24_';
 
+procedure genCW(PMsg,
+                Pfreqcw,
+                Piwave,
+                Pnwave : Pointer
+               ); cdecl; external JT_DLL name 'gencwid_';
+
 procedure pfxBuild();
 
 Var
    e65pfx    : Array[0..338] of String;
    e65sfx    : Array[0..11] of String;
+   e65cwid   : Packed Array[0..110249] of CTypes.cint16;
 
 implementation
   procedure pfxBuild();

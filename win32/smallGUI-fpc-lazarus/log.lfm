@@ -1,15 +1,15 @@
 object Form2: TForm2
-  Left = 17
-  Height = 250
-  Top = 15
+  Left = 20
+  Height = 350
+  Top = 17
   Width = 385
   BorderIcons = []
   Caption = 'Log Contact'
-  ClientHeight = 250
+  ClientHeight = 350
   ClientWidth = 385
-  Constraints.MaxHeight = 250
+  Constraints.MaxHeight = 350
   Constraints.MaxWidth = 385
-  Constraints.MinHeight = 190
+  Constraints.MinHeight = 350
   Constraints.MinWidth = 385
   Font.Height = -13
   Font.Name = 'Arial'
@@ -150,10 +150,22 @@ object Form2: TForm2
   object Label29: TLabel
     Left = 8
     Height = 15
-    Top = 159
+    Top = 200
     Width = 189
     Caption = 'Location of Log file (jt65hf_log.adi)'
     Font.Height = -11
+    Font.Name = 'Arial'
+    Font.Style = [fsBold]
+    ParentColor = False
+    ParentFont = False
+  end
+  object Label12: TLabel
+    Left = 8
+    Height = 17
+    Top = 169
+    Width = 36
+    Caption = 'Notes'
+    Font.Height = -13
     Font.Name = 'Arial'
     Font.Style = [fsBold]
     ParentColor = False
@@ -219,7 +231,7 @@ object Form2: TForm2
   object btnLogQSO: TButton
     Left = 8
     Height = 25
-    Top = 216
+    Top = 256
     Width = 250
     Caption = 'Log Contact And Close This Window'
     Font.Height = -13
@@ -239,7 +251,7 @@ object Form2: TForm2
   object DirectoryEdit1: TDirectoryEdit
     Left = 8
     Height = 24
-    Top = 176
+    Top = 217
     Width = 347
     ShowHidden = False
     ButtonWidth = 23
@@ -249,7 +261,7 @@ object Form2: TForm2
   object Button1: TButton
     Left = 303
     Height = 25
-    Top = 216
+    Top = 256
     Width = 75
     Caption = 'Cancel'
     Font.Height = -13
@@ -258,5 +270,12 @@ object Form2: TForm2
     OnClick = Button1Click
     ParentFont = False
     TabOrder = 11
+  end
+  object edLogComment: TEdit
+    Left = 56
+    Height = 24
+    Top = 162
+    Width = 320
+    TabOrder = 12
   end
 end

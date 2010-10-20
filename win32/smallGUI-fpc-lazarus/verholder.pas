@@ -28,11 +28,16 @@ uses
   Classes, SysUtils; 
 
   function verReturn() : String;
+  function dllReturn() : Integer;
 
 implementation
   function verReturn() : String;
   Begin
-       Result := '1.0.5.2';
+       Result := '1.0.7';
   End;
+  function dllReturn() : Integer;
+  Begin
+       Result := 3000;
+  end;
 end.
 
