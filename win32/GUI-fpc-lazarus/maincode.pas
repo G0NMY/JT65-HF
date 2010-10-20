@@ -1808,6 +1808,16 @@ begin
           diagout.Form3.ListBox1.Items.Add('Terminated Decoder Thread');
 
           diagout.Form3.ListBox1.Items.Add('Terminating Rig Control Thread');
+          termcount :=0;
+          if catcontrol.hrdConnected() then diagout.Form3.ListBox1.Items.Add('Disconnecting HRD');
+          while catcontrol.hrdConnected() do
+          Begin
+               application.ProcessMessages;
+               catcontrol.hrdDisconnect();
+               sleep(1000);
+               inc(termcount);
+               if termcount > 9 Then break;
+          end;
           termcount := 0;
           while catInProgress Do
           Begin
@@ -1817,7 +1827,6 @@ begin
                if termcount > 9 then break;
           end;
           rigThread.Suspend;
-          if catcontrol.hrdConnected() then catcontrol.hrdDisconnect();
           diagout.Form3.ListBox1.Items.Add('Terminated Rig Control Thread');
 
           diagout.Form3.ListBox1.Items.Add('Freeing Threads');

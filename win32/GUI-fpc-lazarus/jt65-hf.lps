@@ -20,12 +20,12 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="maincode"/>
-        <CursorPos X="31" Y="5300"/>
-        <TopLine Value="5281"/>
+        <CursorPos X="1" Y="1821"/>
+        <TopLine Value="1798"/>
         <EditorIndex Value="5"/>
         <UsageCount Value="215"/>
         <Bookmarks Count="2">
-          <Item0 X="1" Y="4242" ID="0"/>
+          <Item0 X="1" Y="4251" ID="0"/>
           <Item1 X="1" Y="443" ID="1"/>
         </Bookmarks>
         <Loaded Value="True"/>
