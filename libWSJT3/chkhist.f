@@ -8,6 +8,7 @@ C      http://developer.berlios.de/projects/wsjt/.
       integer mrsym(63)
       integer hist(0:63)
       integer ipk
+      integer nmax
 
       do i=0,63
          hist(i)=0

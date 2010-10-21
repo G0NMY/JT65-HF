@@ -6,7 +6,7 @@
       character*255 kvfile
       integer era(51),dat4(12),indx(64)
       integer mrsym(63),mr2sym(63),mrprob(63),mr2prob(63)
-      integer nhist(0:63)
+      integer nhist
       logical first
       integer system
       common/extcom/ntdecode

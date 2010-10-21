@@ -20,8 +20,8 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="maincode"/>
-        <CursorPos X="12" Y="5593"/>
-        <TopLine Value="5575"/>
+        <CursorPos X="35" Y="3333"/>
+        <TopLine Value="3325"/>
         <EditorIndex Value="5"/>
         <UsageCount Value="215"/>
         <Bookmarks Count="2">
@@ -164,7 +164,7 @@
         <Filename Value="verholder.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="verHolder"/>
-        <CursorPos X="7" Y="41"/>
+        <CursorPos X="22" Y="40"/>
         <TopLine Value="7"/>
         <EditorIndex Value="19"/>
         <UsageCount Value="201"/>
@@ -354,7 +354,7 @@
       </Unit34>
     </Units>
     <General>
-      <ActiveEditorIndexAtStart Value="5"/>
+      <ActiveEditorIndexAtStart Value="19"/>
     </General>
   </ProjectSession>
   <Debugging>

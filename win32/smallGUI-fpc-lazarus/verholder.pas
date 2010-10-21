@@ -37,7 +37,7 @@ implementation
   End;
   function dllReturn() : Integer;
   Begin
-       Result := 3000;
+       Result := 3001;
   end;
 end.
 

@@ -3,8 +3,8 @@
       integer vint
       character vstr*7
 
-      vint = 3000
-      vstr = '3.0.0.0'
+      vint = 3001
+      vstr = '3.0.0.1'
 
       return
       end
