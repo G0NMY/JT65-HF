@@ -20,8 +20,8 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="maincode"/>
-        <CursorPos X="75" Y="2000"/>
-        <TopLine Value="1998"/>
+        <CursorPos X="12" Y="5593"/>
+        <TopLine Value="5575"/>
         <EditorIndex Value="5"/>
         <UsageCount Value="215"/>
         <Bookmarks Count="2">
@@ -326,7 +326,7 @@
         <ComponentName Value="Form4"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="about"/>
-        <CursorPos X="112" Y="21"/>
+        <CursorPos X="32" Y="11"/>
         <TopLine Value="1"/>
         <EditorIndex Value="7"/>
         <UsageCount Value="98"/>
@@ -354,7 +354,7 @@
       </Unit34>
     </Units>
     <General>
-      <ActiveEditorIndexAtStart Value="7"/>
+      <ActiveEditorIndexAtStart Value="5"/>
     </General>
   </ProjectSession>
   <Debugging>

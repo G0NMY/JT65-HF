@@ -251,6 +251,8 @@ type
     procedure edMyCallChange(Sender: TObject);
     procedure edUserMsgChange(Sender: TObject);
     procedure FormCreate(Sender: TObject);
+    procedure hrdAddressChange(Sender: TObject);
+    procedure hrdPortChange(Sender: TObject);
     procedure setHRDQRGClick(Sender: TObject);
     procedure sliderAFGainChange(Sender: TObject);
     procedure sliderMicGainChange(Sender: TObject);
@@ -721,6 +723,26 @@ end;
 procedure TForm6.FormCreate(Sender: TObject);
 begin
      Form6.DirectoryEdit1.Directory := GetAppConfigDir(False);
+end;
+
+procedure TForm6.hrdAddressChange(Sender: TObject);
+begin
+     globalData.hrdcatControlcurrentRig.hrdAddress := cfgvtwo.Form6.hrdAddress.Text;
+end;
+
+procedure TForm6.hrdPortChange(Sender: TObject);
+Var
+   tstint : Integer;
+begin
+     tstint := 0;
+     If TryStrToInt(hrdPort.Text,tstint) Then
+     Begin
+          globalData.hrdcatControlcurrentRig.hrdPort := tstint;
+     end
+     else
+     begin
+          globalData.hrdcatControlcurrentRig.hrdPort := 7809;
+     end;
 end;
 
 procedure TForm6.setHRDQRGClick(Sender: TObject);

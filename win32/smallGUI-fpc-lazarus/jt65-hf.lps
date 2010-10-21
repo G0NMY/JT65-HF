@@ -20,12 +20,12 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="maincode"/>
-        <CursorPos X="1" Y="6003"/>
-        <TopLine Value="5967"/>
+        <CursorPos X="105" Y="5561"/>
+        <TopLine Value="5543"/>
         <EditorIndex Value="5"/>
         <UsageCount Value="215"/>
         <Bookmarks Count="2">
-          <Item0 X="1" Y="4250" ID="0"/>
+          <Item0 X="1" Y="4300" ID="0"/>
           <Item1 X="1" Y="442" ID="1"/>
         </Bookmarks>
         <Loaded Value="True"/>
@@ -144,8 +144,8 @@
         <ComponentName Value="Form6"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="cfgvtwo"/>
-        <CursorPos X="1" Y="736"/>
-        <TopLine Value="714"/>
+        <CursorPos X="21" Y="735"/>
+        <TopLine Value="717"/>
         <EditorIndex Value="8"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
@@ -307,7 +307,7 @@
         <CursorPos X="28" Y="3"/>
         <TopLine Value="1"/>
         <EditorIndex Value="3"/>
-        <UsageCount Value="121"/>
+        <UsageCount Value="123"/>
         <Loaded Value="True"/>
       </Unit30>
       <Unit31>
@@ -317,7 +317,7 @@
         <CursorPos X="1" Y="1"/>
         <TopLine Value="1"/>
         <EditorIndex Value="4"/>
-        <UsageCount Value="121"/>
+        <UsageCount Value="123"/>
         <Loaded Value="True"/>
       </Unit31>
       <Unit32>
@@ -329,7 +329,7 @@
         <CursorPos X="112" Y="21"/>
         <TopLine Value="1"/>
         <EditorIndex Value="7"/>
-        <UsageCount Value="98"/>
+        <UsageCount Value="100"/>
         <Loaded Value="True"/>
       </Unit32>
       <Unit33>
@@ -339,7 +339,7 @@
         <CursorPos X="1" Y="152"/>
         <TopLine Value="116"/>
         <EditorIndex Value="16"/>
-        <UsageCount Value="27"/>
+        <UsageCount Value="29"/>
         <Loaded Value="True"/>
       </Unit33>
       <Unit34>
@@ -349,7 +349,7 @@
         <CursorPos X="11" Y="92"/>
         <TopLine Value="71"/>
         <EditorIndex Value="18"/>
-        <UsageCount Value="26"/>
+        <UsageCount Value="28"/>
         <Loaded Value="True"/>
       </Unit34>
     </Units>

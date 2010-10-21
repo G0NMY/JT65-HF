@@ -1,13 +1,13 @@
 object Form1: TForm1
-  Left = 0
+  Left = 2
   Height = 560
-  Top = 9
+  Top = 0
   Width = 935
   ActiveControl = btnReDecode
   Caption = 'JT65-HF'
   ClientHeight = 540
   ClientWidth = 935
-  Constraints.MaxHeight = 690
+  Constraints.MaxHeight = 560
   Constraints.MaxWidth = 935
   Constraints.MinHeight = 560
   Constraints.MinWidth = 935
@@ -250,7 +250,7 @@ object Form1: TForm1
     ParentFont = False
   end
   object Label39: TLabel
-    Left = 697
+    Left = 699
     Height = 15
     Top = 442
     Width = 73
@@ -275,20 +275,6 @@ object Form1: TForm1
     ParentColor = False
     ParentFont = False
   end
-  object Label19: TLabel
-    Left = 520
-    Height = 17
-    Hint = 'Double click to disable PSKR'
-    Top = 145
-    Width = 56
-    Caption = 'PSKR:  0'
-    Font.Height = -13
-    Font.Name = 'Arial'
-    Font.Style = [fsBold]
-    ParentColor = False
-    ParentFont = False
-    OnDblClick = Label19DblClick
-  end
   object Label12: TLabel
     Left = 343
     Height = 17
@@ -300,20 +286,6 @@ object Form1: TForm1
     Font.Style = [fsBold]
     ParentColor = False
     ParentFont = False
-  end
-  object Label30: TLabel
-    Left = 538
-    Height = 17
-    Hint = 'Double click to disable RB'
-    Top = 123
-    Width = 38
-    Caption = 'RB:  0'
-    Font.Height = -13
-    Font.Name = 'Arial'
-    Font.Style = [fsBold]
-    ParentColor = False
-    ParentFont = False
-    OnDblClick = Label30DblClick
   end
   object edMsg: TEdit
     Left = 556
@@ -520,7 +492,7 @@ object Form1: TForm1
     object Label1: TLabel
       Left = 11
       Height = 42
-      Top = 212
+      Top = 182
       Width = 137
       Caption = '16:10:05'
       Font.Height = -35
@@ -532,7 +504,7 @@ object Form1: TForm1
     object Label9: TLabel
       Left = 17
       Height = 25
-      Top = 183
+      Top = 160
       Width = 124
       Caption = '2009-Mar-30'
       Font.Height = -21
@@ -544,7 +516,7 @@ object Form1: TForm1
     object Label4: TLabel
       Left = 1
       Height = 29
-      Top = 73
+      Top = 60
       Width = 153
       Caption = 'Optimum input level is 0 with'#13#10'only background noise present.'
       ParentColor = False
@@ -552,7 +524,7 @@ object Form1: TForm1
     object Label10: TLabel
       Left = 1
       Height = 15
-      Top = 124
+      Top = 111
       Width = 19
       Caption = 'L: 0'
       ParentColor = False
@@ -560,7 +532,7 @@ object Form1: TForm1
     object Label11: TLabel
       Left = 1
       Height = 15
-      Top = 149
+      Top = 136
       Width = 20
       Caption = 'R: 0'
       ParentColor = False
@@ -568,8 +540,8 @@ object Form1: TForm1
     object Label25: TLabel
       Left = 1
       Height = 15
-      Top = 107
-      Width = 85
+      Top = 94
+      Width = 84
       Caption = 'Digital Audio Gain'
       ParentColor = False
     end
@@ -581,10 +553,38 @@ object Form1: TForm1
       Caption = 'Audio Input Levels'
       ParentColor = False
     end
+    object Label30: TLabel
+      Left = 89
+      Height = 17
+      Hint = 'Double click to disable RB'
+      Top = 221
+      Width = 12
+      Caption = ' 0'
+      Font.Height = -13
+      Font.Name = 'Arial'
+      Font.Style = [fsBold]
+      ParentColor = False
+      ParentFont = False
+      OnDblClick = Label30DblClick
+    end
+    object Label19: TLabel
+      Left = 89
+      Height = 17
+      Hint = 'Double click to disable PSKR'
+      Top = 237
+      Width = 12
+      Caption = ' 0'
+      Font.Height = -13
+      Font.Name = 'Arial'
+      Font.Style = [fsBold]
+      ParentColor = False
+      ParentFont = False
+      OnDblClick = Label19DblClick
+    end
     object pbAu2: TProgressBar
       Left = 1
       Height = 18
-      Top = 45
+      Top = 40
       Width = 100
       Smooth = True
       Step = 1
@@ -609,7 +609,7 @@ object Form1: TForm1
     object rbUseRight: TRadioButton
       Left = 106
       Height = 19
-      Top = 45
+      Top = 40
       Width = 36
       Caption = '-21'
       Font.Height = -11
@@ -623,7 +623,7 @@ object Form1: TForm1
     object TrackBar1: TTrackBar
       Left = 37
       Height = 20
-      Top = 124
+      Top = 111
       Width = 120
       Max = 6
       Min = -6
@@ -635,7 +635,7 @@ object Form1: TForm1
     object TrackBar2: TTrackBar
       Left = 37
       Height = 20
-      Top = 149
+      Top = 136
       Width = 120
       Max = 6
       Min = -6
@@ -653,6 +653,24 @@ object Form1: TForm1
       Step = 1
       TabOrder = 5
       BarShowText = True
+    end
+    object cbEnRB: TCheckBox
+      Left = 2
+      Height = 19
+      Top = 221
+      Width = 69
+      Caption = 'Enable RB'
+      OnChange = cbEnRBChange
+      TabOrder = 6
+    end
+    object cbEnPSKR: TCheckBox
+      Left = 2
+      Height = 19
+      Top = 237
+      Width = 82
+      Caption = 'Enable PSKR'
+      OnClick = cbEnPSKRClick
+      TabOrder = 7
     end
   end
   object GroupBox4: TGroupBox
@@ -1112,24 +1130,6 @@ object Form1: TForm1
     ParentFont = False
     TabOrder = 34
   end
-  object cbEnRB: TCheckBox
-    Left = 657
-    Height = 20
-    Top = 120
-    Width = 82
-    Caption = 'Enable RB'
-    OnChange = cbEnRBChange
-    TabOrder = 35
-  end
-  object cbEnPSKR: TCheckBox
-    Left = 657
-    Height = 20
-    Top = 142
-    Width = 100
-    Caption = 'Enable PSKR'
-    OnClick = cbEnPSKRClick
-    TabOrder = 36
-  end
   object Edit2: TEdit
     Left = 677
     Height = 24
@@ -1142,7 +1142,7 @@ object Form1: TForm1
     ParentFont = False
     ReadOnly = True
     TabStop = False
-    TabOrder = 37
+    TabOrder = 35
     Text = '100'
   end
   object btnReDecode: TButton
@@ -1156,7 +1156,7 @@ object Form1: TForm1
     Font.Style = [fsBold]
     OnClick = btnReDecodeClick
     ParentFont = False
-    TabOrder = 38
+    TabOrder = 36
   end
   object Timer1: TTimer
     Interval = 220

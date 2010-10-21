@@ -54,10 +54,10 @@ type
     buttonAnswerCQ: TButton;
     buttonSendReport: TButton;
     buttonAckReport1: TButton;
+    cbEnPSKR: TCheckBox;
+    cbEnRB: TCheckBox;
     cbSpecPal: TComboBox;
     cbSmooth: TCheckBox;
-    cbEnRB: TCheckBox;
-    cbEnPSKR: TCheckBox;
     chkAFC: TCheckBox;
     chkAutoTxDF: TCheckBox;
     chkEnTX: TCheckBox;
@@ -3313,7 +3313,7 @@ end;
 procedure TForm1.initializerCode();
 var
    paInS, paOutS, foo : String;
-   i                  : Integer;
+   i, ifoo            : Integer;
    paDefApi           : Integer;
    paDefApiDevCount   : Integer;
    vint, tstint       : Integer;
@@ -4145,39 +4145,89 @@ Begin
      if cfg.storedValue['si570ptt'] = 'y' then globalData.si570ptt := True else globalData.si570ptt := False;
      if cfg.storedValue['useCWID'] = 'y' then cfgvtwo.Form6.cbCWID.Checked := True else cfgvtwo.Form6.cbCWID.Checked := False;
      if cfg.StoredValue['useCATTxDF'] = 'yes' then cfgvtwo.Form6.chkTxDFVFO.Checked := True else cfgvtwo.Form6.chkTxDFVFO.Checked := False;
+
      if cfg.StoredValue['enAutoQSY1'] = 'yes' then cfgvtwo.Form6.cbEnableQSY1.Checked := True else cfgvtwo.Form6.cbEnableQSY1.Checked := False;
      if cfg.StoredValue['enAutoQSY2'] = 'yes' then cfgvtwo.Form6.cbEnableQSY2.Checked := True else cfgvtwo.Form6.cbEnableQSY2.Checked := False;
      if cfg.StoredValue['enAutoQSY3'] = 'yes' then cfgvtwo.Form6.cbEnableQSY3.Checked := True else cfgvtwo.Form6.cbEnableQSY3.Checked := False;
      if cfg.StoredValue['enAutoQSY4'] = 'yes' then cfgvtwo.Form6.cbEnableQSY4.Checked := True else cfgvtwo.Form6.cbEnableQSY4.Checked := False;
      if cfg.StoredValue['enAutoQSY5'] = 'yes' then cfgvtwo.Form6.cbEnableQSY5.Checked := True else cfgvtwo.Form6.cbEnableQSY5.Checked := False;
+
      if cfg.StoredValue['autoQSYAT1'] = 'yes' then cfgvtwo.Form6.cbATQSY1.Checked := True else cfgvtwo.Form6.cbATQSY1.Checked := False;
      if cfg.StoredValue['autoQSYAT2'] = 'yes' then cfgvtwo.Form6.cbATQSY2.Checked := True else cfgvtwo.Form6.cbATQSY2.Checked := False;
      if cfg.StoredValue['autoQSYAT3'] = 'yes' then cfgvtwo.Form6.cbATQSY3.Checked := True else cfgvtwo.Form6.cbATQSY3.Checked := False;
      if cfg.StoredValue['autoQSYAT4'] = 'yes' then cfgvtwo.Form6.cbATQSY4.Checked := True else cfgvtwo.Form6.cbATQSY4.Checked := False;
      if cfg.StoredValue['autoQSYAT5'] = 'yes' then cfgvtwo.Form6.cbATQSY5.Checked := True else cfgvtwo.Form6.cbATQSY5.Checked := False;
+
      cfgvtwo.Form6.edQRGQSY1.Text := cfg.StoredValue['autoQSYQRG1'];
      cfgvtwo.Form6.edQRGQSY2.Text := cfg.StoredValue['autoQSYQRG2'];
      cfgvtwo.Form6.edQRGQSY3.Text := cfg.StoredValue['autoQSYQRG3'];
      cfgvtwo.Form6.edQRGQSY4.Text := cfg.StoredValue['autoQSYQRG4'];
      cfgvtwo.Form6.edQRGQSY5.Text := cfg.StoredValue['autoQSYQRG5'];
+
      foo := cfg.StoredValue['autoQSYUTC1'];
-     cfgvtwo.Form6.qsyHour1.Value := StrToInt(foo[1..2]);
-     cfgvtwo.Form6.qsyMinute1.Value := StrToInt(foo[3..4]);
+     if TryStrToInt(cfg.StoredValue['autoQSYUTC1'],ifoo) Then
+     Begin
+          cfgvtwo.Form6.qsyHour1.Value := StrToInt(foo[1..2]);
+          cfgvtwo.Form6.qsyMinute1.Value := StrToInt(foo[3..4]);
+     end
+     else
+     begin
+          cfgvtwo.Form6.qsyHour1.Value := 0;
+          cfgvtwo.Form6.qsyMinute1.Value := 0;
+     end;
+
      foo := cfg.StoredValue['autoQSYUTC2'];
-     cfgvtwo.Form6.qsyHour2.Value := StrToInt(foo[1..2]);
-     cfgvtwo.Form6.qsyMinute2.Value := StrToInt(foo[3..4]);
+     if TryStrToInt(cfg.StoredValue['autoQSYUTC2'],ifoo) Then
+     Begin
+          cfgvtwo.Form6.qsyHour2.Value := StrToInt(foo[1..2]);
+          cfgvtwo.Form6.qsyMinute2.Value := StrToInt(foo[3..4]);
+     end
+     else
+     begin
+          cfgvtwo.Form6.qsyHour2.Value := 0;
+          cfgvtwo.Form6.qsyMinute2.Value := 0;
+     end;
+
      foo := cfg.StoredValue['autoQSYUTC3'];
-     cfgvtwo.Form6.qsyHour3.Value := StrToInt(foo[1..2]);
-     cfgvtwo.Form6.qsyMinute3.Value := StrToInt(foo[3..4]);
+     if TryStrToInt(cfg.StoredValue['autoQSYUTC3'],ifoo) Then
+     Begin
+          cfgvtwo.Form6.qsyHour3.Value := StrToInt(foo[1..2]);
+          cfgvtwo.Form6.qsyMinute3.Value := StrToInt(foo[3..4]);
+     end
+     else
+     begin
+          cfgvtwo.Form6.qsyHour3.Value := 0;
+          cfgvtwo.Form6.qsyMinute3.Value := 0;
+     end;
+
      foo := cfg.StoredValue['autoQSYUTC4'];
-     cfgvtwo.Form6.qsyHour4.Value := StrToInt(foo[1..2]);
-     cfgvtwo.Form6.qsyMinute4.Value := StrToInt(foo[3..4]);
+     if TryStrToInt(cfg.StoredValue['autoQSYUTC4'],ifoo) Then
+     Begin
+          cfgvtwo.Form6.qsyHour4.Value := StrToInt(foo[1..2]);
+          cfgvtwo.Form6.qsyMinute4.Value := StrToInt(foo[3..4]);
+     end
+     else
+     begin
+          cfgvtwo.Form6.qsyHour4.Value := 0;
+          cfgvtwo.Form6.qsyMinute4.Value := 0;
+     end;
+
      foo := cfg.StoredValue['autoQSYUTC5'];
-     cfgvtwo.Form6.qsyHour5.Value := StrToInt(foo[1..2]);
-     cfgvtwo.Form6.qsyMinute5.Value := StrToInt(foo[3..4]);
+     if TryStrToInt(cfg.StoredValue['autoQSYUTC5'],ifoo) Then
+     Begin
+          cfgvtwo.Form6.qsyHour5.Value := StrToInt(foo[1..2]);
+          cfgvtwo.Form6.qsyMinute5.Value := StrToInt(foo[3..4]);
+     end
+     else
+     begin
+          cfgvtwo.Form6.qsyHour5.Value := 0;
+          cfgvtwo.Form6.qsyMinute5.Value := 0;
+     end;
+
      cfgvtwo.Form6.hrdAddress.Text := cfg.StoredValue['hrdAddress'];
      globalData.hrdcatControlcurrentRig.hrdAddress := cfgvtwo.Form6.hrdAddress.Text;
      cfgvtwo.Form6.hrdPort.Text := cfg.StoredValue['hrdPort'];
+
      tstint := 0;
      If TryStrToInt(cfg.StoredValue['hrdPort'],tstint) Then
      Begin
@@ -5508,11 +5558,11 @@ Begin
      if cfgvtwo.Form6.cbUsePSKReporter.Checked and not primed Then PSKReporter.ReporterTickle;
      If cfgvtwo.Form6.cbUsePSKReporter.Checked and not primed Then
      Begin
-          If PSKReporter.ReporterGetStatistics(pskrStats,SizeOf(pskrStats)) = 0 Then Label19.Caption := 'PSKR: ' + IntToStr(pskrStats.callsigns_sent);
+          If PSKReporter.ReporterGetStatistics(pskrStats,SizeOf(pskrStats)) = 0 Then Label19.Caption := IntToStr(pskrStats.callsigns_sent);
      End;
      if cfgvtwo.Form6.cbUsePSKReporter.Checked Then Form1.Label19.Visible := True else Form1.Label19.Visible := False;
      // RB Check
-     If cfgvtwo.Form6.cbUseRB.Checked Then Label30.Caption := 'RB: ' + IntToStr(rbc.glrbsSentCount);
+     If cfgvtwo.Form6.cbUseRB.Checked Then Label30.Caption := IntToStr(rbc.glrbsSentCount);
      if cfgvtwo.Form6.cbUseRB.Checked Then Form1.Label30.Visible := True else Form1.Label30.Visible := False;
      // Force Rig control read cycle.
      if (st.Second mod 3 = 0) And not primed Then doCAT := True;
