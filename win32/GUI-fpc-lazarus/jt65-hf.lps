@@ -20,13 +20,13 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="maincode"/>
-        <CursorPos X="35" Y="3333"/>
-        <TopLine Value="3325"/>
+        <CursorPos X="47" Y="5553"/>
+        <TopLine Value="5547"/>
         <EditorIndex Value="5"/>
         <UsageCount Value="215"/>
         <Bookmarks Count="2">
-          <Item0 X="1" Y="4251" ID="0"/>
-          <Item1 X="1" Y="443" ID="1"/>
+          <Item0 X="1" Y="4257" ID="0"/>
+          <Item1 X="1" Y="445" ID="1"/>
         </Bookmarks>
         <Loaded Value="True"/>
       </Unit1>
@@ -164,7 +164,7 @@
         <Filename Value="verholder.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="verHolder"/>
-        <CursorPos X="22" Y="40"/>
+        <CursorPos X="22" Y="32"/>
         <TopLine Value="7"/>
         <EditorIndex Value="19"/>
         <UsageCount Value="201"/>
@@ -294,8 +294,8 @@
         <Filename Value="d65.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="d65"/>
-        <CursorPos X="54" Y="1294"/>
-        <TopLine Value="1279"/>
+        <CursorPos X="6" Y="267"/>
+        <TopLine Value="231"/>
         <EditorIndex Value="21"/>
         <UsageCount Value="202"/>
         <Loaded Value="True"/>
@@ -307,7 +307,7 @@
         <CursorPos X="28" Y="3"/>
         <TopLine Value="1"/>
         <EditorIndex Value="3"/>
-        <UsageCount Value="121"/>
+        <UsageCount Value="123"/>
         <Loaded Value="True"/>
       </Unit30>
       <Unit31>
@@ -317,7 +317,7 @@
         <CursorPos X="1" Y="1"/>
         <TopLine Value="1"/>
         <EditorIndex Value="4"/>
-        <UsageCount Value="121"/>
+        <UsageCount Value="123"/>
         <Loaded Value="True"/>
       </Unit31>
       <Unit32>
@@ -329,7 +329,7 @@
         <CursorPos X="32" Y="11"/>
         <TopLine Value="1"/>
         <EditorIndex Value="7"/>
-        <UsageCount Value="98"/>
+        <UsageCount Value="100"/>
         <Loaded Value="True"/>
       </Unit32>
       <Unit33>
@@ -339,7 +339,7 @@
         <CursorPos X="1" Y="152"/>
         <TopLine Value="116"/>
         <EditorIndex Value="16"/>
-        <UsageCount Value="27"/>
+        <UsageCount Value="29"/>
         <Loaded Value="True"/>
       </Unit33>
       <Unit34>
@@ -349,12 +349,12 @@
         <CursorPos X="11" Y="92"/>
         <TopLine Value="71"/>
         <EditorIndex Value="18"/>
-        <UsageCount Value="26"/>
+        <UsageCount Value="28"/>
         <Loaded Value="True"/>
       </Unit34>
     </Units>
     <General>
-      <ActiveEditorIndexAtStart Value="19"/>
+      <ActiveEditorIndexAtStart Value="21"/>
     </General>
   </ProjectSession>
   <Debugging>

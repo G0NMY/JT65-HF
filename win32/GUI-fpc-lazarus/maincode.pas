@@ -82,8 +82,10 @@ type
     Label16: TLabel;
     Label17: TLabel;
     Label19: TLabel;
+    Label2: TLabel;
     Label20: TLabel;
     Label22: TLabel;
+    Label23: TLabel;
     Label24: TLabel;
     Label25: TLabel;
     Label26: TLabel;
@@ -501,7 +503,7 @@ begin
              Begin
                   If (mnrbcReport) And (not rbc.glrbActive) Then
                   Begin
-                       rbc.glrbCallsign := TrimLeft(TrimRight(cfgvtwo.Form6.editPSKRCall.Text)) + '-1';
+                       if globalData.debugOn Then rbc.glrbCallsign := TrimLeft(TrimRight(cfgvtwo.Form6.editPSKRCall.Text)) + '-2' else rbc.glrbCallsign := TrimLeft(TrimRight(cfgvtwo.Form6.editPSKRCall.Text)) + '-1';
                        rbc.glrbGrid := TrimLeft(TrimRight(cfgvtwo.Form6.edMyGrid.Text));
                        rbc.glrbQRG := Form1.editManQRG.Text;
                        rbc.glrbActive := True;
@@ -510,7 +512,7 @@ begin
                   end;
                   if (cfgvtwo.glrbcLogin) And (not globalData.rbLoggedIn) And (not rbc.glrbActive) Then
                   Begin
-                       rbc.glrbCallsign := TrimLeft(TrimRight(cfgvtwo.Form6.editPSKRCall.Text)) + '-1';
+                       if globalData.debugOn Then rbc.glrbCallsign := TrimLeft(TrimRight(cfgvtwo.Form6.editPSKRCall.Text)) + '-2' else rbc.glrbCallsign := TrimLeft(TrimRight(cfgvtwo.Form6.editPSKRCall.Text)) + '-1';
                        rbc.glrbQRG := Form1.editManQRG.Text;
                        rbc.glrbGrid := TrimLeft(TrimRight(cfgvtwo.Form6.edMyGrid.Text));
                        rbc.glrbActive := True;
@@ -519,7 +521,7 @@ begin
                   End;
                   if (cfgvtwo.glrbcLogout) And (globalData.rbLoggedIn) And (not rbc.glrbActive) Then
                   Begin
-                       rbc.glrbCallsign := TrimLeft(TrimRight(cfgvtwo.Form6.editPSKRCall.Text)) + '-1';
+                       if globalData.debugOn Then rbc.glrbCallsign := TrimLeft(TrimRight(cfgvtwo.Form6.editPSKRCall.Text)) + '-2' else rbc.glrbCallsign := TrimLeft(TrimRight(cfgvtwo.Form6.editPSKRCall.Text)) + '-1';
                        rbc.glrbQRG := Form1.editManQRG.Text;
                        rbc.glrbGrid := TrimLeft(TrimRight(cfgvtwo.Form6.edMyGrid.Text));
                        rbc.glrbActive := True;
@@ -528,7 +530,7 @@ begin
                   End;
                   if (rbcPing) And (not rbc.glrbActive) Then
                   Begin
-                       rbc.glrbCallsign := TrimLeft(TrimRight(cfgvtwo.Form6.editPSKRCall.Text)) + '-1';
+                       if globalData.debugOn Then rbc.glrbCallsign := TrimLeft(TrimRight(cfgvtwo.Form6.editPSKRCall.Text)) + '-2' else rbc.glrbCallsign := TrimLeft(TrimRight(cfgvtwo.Form6.editPSKRCall.Text)) + '-1';
                        rbc.glrbQRG := Form1.editManQRG.Text;
                        rbc.glrbGrid := TrimLeft(TrimRight(cfgvtwo.Form6.edMyGrid.Text));
                        rbc.glrbActive := True;
@@ -1925,13 +1927,15 @@ end;
 
 procedure TForm1.FormCreate(Sender: TObject);
 Var
-   fname, fna  : String;
+   //fname, fna  : String;
+   fname       : String;
    pfname      : PChar;
 begin
-     if globalData.debugOn Then fna := 'D' else fna := '';
+     //if globalData.debugOn Then fna := 'D' else fna := '';
      cfgError := True;
      Try
-        fname := GetAppConfigDir(False)+'station1.xml' + fna;
+        //fname := GetAppConfigDir(False)+'station1.xml' + fna;
+        fname := GetAppConfigDir(False)+'station1.xml';
         cfg.FileName := fname;
         cfgError := False;
      Except
@@ -3320,7 +3324,8 @@ var
    vstr               : PChar;
    st                 : TSYSTEMTIME;
    tstflt             : Double;
-   fname, fna         : String;
+   //fname, fna         : String;
+   fname              : String;
    verUpdate          : Boolean;
 Begin
      // This block is executed only once when the program starts
@@ -3329,7 +3334,7 @@ Begin
           showMessage('Configuration file damaged and can not be recovered.');
           Halt;
      End;
-     if globalData.debugOn Then showMessage('Debug ON');
+     //if globalData.debugOn Then showMessage('Debug ON');
      if cfgRecover then ShowMessage('Configuration file erased due to unrecoverable error.  Please reconfigure.');
      dlog.fileDebug('Entering initializer code.');
      // Check dll version.
@@ -3479,8 +3484,9 @@ Begin
 
      //showmessage('portaudio initialization completed...');
 
-     if globalData.debugOn Then fna := 'D' else fna := '';
-     fname := GetAppConfigDir(False)+'station1.xml' + fna;
+     //if globalData.debugOn Then fna := 'D' else fna := '';
+     //fname := GetAppConfigDir(False)+'station1.xml' + fna;
+     fname := GetAppConfigDir(False)+'station1.xml';
      {$IFDEF win32}
        if not fileExists(fname) Then
      {$ENDIF}
@@ -6021,7 +6027,7 @@ initialization
 
   d65.glnd65firstrun := True;
   d65.glbinspace := 100;
-  globalData.debugOn := False;
+  globalData.debugOn := True;
   globalData.gmode := 65;
   txmode := globalData.gmode;
   mnHavePrefix := False;

@@ -188,12 +188,19 @@ Begin
           kvDat[i] := 0;
      End;
      ierr := 0;
-     kvProc := TProcess.Create(nil);
-     kvProc.CommandLine := 'kvasd_g95.exe -q';
-     kvProc.Options := kvProc.Options + [poWaitOnExit];
-     kvProc.Options := kvProc.Options + [poNoConsole];
-     kvProc.Execute;
-     ierr := kvProc.ExitStatus;
+     if FileExists('KVASD.DAT') Then
+     Begin
+          kvProc := TProcess.Create(nil);
+          kvProc.CommandLine := 'kvasd_g95.exe -q';
+          kvProc.Options := kvProc.Options + [poWaitOnExit];
+          kvProc.Options := kvProc.Options + [poNoConsole];
+          kvProc.Execute;
+          ierr := kvProc.ExitStatus;
+     End
+     Else
+     Begin
+          ierr := -1;
+     end;
      if ierr = 0 Then
      Begin
           Try
@@ -253,7 +260,6 @@ Begin
           Result := False;
           kdec := '';
      End;
-     if FileExists('KVASD.DAT') Then DeleteFile('KVASD.DAT');
 end;
 
 procedure doDecode(bStart, bEnd : Integer);
@@ -1025,25 +1031,31 @@ begin
                                        begin
                                             // Oh joy.  Time to try for kv.
                                             kdec := '';
-                                            if evalKV(kdec) Then
+                                            if FileExists('KVASD.DAT') Then
                                             Begin
-                                                 inc(ndec);
-                                                 // Seems I found a kv decode.
-                                                 foo := TrimLeft(TrimRight(foo)) + TrimLeft(TrimRight(kdec));
-                                                 gldecOut.Add(TrimLeft(TrimRight(foo))+',K');
-                                                 for j := 0 to 99 do
-                                                 begin
-                                                      if decArray[j] = '' Then
-                                                      Begin
-                                                           decArray[j] := TrimLeft(TrimRight(foo))+',K';
-                                                           break;
+                                                 if evalKV(kdec) Then
+                                                 Begin
+                                                      inc(ndec);
+                                                      // Seems I found a kv decode.
+                                                      foo := TrimLeft(TrimRight(foo)) + TrimLeft(TrimRight(kdec));
+                                                      gldecOut.Add(TrimLeft(TrimRight(foo))+',K');
+                                                      for j := 0 to 99 do
+                                                      begin
+                                                           if decArray[j] = '' Then
+                                                           Begin
+                                                                decArray[j] := TrimLeft(TrimRight(foo))+',K';
+                                                                break;
+                                                           end;
                                                       end;
+                                                      if FileExists('KVASD.DAT') Then DeleteFile('KVASD.DAT');
+                                                 end
+                                                 else
+                                                 begin
                                                  end;
                                             end;
                                        end;
                                   end;
                              end;
-                             if FileExists('KVASD.DAT') Then DeleteFile('KVASD.DAT');
                         End;
                    end;
               end;

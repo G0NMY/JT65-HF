@@ -276,15 +276,14 @@ object Form1: TForm1
     ParentFont = False
   end
   object Label19: TLabel
-    Left = 566
+    Left = 761
     Height = 17
     Hint = 'Double click to disable PSKR'
-    Top = 650
-    Width = 56
-    Caption = 'PSKR:  0'
+    Top = 645
+    Width = 8
+    Caption = '0'
     Font.Height = -13
     Font.Name = 'Arial'
-    Font.Style = [fsBold]
     ParentColor = False
     ParentFont = False
     OnDblClick = Label19DblClick
@@ -311,18 +310,28 @@ object Form1: TForm1
     PopupMenu = popupQRG
   end
   object Label30: TLabel
-    Left = 584
+    Left = 761
     Height = 17
     Hint = 'Double click to disable RB'
-    Top = 628
-    Width = 38
-    Caption = 'RB:  0'
+    Top = 621
+    Width = 8
+    Caption = '0'
     Font.Height = -13
     Font.Name = 'Arial'
-    Font.Style = [fsBold]
     ParentColor = False
     ParentFont = False
     OnDblClick = Label30DblClick
+  end
+  object Label2: TLabel
+    Left = 733
+    Height = 15
+    Top = 606
+    Width = 64
+    Caption = 'Reports Sent'
+    Font.Height = -11
+    Font.Name = 'Arial'
+    ParentColor = False
+    ParentFont = False
   end
   object edMsg: TEdit
     Left = 556
@@ -1122,18 +1131,18 @@ object Form1: TForm1
     TabOrder = 34
   end
   object cbEnRB: TCheckBox
-    Left = 703
+    Left = 650
     Height = 20
-    Top = 625
+    Top = 619
     Width = 82
     Caption = 'Enable RB'
     OnChange = cbEnRBChange
     TabOrder = 35
   end
   object cbEnPSKR: TCheckBox
-    Left = 703
+    Left = 650
     Height = 20
-    Top = 647
+    Top = 643
     Width = 100
     Caption = 'Enable PSKR'
     OnClick = cbEnPSKRClick
