@@ -1279,6 +1279,25 @@ begin
                    decode.cSync := TrimLeft(TrimRight(foo));
                    foo := ExtractWord(7,gldecOut.Strings[i],CsvDelim);
                    decode.bDecoded := TrimLeft(TrimRight(foo));
+                   // WARNING LOOK AT THIS IF THINGS START TO GO WRONG IN DISPLAY!
+                   for j := 0 to 49 do
+                   begin
+                        if gld65decodes[j].dtProcessed Then
+                        Begin
+                             gld65decodes[j].dtTimeStamp := '';
+                             gld65decodes[j].dtSigLevel := '';
+                             gld65decodes[j].dtNumSync := '';
+                             gld65decodes[j].dtDeltaTime := '';
+                             gld65decodes[j].dtDeltaFreq := '';
+                             gld65decodes[j].dtSigW := ' ';
+                             gld65decodes[j].dtCharSync := '';
+                             gld65decodes[j].dtDecoded := '';
+                             gld65decodes[j].dtDisplayed := True;
+                             gld65decodes[j].dtProcessed := True;
+                             gld65decodes[j].dtType := '';
+                        end;
+                   end;
+                   // END OF WARNING
                    for j := 0 to 49 do
                    begin
                         if gld65decodes[j].dtProcessed Then

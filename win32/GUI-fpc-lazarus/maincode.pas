@@ -1885,6 +1885,25 @@ Var
 begin
      If cfgvtwo.Form6.cbUseRB.Checked Then
      Begin
+          // Clear rb pass-through array of processed entries.
+          for ii := 0 to 499 do
+          begin
+               if rbc.glrbReports[ii].rbProcessed Then
+               Begin
+                    rbc.glrbReports[ii].rbCached    := False;
+                    rbc.glrbReports[ii].rbCharSync  := '';
+                    rbc.glrbReports[ii].rbDecoded   := '';
+                    rbc.glrbReports[ii].rbDeltaFreq := '';
+                    rbc.glrbReports[ii].rbDeltaTime := '';
+                    rbc.glrbReports[ii].rbFrequency := '';
+                    rbc.glrbReports[ii].rbNumSync   := '';
+                    rbc.glrbReports[ii].rbSigLevel  := '';
+                    rbc.glrbReports[ii].rbSigW      := '';
+                    rbc.glrbReports[ii].rbTimeStamp := '';
+                    rbc.glrbReports[ii].rbProcessed := True;
+                    rbc.glrbReports[ii].rbMode      := 0;
+               end;
+          end;
           ii := 0;
           while ii < 500 do
           begin
@@ -5729,6 +5748,17 @@ Begin
                begin
                     addToDisplay(i,65);
                     if not reDecode Then addToRBC(i,65);
+                    d65.gld65decodes[i].dtCharSync  := '';
+                    d65.gld65decodes[i].dtDecoded   := '';
+                    d65.gld65decodes[i].dtDeltaFreq := '';
+                    d65.gld65decodes[i].dtDeltaTime := '';
+                    d65.gld65decodes[i].dtDisplayed := True;
+                    d65.gld65decodes[i].dtNumSync   := '';
+                    d65.gld65decodes[i].dtProcessed := True;
+                    d65.gld65decodes[i].dtSigLevel  := '';
+                    d65.gld65decodes[i].dtSigW      := '';
+                    d65.gld65decodes[i].dtTimeStamp := '';
+                    d65.gld65decodes[i].dtType      := '';
                end;
           End;
           if reDecode then reDecode := False;
