@@ -29,7 +29,7 @@ uses
   Classes, SysUtils, LResources, Forms, Controls, Graphics, Dialogs,
   StdCtrls, CTypes, StrUtils, Math, portaudio, ExtCtrls, ComCtrls, Spin,
   Windows, DateUtils, encode65, parseCallSign, globalData, XMLPropStorage, adc,
-  dac, madc, mdac, ClipBrd, dlog, rawdec, cfgvtwo, guiConfig, verHolder,
+  dac, ClipBrd, dlog, rawdec, cfgvtwo, guiConfig, verHolder,
   PSKReporter, catControl, Menus, synaser, rbc, log, diagout, synautil,
   waterfall, d65, spectrum, about;
 
@@ -1165,18 +1165,18 @@ Begin
           for i := bStart to bEnd do
           Begin
                if paInParams.channelCount = 2 then d65.glinBuffer[i] := min(32766,max(-32766,adc.d65rxBuffer[i]));
-               if paInParams.channelCount = 1 then d65.glinBuffer[i] := min(32766,max(-32766,madc.d65rxBuffer[i]));
+               //if paInParams.channelCount = 1 then d65.glinBuffer[i] := min(32766,max(-32766,madc.d65rxBuffer[i]));
                if Odd(thisMinute) Then
                Begin
                     if paInParams.channelCount = 2 then auOddBuffer[i] := min(32766,max(-32766,adc.d65rxBuffer[i]));
-                    if paInParams.channelCount = 1 then auOddBuffer[i] := min(32766,max(-32766,madc.d65rxBuffer[i]));
+                    //if paInParams.channelCount = 1 then auOddBuffer[i] := min(32766,max(-32766,madc.d65rxBuffer[i]));
                     haveOddBuffer := True;
                     haveEvenBuffer := False;
                End
                else
                Begin
                     if paInParams.channelCount = 2 then auEvenBuffer[i] := min(32766,max(-32766,adc.d65rxBuffer[i]));
-                    if paInParams.channelCount = 1 then auEvenBuffer[i] := min(32766,max(-32766,madc.d65rxBuffer[i]));
+                    //if paInParams.channelCount = 1 then auEvenBuffer[i] := min(32766,max(-32766,madc.d65rxBuffer[i]));
                     haveEvenBuffer := True;
                     haveOddBuffer := False;
                End;
@@ -2518,9 +2518,9 @@ end;
 procedure TForm1.rbUseMixChange(Sender: TObject);
 begin
   If Form1.rbUseLeft.Checked Then adc.adcChan  := 1;
-  If Form1.rbUseLeft.Checked Then madc.adcChan  := 1;
+  //If Form1.rbUseLeft.Checked Then madc.adcChan  := 1;
   If Form1.rbUseRight.Checked Then adc.adcChan := 2;
-  If Form1.rbUseRight.Checked Then madc.adcChan := 2;
+  //If Form1.rbUseRight.Checked Then madc.adcChan := 2;
 end;
 
 
@@ -2623,7 +2623,7 @@ begin
                     end;
                     if paInParams.channelCount = 1 then
                     begin
-                         if haveEvenBuffer then d65.glinBuffer[i] := min(32766,max(-32766,madc.d65rxBuffer[i]));
+                         //if haveEvenBuffer then d65.glinBuffer[i] := min(32766,max(-32766,madc.d65rxBuffer[i]));
                     end;
                end;
                d65.gld65timestamp := '';
@@ -2927,7 +2927,7 @@ procedure TForm1.TrackBar1Change(Sender: TObject);
 begin
   // Handle change to Digital Gain
   adc.adcLDgain := Form1.TrackBar1.Position;
-  madc.adcLDgain := Form1.TrackBar1.Position;
+  //madc.adcLDgain := Form1.TrackBar1.Position;
   Form1.Label10.Caption := 'L: ' + IntToStr(Form1.TrackBar1.Position);
   If Form1.TrackBar1.Position <> 0 Then Form1.Label10.Font.Color := clRed else Form1.Label10.Font.Color := clBlack;
 end;
@@ -2935,7 +2935,7 @@ end;
 procedure TForm1.TrackBar2Change(Sender: TObject);
 begin
   adc.adcRDgain := Form1.TrackBar2.Position;
-  madc.adcRDgain := Form1.TrackBar2.Position;
+  //madc.adcRDgain := Form1.TrackBar2.Position;
   Form1.Label11.Caption := 'R: ' + IntToStr(Form1.TrackBar2.Position);
   If Form1.TrackBar2.Position <> 0 Then Form1.Label11.Font.Color := clRed else Form1.Label11.Font.Color := clBlack;
 end;
@@ -3165,7 +3165,7 @@ Begin
      end;
      if paInParams.channelCount = 1 then
      begin
-          if audioAve1 > 0 Then audioAve1 := (audioAve1+madc.specLevel1) DIV 2 else audioAve1 := madc.specLevel1;
+          //if audioAve1 > 0 Then audioAve1 := (audioAve1+madc.specLevel1) DIV 2 else audioAve1 := madc.specLevel1;
      end;
      if paInParams.channelCount = 2 then
      Begin
@@ -3173,7 +3173,7 @@ Begin
      end;
      if paInParams.channelCount = 1 then
      begin
-          if audioAve2 > 0 Then audioAve2 := (audioAve1+madc.specLevel2) DIV 2 else audioAve2 := madc.specLevel2;
+          //if audioAve2 > 0 Then audioAve2 := (audioAve1+madc.specLevel2) DIV 2 else audioAve2 := madc.specLevel2;
      end;
 End;
 
@@ -3195,7 +3195,7 @@ Begin
      end;
      if paInParams.channelCount = 1 then
      Begin
-          if madc.specLevel1 > 0 Then Form1.rbUseLeft.Caption := 'L ' + IntToStr(Round((audioAveL*0.4)-20)) Else Form1.rbUseLeft.Caption := 'L -20';
+          //if madc.specLevel1 > 0 Then Form1.rbUseLeft.Caption := 'L ' + IntToStr(Round((audioAveL*0.4)-20)) Else Form1.rbUseLeft.Caption := 'L -20';
      end;
      if paInParams.channelCount = 2 then
      Begin
@@ -3203,7 +3203,7 @@ Begin
      end;
      if paInParams.channelCount = 1 then
      Begin
-          if madc.specLevel2 > 0 Then Form1.rbUseRight.Caption := 'R ' + IntToStr(Round((audioAveR*0.4)-20)) Else Form1.rbUseRight.Caption := 'R -20';
+          //if madc.specLevel2 > 0 Then Form1.rbUseRight.Caption := 'R ' + IntToStr(Round((audioAveR*0.4)-20)) Else Form1.rbUseRight.Caption := 'R -20';
      end;
      if paInParams.channelCount = 2 then
      begin
@@ -3211,7 +3211,7 @@ Begin
      end;
      if paInParams.channelCount = 1 then
      begin
-          if (madc.specLevel1 < 40) Or (madc.specLevel1 > 60) Then rbUseLeft.Font.Color := clRed else rbUseLeft.Font.Color := clBlack;
+          //if (madc.specLevel1 < 40) Or (madc.specLevel1 > 60) Then rbUseLeft.Font.Color := clRed else rbUseLeft.Font.Color := clBlack;
      end;
      if paInParams.channelCount = 2 then
      begin
@@ -3219,7 +3219,7 @@ Begin
      end;
      if paInParams.channelCount = 1 then
      begin
-          if (madc.specLevel2 < 40) Or (madc.specLevel2 > 60) Then rbUseRight.Font.Color := clRed else rbUseRight.Font.Color := clBlack;
+          //if (madc.specLevel2 < 40) Or (madc.specLevel2 > 60) Then rbUseRight.Font.Color := clRed else rbUseRight.Font.Color := clBlack;
      end;
      if paInParams.channelCount = 2 then
      begin
@@ -3227,7 +3227,7 @@ Begin
      end;
      if paInParams.channelCount = 1 then
      begin
-          if madc.specLevel1 > 0 Then cfgvtwo.Form6.Label25.Caption := 'L ' + IntToStr(Round((audioAveL*0.4)-20)) Else cfgvtwo.Form6.Label25.Caption := 'L -20';
+          //if madc.specLevel1 > 0 Then cfgvtwo.Form6.Label25.Caption := 'L ' + IntToStr(Round((audioAveL*0.4)-20)) Else cfgvtwo.Form6.Label25.Caption := 'L -20';
      end;
      if paInParams.channelCount = 2 then
      begin
@@ -3235,7 +3235,7 @@ Begin
      end;
      if paInParams.channelCount = 1 then
      begin
-          if madc.specLevel2 > 0 Then cfgvtwo.Form6.Label31.Caption := 'R ' + IntToStr(Round((audioAveR*0.4)-20)) Else cfgvtwo.Form6.Label31.Caption := 'R -20';
+          //if madc.specLevel2 > 0 Then cfgvtwo.Form6.Label31.Caption := 'R ' + IntToStr(Round((audioAveR*0.4)-20)) Else cfgvtwo.Form6.Label31.Caption := 'R -20';
      end;
      if paInParams.channelCount = 2 then
      begin
@@ -3243,7 +3243,7 @@ Begin
      end;
      if paInParams.channelCount = 1 then
      begin
-          if (madc.specLevel1 < 40) Or (madc.specLevel1 > 60) Then cfgvtwo.Form6.Label25.Font.Color := clRed else cfgvtwo.Form6.Label25.Font.Color := clBlack;
+          //if (madc.specLevel1 < 40) Or (madc.specLevel1 > 60) Then cfgvtwo.Form6.Label25.Font.Color := clRed else cfgvtwo.Form6.Label25.Font.Color := clBlack;
      end;
      if paInParams.channelCount = 2 then
      begin
@@ -3251,7 +3251,7 @@ Begin
      end;
      if paInParams.channelCount = 1 then
      begin
-          if (madc.specLevel2 < 40) Or (madc.specLevel2 > 60) Then cfgvtwo.Form6.Label31.Font.Color := clRed else cfgvtwo.Form6.Label31.Font.Color := clBlack;
+          //if (madc.specLevel2 < 40) Or (madc.specLevel2 > 60) Then cfgvtwo.Form6.Label31.Font.Color := clRed else cfgvtwo.Form6.Label31.Font.Color := clBlack;
      end;
 End;
 
@@ -3816,26 +3816,26 @@ Begin
      Begin
           Form1.TrackBar1.Position := tstint;
           adc.adcLDgain := Form1.TrackBar1.Position;
-          madc.adcLDgain := Form1.TrackBar1.Position;
+          //madc.adcLDgain := Form1.TrackBar1.Position;
      End
      else
      Begin
           Form1.TrackBar1.Position := 0;
           adc.adcLDgain := Form1.TrackBar1.Position;
-          madc.adcLDgain := Form1.TrackBar1.Position;
+          //madc.adcLDgain := Form1.TrackBar1.Position;
      End;
      tstint := 0;
      if TryStrToInt(cfg.StoredValue['rdgain'],tstint) Then
      Begin
           Form1.TrackBar2.Position := tstint;
           adc.adcRDgain := Form1.TrackBar2.Position;
-          madc.adcRDgain := Form1.TrackBar2.Position;
+          //madc.adcRDgain := Form1.TrackBar2.Position;
      End
      else
      Begin
           Form1.TrackBar2.Position := 0;
           adc.adcRDgain := Form1.TrackBar2.Position;
-          madc.adcRDgain := Form1.TrackBar2.Position;
+          //madc.adcRDgain := Form1.TrackBar2.Position;
      End;
      Form1.Label10.Caption := 'L: ' + IntToStr(Form1.TrackBar1.Position);
      Form1.Label11.Caption := 'R: ' + IntToStr(Form1.TrackBar2.Position);
@@ -3848,9 +3848,9 @@ Begin
      if cfg.StoredValue['audiochan'] = 'L' Then Form1.rbUseLeft.Checked := True;
      if cfg.StoredValue['audiochan'] = 'R' Then Form1.rbUseRight.Checked := True;
      If Form1.rbUseLeft.Checked Then adc.adcChan  := 1;
-     If Form1.rbUseLeft.Checked Then madc.adcChan  := 1;
+     //If Form1.rbUseLeft.Checked Then madc.adcChan  := 1;
      If Form1.rbUseRight.Checked Then adc.adcChan := 2;
-     If Form1.rbUseRight.Checked Then madc.adcChan := 2;
+     //If Form1.rbUseRight.Checked Then madc.adcChan := 2;
      if cfg.StoredValue['autoSR'] = '1' Then
      Begin
           cfgvtwo.Form6.chkEnableAutoSR.Checked := True;
@@ -4336,26 +4336,26 @@ Begin
      ppaInParams := @paInParams;
      // Set rxBuffer index to start of array.
      adc.d65rxBufferIdx := 0;
-     madc.d65rxBufferIdx := 0;
+     //madc.d65rxBufferIdx := 0;
 
      adc.adcT := 0;
-     madc.adcT := 0;
+     //madc.adcT := 0;
 
      // Set ptr to start of buffer.
      adc.d65rxBufferPtr := @adc.d65rxBuffer[0];
-     madc.d65rxBufferPtr := @madc.d65rxBuffer[0];
+     //madc.d65rxBufferPtr := @madc.d65rxBuffer[0];
 
      // Initialize rx stream.
      paInParams.channelCount := 2;
      paResult := portaudio.Pa_OpenStream(paInStream,ppaInParams,Nil,11025,2048,0,@adc.adcCallback,Pointer(Self));
+     //if paResult <> 0 Then
+     //Begin
+          //paInParams.channelCount := 1;
+          //paResult := portaudio.Pa_OpenStream(paInStream,ppaInParams,Nil,11025,2048,0,@madc.adcCallback,Pointer(Self));
+     //end;
      if paResult <> 0 Then
      Begin
-          paInParams.channelCount := 1;
-          paResult := portaudio.Pa_OpenStream(paInStream,ppaInParams,Nil,11025,2048,0,@madc.adcCallback,Pointer(Self));
-     end;
-     if paResult <> 0 Then
-     Begin
-          ShowMessage('PA Error:  ' + StrPas(portaudio.Pa_GetErrorText(paResult)) + ' Could not setup for mono or stereo input.  Program will exit.');
+          ShowMessage('PA Error:  ' + StrPas(portaudio.Pa_GetErrorText(paResult)) + ' Could not setup for stereo input.  Program will exit.');
           halt;
      end
      else
@@ -4384,23 +4384,23 @@ Begin
      ppaOutParams := @paOutParams;
      // Set txBuffer index to start of array.
      dac.d65txBufferIdx := 0;
-     mdac.d65txBufferIdx := 0;
+     //mdac.d65txBufferIdx := 0;
 
      dac.dacT := 0;
-     mdac.dacT := 0;
+     //mdac.dacT := 0;
 
      // Set ptr to start of buffer.
      dac.d65txBufferPtr := @dac.d65txBuffer[0];
-     mdac.d65txBufferPtr := @mdac.d65txBuffer[0];
+     //mdac.d65txBufferPtr := @mdac.d65txBuffer[0];
 
      // Initialize tx stream.
      paOutParams.channelCount := 2;
      paResult := portaudio.Pa_OpenStream(paOutStream,Nil,ppaOutParams,11025,2048,0,@dac.dacCallback,Pointer(Self));
-     if paResult <> 0 Then
-     Begin
-          paOutParams.channelCount := 1;
-          paResult := portaudio.Pa_OpenStream(paOutStream,Nil,ppaOutParams,11025,2048,0,@mdac.dacCallback,Pointer(Self));
-     End;
+     //if paResult <> 0 Then
+     //Begin
+          //paOutParams.channelCount := 1;
+          //paResult := portaudio.Pa_OpenStream(paOutStream,Nil,ppaOutParams,11025,2048,0,@mdac.dacCallback,Pointer(Self));
+     //End;
      if paResult <> 0 Then
      Begin
           ShowMessage('PA Error:  ' + StrPas(portaudio.Pa_GetErrorText(paResult)));
@@ -4511,7 +4511,7 @@ Begin
      // Update TX Sample Error Rate display.
      If (dErrError = 0) and (thisAction > 1) Then txsrs := '';
      If (dErrError = 0) and (thisAction = 1) Then txsrs := '';
-     if paOutParams.channelCount = 1 then erate := mdac.dacErate;
+     //if paOutParams.channelCount = 1 then erate := mdac.dacErate;
      if paOutParams.channelCount = 2 then erate := dac.dacErate;
      If erate <> 0 Then
      Begin
@@ -4598,10 +4598,10 @@ Begin
           for mnlooper := 0 to  3306 do
           begin
                dac.d65txBuffer[mnlooper] := 0;
-               mdac.d65txBuffer[mnlooper] := 0;
+               //mdac.d65txBuffer[mnlooper] := 0;
           end;
           if (paOutParams.channelCount = 2) And (txMode = 65) then encode65.gen65(d65txmsg,@txdf,@dac.d65txBuffer[0],@d65nwave,@d65sendingsh,d65sending,@d65nmsg);
-          if (paOutParams.channelCount = 1) And (txMode = 65) Then encode65.gen65(d65txmsg,@txdf,@mdac.d65txBuffer[0],@d65nwave,@d65sendingsh,d65sending,@d65nmsg);
+          //if (paOutParams.channelCount = 1) And (txMode = 65) Then encode65.gen65(d65txmsg,@txdf,@mdac.d65txBuffer[0],@d65nwave,@d65sendingsh,d65sending,@d65nmsg);
 
           //if txMode =  4 Then  encode65.gen4(d65txmsg,@txdf,@dac.d65txBuffer[0],@d65nwave,@d65sendingsh,d65sending,@d65nmsg);
           //if txMode =  4 Then  encode65.gen4(d65txmsg,@txdf,@mdac.d65txBuffer[0],@d65nwave,@d65sendingsh,d65sending,@d65nmsg);
@@ -4621,7 +4621,7 @@ Begin
                for mnlooper := mnlooper to mnlooper + 11025 do
                begin
                     dac.d65txBuffer[mnlooper] := 0;
-                    mdac.d65txBuffer[mnlooper] := 0;
+                    //mdac.d65txBuffer[mnlooper] := 0;
                end;
                // Gen CW ID
                for i := 0 to 110249 do
@@ -4653,7 +4653,7 @@ Begin
                     for i := 0 to nwave-1 do
                     begin
                          dac.d65txBuffer[mnlooper] := encode65.e65cwid[i];
-                         mdac.d65txBuffer[mnlooper] := encode65.e65cwid[i];
+                         //mdac.d65txBuffer[mnlooper] := encode65.e65cwid[i];
                          inc(mnlooper);
                     end;
                End
@@ -4663,14 +4663,14 @@ Begin
                     for i := mnlooper to 661503 do
                     begin
                          dac.d65txBuffer[i] := 0;
-                         mdac.d65txBuffer[i] := 0;
+                         //mdac.d65txBuffer[i] := 0;
                     end;
                End;
                // Finish buffer to end with silence.
                for i := mnlooper to 661503 do
                begin
                     dac.d65txBuffer[i] := 0;
-                    mdac.d65txBuffer[i] := 0;
+                    //mdac.d65txBuffer[i] := 0;
                end;
           End
           Else
@@ -4678,7 +4678,7 @@ Begin
                for i := mnlooper to 661503 do
                begin
                     dac.d65txBuffer[i] := 0;
-                    mdac.d65txBuffer[i] := 0;
+                    //mdac.d65txBuffer[i] := 0;
                end;
           End;
           // I now have a set of samples representing the JT65A audio
@@ -4740,7 +4740,7 @@ Begin
           if tryStrToFloat(cfgvtwo.Form6.edTXSRCor.Text,txsr) Then d65samfacout := StrToFloat(cfgvtwo.Form6.edTXSRCor.Text) else d65samfacout := 1.0;
           // Generate samples.
           if (paOutParams.channelCount = 2) And (txMode = 65) Then encode65.gen65(d65txmsg,@txdf,@dac.d65txBuffer[0],@d65nwave,@d65sendingsh,d65sending,@d65nmsg);
-          if (paOutParams.channelCount = 1) And (txMode = 65) Then encode65.gen65(d65txmsg,@txdf,@mdac.d65txBuffer[0],@d65nwave,@d65sendingsh,d65sending,@d65nmsg);
+          //if (paOutParams.channelCount = 1) And (txMode = 65) Then encode65.gen65(d65txmsg,@txdf,@mdac.d65txBuffer[0],@d65nwave,@d65sendingsh,d65sending,@d65nmsg);
 
           //if txMode =  4 Then  encode65.gen4(d65txmsg,@txdf,@dac.d65txBuffer[0],@d65nwave,@d65sendingsh,d65sending,@d65nmsg);
           //if txMode =  4 Then  encode65.gen4(d65txmsg,@txdf,@mdac.d65txBuffer[0],@d65nwave,@d65sendingsh,d65sending,@d65nmsg);
@@ -4750,7 +4750,7 @@ Begin
           while mnlooper < 661504 do
           begin
                dac.d65txBuffer[mnlooper] := 0;
-               mdac.d65txBuffer[mnlooper] := 0;
+               //mdac.d65txBuffer[mnlooper] := 0;
                inc(mnlooper);
           end;
           d65nwave := 538624;
@@ -4795,18 +4795,18 @@ Begin
      paInParams.hostApiSpecificStreamInfo := Nil;
      ppaInParams := @paInParams;
      adc.d65rxBufferIdx := 0;
-     madc.d65rxBufferIdx := 0;
+     //madc.d65rxBufferIdx := 0;
 
      adc.adcT := 0;
-     madc.adcT := 0;
+     //madc.adcT := 0;
 
      paInParams.channelCount := 2;
      paResult := portaudio.Pa_OpenStream(paInStream,ppaInParams,Nil,11025,2048,0,@adc.adcCallback,Pointer(Self));
-     if paResult <> 0 Then
-     Begin
-          paInParams.channelCount := 1;
-          paResult := portaudio.Pa_OpenStream(paInStream,ppaInParams,Nil,11025,2048,0,@madc.adcCallback,Pointer(Self));
-     end;
+     //if paResult <> 0 Then
+     //Begin
+          //paInParams.channelCount := 1;
+          //paResult := portaudio.Pa_OpenStream(paInStream,ppaInParams,Nil,11025,2048,0,@madc.adcCallback,Pointer(Self));
+     //end;
      if paResult = 0 Then
      Begin
           paResult := portaudio.Pa_StartStream(paInStream);
@@ -4827,20 +4827,20 @@ Begin
      paOutParams.hostApiSpecificStreamInfo := Nil;
      ppaOutParams := @paOutParams;
      dac.d65txBufferIdx := 0;
-     mdac.d65txBufferIdx := 0;
+     //mdac.d65txBufferIdx := 0;
 
      dErrCount := 0;
      adCount := 0;
      dac.dacT := 0;
-     mdac.dacT := 0;
+     //mdac.dacT := 0;
 
      paOutParams.channelCount := 2;
      paResult := portaudio.Pa_OpenStream(paOutStream,Nil,ppaOutParams,11025,2048,0,@dac.dacCallback,Pointer(Self));
-     if paResult <> 0 Then
-     Begin
-          paOutParams.channelCount := 1;
-          paResult := portaudio.Pa_OpenStream(paOutStream,Nil,ppaOutParams,11025,2048,0,@mdac.dacCallback,Pointer(Self));
-     End;
+     //if paResult <> 0 Then
+     //Begin
+          //paOutParams.channelCount := 1;
+          //paResult := portaudio.Pa_OpenStream(paOutStream,Nil,ppaOutParams,11025,2048,0,@mdac.dacCallback,Pointer(Self));
+     //End;
      if paresult = 0 Then
      Begin
           paResult := portaudio.Pa_StartStream(paOutStream);
@@ -5071,7 +5071,7 @@ Begin
                globalData.txInProgress := False;
                rxInProgress := True;
                adc.d65rxBufferIdx := 0;
-               madc.d65rxBufferIdx := 0;
+               //madc.d65rxBufferIdx := 0;
 
                nextAction := 2; // As always, RX assumed to be next.
                inc(rxCount);
@@ -5093,7 +5093,7 @@ Begin
           Begin
                // Code that only executes while in an active RX cycle.
                if paInParams.channelCount = 2 Then Form1.ProgressBar3.Position := adc.d65rxBufferIdx;
-               if paInParams.channelCount = 1 Then Form1.ProgressBar3.Position := madc.d65rxBufferIdx;
+               //if paInParams.channelCount = 1 Then Form1.ProgressBar3.Position := madc.d65rxBufferIdx;
 
                rxInProgress := True;
                globalData.txInProgress := False;
@@ -5110,18 +5110,18 @@ Begin
                          globalData.txInProgress := False;
                     End;
                end;
-               if paInParams.channelCount = 1 Then
-               Begin
-                    If madc.d65rxBufferIdx >= 533504 Then
-                    Begin
-                         // Get End of Period QRG
-                         eopQRG := globalData.gqrg;
-                         // Switch to decoder action
-                         thisAction := 4;
-                         rxInProgress := False;
-                         globalData.txInProgress := False;
-                    End;
-               end;
+               //if paInParams.channelCount = 1 Then
+               //Begin
+               //     If madc.d65rxBufferIdx >= 533504 Then
+               //     Begin
+               //          // Get End of Period QRG
+               //          eopQRG := globalData.gqrg;
+               //          // Switch to decoder action
+               //          thisAction := 4;
+               //          rxInProgress := False;
+               //          globalData.txInProgress := False;
+               //     End;
+               //end;
           End;
      End;
      //
@@ -5153,10 +5153,10 @@ Begin
                          rxInProgress := False;
                          nextAction := 2;
                          dac.d65txBufferIdx := 0;
-                         mdac.d65txBufferIdx := 0;
+                         //mdac.d65txBufferIdx := 0;
 
                          dac.d65txBufferPtr := @dac.d65txBuffer[0];
-                         mdac.d65txBufferPtr := @mdac.d65txBuffer[0];
+                         //mdac.d65txBufferPtr := @mdac.d65txBuffer[0];
 
                          rxCount := 0;
                          if getPTTMethod() = 'SI5' Then si570Raiseptt();
@@ -5227,23 +5227,23 @@ Begin
                          curMsg := '';
                     End;
                end;
-               if paOutParams.channelCount = 1 Then
-               Begin
-                    if (mdac.d65txBufferIdx >= d65nwave+11025) Or (mdac.d65txBufferIdx >= 661503-(11025 DIV 2)) Then
-                    Begin
-                         globalData.txInProgress := False;
-                         if getPTTMethod() = 'SI5' Then si570Lowerptt();
-                         if getPTTMethod() = 'HRD' Then hrdLowerPTT();
-                         if getPTTMethod() = 'ALT' Then altLowerPTT();
-                         if getPTTMethod() = 'PTT' Then lowerPTT();
-                         thisAction := 5;
-                         actionSet := False;
-                         curMsg := '';
-                    End;
-               end;
+               //if paOutParams.channelCount = 1 Then
+               //Begin
+               //     if (mdac.d65txBufferIdx >= d65nwave+11025) Or (mdac.d65txBufferIdx >= 661503-(11025 DIV 2)) Then
+               //     Begin
+               //          globalData.txInProgress := False;
+               //          if getPTTMethod() = 'SI5' Then si570Lowerptt();
+               //          if getPTTMethod() = 'HRD' Then hrdLowerPTT();
+               //          if getPTTMethod() = 'ALT' Then altLowerPTT();
+               //          if getPTTMethod() = 'PTT' Then lowerPTT();
+               //          thisAction := 5;
+               //          actionSet := False;
+               //          curMsg := '';
+               //     End;
+               //end;
                // Update the progress indicator for this sequence.
                if paOutParams.channelCount = 2 Then Form1.ProgressBar3.Position := dac.d65txBufferIdx;
-               if paOutParams.channelCount = 1 Then Form1.ProgressBar3.Position := mdac.d65txBufferIdx;
+               //if paOutParams.channelCount = 1 Then Form1.ProgressBar3.Position := mdac.d65txBufferIdx;
           End;
      End;
      //
@@ -5287,10 +5287,10 @@ Begin
                          rxInProgress := False;
                          nextAction := 2;
                          dac.d65txBufferIdx := 0;
-                         mdac.d65txBufferIdx := 0;
+                         //mdac.d65txBufferIdx := 0;
 
                          dac.d65txBufferPtr := @dac.d65txBuffer[0];
-                         mdac.d65txBufferPtr := @mdac.d65txBuffer[0];
+                         //mdac.d65txBufferPtr := @mdac.d65txBuffer[0];
 
                          rxCount := 0;
                          if getPTTMethod() = 'SI5' Then si570Raiseptt();
@@ -5363,24 +5363,24 @@ Begin
                          curMsg := '';
                     End;
                end;
-               if paOutParams.channelCount = 1 Then
-               Begin
-                    if (mdac.d65txBufferIdx >= d65nwave+11025) Or (mdac.d65txBufferIdx >= 661503-(11025 DIV 2)) Or (thisSecond > 48) Then
-                    Begin
-                         // I have a full TX cycle when d65txBufferIdx >= 538624 or thisSecond > 48
-                         if getPTTMethod() = 'SI5' Then si570Lowerptt();
-                         if getPTTMethod() = 'HRD' Then hrdLowerPTT();
-                         if getPTTMethod() = 'ALT' Then altLowerPTT();
-                         if getPTTMethod() = 'PTT' Then lowerPTT();
-                         actionSet := False;
-                         thisAction := 5;
-                         globalData.txInProgress := False;
-                         curMsg := '';
-                    End;
-               end;
+               //if paOutParams.channelCount = 1 Then
+               //Begin
+               //     if (mdac.d65txBufferIdx >= d65nwave+11025) Or (mdac.d65txBufferIdx >= 661503-(11025 DIV 2)) Or (thisSecond > 48) Then
+               //     Begin
+               //          // I have a full TX cycle when d65txBufferIdx >= 538624 or thisSecond > 48
+               //          if getPTTMethod() = 'SI5' Then si570Lowerptt();
+               //          if getPTTMethod() = 'HRD' Then hrdLowerPTT();
+               //          if getPTTMethod() = 'ALT' Then altLowerPTT();
+               //          if getPTTMethod() = 'PTT' Then lowerPTT();
+               //          actionSet := False;
+               //          thisAction := 5;
+               //          globalData.txInProgress := False;
+               //          curMsg := '';
+               //     End;
+               //end;
                // Update the progress indicator for this sequence.
                if paOutParams.channelCount = 2 Then Form1.ProgressBar3.Position := dac.d65txBufferIdx;
-               if paOutParams.channelCount = 1 Then Form1.ProgressBar3.Position := mdac.d65txBufferIdx;
+               //if paOutParams.channelCount = 1 Then Form1.ProgressBar3.Position := mdac.d65txBufferIdx;
           End;
      End;
 End;
@@ -5942,17 +5942,17 @@ initialization
   End;
   // Initialize rxBuffer and its pointer, rxBuffer holds incoming sample data from PA
   adc.d65rxBufferPtr := @adc.d65rxBuffer[0];  // pointer set to start of rxBuffer
-  madc.d65rxBufferPtr := @madc.d65rxBuffer[0];  // pointer set to start of rxBuffer
+  //madc.d65rxBufferPtr := @madc.d65rxBuffer[0];  // pointer set to start of rxBuffer
 
   adc.d65rxBufferIdx := 0;
-  madc.d65rxBufferIdx := 0;
+  //madc.d65rxBufferIdx := 0;
 
   // Initialize txBuffer and its pointer, txBuffer holds outgoing sample data for PA
   dac.d65txBufferPtr := @dac.d65txBuffer[0];  // pointer set to start of txBuffer
-  mdac.d65txBufferPtr := @mdac.d65txBuffer[0];  // pointer set to start of txBuffer
+  //mdac.d65txBufferPtr := @mdac.d65txBuffer[0];  // pointer set to start of txBuffer
 
   dac.d65txBufferIdx := 0;
-  mdac.d65txBufferIdx := 0;
+  //mdac.d65txBufferIdx := 0;
 
   // Setup PChar type variables.
   d65txmsg := StrAlloc(28);
@@ -5971,10 +5971,10 @@ initialization
   sLevelM := 0;
   smeterIdx := 0;
   adc.adcSpecCount := 0;
-  madc.adcSpecCount := 0;
+  //madc.adcSpecCount := 0;
 
   adc.adcChan := 1;
-  madc.adcChan := 1;
+  //madc.adcChan := 1;
 
   globalData.specNewSpec65 := False;
   primed       := False; // This is part of the time sync code.
@@ -6004,19 +6004,19 @@ initialization
   //
   exchange     := '';
   adc.adcT         := 0;
-  madc.adcT         := 0;
+  //madc.adcT         := 0;
 
   adc.adcE         := 0;
-  madc.adcE         := 0;
+  //madc.adcE         := 0;
 
   mnpttOpened    := False;
   firstReport  := True;
   useBuffer := 0;
   adc.adcLDgain := 0;
-  madc.adcLDgain := 0;
+  //madc.adcLDgain := 0;
 
   adc.adcRDgain := 0;
-  madc.adcRDgain := 0;
+  //madc.adcRDgain := 0;
 
   lastMsg := '';
   curMsg := '';
@@ -6053,7 +6053,7 @@ initialization
   globalData.audioComputing := False;
   resyncLoop := False;
   adc.adcRunning := False;
-  madc.adcRunning := False;
+  //madc.adcRunning := False;
 
   d65.glnd65firstrun := True;
   d65.glbinspace := 100;
@@ -6066,7 +6066,7 @@ initialization
   // Create stream for spectrum image
   globalData.specMs65 := TMemoryStream.Create;
   adc.adcECount := 0;
-  madc.adcECount := 0;
+  //madc.adcECount := 0;
 
   reDecode := False;
   // Clear rewind buffers

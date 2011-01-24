@@ -804,7 +804,7 @@ begin
                               '&value9=' + glrbReports[i].rbTimeStamp[1..4] + '-'
                                          + glrbReports[i].rbTimeStamp[5..6] + '-'
                                          + glrbReports[i].rbTimeStamp[7..8] +
-                              '&value10=504';
+                              '&value10=600';
                        // Now I need to send the RB spot.
                        // sendReport will return true on success.
                        if length(callsign) > 0 Then
@@ -847,7 +847,7 @@ begin
                                         '&value9=' + glrbReports[i].rbTimeStamp[1..4] + '-'
                                                    + glrbReports[i].rbTimeStamp[5..6] + '-'
                                                    + glrbReports[i].rbTimeStamp[7..8] +
-                                        '&value10=504';
+                                        '&value10=600';
                                  fileCache(foo);
                             End;
                        End;
@@ -871,7 +871,7 @@ begin
                               '&value9=' + glrbReports[i].rbTimeStamp[1..4] + '-'
                                          + glrbReports[i].rbTimeStamp[5..6] + '-'
                                          + glrbReports[i].rbTimeStamp[7..8] +
-                              '&value10=504';
+                              '&value10=600';
                        // Now I need to save the RB spot.
                        if length(callsign) > 0 Then fileCache(foo);
                   End;
