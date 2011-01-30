@@ -20,7 +20,7 @@ object Form6: TForm6
     Width = 784
     Font.Height = -13
     Font.Name = 'Arial'
-    PageIndex = 0
+    PageIndex = 2
     ParentFont = False
     TabOrder = 0
     object Page1: TPage
@@ -114,8 +114,8 @@ object Form6: TForm6
         Left = 5
         Height = 15
         Top = 407
-        Width = 248
-        Caption = 'Location of RX/TX history file (JT65hf-log.csv)'
+        Width = 443
+        Caption = 'Location of RX/TX history file (JT65hf-log.csv) and ADIF log export (jt65hf_log.adi):'
         Font.Height = -11
         Font.Name = 'Arial'
         Font.Style = [fsBold]
@@ -158,6 +158,14 @@ object Form6: TForm6
         ParentColor = False
         ParentFont = False
       end
+      object Label12: TLabel
+        Left = 92
+        Height = 17
+        Top = 75
+        Width = 64
+        Caption = 'Grid invalid'
+        ParentColor = False
+      end
       object edMyCall: TEdit
         Left = 5
         Height = 24
@@ -166,6 +174,7 @@ object Form6: TForm6
         CharCase = ecUppercase
         Font.Height = -13
         Font.Name = 'Arial'
+        MaxLength = 32
         OnChange = edMyCallChange
         ParentFont = False
         TabOrder = 0
@@ -177,6 +186,8 @@ object Form6: TForm6
         Width = 80
         Font.Height = -13
         Font.Name = 'Arial'
+        MaxLength = 6
+        OnChange = edMyGridChange
         ParentFont = False
         TabOrder = 1
       end
@@ -1070,7 +1081,7 @@ object Form6: TForm6
         Left = 228
         Height = 17
         Top = 85
-        Width = 284
+        Width = 282
         Caption = '[Optional] Antenna Description for PSK Reporter.'
         ParentColor = False
       end
@@ -1107,6 +1118,7 @@ object Form6: TForm6
         Top = 37
         Width = 112
         CharCase = ecUppercase
+        MaxLength = 32
         TabOrder = 1
       end
       object editPSKRAntenna: TEdit

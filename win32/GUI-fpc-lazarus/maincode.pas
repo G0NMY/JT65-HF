@@ -31,7 +31,7 @@ uses
   Windows, DateUtils, encode65, parseCallSign, globalData, XMLPropStorage, adc,
   dac, ClipBrd, dlog, rawdec, cfgvtwo, guiConfig, verHolder,
   PSKReporter, catControl, Menus, synaser, rbc, log, diagout, synautil,
-  waterfall, d65, spectrum, about;
+  waterfall, d65, spectrum, about, fileutil;
 
 Const
   JT_DLL = 'jt65.dll';
@@ -316,7 +316,7 @@ type
      decoderThread              : decodeThread;
      rigThread                  : catThread;
      rbThread                   : rbcThread;
-     rbcPing, mnrbcReport       : Boolean;
+     rbcPing, dorbReport        : Boolean;
      rbcCache, primed           : Boolean;
      txNextPeriod               : Boolean;
      statusChange               : Boolean;
@@ -436,18 +436,9 @@ procedure ver(vint : Pointer; vstr : Pointer); cdecl; external JT_DLL name 'vers
 function TForm1.utcTime(): TSYSTEMTIME;
 Var
    st : TSYSTEMTIME;
-   {$IFDEF linux}
-    dt : TDateTime;
-   {$ENDIF}
 Begin
      st.Hour:=0;
-     {$IFDEF win32}
-      GetSystemTime(st);
-     {$ENDIF}
-     {$IFDEF linux}
-      dt := synaUtil.GetUTTime;
-      DateTimeToSystemTime(GetUTTime,st);
-     {$ENDIF}
+     GetSystemTime(st);
      result := st;
 End;
 
@@ -488,40 +479,35 @@ begin
      while not Terminated and not Suspended and not rbc.glrbActive do
      begin
           Try
-             // Working on case where a failed RB transaction sets rbCacheOnly thus
-             // leaving the RB in cache mode forever.
              if globalData.rbCacheOnly Then
              Begin
                   // rbCacheOnly is set, but, should it be?
                   if not cfgvtwo.Form6.cbNoInet.Checked And cfgvtwo.Form6.cbUseRB.Checked Then globalData.rbCacheOnly := False;
                   if cfgvtwo.Form6.cbNoInet.Checked And cfgvtwo.Form6.cbUseRB.Checked Then globalData.rbCacheOnly := True;
              End;
-             // Check to see if glrbNoInet needs to be set/unset.
-             rbc.glrbNoInet := True;
-             if cfgvtwo.Form6.cbUseRB.Checked Then rbc.glrbNoInet := False;
              if Length(TrimLeft(TrimRight(cfgvtwo.Form6.editPSKRCall.Text)))>0 Then
              Begin
-                  If (mnrbcReport) And (not rbc.glrbActive) Then
+                  If (dorbReport) And (not rbc.glrbActive) Then
                   Begin
-                       if globalData.debugOn Then rbc.glrbCallsign := TrimLeft(TrimRight(cfgvtwo.Form6.editPSKRCall.Text)) + '-2' else rbc.glrbCallsign := TrimLeft(TrimRight(cfgvtwo.Form6.editPSKRCall.Text)) + '-1';
+                       rbc.glrbCallsign := TrimLeft(TrimRight(cfgvtwo.Form6.editPSKRCall.Text));
                        rbc.glrbGrid := TrimLeft(TrimRight(cfgvtwo.Form6.edMyGrid.Text));
                        rbc.glrbQRG := Form1.editManQRG.Text;
                        rbc.glrbActive := True;
                        rbc.processRB();
-                       mnrbcReport := False;
+                       dorbReport := False;
                   end;
-                  if (cfgvtwo.glrbcLogin) And (not globalData.rbLoggedIn) And (not rbc.glrbActive) Then
+                  if (cfgvtwo.glrbcLogin) And (not rbc.glrbActive) Then
                   Begin
-                       if globalData.debugOn Then rbc.glrbCallsign := TrimLeft(TrimRight(cfgvtwo.Form6.editPSKRCall.Text)) + '-2' else rbc.glrbCallsign := TrimLeft(TrimRight(cfgvtwo.Form6.editPSKRCall.Text)) + '-1';
+                       rbc.glrbCallsign := TrimLeft(TrimRight(cfgvtwo.Form6.editPSKRCall.Text));
                        rbc.glrbQRG := Form1.editManQRG.Text;
                        rbc.glrbGrid := TrimLeft(TrimRight(cfgvtwo.Form6.edMyGrid.Text));
                        rbc.glrbActive := True;
                        rbc.doLogin();
                        cfgvtwo.glrbcLogin := False;
                   End;
-                  if (cfgvtwo.glrbcLogout) And (globalData.rbLoggedIn) And (not rbc.glrbActive) Then
+                  if (cfgvtwo.glrbcLogout) And (not rbc.glrbActive) Then
                   Begin
-                       if globalData.debugOn Then rbc.glrbCallsign := TrimLeft(TrimRight(cfgvtwo.Form6.editPSKRCall.Text)) + '-2' else rbc.glrbCallsign := TrimLeft(TrimRight(cfgvtwo.Form6.editPSKRCall.Text)) + '-1';
+                       rbc.glrbCallsign := TrimLeft(TrimRight(cfgvtwo.Form6.editPSKRCall.Text));
                        rbc.glrbQRG := Form1.editManQRG.Text;
                        rbc.glrbGrid := TrimLeft(TrimRight(cfgvtwo.Form6.edMyGrid.Text));
                        rbc.glrbActive := True;
@@ -530,7 +516,7 @@ begin
                   End;
                   if (rbcPing) And (not rbc.glrbActive) Then
                   Begin
-                       if globalData.debugOn Then rbc.glrbCallsign := TrimLeft(TrimRight(cfgvtwo.Form6.editPSKRCall.Text)) + '-2' else rbc.glrbCallsign := TrimLeft(TrimRight(cfgvtwo.Form6.editPSKRCall.Text)) + '-1';
+                       rbc.glrbCallsign := TrimLeft(TrimRight(cfgvtwo.Form6.editPSKRCall.Text));
                        rbc.glrbQRG := Form1.editManQRG.Text;
                        rbc.glrbGrid := TrimLeft(TrimRight(cfgvtwo.Form6.edMyGrid.Text));
                        rbc.glrbActive := True;
@@ -545,9 +531,9 @@ begin
                   End;
              End;
           Except
-             dlog.fileDebug('Exception in rbc thread');
+             dlog.fileDebug('Notice:  Exception in rbc thread');
           end;
-          Sleep(100);
+          Sleep(500);
      end;
 end;
 
@@ -567,10 +553,10 @@ begin
                d65doDecodePass := False;
           End;
           Except
-             dlog.fileDebug('Exception in decoder thread');
+             dlog.fileDebug('Notice:  Exception in decoder thread');
              if reDecode then reDecode := False;
           end;
-          Sleep(100);
+          Sleep(500);
      end;
 end;
 
@@ -589,32 +575,17 @@ Begin
      if needLog Then
      begin
           Try
-             {$IFDEF win32}
-               fname := cfgvtwo.Form6.DirectoryEdit1.Directory + '\JT65hf-log.csv';
-               AssignFile(logFile, fname);
-               If FileExists(fname) Then
-               Begin
-                    Append(logFile);
-               End
-               Else
-               Begin
-                    Rewrite(logFile);
-                    WriteLn(logFile,'"Date","Time","QRG","Sync","DB","DT","DF","Decoder","Exchange"');
-               End;
-             {$ENDIF}
-             {$IFDEF linux}
-               fname := cfgvtwo.Form6.DirectoryEdit1.Directory + 'JT65hf-log.csv';
-               AssignFile(logFile, fname);
-               If FileExists(fname) Then
-               Begin
-                    Append(logFile);
-               End
-               Else
-               Begin
-                    Rewrite(logFile);
-                    WriteLn(logFile,'"Date","Time","QRG","Sync","DB","DT","DF","Decoder","Exchange"');
-               End;
-             {$ENDIF}
+             fname := cfgvtwo.Form6.DirectoryEdit1.Directory + '\JT65hf-log.csv';
+             AssignFile(logFile, fname);
+             If FileExists(fname) Then
+             Begin
+                  Append(logFile);
+             End
+             Else
+             Begin
+                  Rewrite(logFile);
+                  WriteLn(logFile,'"Date","Time","QRG","Sync","DB","DT","DF","Decoder","Exchange"');
+             End;
              // Write the record
              for i := 0 to 99 do
              begin
@@ -1160,23 +1131,26 @@ Begin
                d65.glfftFWisdom := 0;
                d65.glfftSWisdom := 0;
           End;
+          // Clear transfer buffer
+          for i := 0 to 661503 do
+          Begin
+               d65.glinBuffer[i] := 0;
+          end;
+          // Range adjust and copy raw buffer to transfer buffer and rewind buffer
           bStart := 0;
           bEnd := 533504;
           for i := bStart to bEnd do
           Begin
-               if paInParams.channelCount = 2 then d65.glinBuffer[i] := min(32766,max(-32766,adc.d65rxBuffer[i]));
-               //if paInParams.channelCount = 1 then d65.glinBuffer[i] := min(32766,max(-32766,madc.d65rxBuffer[i]));
+               d65.glinBuffer[i] := min(32766,max(-32766,adc.d65rxBuffer[i]));
                if Odd(thisMinute) Then
                Begin
-                    if paInParams.channelCount = 2 then auOddBuffer[i] := min(32766,max(-32766,adc.d65rxBuffer[i]));
-                    //if paInParams.channelCount = 1 then auOddBuffer[i] := min(32766,max(-32766,madc.d65rxBuffer[i]));
+                    auOddBuffer[i] := d65.glinBuffer[i];
                     haveOddBuffer := True;
                     haveEvenBuffer := False;
                End
                else
                Begin
-                    if paInParams.channelCount = 2 then auEvenBuffer[i] := min(32766,max(-32766,adc.d65rxBuffer[i]));
-                    //if paInParams.channelCount = 1 then auEvenBuffer[i] := min(32766,max(-32766,madc.d65rxBuffer[i]));
+                    auEvenBuffer[i] := d65.glinBuffer[i];;
                     haveEvenBuffer := True;
                     haveOddBuffer := False;
                End;
@@ -1621,7 +1595,7 @@ begin
           if cfgvtwo.Form6.cbMultiAutoEnable.Checked Then cfg.StoredValue['multiQSOWatchDog'] := '1' else cfg.StoredValue['multiQSOWatchDog'] := '0';
           if cfgvtwo.Form6.cbSaveCSV.Checked Then cfg.StoredValue['saveCSV'] := '1' else cfg.StoredValue['saveCSV'] := '0';
           cfg.StoredValue['csvPath'] := cfgvtwo.Form6.DirectoryEdit1.Directory;
-          cfg.StoredValue['adiPath'] := log.Form2.DirectoryEdit1.Directory;
+          cfg.StoredValue['adiPath'] := cfgvtwo.Form6.DirectoryEdit1.Directory;
           cfg.StoredValue['catBy'] := cfgvtwo.glcatBy;
           if cfgvtwo.Form6.cbUsePSKReporter.Checked Then cfg.StoredValue['usePSKR'] := 'yes' else cfg.StoredValue['usePSKR'] := 'no';
           if cfgvtwo.Form6.cbUseRB.Checked Then cfg.StoredValue['useRB'] := 'yes' else cfg.StoredValue['useRB'] := 'no';
@@ -1899,6 +1873,7 @@ begin
                     rbc.glrbReports[ii].rbNumSync   := '';
                     rbc.glrbReports[ii].rbSigLevel  := '';
                     rbc.glrbReports[ii].rbSigW      := '';
+                    rbc.glrbReports[ii].rbDecoder   := '';
                     rbc.glrbReports[ii].rbTimeStamp := '';
                     rbc.glrbReports[ii].rbProcessed := True;
                     rbc.glrbReports[ii].rbMode      := 0;
@@ -1922,6 +1897,7 @@ begin
                               rbc.glrbReports[ii].rbSigW      := d65.gld65decodes[i].dtSigW;
                               rbc.glrbReports[ii].rbCharSync  := d65.gld65decodes[i].dtCharSync;
                               rbc.glrbReports[ii].rbDecoded   := d65.gld65decodes[i].dtDecoded;
+                              rbc.glrbReports[ii].rbDecoder   := d65.gld65decodes[i].dtType;
                               rbc.glrbReports[ii].rbFrequency := FloatToStr(eopQRG/1000);
                               rbc.glrbReports[ii].rbMode      := m;
                               rbc.glrbReports[ii].rbProcessed := False;
@@ -1946,23 +1922,30 @@ end;
 
 procedure TForm1.FormCreate(Sender: TObject);
 Var
-   //fname, fna  : String;
    fname       : String;
-   pfname      : PChar;
+   PIDL : PItemIDList;
+   Folder : array[0..MAX_PATH] of Char;
+   const CSIDL_PERSONAL = $0005;
 begin
-     //if globalData.debugOn Then fna := 'D' else fna := '';
+     // DEBUGGING
+     SHGetSpecialFolderLocation(0, CSIDL_PERSONAL, PIDL);
+     SHGetPathFromIDList(PIDL, Folder);
+     globalData.basedir:=Folder;
+     globalData.srcdir := globalData.basedir + '\JT65HF';
+     globalData.logdir := globalData.basedir + '\JT65HF\log';
+     globalData.cfgdir := globalData.basedir + '\JT65HF\data';
+     globalData.kvdir  := globalData.basedir + '\JT65HF\kvdt';
      cfgError := True;
      Try
-        //fname := GetAppConfigDir(False)+'station1.xml' + fna;
-        fname := GetAppConfigDir(False)+'station1.xml';
+        fname := globalData.cfgdir+'\station1.xml';
         cfg.FileName := fname;
         cfgError := False;
      Except
         // An exception here means the xml config file is corrupted. :(
         // So, I need to delete it and force a regeneration.
-        pfname := StrAlloc(Length(fname)+1);
-        strPcopy(pfname,fname);
-        if not DeleteFile(pfname) Then
+        //function RenameFileUTF8(const OldName, NewName: String): Boolean;
+        //function DeleteFileUTF8(const FileName: String): Boolean;
+        if not DeleteFileUTF8(globalData.cfgdir+'\station1.xml') Then
         Begin
              cfgError := True;
              cfgRecover := False;
@@ -2518,9 +2501,7 @@ end;
 procedure TForm1.rbUseMixChange(Sender: TObject);
 begin
   If Form1.rbUseLeft.Checked Then adc.adcChan  := 1;
-  //If Form1.rbUseLeft.Checked Then madc.adcChan  := 1;
   If Form1.rbUseRight.Checked Then adc.adcChan := 2;
-  //If Form1.rbUseRight.Checked Then madc.adcChan := 2;
 end;
 
 
@@ -2617,14 +2598,7 @@ begin
                bEnd := 533504;
                for i := bStart to bEnd do
                Begin
-                    if paInParams.channelCount = 2 then
-                    begin
-                         if haveOddBuffer then d65.glinBuffer[i] := min(32766,max(-32766,adc.d65rxBuffer[i]));
-                    end;
-                    if paInParams.channelCount = 1 then
-                    begin
-                         //if haveEvenBuffer then d65.glinBuffer[i] := min(32766,max(-32766,madc.d65rxBuffer[i]));
-                    end;
+                    if haveOddBuffer then d65.glinBuffer[i] := min(32766,max(-32766,adc.d65rxBuffer[i]))
                end;
                d65.gld65timestamp := '';
                d65.gld65timestamp := d65.gld65timestamp + IntToStr(ost.Year);
@@ -3159,22 +3133,8 @@ Begin
                End;
           End;
      End;
-     if paInParams.channelCount = 2 then
-     begin
-          if audioAve1 > 0 Then audioAve1 := (audioAve1+adc.specLevel1) DIV 2 else audioAve1 := adc.specLevel1;
-     end;
-     if paInParams.channelCount = 1 then
-     begin
-          //if audioAve1 > 0 Then audioAve1 := (audioAve1+madc.specLevel1) DIV 2 else audioAve1 := madc.specLevel1;
-     end;
-     if paInParams.channelCount = 2 then
-     Begin
-          if audioAve2 > 0 Then audioAve2 := (audioAve1+adc.specLevel2) DIV 2 else audioAve2 := adc.specLevel2;
-     end;
-     if paInParams.channelCount = 1 then
-     begin
-          //if audioAve2 > 0 Then audioAve2 := (audioAve1+madc.specLevel2) DIV 2 else audioAve2 := madc.specLevel2;
-     end;
+     if audioAve1 > 0 Then audioAve1 := (audioAve1+adc.specLevel1) DIV 2 else audioAve1 := adc.specLevel1;
+     if audioAve2 > 0 Then audioAve2 := (audioAve1+adc.specLevel2) DIV 2 else audioAve2 := adc.specLevel2;
 End;
 
 procedure TForm1.displayAudio(audioAveL : Integer; audioAveR : Integer);
@@ -3189,70 +3149,14 @@ Begin
      cfgvtwo.Form6.pbAULeft.Position := audioAveL;
      cfgvtwo.Form6.pbAURight.Position := audioAveR;
      // Convert S Level to dB for text display
-     if paInParams.channelCount = 2 then
-     Begin
-          if adc.specLevel1 > 0 Then Form1.rbUseLeft.Caption := 'L ' + IntToStr(Round((audioAveL*0.4)-20)) Else Form1.rbUseLeft.Caption := 'L -20';
-     end;
-     if paInParams.channelCount = 1 then
-     Begin
-          //if madc.specLevel1 > 0 Then Form1.rbUseLeft.Caption := 'L ' + IntToStr(Round((audioAveL*0.4)-20)) Else Form1.rbUseLeft.Caption := 'L -20';
-     end;
-     if paInParams.channelCount = 2 then
-     Begin
-          if adc.specLevel2 > 0 Then Form1.rbUseRight.Caption := 'R ' + IntToStr(Round((audioAveR*0.4)-20)) Else Form1.rbUseRight.Caption := 'R -20';
-     end;
-     if paInParams.channelCount = 1 then
-     Begin
-          //if madc.specLevel2 > 0 Then Form1.rbUseRight.Caption := 'R ' + IntToStr(Round((audioAveR*0.4)-20)) Else Form1.rbUseRight.Caption := 'R -20';
-     end;
-     if paInParams.channelCount = 2 then
-     begin
-          if (adc.specLevel1 < 40) Or (adc.specLevel1 > 60) Then rbUseLeft.Font.Color := clRed else rbUseLeft.Font.Color := clBlack;
-     end;
-     if paInParams.channelCount = 1 then
-     begin
-          //if (madc.specLevel1 < 40) Or (madc.specLevel1 > 60) Then rbUseLeft.Font.Color := clRed else rbUseLeft.Font.Color := clBlack;
-     end;
-     if paInParams.channelCount = 2 then
-     begin
-          if (adc.specLevel2 < 40) Or (adc.specLevel2 > 60) Then rbUseRight.Font.Color := clRed else rbUseRight.Font.Color := clBlack;
-     end;
-     if paInParams.channelCount = 1 then
-     begin
-          //if (madc.specLevel2 < 40) Or (madc.specLevel2 > 60) Then rbUseRight.Font.Color := clRed else rbUseRight.Font.Color := clBlack;
-     end;
-     if paInParams.channelCount = 2 then
-     begin
-          if adc.specLevel1 > 0 Then cfgvtwo.Form6.Label25.Caption := 'L ' + IntToStr(Round((audioAveL*0.4)-20)) Else cfgvtwo.Form6.Label25.Caption := 'L -20';
-     end;
-     if paInParams.channelCount = 1 then
-     begin
-          //if madc.specLevel1 > 0 Then cfgvtwo.Form6.Label25.Caption := 'L ' + IntToStr(Round((audioAveL*0.4)-20)) Else cfgvtwo.Form6.Label25.Caption := 'L -20';
-     end;
-     if paInParams.channelCount = 2 then
-     begin
-          if adc.specLevel2 > 0 Then cfgvtwo.Form6.Label31.Caption := 'R ' + IntToStr(Round((audioAveR*0.4)-20)) Else cfgvtwo.Form6.Label31.Caption := 'R -20';
-     end;
-     if paInParams.channelCount = 1 then
-     begin
-          //if madc.specLevel2 > 0 Then cfgvtwo.Form6.Label31.Caption := 'R ' + IntToStr(Round((audioAveR*0.4)-20)) Else cfgvtwo.Form6.Label31.Caption := 'R -20';
-     end;
-     if paInParams.channelCount = 2 then
-     begin
-          if (adc.specLevel1 < 40) Or (adc.specLevel1 > 60) Then cfgvtwo.Form6.Label25.Font.Color := clRed else cfgvtwo.Form6.Label25.Font.Color := clBlack;
-     end;
-     if paInParams.channelCount = 1 then
-     begin
-          //if (madc.specLevel1 < 40) Or (madc.specLevel1 > 60) Then cfgvtwo.Form6.Label25.Font.Color := clRed else cfgvtwo.Form6.Label25.Font.Color := clBlack;
-     end;
-     if paInParams.channelCount = 2 then
-     begin
-          if (adc.specLevel2 < 40) Or (adc.specLevel2 > 60) Then cfgvtwo.Form6.Label31.Font.Color := clRed else cfgvtwo.Form6.Label31.Font.Color := clBlack;
-     end;
-     if paInParams.channelCount = 1 then
-     begin
-          //if (madc.specLevel2 < 40) Or (madc.specLevel2 > 60) Then cfgvtwo.Form6.Label31.Font.Color := clRed else cfgvtwo.Form6.Label31.Font.Color := clBlack;
-     end;
+     if adc.specLevel1 > 0 Then Form1.rbUseLeft.Caption := 'L ' + IntToStr(Round((audioAveL*0.4)-20)) Else Form1.rbUseLeft.Caption := 'L -20';
+     if adc.specLevel2 > 0 Then Form1.rbUseRight.Caption := 'R ' + IntToStr(Round((audioAveR*0.4)-20)) Else Form1.rbUseRight.Caption := 'R -20';
+     if (adc.specLevel1 < 40) Or (adc.specLevel1 > 60) Then rbUseLeft.Font.Color := clRed else rbUseLeft.Font.Color := clBlack;
+     if (adc.specLevel2 < 40) Or (adc.specLevel2 > 60) Then rbUseRight.Font.Color := clRed else rbUseRight.Font.Color := clBlack;
+     if adc.specLevel1 > 0 Then cfgvtwo.Form6.Label25.Caption := 'L ' + IntToStr(Round((audioAveL*0.4)-20)) Else cfgvtwo.Form6.Label25.Caption := 'L -20';
+     if adc.specLevel2 > 0 Then cfgvtwo.Form6.Label31.Caption := 'R ' + IntToStr(Round((audioAveR*0.4)-20)) Else cfgvtwo.Form6.Label31.Caption := 'R -20';
+     if (adc.specLevel1 < 40) Or (adc.specLevel1 > 60) Then cfgvtwo.Form6.Label25.Font.Color := clRed else cfgvtwo.Form6.Label25.Font.Color := clBlack;
+     if (adc.specLevel2 < 40) Or (adc.specLevel2 > 60) Then cfgvtwo.Form6.Label31.Font.Color := clRed else cfgvtwo.Form6.Label31.Font.Color := clBlack;
 End;
 
 procedure TForm1.updateStatus(i : Integer);
@@ -3343,10 +3247,52 @@ var
    vstr               : PChar;
    st                 : TSYSTEMTIME;
    tstflt             : Double;
-   //fname, fna         : String;
    fname              : String;
    verUpdate          : Boolean;
+   lfile              : TextFile;
 Begin
+     // DEBUGGING
+     // basedir now holds path to current user's my documents space like:
+     // C:\Users\Joe\Documents
+     // I have confirmed this to work under Windows 7, Vista, XP and Wine
+     //
+     // I want to use basedir + \JT65HF\log\  as default location for adif/csv
+     //                         \JT65HF\data\ as directory for holding config and fft wisdom
+     //                         \JT65HF\kvdt\ as directory for holding KVASD.EXE and KVASD.DAT (maybe...)
+     if not directoryExists(globalData.basedir) Then createDir(globalData.basedir);
+     if not directoryExists(globalData.logdir) Then createDir(globalData.logdir);
+     if not directoryExists(globalData.cfgdir) Then createDir(globalData.cfgdir);
+     if not directoryExists(globalData.kvdir) Then createDir(globalData.kvdir);
+     // Now... I need to handle the case of a user that has configuration and fft metrics in old location
+     // by copying that data into the new locations.
+     if not fileExists(globalData.cfgdir+'\station1.xml') And fileExists(GetAppConfigDir(False)+'station1.xml') Then
+     Begin
+          // OK, I have station1.xml in the old location but not the new so copy it.
+          if fileutil.CopyFile(GetAppConfigDir(False)+'station1.xml',globalData.cfgdir+'\station1.xml') Then showmessage('Copied config');
+     end;
+     if not fileExists(globalData.cfgdir+'\wisdom2.dat') And fileExists(GetAppConfigDir(False)+'wisdom2.dat') Then
+     Begin
+          // OK, I have wisdom2.dat in the old location but not the new so copy it.
+          if fileutil.CopyFile(GetAppConfigDir(False)+'wisdom2.dat',globalData.cfgdir+'\wisdom2.dat') Then showmessage('Copied wisdom');
+     end;
+     if not fileExists(globalData.logdir+'\JT65HF-log.csv') Then
+     Begin
+          AssignFile(lfile, globalData.logdir+'\JT65HF-log.csv');
+          rewrite(lfile);
+          WriteLn(lfile,'"Date","Time","QRG","Sync","DB","DT","DF","Decoder","Exchange"');
+          closeFile(lfile);
+     end;
+     if not fileExists(globalData.logdir+'\JT65HF_ADIFLOG.adi') Then
+     Begin
+          AssignFile(lfile, globalData.logdir+'\JT65HF_ADIFLOG.adi');
+          rewrite(lfile);
+          writeln(lfile,'JT65-HF ADIF Export');
+          writeln(lfile,'<eoh>');
+          closeFile(lfile);
+     end;
+
+     // END DEBUGGING
+
      // This block is executed only once when the program starts
      if cfgError Then
      Begin
@@ -3400,7 +3346,7 @@ Begin
      cfgvtwo.glrbcLogin := False;
      cfgvtwo.glrbcLogout := False;
      rbcPing := False;
-     mnrbcReport := False;
+     dorbReport := False;
      rbThread := rbcThread.Create(False);
      //showmessage('created RB thread');
      //
@@ -3434,8 +3380,7 @@ Begin
           inc(i);
      end;
      rbc.glrbsSentCount := 0;
-     //globalData.rbID := '1';
-     rbc.glrbCallsign := TrimLeft(TrimRight(cfgvtwo.Form6.editPSKRCall.Text)) + '-2';
+     rbc.glrbCallsign := TrimLeft(TrimRight(cfgvtwo.Form6.editPSKRCall.Text));
      // Init PA.  If this doesn't work there's no reason to continue.
      //showmessage('initializing portaudio');
      PaResult := portaudio.Pa_Initialize();
@@ -3502,21 +3447,10 @@ Begin
      End;
 
      //showmessage('portaudio initialization completed...');
-
-     //if globalData.debugOn Then fna := 'D' else fna := '';
-     //fname := GetAppConfigDir(False)+'station1.xml' + fna;
-     fname := GetAppConfigDir(False)+'station1.xml';
-     {$IFDEF win32}
-       if not fileExists(fname) Then
-     {$ENDIF}
-     {$IFDEF linux}
-       if not directoryExists(GetAppConfigDir(False) Then createDir(appConfigDir(False));
-       if not fileExists(fname) Then
-     {$ENDIF}
+     fname := globalData.cfgdir+'\station1.xml';
+     if not fileExists(fname) Then
      Begin
-
           //showmessage('Running initial configuration...');
-
           cfgvtwo.glmustConfig := True;
           // Setup default sane value for config form.
           cfgvtwo.Form6.edMyCall.Clear;
@@ -3532,7 +3466,7 @@ Begin
           cfgvtwo.Form6.edTXSRCor.Text := '1.0000';
           cfgvtwo.Form6.chkEnableAutoSR.Checked := True;
           cfgvtwo.Form6.cbSaveCSV.Checked := True;
-          cfgvtwo.Form6.DirectoryEdit1.Directory := GetAppConfigDir(False);
+          cfgvtwo.Form6.DirectoryEdit1.Directory := globalData.logdir;
           cfgvtwo.Form6.editUserDefinedPort1.Text := 'None';
           cfgvtwo.Form6.ComboBox1.ItemIndex := 8;
           cfgvtwo.Form6.ComboBox1.Color := clLime;
@@ -3625,7 +3559,7 @@ Begin
           cfg.StoredValue['rxCF']         := '0';
           If cfgvtwo.Form6.cbSaveCSV.Checked Then cfg.StoredValue['saveCSV'] := '1' Else cfg.StoredValue['saveCSV'] := '0';
           cfg.StoredValue['csvPath'] := cfgvtwo.Form6.DirectoryEdit1.Directory;
-          cfg.StoredValue['adiPath'] := log.Form2.DirectoryEdit1.Directory;
+          cfg.StoredValue['adiPath'] := cfgvtwo.Form6.DirectoryEdit1.Directory;
           cfg.StoredValue['version'] := verHolder.verReturn();
           cfg.StoredValue['cqColor'] := IntToStr(cfgvtwo.Form6.ComboBox1.ItemIndex);
           cfg.StoredValue['callColor'] := IntToStr(cfgvtwo.Form6.ComboBox2.ItemIndex);
@@ -3900,8 +3834,8 @@ Begin
           spectrum.specVGain := 7;
      End;
      if cfg.StoredValue['saveCSV'] = '1' Then cfgvtwo.Form6.cbSaveCSV.Checked := True else cfgvtwo.Form6.cbSaveCSV.Checked := False;
-     if Length(cfg.StoredValue['csvPath']) > 0 Then cfgvtwo.Form6.DirectoryEdit1.Directory := cfg.StoredValue['csvPath'] else cfgvtwo.Form6.DirectoryEdit1.Directory := GetAppConfigDir(False);
-     if Length(cfg.StoredValue['adiPath']) > 0 Then log.Form2.DirectoryEdit1.Directory := cfg.StoredValue['adiPath'] else log.Form2.DirectoryEdit1.Directory := GetAppConfigDir(False);
+     if Length(cfg.StoredValue['csvPath']) > 0 Then cfgvtwo.Form6.DirectoryEdit1.Directory := cfg.StoredValue['csvPath'] else cfgvtwo.Form6.DirectoryEdit1.Directory := globalData.logdir;
+     //if Length(cfg.StoredValue['adiPath']) > 0 Then log.Form2.DirectoryEdit1.Directory := cfg.StoredValue['adiPath'] else log.Form2.DirectoryEdit1.Directory := globalData.logdir;
      if cfg.StoredValue['version'] <> verHolder.verReturn() Then verUpdate := True else verUpdate := False;
      if cfg.StoredValue['txWatchDog'] = '1' Then
      Begin
@@ -4122,7 +4056,7 @@ Begin
      if cfg.StoredValue['useRB'] = 'yes' Then cfgvtwo.Form6.cbUseRB.Checked := True else cfgvtwo.Form6.cbUseRB.Checked := False;
      cfgvtwo.Form6.editPSKRAntenna.Text := cfg.StoredValue['pskrAntenna'];
      if cfg.StoredValue['optFFT'] = 'on' Then cfgvtwo.Form6.chkNoOptFFT.Checked := False else cfgvtwo.Form6.chkNoOptFFT.Checked := True;
-     if cfg.StoredValue['useAltPTT'] = 'yes' Then cfgvtwo.Form6.cbUseAltPTT.Checked else cfgvtwo.Form6.cbUseAltPTT.Checked := False;
+     if cfg.StoredValue['useAltPTT'] = 'yes' Then cfgvtwo.Form6.cbUseAltPTT.Checked := True else cfgvtwo.Form6.cbUseAltPTT.Checked := False;
      if cfg.StoredValue['useHRDPTT'] = 'yes' Then cfgvtwo.Form6.chkHRDPTT.Checked := True else cfgvtwo.Form6.chkHRDPTT.Checked := False;
      if cfg.StoredValue['useCATTxDF'] = 'yes' Then cfgvtwo.Form6.chkTxDFVFO.Checked := True else cfgvtwo.Form6.chkTxDFVFO.Checked := False;
 
@@ -4298,7 +4232,7 @@ Begin
      d65.glfftSWisdom := 0;
      if not cfgvtwo.Form6.chkNoOptFFT.Checked Then
      Begin
-          fname := GetAppConfigDir(False)+'wisdom2.dat';
+          fname := globalData.cfgdir+'\wisdom2.dat';
           if FileExists(fname) Then
           Begin
                // I have data for FFTW_MEASURE metrics use ical settings in
@@ -4348,11 +4282,6 @@ Begin
      // Initialize rx stream.
      paInParams.channelCount := 2;
      paResult := portaudio.Pa_OpenStream(paInStream,ppaInParams,Nil,11025,2048,0,@adc.adcCallback,Pointer(Self));
-     //if paResult <> 0 Then
-     //Begin
-          //paInParams.channelCount := 1;
-          //paResult := portaudio.Pa_OpenStream(paInStream,ppaInParams,Nil,11025,2048,0,@madc.adcCallback,Pointer(Self));
-     //end;
      if paResult <> 0 Then
      Begin
           ShowMessage('PA Error:  ' + StrPas(portaudio.Pa_GetErrorText(paResult)) + ' Could not setup for stereo input.  Program will exit.');
@@ -4396,11 +4325,6 @@ Begin
      // Initialize tx stream.
      paOutParams.channelCount := 2;
      paResult := portaudio.Pa_OpenStream(paOutStream,Nil,ppaOutParams,11025,2048,0,@dac.dacCallback,Pointer(Self));
-     //if paResult <> 0 Then
-     //Begin
-          //paOutParams.channelCount := 1;
-          //paResult := portaudio.Pa_OpenStream(paOutStream,Nil,ppaOutParams,11025,2048,0,@mdac.dacCallback,Pointer(Self));
-     //End;
      if paResult <> 0 Then
      Begin
           ShowMessage('PA Error:  ' + StrPas(portaudio.Pa_GetErrorText(paResult)));
@@ -4511,8 +4435,7 @@ Begin
      // Update TX Sample Error Rate display.
      If (dErrError = 0) and (thisAction > 1) Then txsrs := '';
      If (dErrError = 0) and (thisAction = 1) Then txsrs := '';
-     //if paOutParams.channelCount = 1 then erate := mdac.dacErate;
-     if paOutParams.channelCount = 2 then erate := dac.dacErate;
+     erate := dac.dacErate;
      If erate <> 0 Then
      Begin
           if dErrCount = 0 Then dErrCount := 1;
@@ -4600,9 +4523,7 @@ Begin
                dac.d65txBuffer[mnlooper] := 0;
                //mdac.d65txBuffer[mnlooper] := 0;
           end;
-          if (paOutParams.channelCount = 2) And (txMode = 65) then encode65.gen65(d65txmsg,@txdf,@dac.d65txBuffer[0],@d65nwave,@d65sendingsh,d65sending,@d65nmsg);
-          //if (paOutParams.channelCount = 1) And (txMode = 65) Then encode65.gen65(d65txmsg,@txdf,@mdac.d65txBuffer[0],@d65nwave,@d65sendingsh,d65sending,@d65nmsg);
-
+          if txMode = 65 then encode65.gen65(d65txmsg,@txdf,@dac.d65txBuffer[0],@d65nwave,@d65sendingsh,d65sending,@d65nmsg);
           //if txMode =  4 Then  encode65.gen4(d65txmsg,@txdf,@dac.d65txBuffer[0],@d65nwave,@d65sendingsh,d65sending,@d65nmsg);
           //if txMode =  4 Then  encode65.gen4(d65txmsg,@txdf,@mdac.d65txBuffer[0],@d65nwave,@d65sendingsh,d65sending,@d65nmsg);
 
@@ -4739,8 +4660,7 @@ Begin
           txsr := 1.0;
           if tryStrToFloat(cfgvtwo.Form6.edTXSRCor.Text,txsr) Then d65samfacout := StrToFloat(cfgvtwo.Form6.edTXSRCor.Text) else d65samfacout := 1.0;
           // Generate samples.
-          if (paOutParams.channelCount = 2) And (txMode = 65) Then encode65.gen65(d65txmsg,@txdf,@dac.d65txBuffer[0],@d65nwave,@d65sendingsh,d65sending,@d65nmsg);
-          //if (paOutParams.channelCount = 1) And (txMode = 65) Then encode65.gen65(d65txmsg,@txdf,@mdac.d65txBuffer[0],@d65nwave,@d65sendingsh,d65sending,@d65nmsg);
+          if txMode = 65 Then encode65.gen65(d65txmsg,@txdf,@dac.d65txBuffer[0],@d65nwave,@d65sendingsh,d65sending,@d65nmsg);
 
           //if txMode =  4 Then  encode65.gen4(d65txmsg,@txdf,@dac.d65txBuffer[0],@d65nwave,@d65sendingsh,d65sending,@d65nmsg);
           //if txMode =  4 Then  encode65.gen4(d65txmsg,@txdf,@mdac.d65txBuffer[0],@d65nwave,@d65sendingsh,d65sending,@d65nmsg);
@@ -4802,11 +4722,6 @@ Begin
 
      paInParams.channelCount := 2;
      paResult := portaudio.Pa_OpenStream(paInStream,ppaInParams,Nil,11025,2048,0,@adc.adcCallback,Pointer(Self));
-     //if paResult <> 0 Then
-     //Begin
-          //paInParams.channelCount := 1;
-          //paResult := portaudio.Pa_OpenStream(paInStream,ppaInParams,Nil,11025,2048,0,@madc.adcCallback,Pointer(Self));
-     //end;
      if paResult = 0 Then
      Begin
           paResult := portaudio.Pa_StartStream(paInStream);
@@ -4836,11 +4751,6 @@ Begin
 
      paOutParams.channelCount := 2;
      paResult := portaudio.Pa_OpenStream(paOutStream,Nil,ppaOutParams,11025,2048,0,@dac.dacCallback,Pointer(Self));
-     //if paResult <> 0 Then
-     //Begin
-          //paOutParams.channelCount := 1;
-          //paResult := portaudio.Pa_OpenStream(paOutStream,Nil,ppaOutParams,11025,2048,0,@mdac.dacCallback,Pointer(Self));
-     //End;
      if paresult = 0 Then
      Begin
           paResult := portaudio.Pa_StartStream(paOutStream);
@@ -5092,36 +5002,20 @@ Begin
           Else
           Begin
                // Code that only executes while in an active RX cycle.
-               if paInParams.channelCount = 2 Then Form1.ProgressBar3.Position := adc.d65rxBufferIdx;
-               //if paInParams.channelCount = 1 Then Form1.ProgressBar3.Position := madc.d65rxBufferIdx;
+               Form1.ProgressBar3.Position := adc.d65rxBufferIdx;
 
                rxInProgress := True;
                globalData.txInProgress := False;
 
-               if paInParams.channelCount = 2 Then
+               If adc.d65rxBufferIdx >= 533504 Then
                Begin
-                    If adc.d65rxBufferIdx >= 533504 Then
-                    Begin
-                         // Get End of Period QRG
-                         eopQRG := globalData.gqrg;
-                         // Switch to decoder action
-                         thisAction := 4;
-                         rxInProgress := False;
-                         globalData.txInProgress := False;
-                    End;
-               end;
-               //if paInParams.channelCount = 1 Then
-               //Begin
-               //     If madc.d65rxBufferIdx >= 533504 Then
-               //     Begin
-               //          // Get End of Period QRG
-               //          eopQRG := globalData.gqrg;
-               //          // Switch to decoder action
-               //          thisAction := 4;
-               //          rxInProgress := False;
-               //          globalData.txInProgress := False;
-               //     End;
-               //end;
+                    // Get End of Period QRG
+                    eopQRG := globalData.gqrg;
+                    // Switch to decoder action
+                    thisAction := 4;
+                    rxInProgress := False;
+                    globalData.txInProgress := False;
+               End;
           End;
      End;
      //
@@ -5213,37 +5107,18 @@ Begin
           Begin
                globalData.txInProgress := True;
                rxInProgress := False;
-               if paOutParams.channelCount = 2 Then
+               if (dac.d65txBufferIdx >= d65nwave+11025) Or (dac.d65txBufferIdx >= 661503-(11025 DIV 2)) Then
                Begin
-                    if (dac.d65txBufferIdx >= d65nwave+11025) Or (dac.d65txBufferIdx >= 661503-(11025 DIV 2)) Then
-                    Begin
-                         globalData.txInProgress := False;
-                         if getPTTMethod() = 'SI5' Then si570Lowerptt();
-                         if getPTTMethod() = 'HRD' Then hrdLowerPTT();
-                         if getPTTMethod() = 'ALT' Then altLowerPTT();
-                         if getPTTMethod() = 'PTT' Then lowerPTT();
-                         thisAction := 5;
-                         actionSet := False;
-                         curMsg := '';
-                    End;
-               end;
-               //if paOutParams.channelCount = 1 Then
-               //Begin
-               //     if (mdac.d65txBufferIdx >= d65nwave+11025) Or (mdac.d65txBufferIdx >= 661503-(11025 DIV 2)) Then
-               //     Begin
-               //          globalData.txInProgress := False;
-               //          if getPTTMethod() = 'SI5' Then si570Lowerptt();
-               //          if getPTTMethod() = 'HRD' Then hrdLowerPTT();
-               //          if getPTTMethod() = 'ALT' Then altLowerPTT();
-               //          if getPTTMethod() = 'PTT' Then lowerPTT();
-               //          thisAction := 5;
-               //          actionSet := False;
-               //          curMsg := '';
-               //     End;
-               //end;
-               // Update the progress indicator for this sequence.
-               if paOutParams.channelCount = 2 Then Form1.ProgressBar3.Position := dac.d65txBufferIdx;
-               //if paOutParams.channelCount = 1 Then Form1.ProgressBar3.Position := mdac.d65txBufferIdx;
+                    globalData.txInProgress := False;
+                    if getPTTMethod() = 'SI5' Then si570Lowerptt();
+                    if getPTTMethod() = 'HRD' Then hrdLowerPTT();
+                    if getPTTMethod() = 'ALT' Then altLowerPTT();
+                    if getPTTMethod() = 'PTT' Then lowerPTT();
+                    thisAction := 5;
+                    actionSet := False;
+                    curMsg := '';
+               End;
+               Form1.ProgressBar3.Position := dac.d65txBufferIdx;
           End;
      End;
      //
@@ -5348,39 +5223,19 @@ Begin
                // Continuing a late sequence TX
                globalData.txInProgress := True;
                rxInProgress := False;
-               if paOutParams.channelCount = 2 Then
+               if (dac.d65txBufferIdx >= d65nwave+11025) Or (dac.d65txBufferIdx >= 661503-(11025 DIV 2)) Or (thisSecond > 48) Then
                Begin
-                    if (dac.d65txBufferIdx >= d65nwave+11025) Or (dac.d65txBufferIdx >= 661503-(11025 DIV 2)) Or (thisSecond > 48) Then
-                    Begin
-                         // I have a full TX cycle when d65txBufferIdx >= 538624 or thisSecond > 48
-                         if getPTTMethod() = 'SI5' Then si570Lowerptt();
-                         if getPTTMethod() = 'HRD' Then hrdLowerPTT();
-                         if getPTTMethod() = 'ALT' Then altLowerPTT();
-                         if getPTTMethod() = 'PTT' Then lowerPTT();
-                         actionSet := False;
-                         thisAction := 5;
-                         globalData.txInProgress := False;
-                         curMsg := '';
-                    End;
-               end;
-               //if paOutParams.channelCount = 1 Then
-               //Begin
-               //     if (mdac.d65txBufferIdx >= d65nwave+11025) Or (mdac.d65txBufferIdx >= 661503-(11025 DIV 2)) Or (thisSecond > 48) Then
-               //     Begin
-               //          // I have a full TX cycle when d65txBufferIdx >= 538624 or thisSecond > 48
-               //          if getPTTMethod() = 'SI5' Then si570Lowerptt();
-               //          if getPTTMethod() = 'HRD' Then hrdLowerPTT();
-               //          if getPTTMethod() = 'ALT' Then altLowerPTT();
-               //          if getPTTMethod() = 'PTT' Then lowerPTT();
-               //          actionSet := False;
-               //          thisAction := 5;
-               //          globalData.txInProgress := False;
-               //          curMsg := '';
-               //     End;
-               //end;
-               // Update the progress indicator for this sequence.
-               if paOutParams.channelCount = 2 Then Form1.ProgressBar3.Position := dac.d65txBufferIdx;
-               //if paOutParams.channelCount = 1 Then Form1.ProgressBar3.Position := mdac.d65txBufferIdx;
+                    // I have a full TX cycle when d65txBufferIdx >= 538624 or thisSecond > 48
+                    if getPTTMethod() = 'SI5' Then si570Lowerptt();
+                    if getPTTMethod() = 'HRD' Then hrdLowerPTT();
+                    if getPTTMethod() = 'ALT' Then altLowerPTT();
+                    if getPTTMethod() = 'PTT' Then lowerPTT();
+                    actionSet := False;
+                    thisAction := 5;
+                    globalData.txInProgress := False;
+                    curMsg := '';
+               End;
+               Form1.ProgressBar3.Position := dac.d65txBufferIdx;
           End;
      End;
 End;
@@ -5684,7 +5539,7 @@ Begin
                begin
                     if not rbc.glrbReports[i].rbProcessed then doRB := True;
                end;
-               if doRB Then mnrbcReport := True;
+               if doRB Then dorbReport := True;
           End;
      End;
      // If rb Enabled (and not Offline Only) then ping RB server every
@@ -5964,7 +5819,7 @@ initialization
   cfgvtwo.glrbcLogin := False;
   cfgvtwo.glrbcLogout := False;
   rbcPing := False;
-  mnrbcReport := False;
+  dorbReport := False;
   alreadyHere := False; // Used to detect an overrun of timer servicing loop.
   sLevel1 := 0;
   sLevel2 := 0;
@@ -6021,7 +5876,7 @@ initialization
   lastMsg := '';
   curMsg := '';
   cfgvtwo.glautoSR := False;
-  rbc.glrbNoInet := True;
+  //rbc.glrbNoInet := True;
   rbRunOnce := True;
   thisTX := '';
   lastTX := '';
@@ -6057,7 +5912,7 @@ initialization
 
   d65.glnd65firstrun := True;
   d65.glbinspace := 100;
-  globalData.debugOn := True;
+  globalData.debugOn := False;
   globalData.gmode := 65;
   txmode := globalData.gmode;
   mnHavePrefix := False;

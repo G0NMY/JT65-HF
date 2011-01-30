@@ -70,7 +70,17 @@ begin
      // TODO Add ifdefs for linux so fname will be correct.
      fname := Form2.DirectoryEdit1.Directory + '\jt65hf_log.adi';
      AssignFile(lfile, fname);
-     If FileExists(fname) Then append(lfile) else rewrite(lfile);
+     If FileExists(fname) Then
+     Begin
+          append(lfile);
+     end
+     else
+     Begin
+          rewrite(lfile);
+          writeln(lfile,'JT65-HF ADIF Export');
+          writeln(lfile,'<adif_ver:4>2.26');
+          writeln(lfile,'<eoh>');
+     end
      writeln(lfile,foo);
      closeFile(lfile);
      Form2.visible := False;

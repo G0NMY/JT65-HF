@@ -188,10 +188,10 @@ Begin
           kvDat[i] := 0;
      End;
      ierr := 0;
-     if FileExists('KVASD.DAT') Then
+     if FileExists(globalData.kvdir+'\KVASD.DAT') Then
      Begin
           kvProc := TProcess.Create(nil);
-          kvProc.CommandLine := 'kvasd_g95.exe -q';
+          kvProc.CommandLine := globalData.kvdir+'\kvasd_g95.exe -q';
           kvProc.Options := kvProc.Options + [poWaitOnExit];
           kvProc.Options := kvProc.Options + [poNoConsole];
           kvProc.Execute;
@@ -205,7 +205,7 @@ Begin
      Begin
           Try
              // read kvasd.dat
-             AssignFile(kvFile, 'KVASD.DAT');
+             AssignFile(kvFile, globalData.kvdir+'\KVASD.DAT');
              Reset(kvFile);
              If FileSize(kvfile) > 256 Then
              Begin
@@ -307,8 +307,8 @@ begin
          glmcall := StrAlloc(12);
          glmyline := StrAlloc(43);
          glkvs := StrAlloc(22);
-         glwisfile := StrAlloc(Length(GetAppConfigDir(False)+'wisdom2.dat')+1);
-         glkvfname := StrAlloc(Length('KVASD.DAT')+1);
+         glwisfile := StrAlloc(Length(globalData.cfgdir+'\wisdom2.dat')+1);
+         glkvfname := StrAlloc(Length(glkvfname+'\KVASD.DAT')+1);
          gldecOut := TStringList.Create;
          glrawOut := TStringList.Create;
          gldecOut.CaseSensitive := False;
@@ -354,8 +354,8 @@ begin
     diagout.Form3.ListBox1.Clear;
     diagout.Form3.ListBox2.Clear;
     diagout.Form3.ListBox3.Clear;
-    strPcopy(glkvfname,'KVASD.DAT');
-    strPcopy(glwisfile,GetAppConfigDir(False)+'wisdom2.dat');
+    strPcopy(glkvfname,glkvfname+'\KVASD.DAT');
+    strPcopy(glwisfile,globalData.cfgdir+'\wisdom2.dat');
     glmline := '                                                                        ';
     glmcall := '            ';
     glmyline := '                                           ';
@@ -1031,7 +1031,7 @@ begin
                                        begin
                                             // Oh joy.  Time to try for kv.
                                             kdec := '';
-                                            if FileExists('KVASD.DAT') Then
+                                            if FileExists(globalData.kvdir+'\KVASD.DAT') Then
                                             Begin
                                                  if evalKV(kdec) Then
                                                  Begin
@@ -1047,7 +1047,7 @@ begin
                                                                 break;
                                                            end;
                                                       end;
-                                                      if FileExists('KVASD.DAT') Then DeleteFile('KVASD.DAT');
+                                                      if FileExists(globalData.kvdir+'\KVASD.DAT') Then DeleteFile(globalData.kvdir+'\KVASD.DAT');
                                                  end
                                                  else
                                                  begin

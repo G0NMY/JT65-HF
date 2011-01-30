@@ -38,6 +38,7 @@ Type
       rbCharSync  : String;
       rbDecoded   : String;
       rbFrequency : String;
+      rbDecoder   : String;
       rbMode      : Integer;
       rbProcessed : Boolean;
       rbCached    : Boolean;
@@ -59,13 +60,10 @@ function  resolveType0(Const Word1: String; Const Word2: String; Const Word3: St
                        Const i: Integer; Var callsign: String; Var Grid: String): Boolean;
 
 var
-   //glrblog                : TextFile;
    glrbReports            : Array[0..499] of rbcReport;
    glrbActive             : Boolean;
-   glrbNoInet             : Boolean;
    glrbEnterTS            : TDateTime;
    glrbCallsign           : String;
-   //rbID                 : String;
    glrbQRG                : String;
    glrbGrid               : String;
    glrbsLastCall          : Array[0..499] Of String;
@@ -76,7 +74,7 @@ implementation
 
 procedure doLogin();
 Var
-   foo, foo2     : String;
+   foo, rbmode   : String;
    HTTP          : THTTPSend;
    fvar          : Single;
    ivar          : Integer;
@@ -85,60 +83,92 @@ Begin
      // Save entry point TimeStamp
      glrbEnterTS := Now;
      glrbActive := True;
-     If not glrbNoInet Then
-     Begin
-          Try
-             fvar := 0.0;
-             ivar := 0;
-             if globalData.gmode = 4 then foo2 := '4B';
-             if globalData.gmode = 65 then foo2 := '65A';
-             if globalData.gmode = 0 then foo2 := '65A/4B';
-             foo2 := foo2 + globalData.mtext;
-             If TryStrToFloat(glrbQRG, fvar) Then ivar := trunc(fvar) Else ivar := 0;
-             If (ivar > 0) And parseCallSign.valQRG(ivar) Then
-             Begin
-                  foo := 'http://jt65.w6cqz.org/dbb.php?func=JLOGIN&value1=' +
-                         glrbCallsign + '&value2=' + glrbQRG + '&value3=' + foo2 +
-                         '&value4=' + glrbGrid;
-                  HTTP := THTTPSend.Create;
-                  HTTP.Timeout := 10000;  // Is this correct?
-                  HTTP.Headers.Add('Accept: text/html');
-                  // I think it wants ms for timeout value...
-                  if not HTTP.HTTPMethod('GET', foo) Then
-                  begin
-                       globalData.rbLoggedIn := False;
-                  end
-                  else
-                  begin
-                       rbResult := TStringList.Create;
-                       rbResult.Clear;
-                       rbResult.LoadFromStream(HTTP.Document);
-                       If TrimLeft(TrimRight(rbResult.Text)) = 'BADQRG' Then
-                       Begin
-                            rbLoggedIn := False;
-                            dlog.fileDebug('RB Login Fails.  Error:  ' + TrimLeft(TrimRight(rbResult.Text)));
-                       End;
-                       If TrimLeft(TrimRight(rbResult.Text)) = 'QSL' Then
-                       Begin
-                            globalData.rbLoggedIn := True;
-                       End;
-                       if not globalData.rbLoggedIn  And (TrimLeft(TrimRight(rbResult.Text))<>'BADQRG') Then dlog.fileDebug('RB Login Fails.  Unknown Error.');
-                       rbResult.Free;
-                  end;
-                  HTTP.Free;
+     globalData.rbecode := '';
+     Try
+        fvar := 0.0;
+        ivar := 0;
+        if globalData.gmode = 4 then rbmode := '4B';
+        if globalData.gmode = 65 then rbmode := '65A';
+        if globalData.gmode = 0 then rbmode := '65A/4B';
+        If TryStrToFloat(glrbQRG, fvar) Then ivar := trunc(fvar) Else ivar := 0;
+        If (ivar > 0) And parseCallSign.valQRG(ivar) Then
+        Begin
+             foo := 'http://jt65.w6cqz.org/dbb.php?func=LI&rbcall=' +
+                 glrbCallsign + '&rbqrg=' + glrbQRG + '&rbmode=' + rbmode +
+                 '&rbgrid=' + glrbGrid;
+             HTTP := THTTPSend.Create;
+             HTTP.Timeout := 10000;  // Is this correct?
+             HTTP.Headers.Add('Accept: text/html');
+             // I think it wants ms for timeout value...
+             if not HTTP.HTTPMethod('GET', foo) Then
+             begin
+                  globalData.rbLoggedIn := False;
+                  dlog.fileDebug('RB Login fails:  Unable to contact RB Server');
+                  globalData.rbecode := 'RBSFAIL';
              end
              else
              begin
-                  globalData.rbLoggedIn := False;
+                  rbResult := TStringList.Create;
+                  rbResult.Clear;
+                  rbResult.LoadFromStream(HTTP.Document);
+                  If TrimLeft(TrimRight(rbResult.Text)) = 'QSL' Then
+                  Begin
+                       globalData.rbLoggedIn := True;
+                       globaldata.rbecode := 'QSL';
+                  End;
+                  if not globalData.rbLoggedIn  Then
+                  Begin
+                       // Error messages RB login can return:
+                       // NO - Indicates login failed but not due to bad RB data, so it's safe to try again.
+                       // BAD QRG - Fix the RB's QRG error before trying again.
+                       // BAD GRID - Invalid Grid value, fix before trying again.
+                       // BAD CALL - RB Call too short/long, fix before trying again.
+                       // BAD MODE - RB Mode not 65A or 4B, fix before trying again.
+                       If TrimLeft(TrimRight(rbResult.Text)) = 'BAD QRG'  Then
+                       Begin
+                            globalData.rbLoggedIn := False;
+                            dlog.fileDebug('RB Login fails:  Bad QRG value.');
+                            globalData.rbecode := 'QRG';
+                       end;
+                       If TrimLeft(TrimRight(rbResult.Text)) = 'BAD GRID' Then
+                       Begin
+                            globalData.rbLoggedIn := False;
+                            dlog.fileDebug('RB Login fails:  Bad GRID value.');
+                            globalData.rbecode := 'GRID';
+                       end;
+                       If TrimLeft(TrimRight(rbResult.Text)) = 'BAD CALL' Then
+                       Begin
+                            globalData.rbLoggedIn := False;
+                            dlog.fileDebug('RB Login fails:  Bad CALL value.');
+                            globalData.rbecode := 'CALL';
+                       end;
+                       If TrimLeft(TrimRight(rbResult.Text)) = 'BAD MODE' Then
+                       Begin
+                            globalData.rbLoggedIn := False;
+                            dlog.fileDebug('RB Login fails:  Bad MODE value.');
+                            globalData.rbecode := 'MODE';
+                       end;
+                       If TrimLeft(TrimRight(rbResult.Text)) = 'NO' Then
+                       Begin
+                            globalData.rbLoggedIn := False;
+                            globalData.rbecode := 'NO'; // NO indicates a server error for login vs a local problem for others.
+                       end;
+                  End;
+                  rbResult.Free;
              end;
-          Except
-             dlog.fileDebug('Exception in doLogin');
-             glrbActive := False;
-          End;
-     End
-     Else
-     Begin
-          glrbActive := False;
+             HTTP.Free;
+        end
+        else
+        begin
+             globalData.rbLoggedIn := False;
+             dlog.fileDebug('RB Login fails:  Bad QRG value.');
+             globalData.rbecode := 'QRG';
+        end;
+     Except
+        dlog.fileDebug('Exception in doLogin');
+        globalData.rbLoggedIn := False;
+        globalData.rbecode := 'EXCEPT';
+        glrbActive := False;
      End;
      glrbActive := False;
 End;
@@ -147,42 +177,34 @@ procedure doLogout();
 Var
    foo           : String;
    HTTP          : THTTPSend;
-   rbResult      : TStringList;
 Begin
      // Save entry point TimeStamp
      glrbEnterTS := Now;
      glrbActive := True;
-     If not glrbNoInet Then
-     Begin
-          Try
-             foo := 'http://jt65.w6cqz.org/dbb.php?func=LOGOUT&value1=' + glrbCallsign;
-             HTTP := THTTPSend.Create;
-             HTTP.Timeout := 10000;  // Is this correct?
-             HTTP.Headers.Add('Accept: text/html');
-             // I think it wants ms for timeout value...
-             if not HTTP.HTTPMethod('GET', foo) Then
-             begin
-                  globalData.rbLoggedIn := True;
-             end
-             else
-             begin
-                  rbResult := TStringList.Create;
-                  rbResult.Clear;
-                  rbResult.LoadFromStream(HTTP.Document);
-                  globalData.rbLoggedIn := False;
-                  rbResult.Free;
-             end;
-             HTTP.Free;
-             glrbActive := False;
-          Except
-                dlog.fileDebug('Exception in doLogout');
-                glrbActive := False;
-          End;
-     End
-     Else
-     Begin
-          glrbActive := False;
-          globalData.rbLoggedIn := False;
+     globalData.rbecode := '';
+     Try
+        foo := 'http://jt65.w6cqz.org/dbb.php?func=LOGOUT&rbcall=' + glrbCallsign + '&rbqrg=' + glrbQRG;
+        HTTP := THTTPSend.Create;
+        HTTP.Timeout := 10000;  // Is this correct?
+        HTTP.Headers.Add('Accept: text/html');
+        // I think it wants ms for timeout value...
+        if not HTTP.HTTPMethod('GET', foo) Then
+        begin
+             globalData.rbLoggedIn := True;
+             dlog.fileDebug('RB Logout fails:  Unable to contact RB Server');
+             globalData.rbecode := 'RBSFAIL';
+        end
+        else
+        begin
+             globalData.rbLoggedIn := False;
+             globalData.rbecode := 'QSL';
+        end;
+        HTTP.Free;
+        glrbActive := False;
+     Except
+        dlog.fileDebug('Exception in doLogout');
+        globalData.rbecode := 'EXCEPT';
+        glrbActive := False;
      End;
      glrbActive := False;
 End;
@@ -466,47 +488,40 @@ Var
    HTTP          : THTTPSend;
    rbResult      : TStringList;
 begin
-     If not glrbNoInet Then
-     Begin
-          Try
+     globalData.rbecode := '';
+     Try
+        Result := False;
+        // Save entry point TimeStamp
+        HTTP := THTTPSend.Create;
+        // I think it wants ms for timeout value...
+        HTTP.Timeout := 10000;  // Is this correct?
+        HTTP.Headers.Add('Accept: text/html');
+        if not HTTP.HTTPMethod('GET', url) Then
+        begin
+             rbErrorCode := HTTP.ResultCode;
+             rbErrorString := HTTP.ResultString;
+             // Cache the report in case of error.
+             glrbReports[i].rbCached := True;
+             foo := 'Report cached.  Error:  ';
+             if rbErrorCode = 500 Then foo := foo + 'Network com fail' + '(' + IntToStr(rbErrorCode) + ')  Exchange was:  ' + glrbReports[i].rbDecoded Else
+             foo := foo + rbErrorString + '(' + IntToStr(rbErrorCode) + ')  Exchange was:  ' + glrbReports[i].rbDecoded;
+             //globalData.rbsFailLog[globalData.rbsFailIdx] :=  foo;
+             //inc(globalData.rbsFailIdx);
+             //if globalData.rbsFailIdx > 499 Then globalData.rbsFailIdx := 0;
              Result := False;
-             // Save entry point TimeStamp
-             HTTP := THTTPSend.Create;
-             // I think it wants ms for timeout value...
-             HTTP.Timeout := 10000;  // Is this correct?
-             HTTP.Headers.Add('Accept: text/html');
-             if not HTTP.HTTPMethod('GET', url) Then
-             begin
-                  rbErrorCode := HTTP.ResultCode;
-                  rbErrorString := HTTP.ResultString;
-                  // Cache the report in case of error.
-                  glrbReports[i].rbCached := True;
-                  foo := 'Report cached.  Error:  ';
-                  if rbErrorCode = 500 Then foo := foo + 'Network com fail' + '(' + IntToStr(rbErrorCode) + ')  Exchange was:  ' + glrbReports[i].rbDecoded Else
-                  foo := foo + rbErrorString + '(' + IntToStr(rbErrorCode) + ')  Exchange was:  ' + glrbReports[i].rbDecoded;
-                  //globalData.rbsFailLog[globalData.rbsFailIdx] :=  foo;
-                  //inc(globalData.rbsFailIdx);
-                  //if globalData.rbsFailIdx > 499 Then globalData.rbsFailIdx := 0;
-                  Result := False;
-             end
-             else
-             begin
-                  rbResult := TStringList.Create;
-                  rbResult.Clear;
-                  rbResult.LoadFromStream(HTTP.Document);
-                  glrbReports[i].rbCached := False;
-                  Result := True;
-                  rbResult.Free;
-             end;
-             HTTP.Free;
-          Except
-             dlog.fileDebug('Exception in sendReport');
-          End;
-     End
-     Else
-     Begin
-          glrbReports[i].rbCached := False;
-          Result := True;
+        end
+        else
+        begin
+             rbResult := TStringList.Create;
+             rbResult.Clear;
+             rbResult.LoadFromStream(HTTP.Document);
+             glrbReports[i].rbCached := False;
+             Result := True;
+             rbResult.Free;
+        end;
+        HTTP.Free;
+     Except
+        dlog.fileDebug('Exception in sendReport');
      End;
 end;
 
@@ -514,31 +529,25 @@ function sendCReport(Const url : String): Boolean;
 Var
    HTTP          : THTTPSend;
 begin
-     If not glrbNoInet Then
-     Begin
-          Try
-             // Save entry point TimeStamp
-             HTTP := THTTPSend.Create;
-             // I think it wants ms for timeout value...
-             HTTP.Timeout := 10000;  // Is this correct?
-             HTTP.Headers.Add('Accept: text/html');
-             if not HTTP.HTTPMethod('GET', url) Then
-             begin
-                  Result := False;
-             end
-             else
-             begin
-                  Result := True;
-             end;
-             HTTP.Free;
-          Except
-             dlog.fileDebug('Exception in sendCReport');
+     globalData.rbecode := '';
+     Try
+        // Save entry point TimeStamp
+        HTTP := THTTPSend.Create;
+        // I think it wants ms for timeout value...
+        HTTP.Timeout := 10000;  // Is this correct?
+        HTTP.Headers.Add('Accept: text/html');
+        if not HTTP.HTTPMethod('GET', url) Then
+        begin
              Result := False;
-          End;
-     End
-     Else
-     Begin
-          Result := False;
+        end
+        else
+        begin
+             Result := True;
+        end;
+        HTTP.Free;
+     Except
+        dlog.fileDebug('Exception in sendCReport');
+        Result := False;
      End;
 end;
 
@@ -647,15 +656,15 @@ End;
 procedure fileReport(Const i: Integer);
 Var
    rbCache           : TextFile;
-   foo2              : String;
+   rbmode              : String;
 Begin
      Try
-        if globalData.gmode = 4 then foo2 := '4B';
-        if globalData.gmode = 65 then foo2 := '65A';
+        if globalData.gmode = 4 then rbmode := '4B';
+        if globalData.gmode = 65 then rbmode := '65A';
         if globalData.gmode = 0 Then
         Begin
-             if glrbReports[i].rbmode = 65 then foo2 := '65A';
-             if glrbReports[i].rbmode = 65 then foo2 := '4B';
+             if glrbReports[i].rbmode = 65 then rbmode := '65A';
+             if glrbReports[i].rbmode = 65 then rbmode := '4B';
         End;
         // User has selected offline mode (or report failed to
         // transmit in live mode), so I save to file.
@@ -680,7 +689,7 @@ Begin
                 glrbReports[i].rbTimeStamp + '","' +
                 glrbReports[i].rbSigLevel + '","' +
                 glrbReports[i].rbDeltaFreq + '","' +
-                glrbReports[i].rbDecoded + '","' + foo2 + '"');
+                glrbReports[i].rbDecoded + '","' + rbmode + '"');
         // Close the file
         CloseFile(rbCache);
      Except
@@ -711,14 +720,14 @@ var
    floatvar            : Single;
    callsign, grid, foo : String;
    word1, word2, word3 : String;
-   foo2                : String;
+   rbmode                : String;
    resolved            : Boolean;
 begin
      // Save entry point TimeStamp
         glrbEnterTS := Now;
         glrbActive := True;
-        if globalData.gmode = 4 then foo2 := '4B';
-        if globalData.gmode = 65 then foo2 := '65A';
+        if globalData.gmode = 4 then rbmode := '4B';
+        if globalData.gmode = 65 then rbmode := '65A';
         // I need to walk rbReports array processing any unprocessed records.
         // Processing = validate text to see if it's a sendable report, if so,
         // send it to rb server unlesss in offline mode.  If in offline mode
@@ -734,8 +743,8 @@ begin
                   floatvar := 0;
                   if globalData.gmode = 0 Then
                   Begin
-                       if glrbReports[i].rbMode = 65 then foo2 := '65A';
-                       if glrbReports[i].rbMode = 4 then foo2 := '4B';
+                       if glrbReports[i].rbMode = 65 then rbmode := '65A';
+                       if glrbReports[i].rbMode = 4 then rbmode := '4B';
                   End;
                   If TryStrToFloat(glrbReports[i].rbFrequency, floatvar) Then intvar := trunc(floatvar) Else intvar := 0;
                   If parseCallSign.valQRG(intvar) Then
@@ -790,21 +799,25 @@ begin
                   if resolved and not globalData.rbCacheOnly Then
                   Begin
                        // Handle sending of report live
-                       foo := 'http://jt65.w6cqz.org/dbb.php?func=PUTQSL' +
-                              '&value1=' + glrbCallSign +
-                              '&value2=' + glrbReports[i].rbFrequency +
-                              '&value3=' + glrbReports[i].rbSigLevel +
-                              '&value4=' + callsign +
-                              '&value5=' + grid +
-                              '&value6=' + glrbReports[i].rbDeltaFreq +
-                              '&value7=' + foo2 +
-                              '&value8=' + glrbReports[i].rbTimeStamp[9..10] + ':'
-                                         + glrbReports[i].rbTimeStamp[11..12] + ':'
-                                         + glrbReports[i].rbTimeStamp[13..14] +
-                              '&value9=' + glrbReports[i].rbTimeStamp[1..4] + '-'
+                       // New rb code will use format:
+                       // rbcall, rbgrid, rbqrg, rxtime, rxcall, rxgrid, rxdf, rxsig, rbmode, rbver
+                       foo := 'http://jt65.w6cqz.org/dbb.php?func=RR' +
+                              '&rbcall=' + glrbCallSign +
+                              '&rbgrid=' + glrbGrid +
+                              '&rbqrg='  + glrbReports[i].rbFrequency +
+                              '&rbmode=' + rbmode +
+                              '&rbver='  + '1800' +
+                              '&rxdate=' + glrbReports[i].rbTimeStamp[1..4] + '-'
                                          + glrbReports[i].rbTimeStamp[5..6] + '-'
                                          + glrbReports[i].rbTimeStamp[7..8] +
-                              '&value10=600';
+                              '&rxtime=' + glrbReports[i].rbTimeStamp[9..10] + ':'
+                                         + glrbReports[i].rbTimeStamp[11..12] + ':'
+                                         + glrbReports[i].rbTimeStamp[13..14] +
+                              '&rxcall=' + callsign +
+                              '&rxgrid=' + grid +
+                              '&rxsig='  + glrbReports[i].rbSigLevel +
+                              '&rxdf='   + glrbReports[i].rbDeltaFreq +
+                              '&rxdec='  + glrbReports[i].rbDecoder;
                        // Now I need to send the RB spot.
                        // sendReport will return true on success.
                        if length(callsign) > 0 Then
@@ -833,21 +846,23 @@ begin
                                  // to rbcache.txt with format;
                                  // url,processed
                                  // url generated above,'F'
-                                 foo := 'http://jt65.w6cqz.org/dbb.php?func=CPUTQSL' +
-                                        '&value1=' + glrbCallSign +
-                                        '&value2=' + glrbReports[i].rbFrequency +
-                                        '&value3=' + glrbReports[i].rbSigLevel +
-                                        '&value4=' + callsign +
-                                        '&value5=' + grid +
-                                        '&value6=' + glrbReports[i].rbDeltaFreq +
-                                        '&value7=' + foo2 +
-                                        '&value8=' + glrbReports[i].rbTimeStamp[9..10] + ':'
-                                                   + glrbReports[i].rbTimeStamp[11..12] + ':'
-                                                   + glrbReports[i].rbTimeStamp[13..14] +
-                                        '&value9=' + glrbReports[i].rbTimeStamp[1..4] + '-'
-                                                   + glrbReports[i].rbTimeStamp[5..6] + '-'
-                                                   + glrbReports[i].rbTimeStamp[7..8] +
-                                        '&value10=600';
+                                 foo := 'http://jt65.w6cqz.org/dbb.php?func=CRR' +
+                                 '&rbcall=' + glrbCallSign +
+                                 '&rbgrid=' + glrbGrid +
+                                 '&rbqrg='  + glrbReports[i].rbFrequency +
+                                 '&rbmode=' + rbmode +
+                                 '&rbver='  + '1800' +
+                                 '&rxdate=' + glrbReports[i].rbTimeStamp[1..4] + '-'
+                                            + glrbReports[i].rbTimeStamp[5..6] + '-'
+                                            + glrbReports[i].rbTimeStamp[7..8] +
+                                 '&rxtime=' + glrbReports[i].rbTimeStamp[9..10] + ':'
+                                            + glrbReports[i].rbTimeStamp[11..12] + ':'
+                                            + glrbReports[i].rbTimeStamp[13..14] +
+                                 '&rxcall=' + callsign +
+                                 '&rxgrid=' + grid +
+                                 '&rxsig='  + glrbReports[i].rbSigLevel +
+                                 '&rxdf='   + glrbReports[i].rbDeltaFreq +
+                                 '&rxdec='  + glrbReports[i].rbDecoder; // rxdec is new field indicating K[vasd] or B[m] as RS decoder method.
                                  fileCache(foo);
                             End;
                        End;
@@ -857,21 +872,23 @@ begin
                   if resolved and globalData.rbCacheOnly Then
                   Begin
                        // Form RB report for inet cache
-                       foo := 'http://jt65.w6cqz.org/dbb.php?func=CPUTQSL' +
-                              '&value1=' + glrbCallSign +
-                              '&value2=' + glrbReports[i].rbFrequency +
-                              '&value3=' + glrbReports[i].rbSigLevel +
-                              '&value4=' + callsign +
-                              '&value5=' + grid +
-                              '&value6=' + glrbReports[i].rbDeltaFreq +
-                              '&value7=' + foo2 +
-                              '&value8=' + glrbReports[i].rbTimeStamp[9..10] + ':'
-                                         + glrbReports[i].rbTimeStamp[11..12] + ':'
-                                         + glrbReports[i].rbTimeStamp[13..14] +
-                              '&value9=' + glrbReports[i].rbTimeStamp[1..4] + '-'
-                                         + glrbReports[i].rbTimeStamp[5..6] + '-'
-                                         + glrbReports[i].rbTimeStamp[7..8] +
-                              '&value10=600';
+                       foo := 'http://jt65.w6cqz.org/dbb.php?func=CRR' +
+                           '&rbcall=' + glrbCallSign +
+                           '&rbgrid=' + glrbGrid +
+                           '&rbqrg='  + glrbReports[i].rbFrequency +
+                           '&rbmode=' + rbmode +
+                           '&rbver='  + '1800' +
+                           '&rxdate=' + glrbReports[i].rbTimeStamp[1..4] + '-'
+                                      + glrbReports[i].rbTimeStamp[5..6] + '-'
+                                      + glrbReports[i].rbTimeStamp[7..8] +
+                           '&rxtime=' + glrbReports[i].rbTimeStamp[9..10] + ':'
+                                      + glrbReports[i].rbTimeStamp[11..12] + ':'
+                                      + glrbReports[i].rbTimeStamp[13..14] +
+                           '&rxcall=' + callsign +
+                           '&rxgrid=' + grid +
+                           '&rxsig='  + glrbReports[i].rbSigLevel +
+                           '&rxdf='   + glrbReports[i].rbDeltaFreq +
+                           '&rxdec='  + glrbReports[i].rbDecoder;
                        // Now I need to save the RB spot.
                        if length(callsign) > 0 Then fileCache(foo);
                   End;

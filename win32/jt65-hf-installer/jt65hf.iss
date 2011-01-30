@@ -43,8 +43,11 @@ Source: "jt65.dll"; DestDir: "{app}"
 Source: "jl-libportaudio-2.dll"; DestDir: "{app}"
 Source: "jl-libsamplerate.dll"; DestDir: "{app}"
 Source: "PSKReporter.dll"; DestDir: "{app}"
+Source: "HRDInterface0014.dll"; DestDir: "{app}"
+Source: "HRDInterface0015.dll"; DestDir: "{app}"
 Source: "libusb0.dll"; DestDir: "{app}"
 Source: "gpl-2.0.txt"; DestDir: "{app}"
+Source: "jt65-hf-setup.pdf"; DestDir: "{app}"
 Source: "hamlib\*.*"; DestDir: "{app}\hamlib"
 Source: "hamlib\rig_dde\*.*"; DestDir: "{app}\hamlib\rig_dde"
 Source: "optFFT\*.*"; DestDir: "{app}\optFFT"
@@ -57,6 +60,7 @@ Filename: "{app}\optFFT\jt65-hf.exe"; Flags: postinstall; Description: "Setup in
 Name: "{group}\JT65-HF"; Filename: "{app}\jt65-hf.exe"
 Name: "{group}\JTG65-HF Small GUI"; Filename: "{app}\sg-jt65-hf.exe"
 Name: "{group}\Uninstall JT65-HF"; Filename: "{uninstallexe}"
+Name: "{group}\Documentation"; Filename: "{app}\jt65-hf-setup.pdf"
 
 [CODE]
 function optFFTCheck(): Boolean;

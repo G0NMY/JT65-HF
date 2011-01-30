@@ -21,7 +21,7 @@
       <AutoIncrementBuild Value="True"/>
       <CurrentVersionNr Value="1"/>
       <CurrentMinorRevNr Value="7"/>
-      <CurrentBuildNr Value="290"/>
+      <CurrentBuildNr Value="292"/>
       <FileDescription Value="Amateur Radio communications using JT65A"/>
       <LegalCopyright Value="2009..2010 - J C Large - W6CQZ - GPL 2"/>
     </VersionInfo>

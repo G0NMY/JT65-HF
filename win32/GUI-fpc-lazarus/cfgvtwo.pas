@@ -53,6 +53,7 @@ type
     hrdAddress: TEdit;
     hrdPort: TEdit;
     Label10: TLabel;
+    Label12: TLabel;
     Label3: TLabel;
     Label33: TLabel;
     Label34: TLabel;
@@ -249,6 +250,7 @@ type
     procedure comboPrefixChange(Sender: TObject);
     procedure editSI570FreqChange(Sender: TObject);
     procedure edMyCallChange(Sender: TObject);
+    procedure edMyGridChange(Sender: TObject);
     procedure edUserMsgChange(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure hrdAddressChange(Sender: TObject);
@@ -628,6 +630,16 @@ begin
           form6.Label26.Font.Color := clBlack;
           glCallChange := True;
      End;
+end;
+
+procedure TForm6.edMyGridChange(Sender: TObject);
+begin
+     // Validate grid
+     // Grid format:
+     // Length = 4 or 6
+     // characters 1 and 2 range of A ... R, upper case, alpha only.
+     // characters 3 and 4 range of 0 ... 9, numeric only.
+     // characters 5 and 6 range of a ... x, lower case, alpha only, optional.
 end;
 
 procedure TForm6.edUserMsgChange(Sender: TObject);
