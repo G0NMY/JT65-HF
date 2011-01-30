@@ -1551,6 +1551,10 @@ object Form1: TForm1
       item
         Name = 'hrdPort'
         Value = '7809'
+      end    
+      item
+        Name = 'txWatchDogCount'
+        Value = '15'
       end>
     FileName = 'station.xml'
     left = 688

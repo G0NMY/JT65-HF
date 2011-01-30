@@ -439,24 +439,53 @@ End;
 
 function isGrid( gridloc : String ): Boolean;
 Var
-   i : Integer;
+   foo, foo1, foo2, foo3 : String;
+   vmsg                  : Boolean;
 Begin
      Try
         Result := True;
         If (Length(gridloc)=4) Or (Length(gridloc)=6) Then
         Begin
-             // Seems to be the proper length for a grid...
-             For i := 1 To Length(gridloc) do
-             Begin
-                  gridloc[i] := upcase(gridloc[i]);
-                      case i of 1,2,5,6: case gridloc[i] of 'A'..'X':;
-                       else Result := False;
-                      end;
-                      3,4: case gridloc[i] of '0'..'9':;
-                       else Result := False;
-                       end;
-                      end;
+             // Validate grid
+             // Grid format:
+             // Length = 4 or 6
+             // characters 1 and 2 range of A ... R, upper case, alpha only.
+             // characters 3 and 4 range of 0 ... 9, numeric only.
+             // characters 5 and 6 range of a ... x, lower case, alpha only, optional.
+             // Validate grid
+             foo := gridloc;
+             foo1 := '';
+             foo2 := '';
+             foo3 := '';
+             if length(foo) = 6 then
+             begin
+                  foo1 := foo[1] + foo[2];
+                  foo1 := upcase(foo1);
+                  foo2 := foo[3] + foo[4];
+                  foo3 := foo[5] + foo[6];
+                  foo3 := lowercase(foo3);
+                  foo := foo1+foo2+foo3;
+                  vmsg := false;
+                  case foo[1] of 'A'..'R': vmsg := True else vmsg := False; end;
+                  if vmsg then case foo[2] of 'A'..'R': vmsg := True else vmsg := False; end;
+                  if vmsg then case foo[3] of '0'..'9': vmsg := True else vmsg := False; end;
+                  if vmsg then case foo[4] of '0'..'9': vmsg := True else vmsg := False; end;
+                  if vmsg then case foo[5] of 'a'..'x': vmsg := True else vmsg := False; end;
+                  if vmsg then case foo[6] of 'a'..'x': vmsg := True else vmsg := False; end;
+             end
+             else
+             begin
+                  foo1 := foo[1] + foo[2];
+                  foo1 := upcase(foo1);
+                  foo2 := foo[3] + foo[4];
+                  foo := foo1+foo2;
+                  vmsg := false;
+                  case foo[1] of 'A'..'R': vmsg := True else vmsg := False; end;
+                  if vmsg then case foo[2] of 'A'..'R': vmsg := True else vmsg := False; end;
+                  if vmsg then case foo[3] of '0'..'9': vmsg := True else vmsg := False; end;
+                  if vmsg then case foo[4] of '0'..'9': vmsg := True else vmsg := False; end;
              end;
+             result := vmsg;
         End
         Else
         Begin

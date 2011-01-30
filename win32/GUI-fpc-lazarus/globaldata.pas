@@ -72,12 +72,12 @@ Var
    debugOn                 : Boolean;
    fullcall                : String;
    gmode                   : Integer; // 65 or 4
-   mtext                   : String;
    si570ptt                : Boolean;
    hrdcatControlcurrentRig : hrdrigCAP;
    hrdVersion              : Integer;
    basedir, cfgdir, kvdir  : String;
    logdir, srcdir          : String;
+   validgrid               : Boolean;
 
    // The variable list above comprises those variables used in more than two
    // units (inclusive of maincode).  Addition of variables to this list should

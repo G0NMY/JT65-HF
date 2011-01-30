@@ -1474,12 +1474,10 @@ begin
      If Form1.chkMultiDecode.Checked Then
      Begin
           Form1.chkMultiDecode.Font.Color := clBlack;
-          globalData.mtext := '/Multi%20On%202K%20BW';
      End
      Else
      Begin
           Form1.chkMultiDecode.Font.Color := clRed;
-          globalData.mtext := '';
      End;
 end;
 
@@ -1591,6 +1589,7 @@ begin
           cfg.StoredValue['specspeed']    := IntToStr(Form1.SpinEdit1.Value);
           cfg.StoredValue['version'] := verHolder.verReturn();
           if cfgvtwo.Form6.cbTXWatchDog.Checked Then cfg.StoredValue['txWatchDog'] := '1' else cfg.StoredValue['txWatchDog'] := '0';
+          cfg.StoredValue['txWatchDogCount'] := IntToStr(cfgvtwo.Form6.spinTXCounter.Value);
           if cfgvtwo.Form6.cbDisableMultiQSO.Checked Then cfg.StoredValue['multiQSOToggle'] := '1' else cfg.StoredValue['multiQSOToggle'] := '0';
           if cfgvtwo.Form6.cbMultiAutoEnable.Checked Then cfg.StoredValue['multiQSOWatchDog'] := '1' else cfg.StoredValue['multiQSOWatchDog'] := '0';
           if cfgvtwo.Form6.cbSaveCSV.Checked Then cfg.StoredValue['saveCSV'] := '1' else cfg.StoredValue['saveCSV'] := '0';
@@ -3460,6 +3459,7 @@ Begin
           cfgvtwo.Form6.comboPrefix.ItemIndex := 0;
           cfgvtwo.Form6.comboSuffix.ItemIndex := 0;
           cfgvtwo.Form6.cbTXWatchDog.Checked := True;
+          cfgvtwo.Form6.spinTXCounter.Value := 15;
           cfgvtwo.Form6.cbDisableMultiQSO.Checked := True;
           cfgvtwo.Form6.cbMultiAutoEnable.Checked := True;
           cfgvtwo.Form6.edRXSRCor.Text := '1.0000';
@@ -3557,6 +3557,8 @@ Begin
           cfg.StoredValue['specspeed']    := IntToStr(Form1.SpinEdit1.Value);
           cfg.StoredValue['txCF']         := '0';
           cfg.StoredValue['rxCF']         := '0';
+          if cfgvtwo.Form6.cbTXWatchDog.Checked Then cfg.StoredValue['txWatchDog'] := '1' else cfg.StoredValue['txWatchDog'] := '0';
+          cfg.StoredValue['txWatchDogCount'] := IntToStr(cfgvtwo.Form6.spinTXCounter.Value);
           If cfgvtwo.Form6.cbSaveCSV.Checked Then cfg.StoredValue['saveCSV'] := '1' Else cfg.StoredValue['saveCSV'] := '0';
           cfg.StoredValue['csvPath'] := cfgvtwo.Form6.DirectoryEdit1.Directory;
           cfg.StoredValue['adiPath'] := cfgvtwo.Form6.DirectoryEdit1.Directory;
@@ -3845,6 +3847,7 @@ Begin
      Begin
           cfgvtwo.Form6.cbTXWatchDog.Checked := False;
      End;
+     If TryStrToInt(cfg.StoredValue['txWatchDogCount'],tstint) Then cfgvtwo.Form6.spinTXCounter.Value := tstint else cfgvtwo.Form6.spinTXCounter.Value := 15;
      if cfg.StoredValue['multiQSOToggle'] = '1' Then cfgvtwo.Form6.cbDisableMultiQSO.Checked := True else cfgvtwo.Form6.cbDisableMultiQSO.Checked := False;
      if cfg.StoredValue['multiQSOWatchDog'] = '1' Then cfgvtwo.Form6.cbMultiAutoEnable.Checked := True else cfgvtwo.Form6.cbMultiAutoEnable.Checked := False;
      tstint := 0;
@@ -4035,7 +4038,6 @@ Begin
           cfgvtwo.Form6.chkUseOmni.Checked := False;
           cfgvtwo.Form6.chkUseHRD.Checked := False;
           cfgvtwo.glcatBy := 'none';
-          //ShowMessage('To prevent a very difficult to correct bug I have disabled HamLib support in JT65-HF.  Rig Control has been set to None.');
      End;
      if cfg.StoredValue['catBy'] = 'hrd' Then
      Begin
@@ -4201,12 +4203,8 @@ Begin
 
      if cfg.StoredValue['version'] <> verHolder.verReturn() Then verUpdate := True else verUpdate := False;
 
-     //showmessage('Read configuration complete...');
-
      if verUpdate Then
      Begin
-          //showmessage('Review configuration required for update...');
-
           cfgvtwo.glmustConfig := True;
           cfgvtwo.Form6.Show;
           cfgvtwo.Form6.BringToFront;
@@ -4217,17 +4215,8 @@ Begin
           cfg.StoredValue['version'] := verHolder.verReturn();
           cfg.Save;
           dlog.fileDebug('Ran configuration update.');
-
-          //showmessage('Update configuration review complete...');
-
      End;
-
-     globalData.mtext := '/Multi%20On%202K%20BW';
-
      //With wisdom comes speed.
-
-     //showmessage('Evaluating optimal FFT data...');
-
      d65.glfftFWisdom := 0;
      d65.glfftSWisdom := 0;
      if not cfgvtwo.Form6.chkNoOptFFT.Checked Then
@@ -4240,12 +4229,10 @@ Begin
                d65.glfftFWisdom := 1;  // Causes measure wisdom to be loaded on first pass of decode65
                d65.glfftSWisdom := 11; // uses measure wisdom (no load/no save) on != first pass of decode65
                dlog.fileDebug('Imported FFTW3 Wisdom.');
-               //showmessage('Imported optimal FFT data...');
           End
           Else
           Begin
                dlog.fileDebug('FFT Wisdom missing... you should run optfft');
-               //showmessage('Failed to import optimal FFT data as it does not exist...');
           End;
      End
      Else
@@ -4253,15 +4240,9 @@ Begin
           d65.glfftFWisdom := 0;
           d65.glfftSWisdom := 0;
           dlog.fileDebug('Running without optimal FFT enabled by user request.');
-          //showmessage('Running WITHOUT optimal FFT data via user choice...');
      End;
      // Setup input device
      dlog.fileDebug('Setting up ADC.');
-     //showmessage('Setting up audio input');
-
-     // Working in for handling mono.  Need to try to open stereo then, if fail,
-     // attempt mono.
-
      foo := cfgvtwo.Form6.cbAudioIn.Items.Strings[cfgvtwo.Form6.cbAudioIn.ItemIndex];
      paInParams.device := StrToInt(foo[1..2]);
      paInParams.sampleFormat := paInt16;
@@ -4270,15 +4251,9 @@ Begin
      ppaInParams := @paInParams;
      // Set rxBuffer index to start of array.
      adc.d65rxBufferIdx := 0;
-     //madc.d65rxBufferIdx := 0;
-
      adc.adcT := 0;
-     //madc.adcT := 0;
-
      // Set ptr to start of buffer.
      adc.d65rxBufferPtr := @adc.d65rxBuffer[0];
-     //madc.d65rxBufferPtr := @madc.d65rxBuffer[0];
-
      // Initialize rx stream.
      paInParams.channelCount := 2;
      paResult := portaudio.Pa_OpenStream(paInStream,ppaInParams,Nil,11025,2048,0,@adc.adcCallback,Pointer(Self));
@@ -4297,14 +4272,8 @@ Begin
           ShowMessage('PA Error:  ' + StrPas(portaudio.Pa_GetErrorText(paResult)));
           halt;
      End;
-     //showmessage('Setting up audio input completed...');
-
      // Setup output device
-
      dlog.fileDebug('Setting up DAC.');
-     //showmessage('Setting up audio output');
-
-
      foo := cfgvtwo.Form6.cbAudioOut.Items.Strings[cfgvtwo.Form6.cbAudioOut.ItemIndex];
      paOutParams.device := StrToInt(foo[1..2]);
      paOutParams.sampleFormat := paInt16;
@@ -4313,15 +4282,9 @@ Begin
      ppaOutParams := @paOutParams;
      // Set txBuffer index to start of array.
      dac.d65txBufferIdx := 0;
-     //mdac.d65txBufferIdx := 0;
-
      dac.dacT := 0;
-     //mdac.dacT := 0;
-
      // Set ptr to start of buffer.
      dac.d65txBufferPtr := @dac.d65txBuffer[0];
-     //mdac.d65txBufferPtr := @mdac.d65txBuffer[0];
-
      // Initialize tx stream.
      paOutParams.channelCount := 2;
      paResult := portaudio.Pa_OpenStream(paOutStream,Nil,ppaOutParams,11025,2048,0,@dac.dacCallback,Pointer(Self));
@@ -4330,7 +4293,6 @@ Begin
           ShowMessage('PA Error:  ' + StrPas(portaudio.Pa_GetErrorText(paResult)));
           //Need to exit this puppy, pa is dead.
      End;
-
      // Start the stream.
      paResult := portaudio.Pa_StartStream(paOutStream);
      if paResult <> 0 Then
@@ -4338,28 +4300,19 @@ Begin
           ShowMessage('PA Error:  ' + StrPas(portaudio.Pa_GetErrorText(paResult)));
           //Need to exit this puppy, pa is dead.
      End;
-     //showmessage('Setting up audio output completed...');
-
      if cfgvtwo.Form6.cbUsePSKReporter.Checked Then
      Begin
-          //showmessage('Initializing PSK Reporter...');
           // Initialize PSK Reporter DLL
           If PSKReporter.ReporterInitialize('report.pskreporter.info','4739') = 0 Then pskrstat := 1 else pskrstat := 0;
           Form1.cbEnPSKR.Checked := True;
-          //showmessage('PSK Reporter initialized...');
      End
      Else
      Begin
           Form1.cbEnPSKR.Checked := False;
      end;
-
      if cfgvtwo.Form6.cbUseRB.Checked then Form1.cbEnRB.Checked := True else Form1.cbEnRB.Checked := False;
-
      // Create and initialize TWaterfallControl
-     //showmessage('Initializing spectrum display');
-
      Waterfall := TWaterfallControl.Create(Self);
-     //if guiConfig.getGUIType() Then Waterfall.Height := 105 else Waterfall.Height := 180;
      Waterfall.Height := 180;
      Waterfall.Width  := 750;
      Waterfall.Top    := 25;
@@ -4367,7 +4320,6 @@ Begin
      Waterfall.Parent := Self;
      Waterfall.OnMouseDown := waterfallMouseDown;
      Waterfall.DoubleBuffered := True;
-     //showmessage('Initialized spectrum display...');
 End;
 
 procedure TForm1.updateSR();
@@ -5035,7 +4987,7 @@ Begin
                // generate the txBuffer
                genTX1();
                if not cfgvtwo.Form6.cbTXWatchDog.Checked Then txCount := 0;
-               if txCount < 15 Then
+               if txCount < cfgvtwo.Form6.spinTXCounter.Value Then
                Begin
                     // Flag TX Buffer as valid.
                     lastMsg := curMsg;
@@ -5150,7 +5102,7 @@ Begin
                TxDirty := True;
                genTX2();
                if not cfgvtwo.Form6.cbTXWatchDog.Checked Then txCount := 0;
-               if txCount < 15 Then
+               if txCount < cfgvtwo.Form6.spinTXCounter.Value Then
                Begin
                     // Flag TX Buffer as valid.
                     lastMsg := curMsg;
@@ -5932,7 +5884,6 @@ initialization
   end;
   haveOddBuffer := False;
   haveEvenBuffer := False;
-  globalData.mtext := '/Multi%20On%202K%20BW';
   globalData.si570ptt := False;
   doCWID := False;
   actionSet := False;

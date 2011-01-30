@@ -20,7 +20,7 @@ object Form6: TForm6
     Width = 784
     Font.Height = -13
     Font.Name = 'Arial'
-    PageIndex = 2
+    PageIndex = 0
     ParentFont = False
     TabOrder = 0
     object Page1: TPage
@@ -148,22 +148,34 @@ object Form6: TForm6
       end
       object Label70: TLabel
         Left = 284
-        Height = 91
+        Height = 69
         Top = 6
-        Width = 479
-        Caption = 'Note:  Suffix/Prefix is suggested to only be used in situations where'#13#10'you have a legal requirement to do so.  You may define a suffix OR'#13#10'a prefix but not both.  Suffix/prefix support in the JT65 protocol is a'#13#10'(very) complex issue.  My suggestion is to avoid its use if at all'#13#10'possible.  Suffix/prefix support in JT65-HF is, at best, incomplete.'
+        Width = 434
+        Caption = 'Note:  Suffix/Prefix is suggested to only be used in situations where'#13#10'you have a legal requirement to do so.  You may define a suffix OR'#13#10'a prefix but not both.  Suffix/prefix support in the JT65 protocol is a'#13#10'(very) complex issue.  My suggestion is to not use it.'
         Font.Height = -15
         Font.Name = 'Arial'
-        Font.Style = [fsBold]
         ParentColor = False
         ParentFont = False
       end
       object Label12: TLabel
         Left = 92
         Height = 17
-        Top = 75
-        Width = 64
-        Caption = 'Grid invalid'
+        Top = 82
+        Width = 307
+        Caption = 'Grid is invalid.  TX/RB/PSKR Functions disabled.'
+        Font.Color = clRed
+        Font.Height = -13
+        Font.Name = 'Arial'
+        Font.Style = [fsBold]
+        ParentColor = False
+        ParentFont = False
+      end
+      object Label13: TLabel
+        Left = 316
+        Height = 17
+        Top = 253
+        Width = 37
+        Caption = 'times.'
         ParentColor = False
       end
       object edMyCall: TEdit
@@ -270,8 +282,8 @@ object Form6: TForm6
         Left = 4
         Height = 20
         Top = 250
-        Width = 452
-        Caption = 'Disable TX after sending same message 15 times. (Runaway TX watchdog)'
+        Width = 252
+        Caption = 'Disable TX after sending same message'
         Checked = True
         State = cbChecked
         TabOrder = 7
@@ -363,6 +375,16 @@ object Form6: TForm6
         Width = 272
         Caption = 'Send CW ID With 73 or Free Text Message'
         TabOrder = 15
+      end
+      object spinTXCounter: TSpinEdit
+        Left = 260
+        Height = 24
+        Top = 246
+        Width = 50
+        MaxValue = 30
+        MinValue = 3
+        TabOrder = 16
+        Value = 15
       end
     end
     object Page2: TPage
@@ -2120,7 +2142,7 @@ object Form6: TForm6
     Left = 8
     Height = 25
     Top = 504
-    Width = 784
+    Width = 336
     Caption = 'Save Settings and Close Window'
     Font.Height = -13
     Font.Name = 'Arial'
@@ -2128,5 +2150,18 @@ object Form6: TForm6
     OnClick = Button1Click
     ParentFont = False
     TabOrder = 1
+  end
+  object Button2: TButton
+    Left = 456
+    Height = 25
+    Top = 504
+    Width = 336
+    Caption = 'Discard Changes and Close Window'
+    Font.Height = -13
+    Font.Name = 'Arial'
+    Font.Style = [fsBold]
+    OnClick = Button2Click
+    ParentFont = False
+    TabOrder = 2
   end
 end

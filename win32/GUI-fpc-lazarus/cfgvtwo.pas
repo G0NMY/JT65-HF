@@ -42,6 +42,7 @@ type
     btnSetSi570: TButton;
     btnClearLog: TButton;
     Button1: TButton;
+    Button2: TButton;
     buttonTestPTT: TButton;
     cbNoInet: TCheckBox;
     cbUseAltPTT: TCheckBox;
@@ -54,6 +55,7 @@ type
     hrdPort: TEdit;
     Label10: TLabel;
     Label12: TLabel;
+    Label13: TLabel;
     Label3: TLabel;
     Label33: TLabel;
     Label34: TLabel;
@@ -66,6 +68,7 @@ type
     Label72: TLabel;
     Label73: TLabel;
     Label9: TLabel;
+    spinTXCounter: TSpinEdit;
     testHRDPTT: TButton;
     setHRDQRG: TButton;
     cbAudioIn: TComboBox;
@@ -233,6 +236,7 @@ type
     qsyHour5: TSpinEdit;
     procedure btnClearLogClick(Sender: TObject);
     procedure Button1Click(Sender: TObject);
+    procedure Button2Click(Sender: TObject);
     procedure buttonTestPTTClick(Sender: TObject);
     procedure cbAudioInChange(Sender: TObject);
     procedure cbAudioOutChange(Sender: TObject);
@@ -291,6 +295,65 @@ implementation
 { TForm6 }
 
 function ptt(nport : Pointer; msg : Pointer; ntx : Pointer; iptt : Pointer) : CTypes.cint; cdecl; external JT_DLL name 'ptt_';
+
+function isGrid( gridloc : String ): Boolean;
+Var
+   foo, foo1, foo2, foo3 : String;
+   vmsg                  : Boolean;
+Begin
+     Try
+        Result := True;
+        If (Length(gridloc)=4) Or (Length(gridloc)=6) Then
+        Begin
+             // Validate grid
+             // Grid format:
+             // Length = 4 or 6
+             // characters 1 and 2 range of A ... R, upper case, alpha only.
+             // characters 3 and 4 range of 0 ... 9, numeric only.
+             // characters 5 and 6 range of a ... x, lower case, alpha only, optional.
+             // Validate grid
+             foo := gridloc;
+             foo1 := '';
+             foo2 := '';
+             foo3 := '';
+             if length(foo) = 6 then
+             begin
+                  foo1 := foo[1] + foo[2];
+                  foo1 := upcase(foo1);
+                  foo2 := foo[3] + foo[4];
+                  foo3 := foo[5] + foo[6];
+                  foo3 := lowercase(foo3);
+                  foo := foo1+foo2+foo3;
+                  vmsg := false;
+                  case foo[1] of 'A'..'R': vmsg := True else vmsg := False; end;
+                  if vmsg then case foo[2] of 'A'..'R': vmsg := True else vmsg := False; end;
+                  if vmsg then case foo[3] of '0'..'9': vmsg := True else vmsg := False; end;
+                  if vmsg then case foo[4] of '0'..'9': vmsg := True else vmsg := False; end;
+                  if vmsg then case foo[5] of 'a'..'x': vmsg := True else vmsg := False; end;
+                  if vmsg then case foo[6] of 'a'..'x': vmsg := True else vmsg := False; end;
+             end
+             else
+             begin
+                  foo1 := foo[1] + foo[2];
+                  foo1 := upcase(foo1);
+                  foo2 := foo[3] + foo[4];
+                  foo := foo1+foo2;
+                  vmsg := false;
+                  case foo[1] of 'A'..'R': vmsg := True else vmsg := False; end;
+                  if vmsg then case foo[2] of 'A'..'R': vmsg := True else vmsg := False; end;
+                  if vmsg then case foo[3] of '0'..'9': vmsg := True else vmsg := False; end;
+                  if vmsg then case foo[4] of '0'..'9': vmsg := True else vmsg := False; end;
+             end;
+             result := vmsg;
+        End
+        Else
+        Begin
+             Result := False;
+        End;
+     Except
+           Result := False;
+     End;
+End;
 
 procedure raisePTT();
 var
@@ -448,6 +511,12 @@ Begin
 End;
 
 procedure TForm6.Button1Click(Sender: TObject);
+begin
+     glmustConfig := False;
+     self.Hide;
+end;
+
+procedure TForm6.Button2Click(Sender: TObject);
 begin
      glmustConfig := False;
      self.Hide;
@@ -634,12 +703,28 @@ end;
 
 procedure TForm6.edMyGridChange(Sender: TObject);
 begin
-     // Validate grid
-     // Grid format:
-     // Length = 4 or 6
-     // characters 1 and 2 range of A ... R, upper case, alpha only.
-     // characters 3 and 4 range of 0 ... 9, numeric only.
-     // characters 5 and 6 range of a ... x, lower case, alpha only, optional.
+     globalData.validgrid := false;
+     if (length(form6.edMyGrid.Text) = 4) or (length(form6.edMyGrid.Text) = 6) Then
+     Begin
+          if isGrid(form6.edMyGrid.Text) then
+          begin
+               form6.Label12.Visible := false;
+               globalData.validgrid := true;
+          end
+          else
+          begin
+               form6.Label12.Visible := true;
+               globalData.validgrid := false;
+          end;
+     end
+     else
+     begin
+          // Invalid due to length incorrect
+          form6.Label12.Visible := true;
+          form6.Label12.Caption := 'Grid is invalid.  TX/RB/PSKR Functions disabled.';
+          globalData.validgrid := False;
+     end;
+     if not globalData.validgrid and ((length(form6.edMyGrid.Text)=4) or (length(form6.edMyGrid.Text)=6)) then showmessage('Invalid character(s) in grid.');
 end;
 
 procedure TForm6.edUserMsgChange(Sender: TObject);
