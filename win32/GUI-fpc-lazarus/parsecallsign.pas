@@ -36,7 +36,6 @@ Const
     function isGrid( gridloc : String ): Boolean;
 
 implementation
-
 function isSlashedCall(callsign : String) : Boolean;
 Begin
      Result := False;

@@ -20,13 +20,13 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="maincode"/>
-        <CursorPos X="1" Y="4219"/>
-        <TopLine Value="4201"/>
+        <CursorPos X="1" Y="310"/>
+        <TopLine Value="305"/>
         <EditorIndex Value="5"/>
         <UsageCount Value="215"/>
         <Bookmarks Count="2">
-          <Item0 X="1" Y="3254" ID="0"/>
-          <Item1 X="1" Y="1938" ID="1"/>
+          <Item0 X="43" Y="517" ID="0"/>
+          <Item1 X="1" Y="4461" ID="1"/>
         </Bookmarks>
         <Loaded Value="True"/>
       </Unit1>
@@ -34,8 +34,8 @@
         <Filename Value="portaudio.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="portaudio"/>
-        <CursorPos X="1" Y="21"/>
-        <TopLine Value="1"/>
+        <CursorPos X="1" Y="57"/>
+        <TopLine Value="49"/>
         <EditorIndex Value="6"/>
         <UsageCount Value="215"/>
         <Loaded Value="True"/>
@@ -44,8 +44,8 @@
         <Filename Value="parsecallsign.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="parseCallSign"/>
-        <CursorPos X="1" Y="499"/>
-        <TopLine Value="469"/>
+        <CursorPos X="1" Y="102"/>
+        <TopLine Value="84"/>
         <EditorIndex Value="20"/>
         <UsageCount Value="215"/>
         <Loaded Value="True"/>
@@ -54,7 +54,7 @@
         <Filename Value="encode65.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="encode65"/>
-        <CursorPos X="1" Y="57"/>
+        <CursorPos X="1" Y="37"/>
         <TopLine Value="29"/>
         <EditorIndex Value="22"/>
         <UsageCount Value="215"/>
@@ -64,7 +64,7 @@
         <Filename Value="globaldata.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="globalData"/>
-        <CursorPos X="1" Y="75"/>
+        <CursorPos X="1" Y="81"/>
         <TopLine Value="54"/>
         <EditorIndex Value="23"/>
         <UsageCount Value="215"/>
@@ -144,8 +144,8 @@
         <ComponentName Value="Form6"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="cfgvtwo"/>
-        <CursorPos X="72" Y="519"/>
-        <TopLine Value="499"/>
+        <CursorPos X="35" Y="516"/>
+        <TopLine Value="513"/>
         <EditorIndex Value="8"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
@@ -200,8 +200,8 @@
         <Filename Value="LibUSB.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="LibUSB"/>
-        <CursorPos X="1" Y="26"/>
-        <TopLine Value="7"/>
+        <CursorPos X="21" Y="141"/>
+        <TopLine Value="117"/>
         <UsageCount Value="218"/>
       </Unit19>
       <Unit20>
@@ -246,7 +246,7 @@
         <IsPartOfProject Value="True"/>
         <UnitName Value="adif"/>
         <CursorPos X="31" Y="105"/>
-        <TopLine Value="74"/>
+        <TopLine Value="75"/>
         <EditorIndex Value="13"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
@@ -288,7 +288,7 @@
         <IsPartOfProject Value="True"/>
         <UnitName Value="waterfall"/>
         <CursorPos X="1" Y="70"/>
-        <TopLine Value="37"/>
+        <TopLine Value="40"/>
         <EditorIndex Value="25"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
@@ -297,8 +297,8 @@
         <Filename Value="d65.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="d65"/>
-        <CursorPos X="1" Y="1386"/>
-        <TopLine Value="1350"/>
+        <CursorPos X="1" Y="358"/>
+        <TopLine Value="342"/>
         <EditorIndex Value="21"/>
         <UsageCount Value="202"/>
         <Loaded Value="True"/>
@@ -310,7 +310,7 @@
         <CursorPos X="28" Y="3"/>
         <TopLine Value="1"/>
         <EditorIndex Value="3"/>
-        <UsageCount Value="148"/>
+        <UsageCount Value="171"/>
         <Loaded Value="True"/>
       </Unit30>
       <Unit31>
@@ -320,7 +320,7 @@
         <CursorPos X="1" Y="1"/>
         <TopLine Value="1"/>
         <EditorIndex Value="4"/>
-        <UsageCount Value="148"/>
+        <UsageCount Value="171"/>
         <Loaded Value="True"/>
       </Unit31>
       <Unit32>
@@ -332,7 +332,7 @@
         <CursorPos X="76" Y="2"/>
         <TopLine Value="1"/>
         <EditorIndex Value="7"/>
-        <UsageCount Value="125"/>
+        <UsageCount Value="148"/>
         <Loaded Value="True"/>
       </Unit32>
       <Unit33>
@@ -340,9 +340,9 @@
         <IsPartOfProject Value="True"/>
         <UnitName Value="madc"/>
         <CursorPos X="1" Y="152"/>
-        <TopLine Value="116"/>
+        <TopLine Value="122"/>
         <EditorIndex Value="16"/>
-        <UsageCount Value="54"/>
+        <UsageCount Value="77"/>
         <Loaded Value="True"/>
       </Unit33>
       <Unit34>
@@ -352,7 +352,7 @@
         <CursorPos X="11" Y="92"/>
         <TopLine Value="71"/>
         <EditorIndex Value="18"/>
-        <UsageCount Value="53"/>
+        <UsageCount Value="76"/>
         <Loaded Value="True"/>
       </Unit34>
     </Units>

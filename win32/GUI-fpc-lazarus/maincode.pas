@@ -262,6 +262,7 @@ type
     function BuildRemoteStringGrid (call, mode, freq, grid, date, time : String) : WideString;
     function BuildLocalString (station_callsign, my_gridsquare, programid, programversion, my_antenna : String) : WideString;
     function isSigRep(rep : String) : Boolean;
+    function valCallsign(callsign : String) : Integer;
     function utcTime() : TSYSTEMTIME;
     procedure addToRBC(i, m : Integer);
     procedure rbcCheck();
@@ -271,6 +272,7 @@ type
     procedure saveCSV();
     procedure si570Raiseptt();
     procedure si570Lowerptt();
+    function valConfig() : boolean;
 
   private
     { private declarations }
@@ -432,6 +434,181 @@ begin
 end;
 
 procedure ver(vint : Pointer; vstr : Pointer); cdecl; external JT_DLL name 'version_';
+
+function nchar(c : char) : integer;
+begin
+     result := -1;
+     case c of
+           '0' : Result := 0;
+           '1' : Result := 1;
+           '2' : Result := 2;
+           '3' : Result := 3;
+           '4' : Result := 4;
+           '5' : Result := 5;
+           '6' : Result := 6;
+           '7' : Result := 7;
+           '8' : Result := 8;
+           '9' : Result := 9;
+           'A' : Result := 10;
+           'B' : Result := 11;
+           'C' : Result := 12;
+           'D' : Result := 13;
+           'E' : Result := 14;
+           'F' : Result := 15;
+           'G' : Result := 16;
+           'H' : Result := 17;
+           'I' : Result := 18;
+           'J' : Result := 19;
+           'K' : Result := 20;
+           'L' : Result := 21;
+           'M' : Result := 22;
+           'N' : Result := 23;
+           'O' : Result := 24;
+           'P' : Result := 25;
+           'Q' : Result := 26;
+           'R' : Result := 27;
+           'S' : Result := 28;
+           'T' : Result := 29;
+           'U' : Result := 30;
+           'V' : Result := 31;
+           'W' : Result := 32;
+           'X' : Result := 33;
+           'Y' : Result := 34;
+           'Z' : Result := 35;
+           ' ' : Result := 36;
+     end;
+end;
+
+function isAlphaNumericSpace(c : char) : Integer;
+begin
+     result := 0;
+     case c of 'A'..'Z','0'..'9',' ' : result := 1; end;
+end;
+
+function isAlphaNumeric(c : char) : Integer;
+begin
+     result := 0;
+     case c of 'A'..'Z','0'..'9' : result := 1; end;
+end;
+
+function isNumeric(c : char) : Integer;
+begin
+     result := 0;
+     case c of '0'..'9' : result := 1; end;
+end;
+
+function isAlphaSpace(c : char) : Integer;
+begin
+     result := 0;
+     case c of 'A'..'Z',' ' : result := 1; end;
+end;
+
+function TForm1.valCallsign(callsign : String) : Integer;
+var
+   foo, foo2   : String;
+   ncall, nfoo : Integer;
+   c2, c3      : Boolean;
+begin
+     result := -1;
+     foo := Trimleft(Trimright(callsign));
+     foo := upcase(foo);
+     // Basic length checks
+     if length(foo) > 6 then result := -1;
+     if length(foo) < 3 then result := -1;
+     if (length(foo) > 2) and (length(foo) < 7) then
+     begin
+          c2 := false;
+          c3 := false;
+          case foo[3] of '0'..'9': c3 := True else c3 := False; end;
+          if not c3 then
+          begin
+               case foo[2] of '0'..'9': c2 := True else c2 := False; end;
+          end;
+          if c2 or c3 then
+          begin
+               if c3 then
+               begin
+                    // If c3 then padright to 6 characters
+                    foo := padright(foo,6);
+                    nfoo := 0;
+                    nfoo := nfoo + isAlphaNumericSpace(foo[1]);
+                    nfoo := nfoo + isAlphaNumeric(foo[2]);
+                    nfoo := nfoo + isNumeric(foo[3]);
+                    nfoo := nfoo + isAlphaSpace(foo[4]);
+                    nfoo := nfoo + isAlphaSpace(foo[5]);
+                    nfoo := nfoo + isAlphaSpace(foo[6]);
+                    if nfoo = 6 then
+                    begin
+                         ncall := 0;
+                         ncall := nchar(foo[1]);
+                         ncall := 36*ncall+nchar(foo[2]);
+                         ncall := 10*ncall+nchar(foo[3]);
+                         ncall := 27*ncall+nchar(foo[4])-10;
+                         ncall := 27*ncall+nchar(foo[5])-10;
+                         ncall := 27*ncall+nchar(foo[6])-10;
+                         result := ncall;
+                    end
+                    else
+                    begin
+                         result := -1;
+                    end;
+               end;
+               if c2 then
+               begin
+                    // Need to insert a space to left then pad right to 6
+                    // According to JT65 rules a callsign with a numeral as 2nd character can not
+                    // be over 5 characters in length...
+                    if length(foo) < 6 then
+                    begin
+                         // pad righ to 6
+                         foo := padright(foo,6);
+                         foo2 := '      ';
+                         // Shift characters right by 1 character
+                         foo2[1] := ' ';
+                         foo2[2] := foo[1];
+                         foo2[3] := foo[2];
+                         foo2[4] := foo[3];
+                         foo2[5] := foo[4];
+                         foo2[6] := foo[5];
+                         nfoo := 0;
+                         nfoo := nfoo + isAlphaNumericSpace(foo2[1]);
+                         nfoo := nfoo + isAlphaNumeric(foo2[2]);
+                         nfoo := nfoo + isNumeric(foo2[3]);
+                         nfoo := nfoo + isAlphaSpace(foo2[4]);
+                         nfoo := nfoo + isAlphaSpace(foo2[5]);
+                         nfoo := nfoo + isAlphaSpace(foo2[6]);
+                         if nfoo = 6 then
+                         begin
+                              ncall := 0;
+                              ncall := nchar(foo2[1]);
+                              ncall := 36*ncall+nchar(foo2[2]);
+                              ncall := 10*ncall+nchar(foo2[3]);
+                              ncall := 27*ncall+nchar(foo2[4])-10;
+                              ncall := 27*ncall+nchar(foo2[5])-10;
+                              ncall := 27*ncall+nchar(foo2[6])-10;
+                              result := ncall;
+                         end
+                         else
+                         begin
+                              result := -1;
+                         end;
+                    end
+                    else
+                    begin
+                         result := -1;
+                    end;
+               end;
+          end
+          else
+          begin
+               result := -1;
+          end;
+     end
+     else
+     begin
+          result := -1;
+     end;
+end;
 
 function TForm1.utcTime(): TSYSTEMTIME;
 Var
@@ -1188,7 +1365,17 @@ end;
 
 procedure TForm1.btnEngageTxClick(Sender: TObject);
 begin
-     Form1.chkEnTX.Checked := True;
+     if not globalData.validgrid then
+     begin
+          cfgvtwo.Form6.Notebook1.ActivePage := 'Station Setup';
+          cfgvtwo.Form6.Show;
+          cfgvtwo.Form6.BringToFront;
+          Form1.chkEnTX.Checked := False;
+     end
+     else
+     begin
+          Form1.chkEnTX.Checked := True;
+     end;
 end;
 
 procedure TForm1.btnDefaultsClick(Sender: TObject);
@@ -1384,25 +1571,37 @@ end;
 
 procedure TForm1.cbEnPSKRClick(Sender: TObject);
 begin
-     If Form1.cbEnPSKR.Checked Then cfgvtwo.Form6.cbUsePSKReporter.Checked := True else cfgvtwo.Form6.cbUsePSKReporter.Checked := False;
+     if not globaldata.validgrid Then
+     begin
+          cfgvtwo.Form6.Notebook1.ActivePage := 'Station Setup';
+          cfgvtwo.Form6.Show;
+          cfgvtwo.Form6.BringToFront;
+          cfgvtwo.Form6.cbUsePSKReporter.Checked := False;
+          Form1.cbEnPSKR.Checked := False;
+     end
+     else
+     begin
+          If Form1.cbEnPSKR.Checked Then cfgvtwo.Form6.cbUsePSKReporter.Checked := True else cfgvtwo.Form6.cbUsePSKReporter.Checked := False;
+     end;
 end;
 
 procedure TForm1.cbEnRBChange(Sender: TObject);
 begin
-     If Form1.cbEnRB.Checked Then cfgvtwo.Form6.cbUseRB.Checked := True else cfgvtwo.Form6.cbUseRB.Checked := False;
-     If cfgvtwo.Form6.cbUseRB.Checked And not cfgvtwo.Form6.cbNoInet.Checked Then
-     Begin
-          cfgvtwo.glrbcLogin := True;
-     End
+     if not globaldata.validgrid Then
+     begin
+          cfgvtwo.Form6.Notebook1.ActivePage := 'Station Setup';
+          cfgvtwo.Form6.Show;
+          cfgvtwo.Form6.BringToFront;
+          cfgvtwo.Form6.cbUseRB.Checked := False;
+          Form1.cbEnRB.Checked := False;
+     end
      else
-     Begin
-          cfgvtwo.glrbcLogout := True;
-     End;
-     // Handle case of rb having been online but now set to offline mode.
-     If (cfgvtwo.Form6.cbNoInet.Checked) And (globalData.rbLoggedIn) Then
-     Begin
-          cfgvtwo.glrbcLogout := True;
-     End;
+     begin
+          If Form1.cbEnRB.Checked Then cfgvtwo.Form6.cbUseRB.Checked := True else cfgvtwo.Form6.cbUseRB.Checked := False;
+          If cfgvtwo.Form6.cbUseRB.Checked And not cfgvtwo.Form6.cbNoInet.Checked Then cfgvtwo.glrbcLogin := True else cfgvtwo.glrbcLogout := True;
+          // Handle case of rb having been online but now set to offline mode.
+          If (cfgvtwo.Form6.cbNoInet.Checked) And (globalData.rbLoggedIn) Then cfgvtwo.glrbcLogout := True;
+     end;
 end;
 
 procedure TForm1.cbSmoothChange(Sender: TObject);
@@ -3236,6 +3435,19 @@ begin
      If (cfgvtwo.Form6.cbUseRB.Checked) And (not cfgvtwo.Form6.cbNoInet.Checked) And (not globalData.rbLoggedIn) Then cfgvtwo.glrbcLogin := True;
 end;
 
+function TForm1.valConfig();
+Begin
+     // Validate station callsign
+     if valCallsign(cfgvtwo.Form6.edMyCall.Text) < 0 Then
+     Begin
+          ShowMessage('The station callsign [' + cfgvtwo.Form6.edMyCall.Text + '] does not conform to the structure imposed by the JT65 protocol and can not be used properly.  TX function is disabled.');
+          globalData.validgrid := false;
+          result := False;
+     end;
+     globalData.chkconfig := false;
+     result := True;
+end;
+
 procedure TForm1.initializerCode();
 var
    paInS, paOutS, foo : String;
@@ -3250,6 +3462,7 @@ var
    verUpdate          : Boolean;
    lfile              : TextFile;
 Begin
+     globalData.chkconfig := true;
      // DEBUGGING
      // basedir now holds path to current user's my documents space like:
      // C:\Users\Joe\Documents
@@ -4241,6 +4454,18 @@ Begin
           d65.glfftSWisdom := 0;
           dlog.fileDebug('Running without optimal FFT enabled by user request.');
      End;
+
+     // Validate station callsign
+     if globalData.chkconfig Then
+     Begin
+          if valCallsign(cfgvtwo.Form6.edMyCall.Text) < 0 Then
+          Begin
+               ShowMessage('The station callsign [' + cfgvtwo.Form6.edMyCall.Text + '] does not conform to the structure imposed by the JT65 protocol and can not be used properly.  TX function is disabled.');
+               globalData.validgrid := false;
+          end;
+     end;
+     globalData.chkconfig := false;
+
      // Setup input device
      dlog.fileDebug('Setting up ADC.');
      foo := cfgvtwo.Form6.cbAudioIn.Items.Strings[cfgvtwo.Form6.cbAudioIn.ItemIndex];

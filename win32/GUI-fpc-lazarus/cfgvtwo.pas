@@ -513,6 +513,7 @@ End;
 procedure TForm6.Button1Click(Sender: TObject);
 begin
      glmustConfig := False;
+     globalData.chkconfig := True;
      self.Hide;
 end;
 
