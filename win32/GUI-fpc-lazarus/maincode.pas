@@ -2128,11 +2128,11 @@ begin
      // DEBUGGING
      SHGetSpecialFolderLocation(0, CSIDL_PERSONAL, PIDL);
      SHGetPathFromIDList(PIDL, Folder);
-     globalData.basedir:=Folder;
-     globalData.srcdir := globalData.basedir + '\JT65HF';
-     globalData.logdir := globalData.basedir + '\JT65HF\log';
-     globalData.cfgdir := globalData.basedir + '\JT65HF\data';
-     globalData.kvdir  := globalData.basedir + '\JT65HF\kvdt';
+     globalData.basedir := Folder;
+     globalData.srcdir  := globalData.basedir + '\JT65HF';
+     globalData.logdir  := globalData.basedir + '\JT65HF\log';
+     globalData.cfgdir  := globalData.basedir + '\JT65HF\data';
+     globalData.kvdir   := globalData.basedir + '\JT65HF\kvdt';
      cfgError := True;
      Try
         fname := globalData.cfgdir+'\station1.xml';
@@ -3502,7 +3502,6 @@ Begin
           writeln(lfile,'<eoh>');
           closeFile(lfile);
      end;
-
      // END DEBUGGING
 
      // This block is executed only once when the program starts
@@ -3511,7 +3510,7 @@ Begin
           showMessage('Configuration file damaged and can not be recovered.');
           Halt;
      End;
-     //if globalData.debugOn Then showMessage('Debug ON');
+     if globalData.debugOn Then showMessage('Debug ON');
      if cfgRecover then ShowMessage('Configuration file erased due to unrecoverable error.  Please reconfigure.');
      dlog.fileDebug('Entering initializer code.');
      // Check dll version.
@@ -3519,14 +3518,12 @@ Begin
      vint := 0;
      vstr := '0.0.0.0';
      ver(@vint, vstr);
-     if vint <> verHolder.dllReturn() Then showMessage('wsjt.dll incorrect version.  Program halted.');
      if vint <> verHolder.dllReturn() Then
      Begin
+          showMessage('wsjt.dll incorrect version.  Program halted.');
           halt;
-     End;
+     end;
      dlog.fileDebug('JT65.dll version check OK.');
-     //showmessage('JT65.dll version check OK.');
-
      // Initialize prefix/suffix support
      encode65.pfxBuild();
      for i := 0 to 338 do
@@ -3541,26 +3538,18 @@ Begin
      tstflt := 0.0;
      Form1.Caption := 'JT65-HF V' + verHolder.verReturn() + ' (c) 2009,2010 W6CQZ.  Free to use/modify/distribute under GPL 2.0 License.';
      // See comments in procedure code to understand why this is a MUST to use.
-     //showmessage('calling DisableFloatingPointExceptions');
      DisableFloatingPointExceptions();
-     //showmessage('called DisableFloatingPointExceptions');
      // Create the decoder thread with param False so it starts.
-     //showmessage('creating decoder thread');
      d65.glinProg := False;
      decoderThread := decodeThread.Create(False);
-     //showmessage('created decoder thread');
      // Create the CAT control thread with param True so it starts.
-     //showmessage('creating rig control thread');
      rigThread := catThread.Create(False);
-     //showmessage('created rig control thread');
      // Create RB thread with param False so it starts.
-     //showmessage('creating RB thread');
      cfgvtwo.glrbcLogin := False;
      cfgvtwo.glrbcLogout := False;
      rbcPing := False;
      dorbReport := False;
      rbThread := rbcThread.Create(False);
-     //showmessage('created RB thread');
      //
      // Initialize various form items to startup values
      //
@@ -3594,27 +3583,20 @@ Begin
      rbc.glrbsSentCount := 0;
      rbc.glrbCallsign := TrimLeft(TrimRight(cfgvtwo.Form6.editPSKRCall.Text));
      // Init PA.  If this doesn't work there's no reason to continue.
-     //showmessage('initializing portaudio');
      PaResult := portaudio.Pa_Initialize();
      If PaResult <> 0 Then ShowMessage('Fatal Error.  Could not initialize portaudio.');
      If PaResult = 0 Then dlog.fileDebug('Portaudio initialized OK.');
-     //showmessage('initialized portaudio');
      // Now I need to populate the Sound In/Out pulldowns.  First I'm going to get
      // a list of the portaudio API descriptions.  For now I'm going to stick with
      // the default windows interface, but in the future I may look at directsound
      // usage as well.
-     //showmessage('getting portaudio default api');
      paDefApi := portaudio.Pa_GetDefaultHostApi();
      if paDefApi >= 0 Then
      Begin
-          //showmessage('portaudio default api retrieved.  Getting device list');
           cfgvtwo.Form6.cbAudioIn.Clear;
           cfgvtwo.Form6.cbAudioOut.Clear;
           paDefApiDevCount := portaudio.Pa_GetHostApiInfo(paDefApi)^.deviceCount;
           i := paDefApiDevCount-1;
-
-          //showmessage('portaudio reports ' + intToStr(paDefApiDevCount) + ' device nodes');
-
           While i >= 0 do
           Begin
                // I need to populate the pulldowns with the devices supported by
@@ -3646,7 +3628,6 @@ Begin
           cfgvtwo.Form6.cbAudioIn.ItemIndex := portaudio.Pa_GetHostApiInfo(paDefApi)^.defaultInputDevice;
           cfgvtwo.Form6.cbAudioOut.ItemIndex := portaudio.Pa_GetHostApiInfo(paDefApi)^.defaultOutputDevice-2;
           dlog.fileDebug('Audio Devices added to pulldowns.');
-          //showmessage('portaudio device list placed in configuration selectors');
      End
      Else
      Begin
@@ -3654,12 +3635,20 @@ Begin
           // can't provide a default API value >= 0.  TODO Handle this should it
           // happen.
           dlog.fileDebug('FATAL:  Portaudio DID NOT INIT.  No defapi found.');
-          ShowMessage('FATAL:  Portaudio DID NOT INIT.  No defapi found, program closing.');
+          ShowMessage('FATAL:  Portaudio DID NOT INIT.  No default api found, program closing.');
           halt;
      End;
-
-     //showmessage('portaudio initialization completed...');
      fname := globalData.cfgdir+'\station1.xml';
+
+     if fileExists(fname) And cfgvtwo.glmustreconfigure Then
+     Begin
+          cfgvtwo.Form6.BringToFront;
+          repeat
+                sleep(10);
+                Application.ProcessMessages
+          until not cfgvtwo.glmustreconfigure;
+     end;
+
      if not fileExists(fname) Then
      Begin
           //showmessage('Running initial configuration...');
@@ -3923,13 +3912,8 @@ Begin
           cfg.StoredValue['hrdPort'] := cfgvtwo.Form6.hrdPort.Text;
           cfg.Save;
           dlog.fileDebug('Ran initial configuration.');
-          //showmessage('Ran initial configuration...');
      End;
-
      // Read configuration data from XMLpropstorage (cfg.)
-
-     //showmessage('Reading configuration...');
-
      cfgvtwo.glmycall := cfg.StoredValue['call'];
      tstint := 0;
      if TryStrToInt(cfg.storedValue['pfx'],tstint) Then cfgvtwo.Form6.comboPrefix.ItemIndex := tstint else cfgvtwo.Form6.comboPrefix.ItemIndex := 0;
@@ -3948,7 +3932,17 @@ Begin
      Begin
           globalData.fullcall := cfgvtwo.glmycall;
      End;
-     cfgvtwo.Form6.edMyGrid.Text := cfg.StoredValue['grid'];
+     if parsecallsign.isGrid(cfg.StoredValue['grid']) Then
+     Begin
+          cfgvtwo.Form6.edMyGrid.Text := cfg.StoredValue['grid'];
+     end
+     else
+     begin
+          ShowMessage('Your station grid square value is incorrect.' +
+          sLineBreak + 'Please enter a correct value in the station configuration screen' +
+          sLineBreak + sLineBreak + 'If you need help with computing your grid square please see the JT65-HF documentation.');
+          cfgvtwo.glmustreconfigure := True;
+     end;
      tstint := 0;
      if TryStrToInt(cfg.StoredValue['rxCF'],tstint) Then Form1.spinDecoderCF.Value := tstint else Form1.spinDecoderCF.Value := 0;
      tstint := 0;
@@ -4484,8 +4478,8 @@ Begin
      paResult := portaudio.Pa_OpenStream(paInStream,ppaInParams,Nil,11025,2048,0,@adc.adcCallback,Pointer(Self));
      if paResult <> 0 Then
      Begin
-          ShowMessage('PA Error:  ' + StrPas(portaudio.Pa_GetErrorText(paResult)) + ' Could not setup for stereo input.  Program will exit.');
-          halt;
+          ShowMessage('PA Error:  ' + StrPas(portaudio.Pa_GetErrorText(paResult)) + ' Could not setup for stereo input.  Please check your setup.');
+          cfgvtwo.glmustreconfigure := True;
      end
      else
      begin
@@ -4495,7 +4489,7 @@ Begin
      if paResult <> 0 Then
      Begin
           ShowMessage('PA Error:  ' + StrPas(portaudio.Pa_GetErrorText(paResult)));
-          halt;
+          cfgvtwo.glmustreconfigure := True;
      End;
      // Setup output device
      dlog.fileDebug('Setting up DAC.');
@@ -4516,6 +4510,7 @@ Begin
      if paResult <> 0 Then
      Begin
           ShowMessage('PA Error:  ' + StrPas(portaudio.Pa_GetErrorText(paResult)));
+          cfgvtwo.glmustreconfigure := True;
           //Need to exit this puppy, pa is dead.
      End;
      // Start the stream.
@@ -4523,7 +4518,7 @@ Begin
      if paResult <> 0 Then
      Begin
           ShowMessage('PA Error:  ' + StrPas(portaudio.Pa_GetErrorText(paResult)));
-          //Need to exit this puppy, pa is dead.
+          cfgvtwo.glmustreconfigure := True;
      End;
      if cfgvtwo.Form6.cbUsePSKReporter.Checked Then
      Begin
@@ -5810,11 +5805,8 @@ begin
           //ShowMessage('Main loop entered, calling initializer code...');
           // Read in initializer code items that can't be run from form create.
           initializerCode();
-
-          runOnce := False;
+          if cfgvtwo.glmustreconfigure then initializerCode();
           dlog.fileDebug('Initializer code complete.  Entering main timing loop.');
-          //ShowMessage('Initializer code completed entering main execution loop...');
-
           Form1.Timer1.Enabled := True;
           // Go ahead and mark the stream as active.  It won't run a decode, but it will paint the spectrum during init.
           // rxInProgress := True;
@@ -5919,6 +5911,7 @@ initialization
   // rbc runs in its own thread and will send reports (if user ebables) at 3
   // and 33 seconds.  The thread will be triggered at each time interval and
   // suspended once rbc.rbcActive is False.
+  cfgvtwo.glmustreconfigure := True;
   rbc.glrbActive := False;
   globalData.rbCacheOnly := False;
   rbc.glrbAlwaysSave := False;

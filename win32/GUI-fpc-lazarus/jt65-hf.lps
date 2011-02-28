@@ -7,8 +7,8 @@
       <Unit0>
         <Filename Value="jt65-hf.lpr"/>
         <IsPartOfProject Value="True"/>
-        <CursorPos X="51" Y="19"/>
-        <TopLine Value="10"/>
+        <CursorPos X="1" Y="38"/>
+        <TopLine Value="20"/>
         <EditorIndex Value="10"/>
         <UsageCount Value="215"/>
         <Loaded Value="True"/>
@@ -20,13 +20,13 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="maincode"/>
-        <CursorPos X="1" Y="310"/>
-        <TopLine Value="305"/>
+        <CursorPos X="31" Y="3649"/>
+        <TopLine Value="3634"/>
         <EditorIndex Value="5"/>
         <UsageCount Value="215"/>
         <Bookmarks Count="2">
           <Item0 X="43" Y="517" ID="0"/>
-          <Item1 X="1" Y="4461" ID="1"/>
+          <Item1 X="1" Y="4455" ID="1"/>
         </Bookmarks>
         <Loaded Value="True"/>
       </Unit1>
@@ -44,8 +44,8 @@
         <Filename Value="parsecallsign.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="parseCallSign"/>
-        <CursorPos X="1" Y="102"/>
-        <TopLine Value="84"/>
+        <CursorPos X="1" Y="492"/>
+        <TopLine Value="462"/>
         <EditorIndex Value="20"/>
         <UsageCount Value="215"/>
         <Loaded Value="True"/>
@@ -144,8 +144,8 @@
         <ComponentName Value="Form6"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="cfgvtwo"/>
-        <CursorPos X="35" Y="516"/>
-        <TopLine Value="513"/>
+        <CursorPos X="47" Y="511"/>
+        <TopLine Value="496"/>
         <EditorIndex Value="8"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
@@ -310,7 +310,7 @@
         <CursorPos X="28" Y="3"/>
         <TopLine Value="1"/>
         <EditorIndex Value="3"/>
-        <UsageCount Value="171"/>
+        <UsageCount Value="175"/>
         <Loaded Value="True"/>
       </Unit30>
       <Unit31>
@@ -320,7 +320,7 @@
         <CursorPos X="1" Y="1"/>
         <TopLine Value="1"/>
         <EditorIndex Value="4"/>
-        <UsageCount Value="171"/>
+        <UsageCount Value="175"/>
         <Loaded Value="True"/>
       </Unit31>
       <Unit32>
@@ -332,7 +332,7 @@
         <CursorPos X="76" Y="2"/>
         <TopLine Value="1"/>
         <EditorIndex Value="7"/>
-        <UsageCount Value="148"/>
+        <UsageCount Value="152"/>
         <Loaded Value="True"/>
       </Unit32>
       <Unit33>
@@ -342,7 +342,7 @@
         <CursorPos X="1" Y="152"/>
         <TopLine Value="122"/>
         <EditorIndex Value="16"/>
-        <UsageCount Value="77"/>
+        <UsageCount Value="81"/>
         <Loaded Value="True"/>
       </Unit33>
       <Unit34>
@@ -352,7 +352,7 @@
         <CursorPos X="11" Y="92"/>
         <TopLine Value="71"/>
         <EditorIndex Value="18"/>
-        <UsageCount Value="76"/>
+        <UsageCount Value="80"/>
         <Loaded Value="True"/>
       </Unit34>
     </Units>

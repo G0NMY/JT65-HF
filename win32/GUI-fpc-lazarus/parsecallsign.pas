@@ -438,8 +438,8 @@ End;
 
 function isGrid( gridloc : String ): Boolean;
 Var
-   foo, foo1, foo2, foo3 : String;
-   vmsg                  : Boolean;
+   foo  : String;
+   vmsg : Boolean;
 Begin
      Try
         Result := True;
@@ -453,17 +453,12 @@ Begin
              // characters 5 and 6 range of a ... x, lower case, alpha only, optional.
              // Validate grid
              foo := gridloc;
-             foo1 := '';
-             foo2 := '';
-             foo3 := '';
              if length(foo) = 6 then
              begin
-                  foo1 := foo[1] + foo[2];
-                  foo1 := upcase(foo1);
-                  foo2 := foo[3] + foo[4];
-                  foo3 := foo[5] + foo[6];
-                  foo3 := lowercase(foo3);
-                  foo := foo1+foo2+foo3;
+                  foo[1] := upcase(foo[1]);
+                  foo[2] := upcase(foo[2]);
+                  foo[5] := lowercase(foo[5]);
+                  foo[6] := lowercase(foo[6]);
                   vmsg := false;
                   case foo[1] of 'A'..'R': vmsg := True else vmsg := False; end;
                   if vmsg then case foo[2] of 'A'..'R': vmsg := True else vmsg := False; end;
@@ -474,10 +469,8 @@ Begin
              end
              else
              begin
-                  foo1 := foo[1] + foo[2];
-                  foo1 := upcase(foo1);
-                  foo2 := foo[3] + foo[4];
-                  foo := foo1+foo2;
+                  foo[1] := upcase(foo[1]);
+                  foo[2] := upcase(foo[2]);
                   vmsg := false;
                   case foo[1] of 'A'..'R': vmsg := True else vmsg := False; end;
                   if vmsg then case foo[2] of 'A'..'R': vmsg := True else vmsg := False; end;
@@ -491,7 +484,6 @@ Begin
              Result := False;
         End;
      Except
-           dlog.fileDebug('Exception raised in isGrid');
            Result := False;
      End;
 End;
