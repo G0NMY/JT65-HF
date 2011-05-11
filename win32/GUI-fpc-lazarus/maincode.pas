@@ -3658,7 +3658,7 @@ Begin
 
      if not fileExists(fname) Then
      Begin
-          guidedConfig.Form7.PageControl1.ActivePageIndex := 0;
+          guidedconfig.Form7.PageControl1.ActivePageIndex := 0;
           guidedconfig.Form7.Show;
           guidedconfig.Form7.BringToFront;
           self.Visible := false;

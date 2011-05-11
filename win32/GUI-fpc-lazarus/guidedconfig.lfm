@@ -15,8 +15,8 @@ object Form7: TForm7
     Height = 545
     Top = 8
     Width = 767
-    ActivePage = PTTRigControl
-    TabIndex = 3
+    ActivePage = CallsignGrid
+    TabIndex = 0
     TabOrder = 0
     object CallsignGrid: TTabSheet
       Caption = 'Callsign/Grid'
@@ -44,7 +44,6 @@ object Form7: TForm7
         MaxLength = 6
         OnChange = edStationCallsignChange
         TabOrder = 0
-        Text = 'W6CQZ'
       end
       object Label4: TLabel
         Left = 264
@@ -103,7 +102,6 @@ object Form7: TForm7
         Alignment = taCenter
         MaxLength = 6
         TabOrder = 1
-        Text = 'EL98ac'
       end
       object Label5: TLabel
         Left = 264
@@ -207,7 +205,7 @@ object Form7: TForm7
         Font.Style = [fsBold]
         OnClick = buttonContinue0Click
         ParentFont = False
-        TabOrder = 3
+        TabOrder = 4
       end
       object edCWCallsign: TEdit
         Left = 144
@@ -216,9 +214,8 @@ object Form7: TForm7
         Width = 112
         Alignment = taCenter
         CharCase = ecUppercase
-        MaxLength = 12
+        MaxLength = 14
         TabOrder = 2
-        Text = 'W6CQZ/4'
       end
       object Label19: TLabel
         Left = 23
@@ -265,9 +262,8 @@ object Form7: TForm7
         Width = 112
         Alignment = taCenter
         CharCase = ecUppercase
-        MaxLength = 12
-        TabOrder = 4
-        Text = 'W6CQZ/4'
+        MaxLength = 32
+        TabOrder = 3
       end
       object Label39: TLabel
         Left = 5
@@ -1291,16 +1287,16 @@ object Form7: TForm7
       end
       object Label25: TLabel
         Left = 4
-        Height = 199
+        Height = 181
         Top = 5
         Width = 718
-        Caption = 'JT65-HF Supports spotting its receptions to 3 spottings networks.'#13#10#13#10'(1) W6CQZ HF JT65 Reverse Beacon (RB) System.'#13#10'(2) PSK Reporter.'#13#10'(3) DX Cluster.'#13#10#13#10'You may elect to send spots to all networks or your choice of any combination of the three or no spotting'#13#10'at all.  Enabling spotting will require an active Internet connection while JT65-HF is running.'#13#10#13#10'You may mark the box below to disable spotting.  If you later change your mind be sure to unmark the box'#13#10'so you can configure/enable spotting.'
+        Caption = 'JT65-HF Supports spotting its receptions to 2 spottings networks.'#13#10#13#10'(1) W6CQZ HF JT65 Reverse Beacon (RB) System.'#13#10'(2) PSK Reporter.'#13#10#13#10'You may elect to send spots to all networks or your choice of any combination or no spotting at all.'#13#10'Enabling spotting will require an active Internet connection while JT65-HF is running.'#13#10#13#10'You may mark the box below to disable spotting.  If you later change your mind be sure to unmark the box'#13#10'so you can configure/enable spotting.'
         ParentColor = False
       end
       object cbNoSpotting: TCheckBox
         Left = 4
         Height = 23
-        Top = 213
+        Top = 197
         Width = 267
         Caption = 'Disable all spotting functionality.'
         Font.Height = -16
@@ -1312,11 +1308,11 @@ object Form7: TForm7
       end
       object GroupBox3: TGroupBox
         Left = 4
-        Height = 224
-        Top = 245
+        Height = 136
+        Top = 229
         Width = 729
         Caption = 'Spotting Network Selection'
-        ClientHeight = 206
+        ClientHeight = 118
         ClientWidth = 725
         Font.Height = -16
         Font.Name = 'Arial'
@@ -1339,47 +1335,18 @@ object Form7: TForm7
           Caption = 'PSK Reporter'
           TabOrder = 1
         end
-        object CheckBox6: TCheckBox
-          Left = 614
-          Height = 23
-          Top = 8
-          Width = 102
-          Caption = 'DX Cluster'
-          Enabled = False
-          TabOrder = 2
-        end
-        object Edit1: TEdit
-          Left = 6
-          Height = 27
-          Top = 104
-          Width = 368
-          CharCase = ecUppercase
-          MaxLength = 32
-          TabOrder = 3
-        end
         object Edit2: TEdit
           Left = 6
           Height = 27
-          Top = 168
+          Top = 72
           Width = 710
           MaxLength = 128
-          TabOrder = 4
-        end
-        object Label35: TLabel
-          Left = 6
-          Height = 55
-          Top = 44
-          Width = 673
-          Caption = '[Optional] Callsign to use for spotting network(s).  May be different than on the air callsign and may'#13#10'contain suffix and/or prefix value.  You may use any of the following characters:  A to Z, 0 to 9 and'#13#10'- or / with the only limit being its length may not exceed 32 characters.'
-          Font.Height = -16
-          Font.Name = 'Arial'
-          ParentColor = False
-          ParentFont = False
+          TabOrder = 2
         end
         object Label36: TLabel
           Left = 6
           Height = 19
-          Top = 144
+          Top = 40
           Width = 586
           Caption = '[Optional] Station information as in rig, antenna and etc.  Maximum of 128 characters.'
           Font.Height = -16
@@ -1946,7 +1913,7 @@ object Form7: TForm7
     end
     object Colors: TTabSheet
       Caption = 'Colors'
-      ClientHeight = 513
+      ClientHeight = 514
       ClientWidth = 759
       TabVisible = False
       object buttonContinue6: TButton
@@ -2136,7 +2103,7 @@ object Form7: TForm7
     end
     object Advanced: TTabSheet
       Caption = 'Advanced Options'
-      ClientHeight = 513
+      ClientHeight = 514
       ClientWidth = 759
       TabVisible = False
       object buttonContinue7: TButton

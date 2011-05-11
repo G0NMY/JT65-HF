@@ -5,8 +5,8 @@ unit guidedconfig;
 interface
 
 uses
-  Classes , SysUtils , FileUtil , LResources , Forms , Controls , Graphics ,
-  Dialogs , StdCtrls , ExtCtrls , ComCtrls , ColorBox , Spin , valobject ,
+  Classes, SysUtils, FileUtil, LResources, Forms, Controls, Graphics,
+  Dialogs, StdCtrls, ExtCtrls, ComCtrls, ColorBox, Spin, valobject,
   rigobject, paobject, CTypes, srgraph;
 
 type
@@ -46,7 +46,6 @@ type
     cbForceMonoIO : TCheckBox ;
     CheckBox4 : TCheckBox ;
     CheckBox5 : TCheckBox ;
-    CheckBox6 : TCheckBox ;
     cbDisableColorCoding : TCheckBox ;
     CheckBox7 : TCheckBox ;
     CheckBox8 : TCheckBox ;
@@ -62,7 +61,6 @@ type
     cqtext1 : TLabel ;
     rbcall : TEdit ;
     edRBCallsign : TEdit ;
-    Edit1 : TEdit ;
     Edit2 : TEdit ;
     editMacro1 : TEdit ;
     editMacro10 : TEdit ;
@@ -141,7 +139,6 @@ type
     Label32 : TLabel ;
     Label33 : TLabel ;
     Label34 : TLabel ;
-    Label35 : TLabel ;
     Label36 : TLabel ;
     Label37 : TLabel ;
     Label38 : TLabel ;
@@ -572,7 +569,7 @@ begin
      else
      begin
           RadioGroup1.Enabled := true;
-          GroupBox1.Enabled := true;
+          if rbPTTCom.Checked then GroupBox1.Enabled := true else GroupBox1.Enabled := False;
           cbCATPTT.Enabled := true;
           cbCATPTT.Visible := true;
           cfg.PTTMethod := 'DISABLED';
@@ -677,14 +674,9 @@ begin
      end;
 end;
 
-procedure TForm7.buttonTestCATClick(Sender : TObject);
-begin
-
-end;
-
 procedure TForm7.buttonTestSerialPTTClick(Sender : TObject);
 begin
-
+     // Need to write PTT Object before I can get to this
 end;
 
 procedure TForm7.comboSoundInChange(Sender : TObject);
@@ -1383,160 +1375,37 @@ begin
      qsotext1.Color := colorBoxQSO.Colors[colorBoxQSO.ItemIndex];
 end;
 
-//procedure TForm7.buttonTestCATClick (Sender : TObject );
-//var
-//     foo : String;
-//begin
-//     // Set the rig control method [none, hrd, commander, omni, hamlib, si570]
-//     if rbUseHRD.Checked then
-//     begin
-//          rig1.rigcontroller := 'hrd';
-//          rig1.pollRig();
-//     end;
-//
-//     if rbUseCommander.Checked then
-//     begin
-//          rig1.rigcontroller := 'commander';
-//          rig1.pollRig();
-//          foo := 'QRG = ' + intToStr(rig1.qrg) + ' Hz, Set QRG = 28076000 Hz, ';
-//          rig1.command := '000xcvrfreqmode<xcvrfreq:8>28076.00<xcvrmode:3>USB';
-//          sleep(100);
-//          rig1.pollRig();
-//          foo := foo + 'QRG = ' + intToStr(rig1.qrg) + ' Hz'
-//     end;
-//
-//     if rbUseOmniRig.Checked then
-//     begin
-//          rig1.rigcontroller := 'omni';
-//          rig1.pollRig();
-//     end;
-//
-//     Label19.Visible := true;
-//     Label19.Caption := foo;
-//end;
-//
-//procedure TForm7.cbAltPTTChange(Sender : TObject);
-//begin
-//     if cbAltPTT.Checked then cfg.AltPTT := True else cfg.AltPTT := False;
-//end;
-//
-//procedure TForm7.Label16Click(Sender : TObject);
-//begin
-//     if cbAltPTT.Checked then cbAltPTT.Checked := False else cbAltPTT.Checked := True;
-//end;
-//
-//procedure TForm7.rgCATClick(Sender : TObject);
-//begin
-//     if rbUseHRD.Checked then
-//     begin
-//          Label18.Caption       := 'You may now test the connection to Ham Radio Deluxe. Please insure that it is running' + sLineBreak +
-//                                   'and the radio you intend to use is on and selected.';
-//          Label18.Visible       := true;
-//          buttonTestCAT.Visible := true;
-//          cfg.CATMethod         := 'HRD';
-//          Label19.Caption       := '';
-//     end;
-//     if rbUseCommander.Checked then
-//     begin
-//          Label18.Caption       := 'You may now test the connection to CI-V Commander. Please insure that it is running' + sLineBreak +
-//                                   'and the radio you intend to use is on and selected.';
-//          Label18.Visible       := true;
-//          buttonTestCAT.Visible := true;
-//          cfg.CATMethod         := 'COMMANDER';
-//          Label19.Caption       := '';
-//     end;
-//     if rbUseOmniRig.Checked then
-//     begin
-//          Label18.Caption       := 'You may now test the connection to OmniRig. Please insure that it is running' + sLineBreak +
-//                                   'and the radio you intend to use is on and selected.';
-//          Label18.Visible       := true;
-//          buttonTestCAT.Visible := true;
-//          cfg.CATMethod         := 'OMNIRIG';
-//          Label19.Caption       := '';
-//     end;
-//     if rbUseNoCAT.Checked then
-//     begin
-//          Label18.Caption       := 'Manual control selected.  You will need to enter the dial QRG setting on the' + sLineBreak +
-//                                   'main JT65-HF screen.  Please attempt to enter the correct QRG and keep it' + sLineBreak +
-//                                   'correct if you have spotting to RB Network or PSK Reporter enabled.';
-//          Label18.Visible       := true;
-//          buttonTestCAT.Visible := false;
-//          cfg.CATMethod         := 'NONE';
-//          Label19.Caption       := '';
-//     end;
-//     //if rbUseSi570.Checked then
-//     //begin
-//     //     Label18.Caption       := 'You may now test the connection to Si570 USB. NOTE:  The Si570 driver can not' + sLineBreak +
-//     //                              '(currently) read the frequency, only write.  So, in practice, the Si570 rig' + sLineBreak +
-//     //                              'controller sets the frequency at program start to 14076000 Hz then keeps track' + sLineBreak +
-//     //                              'of changes.';
-//     //     Label18.Visible       := true;
-//     //     buttonTestCAT.Visible := true;
-//     //     Label19.Caption       := '';
-//     //end;
-//end;
-//
-//procedure TForm7.rgPTTClick(Sender : TObject);
-//begin
-//     if rbCATPlusVoxPTT.Checked then
-//     begin
-//          rgCAT.Visible         := false;
-//          gbSerial.Visible      := false;
-//          Label17.Visible       := false;
-//          Label18.Visible       := false;
-//          rgCAT.Visible         := true;
-//          buttonTestCAT.Visible := false;
-//          cfg.PTTMethod         := 'VOX';
-//     end;
-//     if rbCATPlusSerialPTT.Checked then
-//     begin
-//          rgCAT.Visible         := false;
-//          gbSerial.Visible      := true;
-//          Label17.Visible       := true;
-//          rgCAT.Visible         := true;
-//          gbSerial.Visible      := true;
-//          Label17.Visible       := true;
-//          Label18.Visible       := false;
-//          buttonTestCAT.Visible := false;
-//          cfg.PTTMethod         := 'SERIAL';
-//     end;
-//     if rbVox.Checked then
-//     begin
-//          rgCAT.Visible         := false;
-//          gbSerial.Visible      := false;
-//          Label17.Visible       := false;
-//          Label18.Visible       := false;
-//          buttonTestCAT.Visible := false;
-//          cfg.PTTMethod         := 'VOX';
-//     end;
-//     if rbSerial.Checked then
-//     begin
-//          rgCAT.Visible         := false;
-//          gbSerial.Visible      := true;
-//          Label17.Visible       := true;
-//          Label18.Visible       := false;
-//          buttonTestCAT.Visible := false;
-//          cfg.PTTMethod         := 'SERIAL';
-//     end;
-//     if rbCAT.Checked then
-//     begin
-//          rgCAT.Visible         := true;
-//          gbSerial.Visible      := false;
-//          Label17.Visible       := false;
-//          Label18.Visible       := false;
-//          buttonTestCAT.Visible := false;
-//          cfg.PTTMethod         := 'CAT';
-//     end;
-//     if rbPTTNoTX.Checked then
-//     begin
-//          rgCAT.Visible         := false;
-//          gbSerial.Visible      := false;
-//          Label17.Visible       := false;
-//          Label18.Visible       := false;
-//          buttonTestCAT.Visible := false;
-//          cfg.PTTMethod         := 'NOTX';
-//     end;
-//end;
+procedure TForm7.buttonTestCATClick (Sender : TObject );
+var
+     foo : String;
+begin
+     Memo1.Clear;
+     // Set the rig control method [none, hrd, commander, omni, hamlib, si570]
+     if rbHRD.Checked then
+     begin
+          rig1.rigcontroller := 'hrd';
+          rig1.pollRig();
+     end;
+
+     if rbCommander.Checked then
+     begin
+          rig1.rigcontroller := 'commander';
+          rig1.pollRig();
+          foo := 'QRG = ' + intToStr(rig1.qrg) + ' Hz, Set QRG = 28076000 Hz, ';
+          rig1.command := '000xcvrfreqmode<xcvrfreq:8>28076.00<xcvrmode:3>USB';
+          sleep(100);
+          rig1.pollRig();
+          foo := foo + 'QRG = ' + intToStr(rig1.qrg) + ' Hz'
+     end;
+
+     if rbOmni.Checked then
+     begin
+          rig1.rigcontroller := 'omni';
+          rig1.pollRig();
+     end;
+
+     Memo1.Text := foo;
+end;
 
 initialization
   {$I guidedconfig.lrs}
