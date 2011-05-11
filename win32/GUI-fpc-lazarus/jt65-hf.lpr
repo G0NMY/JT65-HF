@@ -1,6 +1,6 @@
 program jt65hf;
 //
-// Copyright (c) 2008,2009 J C Large - W6CQZ
+// Copyright (c) 2008,2011 J C Large - W6CQZ
 //
 //
 // JT65-HF is the legal property of its developer.
@@ -27,24 +27,24 @@ uses
   cthreads, cmem,
   {$ENDIF}{$ENDIF}
   Interfaces, // this includes the LCL widgetset
-  Forms, maincode, portaudio, encode65, globalData, spectrum, cmaps, fftw_jl,
-  adc, samplerate, dac, LResources, dlog, rawdec, cfgvtwo, guiConfig, verHolder,
-  PSKReporter, catControl, Si570Dev, LibUSB, SndTypes, UsbDev, synaser, rbc,
-  adif, log, diagout, waterfall, d65, hrdinterface5, hrdinterface4, about,
-  madc, mdac;
+  Forms, tachartlazaruspkg, maincode, portaudio, encode65, globalData,
+  spectrum, cmaps, fftw_jl, adc, samplerate, dac, dlog, rawdec,
+  guiConfig, verHolder, PSKReporter, synaser, rbc, adif, log, diagout,
+  waterfall, d65, about, cfgobject, rigobject, ddeobject, omnirigobject,
+  civobject, ddehrdobject, guidedconfig, valobject, paobject, srgraph;
 
-{$IFDEF WINDOWS}{$R jt65-hf.rc}{$ENDIF}
+{$R *.res}
 
 begin
-  {$I jt65-hf.lrs}
   Application.Title:='JT65-HF';
   Application.Initialize;
   Application.CreateForm(TForm1, Form1);
   Application.CreateForm(TForm5, Form5);
-  Application.CreateForm(TForm6, Form6);
   Application.CreateForm(TForm2, Form2);
   Application.CreateForm(TForm3, Form3);
   Application.CreateForm(TForm4, Form4);
+  Application .CreateForm (TForm7 , Form7 );
+  Application .CreateForm (TForm8 , Form8 );
   Application.Run;
 end.
 

@@ -1,7 +1,7 @@
 object Form1: TForm1
-  Left = 0
+  Left = 10
   Height = 690
-  Top = 9
+  Top = 6
   Width = 935
   ActiveControl = btnReDecode
   Caption = 'JT65-HF'
@@ -18,7 +18,7 @@ object Form1: TForm1
   OnCreate = FormCreate
   SessionProperties = 'Left;Top'
   ShowHint = True
-  LCLVersion = '0.9.28.2'
+  LCLVersion = '0.9.30'
   Visible = True
   object Label6: TLabel
     Left = 784
@@ -215,7 +215,7 @@ object Form1: TForm1
     Left = 556
     Height = 20
     Top = 228
-    Width = 329
+    Width = 330
     Caption = 'Message To TX:  1234567890123456789012'
     Font.Height = -16
     Font.Name = 'Arial'
@@ -250,7 +250,7 @@ object Form1: TForm1
     ParentFont = False
   end
   object Label39: TLabel
-    Left = 697
+    Left = 702
     Height = 15
     Top = 479
     Width = 73
@@ -267,7 +267,7 @@ object Form1: TForm1
     Left = 177
     Height = 15
     Top = 210
-    Width = 296
+    Width = 298
     Caption = 'Left click waterfall to set TX CF, Right click sets RX CF.'
     Font.Height = -11
     Font.Name = 'Arial'
@@ -276,7 +276,7 @@ object Form1: TForm1
     ParentFont = False
   end
   object Label19: TLabel
-    Left = 761
+    Left = 667
     Height = 17
     Hint = 'Double click to disable PSKR'
     Top = 645
@@ -289,7 +289,7 @@ object Form1: TForm1
     OnDblClick = Label19DblClick
   end
   object Label12: TLabel
-    Left = 829
+    Left = 805
     Height = 17
     Top = 587
     Width = 88
@@ -301,7 +301,7 @@ object Form1: TForm1
     ParentFont = False
   end
   object Label23: TLabel
-    Left = 812
+    Left = 793
     Height = 17
     Top = 647
     Width = 118
@@ -310,7 +310,7 @@ object Form1: TForm1
     PopupMenu = popupQRG
   end
   object Label30: TLabel
-    Left = 761
+    Left = 667
     Height = 17
     Hint = 'Double click to disable RB'
     Top = 621
@@ -323,7 +323,7 @@ object Form1: TForm1
     OnDblClick = Label30DblClick
   end
   object Label2: TLabel
-    Left = 733
+    Left = 639
     Height = 15
     Top = 606
     Width = 64
@@ -621,8 +621,8 @@ object Form1: TForm1
       Font.Style = [fsBold]
       OnChange = rbUseMixChange
       ParentFont = False
-      State = cbChecked
       TabOrder = 1
+      TabStop = True
     end
     object rbUseRight: TRadioButton
       Left = 106
@@ -636,7 +636,6 @@ object Form1: TForm1
       OnChange = rbUseMixChange
       ParentFont = False
       TabOrder = 2
-      TabStop = False
     end
     object TrackBar1: TTrackBar
       Left = 37
@@ -1041,8 +1040,8 @@ object Form1: TForm1
       Font.Style = [fsBold]
       OnChange = rbFirstChange
       ParentFont = False
-      State = cbChecked
       TabOrder = 0
+      TabStop = True
     end
     object rbTX2: TRadioButton
       Left = 89
@@ -1056,7 +1055,6 @@ object Form1: TForm1
       OnChange = rbFirstChange
       ParentFont = False
       TabOrder = 1
-      TabStop = False
     end
   end
   object rbFreeMsg: TRadioButton
@@ -1071,7 +1069,6 @@ object Form1: TForm1
     OnChange = rbFreeMsgChange
     ParentFont = False
     TabOrder = 30
-    TabStop = False
   end
   object rbGenMsg: TRadioButton
     Left = 556
@@ -1086,8 +1083,8 @@ object Form1: TForm1
     Font.Style = [fsBold]
     OnChange = rbFreeMsgChange
     ParentFont = False
-    State = cbChecked
     TabOrder = 31
+    TabStop = True
   end
   object btnDefaults: TButton
     Left = 784
@@ -1103,10 +1100,10 @@ object Form1: TForm1
     TabOrder = 32
   end
   object editManQRG: TEdit
-    Left = 812
+    Left = 764
     Height = 37
     Top = 606
-    Width = 118
+    Width = 166
     Alignment = taCenter
     Font.Height = -24
     Font.Name = 'Arial'
@@ -1131,7 +1128,7 @@ object Form1: TForm1
     TabOrder = 34
   end
   object cbEnRB: TCheckBox
-    Left = 650
+    Left = 556
     Height = 20
     Top = 619
     Width = 82
@@ -1140,7 +1137,7 @@ object Form1: TForm1
     TabOrder = 35
   end
   object cbEnPSKR: TCheckBox
-    Left = 650
+    Left = 556
     Height = 20
     Top = 643
     Width = 100
@@ -1175,6 +1172,22 @@ object Form1: TForm1
     OnClick = btnReDecodeClick
     ParentFont = False
     TabOrder = 38
+  end
+  object Label5: TLabel
+    Left = 310
+    Height = 17
+    Top = 146
+    Width = 39
+    Caption = 'Label5'
+    ParentColor = False
+  end
+  object Label18: TLabel
+    Left = 310
+    Height = 17
+    Top = 168
+    Width = 46
+    Caption = 'Label18'
+    ParentColor = False
   end
   object Timer1: TTimer
     Interval = 220

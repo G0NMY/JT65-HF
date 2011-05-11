@@ -1,6 +1,5 @@
-unit dac;
 //
-// Copyright (c) 2008,2009 J C Large - W6CQZ
+// Copyright (c) 2008...2011 J C Large - W6CQZ
 //
 //
 // JT65-HF is the legal property of its developer.
@@ -20,6 +19,8 @@ unit dac;
 // the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
 // Boston, MA 02110-1301, USA.
 //
+unit dac;
+
 {$mode objfpc}{$H+}
 
 interface
@@ -27,7 +28,16 @@ interface
 uses
   Classes, SysUtils, PortAudio, globalData, DateUtils, CTypes;
 
-function dacCallback(input: Pointer; output: Pointer; frameCount: Longword;
+Type
+  outptr = ^CTypes.cint16;
+  inptr = ^CTypes.cint16;
+
+function sdacCallback(input: inptr; output: outptr; frameCount: Longword;
+                       timeInfo: PPaStreamCallbackTimeInfo;
+                       statusFlags: TPaStreamCallbackFlags;
+                       inputDevice: Pointer): Integer; cdecl;
+
+function mdacCallback(input: inptr; output: outptr; frameCount: Longword;
                        timeInfo: PPaStreamCallbackTimeInfo;
                        statusFlags: TPaStreamCallbackFlags;
                        inputDevice: Pointer): Integer; cdecl;
@@ -43,10 +53,13 @@ Var
    dacTimeStamp   : Integer;
    dacLTimeStamp  : Integer;
    dacSTimeStamp  : TTimeStamp;
+   dacUnderrun    : Integer;
+   dacCount       : Integer;
+   dacEnTX        : Boolean;
 
 implementation
 
-function dacCallback(input: Pointer; output: Pointer; frameCount: Longword;
+function sdacCallback(input: inptr; output: outptr; frameCount: Longword;
                      timeInfo: PPaStreamCallbackTimeInfo;
                      statusFlags: TPaStreamCallbackFlags;
                      inputDevice: Pointer): Integer; cdecl;
@@ -54,6 +67,8 @@ Var
    i             : Integer;
    optr          : ^smallint;
 Begin
+     if statusFlags = 8 Then inc(dacUnderrun);
+     inc(dacCount);
      // Set DAC entry timestamp
      dacSTimeStamp := DateTimeToTimeStamp(Now);
      if dacT = 0 Then
@@ -83,7 +98,7 @@ Begin
      inc(dacT);
      if dacT > 100000 Then dacT := 0;
      optr := output;
-     if globalData.txInProgress Then
+     if dacEnTX Then
      Begin
           for i := 0 to frameCount-1 do
           Begin
@@ -101,6 +116,66 @@ Begin
           Begin
                optr^ := 0;
                inc(optr);
+               optr^ := 0;
+               inc(optr);
+          End;
+     End;
+     result := paContinue;
+End;
+
+function mdacCallback(input: inptr; output: outptr; frameCount: Longword;
+                     timeInfo: PPaStreamCallbackTimeInfo;
+                     statusFlags: TPaStreamCallbackFlags;
+                     inputDevice: Pointer): Integer; cdecl;
+Var
+   i             : Integer;
+   optr          : ^smallint;
+Begin
+     if statusFlags = 8 Then inc(dacUnderrun);
+     inc(dacCount);
+     // Set DAC entry timestamp
+     dacSTimeStamp := DateTimeToTimeStamp(Now);
+     if dacT = 0 Then
+     Begin
+          dacE := 0;
+          dacErr := 0;
+          dacErate := 0;
+          dacEavg := 0;
+          dacLTimeStamp := dacSTimeStamp.Time;
+          dacTimeStamp  := dacSTimeStamp.Time;
+     End
+     Else
+     Begin
+          dacTimeStamp := dacSTimeStamp.Time;
+          if dacTimeStamp > dacLTimeStamp Then
+          Begin
+               dacE := dacE+(dacTimeStamp - dacLTimeStamp);
+               dacLTimeStamp := dacTimeStamp;
+          End
+          Else
+          Begin
+               dacT := -1;
+          End;
+     End;
+     if dacT > 0 Then dacErr := dacE / dacT;
+     dacErate := 185.75963718820861678004535147392/dacErr;
+     inc(dacT);
+     if dacT > 100000 Then dacT := 0;
+     optr := output;
+     if dacEnTX Then
+     Begin
+          for i := 0 to frameCount-1 do
+          Begin
+               optr^ := d65txBuffer[d65txBufferIdx+i];
+               inc(optr);
+          End;
+          d65txBufferPtr := d65txBufferPtr+frameCount;
+          d65txBufferIdx := d65txBufferIdx+frameCount;
+     End
+     Else
+     Begin
+          for i := 0 to frameCount-1 do
+          Begin
                optr^ := 0;
                inc(optr);
           End;

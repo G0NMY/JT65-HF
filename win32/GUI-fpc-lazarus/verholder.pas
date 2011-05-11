@@ -1,6 +1,5 @@
-unit verHolder;
 //
-// Copyright (c) 2008,2009 J C Large - W6CQZ
+// Copyright (c) 2008...2011 J C Large - W6CQZ
 //
 //
 // JT65-HF is the legal property of its developer.
@@ -20,6 +19,8 @@ unit verHolder;
 // the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
 // Boston, MA 02110-1301, USA.
 //
+unit verHolder;
+
 {$mode objfpc}{$H+}
 
 interface
@@ -27,14 +28,20 @@ interface
 uses
   Classes, SysUtils; 
 
-  function verReturn() : String;
-  function dllReturn() : Integer;
+  function verReturn()  : String;
+  function iverReturn() : Integer;
+  function dllReturn()  : Integer;
 
 implementation
   function verReturn() : String;
   Begin
-       Result := '1.0.8';
+       Result := '2.0.0';
   End;
+  function iverReturn() : Integer;
+  Begin
+       result := 200;
+  end;
+
   function dllReturn() : Integer;
   Begin
        Result := 3001;

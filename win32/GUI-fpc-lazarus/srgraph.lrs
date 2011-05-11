@@ -1,0 +1,44 @@
+{ This is an automatically generated lazarus resource file }
+
+LazarusResources.Add('TForm8','FORMDATA',[
+  'TPF0'#6'TForm8'#5'Form8'#4'Left'#2#15#6'Height'#3#228#1#3'Top'#2'V'#5'Width'
+  +#3#132#3#11'BorderIcons'#11#12'biSystemMenu'#10'biMinimize'#0#7'Caption'#6#28
+  +'Sample Rate Error Statistics'#12'ClientHeight'#3#228#1#11'ClientWidth'#3#132
+  +#3#21'Constraints.MaxHeight'#3#228#1#20'Constraints.MaxWidth'#3#132#3#21'Con'
+  +'straints.MinHeight'#3#228#1#20'Constraints.MinWidth'#3#132#3#8'OnCreate'#7
+  +#10'FormCreate'#10'LCLVersion'#6#6'0.9.30'#7'Visible'#9#0#6'TChart'#7'srChar'
+  +'t'#4'Left'#2#16#6'Height'#3#200#0#3'Top'#2#8#5'Width'#3'h'#3#8'AxisList'#14
+  +#1#27'Title.LabelFont.Orientation'#3#132#3#13'Title.Visible'#9#13'Title.Capt'
+  +'ion'#6#28'RX SR Error 1.000 is perfect'#0#1#9'Alignment'#7#9'calBottom'#13
+  +'Title.Visible'#9#13'Title.Caption'#6#14'Time (Seconds)'#0#0#11'Extent.YMin'
+  +#5#0'p='#10#215#163'p'#253#254'?'#11'Extent.XMax'#5#0#0#0#0#0#0#0#150#7'@'#11
+  +'Extent.YMax'#5#0'H'#225'z'#20#174'G'#129#255'?'#14'Extent.UseXMin'#9#14'Ext'
+  +'ent.UseYMin'#9#14'Extent.UseXMax'#9#14'Extent.UseYMax'#9#16'Foot.Brush.Colo'
+  +'r'#7#9'clBtnFace'#15'Foot.Font.Color'#7#6'clBlue'#17'Legend.UseSidebar'#8#14
+  +'Legend.Visible'#9#17'Title.Brush.Color'#7#9'clBtnFace'#16'Title.Font.Color'
+  +#7#6'clBlue'#18'Title.Text.Strings'#1#6#7'TAChart'#0#14'DoubleBuffered'#9#11
+  +'ParentColor'#8#9'PopupMenu'#7#10'PopupMenu1'#10'OnDblClick'#7#15'srChartDbl'
+  +'Click'#0#11'TLineSeries'#7'series1'#19'Legend.Multiplicity'#7#7'lmPoint'#14
+  +'Legend.Visible'#8#5'Title'#6#9'Short Avg'#0#0#11'TLineSeries'#7'series2'#14
+  +'Legend.Visible'#8#0#0#0#6'TChart'#8'srChart1'#4'Left'#2#16#6'Height'#3#200#0
+  +#3'Top'#3#216#0#5'Width'#3'h'#3#8'AxisList'#14#1#27'Title.LabelFont.Orientat'
+  +'ion'#3#132#3#13'Title.Visible'#9#13'Title.Caption'#6#28'TX SR Error 1.000 i'
+  +'s perfect'#0#1#9'Alignment'#7#9'calBottom'#13'Title.Visible'#9#13'Title.Cap'
+  +'tion'#6#14'Time (Seconds)'#0#0#11'Extent.YMin'#5#0'p='#10#215#163'p'#253#254
+  +'?'#11'Extent.XMax'#5#0#0#0#0#0#0#0#150#7'@'#11'Extent.YMax'#5#0'H'#225'z'#20
+  +#174'G'#129#255'?'#14'Extent.UseXMin'#9#14'Extent.UseYMin'#9#14'Extent.UseXM'
+  +'ax'#9#14'Extent.UseYMax'#9#16'Foot.Brush.Color'#7#9'clBtnFace'#15'Foot.Font'
+  +'.Color'#7#6'clBlue'#17'Legend.UseSidebar'#8#14'Legend.Visible'#9#17'Title.B'
+  +'rush.Color'#7#9'clBtnFace'#16'Title.Font.Color'#7#6'clBlue'#18'Title.Text.S'
+  +'trings'#1#6#7'TAChart'#0#14'DoubleBuffered'#9#11'ParentColor'#8#10'OnDblCli'
+  +'ck'#7#16'srChart1DblClick'#0#11'TLineSeries'#7'series3'#14'Legend.Visible'#8
+  +#5'Title'#6#9'Short Avg'#0#0#11'TLineSeries'#7'series4'#14'Legend.Visible'#8
+  +#5'Title'#6#8'Long Avg'#0#0#0#6'TLabel'#6'Label1'#4'Left'#2#16#6'Height'#2
+  +''''#3'Top'#3#176#1#5'Width'#3'5'#3#7'Caption'#6#174'Right Clicking will all'
+  +'ow saving display in BMP format.  You may zoom in by selecting an area of i'
+  +'nterest with'#13#10'mouse.  Single left click will restore to orginial zoom'
+  +'/scale.'#9'Font.Name'#6#5'Arial'#10'Font.Style'#11#6'fsBold'#0#11'ParentCol'
+  +'or'#8#10'ParentFont'#8#0#0#10'TPopupMenu'#10'PopupMenu1'#4'left'#3'X'#3#3't'
+  +'op'#3#176#1#0#9'TMenuItem'#9'MenuItem1'#7'Caption'#6#11'Save to BMP'#7'OnCl'
+  +'ick'#7#14'MenuItem1Click'#0#0#0#0
+]);

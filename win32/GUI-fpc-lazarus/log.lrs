@@ -1,17 +1,19 @@
+{ This is an automatically generated lazarus resource file }
+
 LazarusResources.Add('TForm2','FORMDATA',[
   'TPF0'#6'TForm2'#5'Form2'#4'Left'#2#20#6'Height'#3#240#0#3'Top'#2#17#5'Width'
   +#3#129#1#11'BorderIcons'#11#0#7'Caption'#6#11'Log Contact'#12'ClientHeight'#3
   +#240#0#11'ClientWidth'#3#129#1#21'Constraints.MaxHeight'#3#240#0#20'Constrai'
   +'nts.MaxWidth'#3#129#1#21'Constraints.MinHeight'#3#240#0#20'Constraints.MinW'
   +'idth'#3#129#1#11'Font.Height'#2#243#9'Font.Name'#6#5'Arial'#10'LCLVersion'#6
-  +#8'0.9.28.2'#0#6'TLabel'#6'Label1'#4'Left'#3#128#0#6'Height'#2#17#3'Top'#2'4'
-  +#5'Width'#2'C'#7'Caption'#6#10'Start Time'#11'Font.Height'#2#243#9'Font.Name'
-  +#6#5'Arial'#10'Font.Style'#11#6'fsBold'#0#11'ParentColor'#8#10'ParentFont'#8
-  +#0#0#6'TLabel'#6'Label2'#4'Left'#2#8#6'Height'#2#17#3'Top'#2'4'#5'Width'#2#30
-  +#7'Caption'#6#4'Date'#11'Font.Height'#2#243#9'Font.Name'#6#5'Arial'#10'Font.'
-  +'Style'#11#6'fsBold'#0#11'ParentColor'#8#10'ParentFont'#8#0#0#6'TLabel'#6'La'
-  +'bel3'#4'Left'#3#8#1#6'Height'#2#17#3'Top'#2'4'#5'Width'#2'='#7'Caption'#6#8
-  +'End Time'#11'Font.Height'#2#243#9'Font.Name'#6#5'Arial'#10'Font.Style'#11#6
+  +#6'0.9.30'#0#6'TLabel'#6'Label1'#4'Left'#3#128#0#6'Height'#2#17#3'Top'#2'4'#5
+  +'Width'#2'C'#7'Caption'#6#10'Start Time'#11'Font.Height'#2#243#9'Font.Name'#6
+  +#5'Arial'#10'Font.Style'#11#6'fsBold'#0#11'ParentColor'#8#10'ParentFont'#8#0
+  +#0#6'TLabel'#6'Label2'#4'Left'#2#8#6'Height'#2#17#3'Top'#2'4'#5'Width'#2#30#7
+  +'Caption'#6#4'Date'#11'Font.Height'#2#243#9'Font.Name'#6#5'Arial'#10'Font.St'
+  +'yle'#11#6'fsBold'#0#11'ParentColor'#8#10'ParentFont'#8#0#0#6'TLabel'#6'Labe'
+  +'l3'#4'Left'#3#8#1#6'Height'#2#17#3'Top'#2'4'#5'Width'#2'='#7'Caption'#6#8'E'
+  +'nd Time'#11'Font.Height'#2#243#9'Font.Name'#6#5'Arial'#10'Font.Style'#11#6
   +'fsBold'#0#11'ParentColor'#8#10'ParentFont'#8#0#0#6'TLabel'#6'Label4'#4'Left'
   +#2#8#6'Height'#2#17#3'Top'#2#14#5'Width'#2#26#7'Caption'#6#4'Call'#11'Font.H'
   +'eight'#2#243#9'Font.Name'#6#5'Arial'#10'Font.Style'#11#6'fsBold'#0#11'Paren'

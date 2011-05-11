@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <CONFIG>
   <ProjectOptions>
+    <Version Value="9"/>
     <PathDelim Value="\"/>
-    <Version Value="7"/>
     <General>
       <Flags>
         <SaveClosedFiles Value="False"/>
@@ -11,7 +11,6 @@
       </Flags>
       <SessionStorage Value="InProjectDir"/>
       <MainUnit Value="0"/>
-      <TargetFileExt Value=".exe"/>
       <Title Value="JT65-HF"/>
       <UseAppBundle Value="False"/>
       <Icon Value="0"/>
@@ -19,12 +18,14 @@
     <VersionInfo>
       <UseVersionInfo Value="True"/>
       <AutoIncrementBuild Value="True"/>
-      <CurrentVersionNr Value="1"/>
-      <CurrentMinorRevNr Value="8"/>
-      <CurrentBuildNr Value="164"/>
-      <FileDescription Value="Amateur Radio communications using JT65A"/>
-      <LegalCopyright Value="2009..2010 - J C Large - W6CQZ - GPL 2"/>
+      <MajorVersionNr Value="1"/>
+      <RevisionNr Value="8"/>
+      <BuildNr Value="412"/>
+      <StringTable FileDescription="Amateur Radio communications using JT65A" LegalCopyright="2009..2011 - J C Large - W6CQZ - GPL 2" ProductVersion=""/>
     </VersionInfo>
+    <BuildModes Count="1">
+      <Item1 Name="default" Default="True"/>
+    </BuildModes>
     <PublishOptions>
       <Version Value="2"/>
       <IgnoreBinaries Value="False"/>
@@ -37,16 +38,20 @@
         <LaunchingApplication PathPlusParams="/usr/X11R6/bin/xterm -T 'Lazarus Run Output' -e $(LazarusDir)/tools/runwait.sh $(TargetCmdLine)"/>
       </local>
     </RunParams>
-    <RequiredPackages Count="2">
+    <RequiredPackages Count="3">
       <Item1>
-        <PackageName Value="FCL"/>
+        <PackageName Value="TAChartLazarusPkg"/>
         <MinVersion Major="1" Valid="True"/>
       </Item1>
       <Item2>
-        <PackageName Value="LCL"/>
+        <PackageName Value="FCL"/>
+        <MinVersion Major="1" Valid="True"/>
       </Item2>
+      <Item3>
+        <PackageName Value="LCL"/>
+      </Item3>
     </RequiredPackages>
-    <Units Count="35">
+    <Units Count="34">
       <Unit0>
         <Filename Value="jt65-hf.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -65,179 +70,176 @@
         <UnitName Value="portaudio"/>
       </Unit2>
       <Unit3>
-        <Filename Value="parsecallsign.pas"/>
-        <IsPartOfProject Value="True"/>
-        <UnitName Value="parseCallSign"/>
-      </Unit3>
-      <Unit4>
         <Filename Value="encode65.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="encode65"/>
-      </Unit4>
-      <Unit5>
+      </Unit3>
+      <Unit4>
         <Filename Value="globaldata.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="globalData"/>
-      </Unit5>
-      <Unit6>
+      </Unit4>
+      <Unit5>
         <Filename Value="spectrum.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="spectrum"/>
-      </Unit6>
-      <Unit7>
+      </Unit5>
+      <Unit6>
         <Filename Value="cmaps.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="cmaps"/>
-      </Unit7>
-      <Unit8>
+      </Unit6>
+      <Unit7>
         <Filename Value="adc.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="adc"/>
-      </Unit8>
-      <Unit9>
+      </Unit7>
+      <Unit8>
         <Filename Value="samplerate.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="samplerate"/>
-      </Unit9>
-      <Unit10>
+      </Unit8>
+      <Unit9>
         <Filename Value="dac.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="dac"/>
-      </Unit10>
-      <Unit11>
+      </Unit9>
+      <Unit10>
         <Filename Value="dlog.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="dlog"/>
-      </Unit11>
-      <Unit12>
+      </Unit10>
+      <Unit11>
         <Filename Value="rawdec.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="Form5"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="rawdec"/>
-      </Unit12>
-      <Unit13>
-        <Filename Value="cfgvtwo.pas"/>
-        <IsPartOfProject Value="True"/>
-        <ComponentName Value="Form6"/>
-        <ResourceBaseClass Value="Form"/>
-        <UnitName Value="cfgvtwo"/>
-      </Unit13>
-      <Unit14>
+      </Unit11>
+      <Unit12>
         <Filename Value="guiconfig.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="guiConfig"/>
-      </Unit14>
-      <Unit15>
+      </Unit12>
+      <Unit13>
         <Filename Value="verholder.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="verHolder"/>
-      </Unit15>
-      <Unit16>
+      </Unit13>
+      <Unit14>
         <Filename Value="PSKReporter.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="PSKReporter"/>
-      </Unit16>
-      <Unit17>
-        <Filename Value="catcontrol.pas"/>
-        <IsPartOfProject Value="True"/>
-        <UnitName Value="catControl"/>
-      </Unit17>
-      <Unit18>
-        <Filename Value="Si570Dev.pas"/>
-        <IsPartOfProject Value="True"/>
-        <UnitName Value="Si570Dev"/>
-      </Unit18>
-      <Unit19>
-        <Filename Value="LibUSB.pas"/>
-        <IsPartOfProject Value="True"/>
-        <UnitName Value="LibUSB"/>
-      </Unit19>
-      <Unit20>
-        <Filename Value="SndTypes.pas"/>
-        <IsPartOfProject Value="True"/>
-        <UnitName Value="SndTypes"/>
-      </Unit20>
-      <Unit21>
-        <Filename Value="UsbDev.pas"/>
-        <IsPartOfProject Value="True"/>
-        <UnitName Value="UsbDev"/>
-      </Unit21>
-      <Unit22>
+      </Unit14>
+      <Unit15>
         <Filename Value="synaser.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="synaser"/>
-      </Unit22>
-      <Unit23>
+      </Unit15>
+      <Unit16>
         <Filename Value="rbc.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="rbc"/>
-      </Unit23>
-      <Unit24>
+      </Unit16>
+      <Unit17>
         <Filename Value="adif.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="adif"/>
-      </Unit24>
-      <Unit25>
+      </Unit17>
+      <Unit18>
         <Filename Value="log.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="Form2"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="log"/>
-      </Unit25>
-      <Unit26>
+      </Unit18>
+      <Unit19>
         <Filename Value="diagout.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="Form3"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="diagout"/>
-      </Unit26>
-      <Unit27>
+      </Unit19>
+      <Unit20>
         <Filename Value="fftw_jl.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="fftw_jl"/>
-      </Unit27>
-      <Unit28>
+      </Unit20>
+      <Unit21>
         <Filename Value="waterfall.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="waterfall"/>
-      </Unit28>
-      <Unit29>
+      </Unit21>
+      <Unit22>
         <Filename Value="d65.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="d65"/>
-      </Unit29>
-      <Unit30>
-        <Filename Value="hrdinterface5.pas"/>
-        <IsPartOfProject Value="True"/>
-        <UnitName Value="hrdinterface5"/>
-      </Unit30>
-      <Unit31>
-        <Filename Value="hrdinterface4.pas"/>
-        <IsPartOfProject Value="True"/>
-        <UnitName Value="hrdinterface4"/>
-      </Unit31>
-      <Unit32>
+      </Unit22>
+      <Unit23>
         <Filename Value="about.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="Form4"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="about"/>
+      </Unit23>
+      <Unit24>
+        <Filename Value="cfgobject.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="cfgobject"/>
+      </Unit24>
+      <Unit25>
+        <Filename Value="rigobject.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="rigobject"/>
+      </Unit25>
+      <Unit26>
+        <Filename Value="ddeobject.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="ddeobject"/>
+      </Unit26>
+      <Unit27>
+        <Filename Value="omnirigobject.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="omnirigobject"/>
+      </Unit27>
+      <Unit28>
+        <Filename Value="civobject.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="civobject"/>
+      </Unit28>
+      <Unit29>
+        <Filename Value="ddehrdobject.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="ddehrdobject"/>
+      </Unit29>
+      <Unit30>
+        <Filename Value="guidedconfig.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="Form7"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="guidedconfig"/>
+      </Unit30>
+      <Unit31>
+        <Filename Value="valobject.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="valobject"/>
+      </Unit31>
+      <Unit32>
+        <Filename Value="paobject.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="paobject"/>
       </Unit32>
       <Unit33>
-        <Filename Value="madc.pas"/>
+        <Filename Value="srgraph.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="madc"/>
+        <ComponentName Value="Form8"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="srgraph"/>
       </Unit33>
-      <Unit34>
-        <Filename Value="mdac.pas"/>
-        <IsPartOfProject Value="True"/>
-        <UnitName Value="mdac"/>
-      </Unit34>
     </Units>
   </ProjectOptions>
   <CompilerOptions>
-    <Version Value="8"/>
+    <Version Value="9"/>
     <PathDelim Value="\"/>
     <Target>
       <Filename Value="jt65-hf"/>
@@ -248,13 +250,8 @@
       </SyntaxOptions>
     </Parsing>
     <CodeGeneration>
-      <Checks>
-        <IOChecks Value="True"/>
-        <RangeChecks Value="True"/>
-        <OverflowChecks Value="True"/>
-        <StackChecks Value="True"/>
-      </Checks>
-      <VerifyObjMethodCallValidity Value="True"/>
+      <TargetCPU Value="i386"/>
+      <TargetOS Value="win32"/>
     </CodeGeneration>
     <Linking>
       <Debugging>
@@ -267,7 +264,17 @@
       </Options>
     </Linking>
     <Other>
+      <CompilerMessages>
+        <UseMsgFile Value="True"/>
+      </CompilerMessages>
       <CompilerPath Value="$(CompPath)"/>
     </Other>
   </CompilerOptions>
+  <Debugging>
+    <Exceptions Count="1">
+      <Item1>
+        <Name Value="EOleSysError"/>
+      </Item1>
+    </Exceptions>
+  </Debugging>
 </CONFIG>

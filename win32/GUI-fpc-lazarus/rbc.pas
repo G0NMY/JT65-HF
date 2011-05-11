@@ -1,3 +1,24 @@
+//
+// Copyright (c) 2008...2011 J C Large - W6CQZ
+//
+//
+// JT65-HF is the legal property of its developer.
+//
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License
+// as published by the Free Software Foundation; either version 2
+// of the License, or (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program; see the file COPYING. If not, write to
+// the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+// Boston, MA 02110-1301, USA.
+//
 unit rbc;
 //
 // Copyright (c) 2008,2009 J C Large - W6CQZ
@@ -20,12 +41,13 @@ unit rbc;
 // the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
 // Boston, MA 02110-1301, USA.
 //
+
 {$mode objfpc}{$H+}
 
 interface
 
 uses
-  Classes, SysUtils, httpsend, Windows, parseCallSign, StrUtils, globalData, dlog;
+  Classes, SysUtils, httpsend, Windows, StrUtils, globalData, dlog;
 
 Type
     rbcReport = Record
@@ -91,79 +113,79 @@ Begin
         if globalData.gmode = 65 then rbmode := '65A';
         if globalData.gmode = 0 then rbmode := '65A/4B';
         If TryStrToFloat(glrbQRG, fvar) Then ivar := trunc(fvar) Else ivar := 0;
-        If (ivar > 0) And parseCallSign.valQRG(ivar) Then
-        Begin
-             foo := 'http://jt65.w6cqz.org/dbb.php?func=LI&rbcall=' +
-                 glrbCallsign + '&rbqrg=' + glrbQRG + '&rbmode=' + rbmode +
-                 '&rbgrid=' + glrbGrid;
-             HTTP := THTTPSend.Create;
-             HTTP.Timeout := 10000;  // Is this correct?
-             HTTP.Headers.Add('Accept: text/html');
-             // I think it wants ms for timeout value...
-             if not HTTP.HTTPMethod('GET', foo) Then
-             begin
-                  globalData.rbLoggedIn := False;
-                  dlog.fileDebug('RB Login fails:  Unable to contact RB Server');
-                  globalData.rbecode := 'RBSFAIL';
-             end
-             else
-             begin
-                  rbResult := TStringList.Create;
-                  rbResult.Clear;
-                  rbResult.LoadFromStream(HTTP.Document);
-                  If TrimLeft(TrimRight(rbResult.Text)) = 'QSL' Then
-                  Begin
-                       globalData.rbLoggedIn := True;
-                       globaldata.rbecode := 'QSL';
-                  End;
-                  if not globalData.rbLoggedIn  Then
-                  Begin
-                       // Error messages RB login can return:
-                       // NO - Indicates login failed but not due to bad RB data, so it's safe to try again.
-                       // BAD QRG - Fix the RB's QRG error before trying again.
-                       // BAD GRID - Invalid Grid value, fix before trying again.
-                       // BAD CALL - RB Call too short/long, fix before trying again.
-                       // BAD MODE - RB Mode not 65A or 4B, fix before trying again.
-                       If TrimLeft(TrimRight(rbResult.Text)) = 'BAD QRG'  Then
-                       Begin
-                            globalData.rbLoggedIn := False;
-                            dlog.fileDebug('RB Login fails:  Bad QRG value.');
-                            globalData.rbecode := 'QRG';
-                       end;
-                       If TrimLeft(TrimRight(rbResult.Text)) = 'BAD GRID' Then
-                       Begin
-                            globalData.rbLoggedIn := False;
-                            dlog.fileDebug('RB Login fails:  Bad GRID value.');
-                            globalData.rbecode := 'GRID';
-                       end;
-                       If TrimLeft(TrimRight(rbResult.Text)) = 'BAD CALL' Then
-                       Begin
-                            globalData.rbLoggedIn := False;
-                            dlog.fileDebug('RB Login fails:  Bad CALL value.');
-                            globalData.rbecode := 'CALL';
-                       end;
-                       If TrimLeft(TrimRight(rbResult.Text)) = 'BAD MODE' Then
-                       Begin
-                            globalData.rbLoggedIn := False;
-                            dlog.fileDebug('RB Login fails:  Bad MODE value.');
-                            globalData.rbecode := 'MODE';
-                       end;
-                       If TrimLeft(TrimRight(rbResult.Text)) = 'NO' Then
-                       Begin
-                            globalData.rbLoggedIn := False;
-                            globalData.rbecode := 'NO'; // NO indicates a server error for login vs a local problem for others.
-                       end;
-                  End;
-                  rbResult.Free;
-             end;
-             HTTP.Free;
-        end
-        else
-        begin
-             globalData.rbLoggedIn := False;
-             dlog.fileDebug('RB Login fails:  Bad QRG value.');
-             globalData.rbecode := 'QRG';
-        end;
+        //If (ivar > 0) And parseCallSign.valQRG(ivar) Then
+        //Begin
+        //     foo := 'http://jt65.w6cqz.org/dbb.php?func=LI&rbcall=' +
+        //         glrbCallsign + '&rbqrg=' + glrbQRG + '&rbmode=' + rbmode +
+        //         '&rbgrid=' + glrbGrid;
+        //     HTTP := THTTPSend.Create;
+        //     HTTP.Timeout := 10000;  // Is this correct?
+        //     HTTP.Headers.Add('Accept: text/html');
+        //     // I think it wants ms for timeout value...
+        //     if not HTTP.HTTPMethod('GET', foo) Then
+        //     begin
+        //          globalData.rbLoggedIn := False;
+        //          dlog.fileDebug('RB Login fails:  Unable to contact RB Server');
+        //          globalData.rbecode := 'RBSFAIL';
+        //     end
+        //     else
+        //     begin
+        //          rbResult := TStringList.Create;
+        //          rbResult.Clear;
+        //          rbResult.LoadFromStream(HTTP.Document);
+        //          If TrimLeft(TrimRight(rbResult.Text)) = 'QSL' Then
+        //          Begin
+        //               globalData.rbLoggedIn := True;
+        //               globaldata.rbecode := 'QSL';
+        //          End;
+        //          if not globalData.rbLoggedIn  Then
+        //          Begin
+        //               // Error messages RB login can return:
+        //               // NO - Indicates login failed but not due to bad RB data, so it's safe to try again.
+        //               // BAD QRG - Fix the RB's QRG error before trying again.
+        //               // BAD GRID - Invalid Grid value, fix before trying again.
+        //               // BAD CALL - RB Call too short/long, fix before trying again.
+        //               // BAD MODE - RB Mode not 65A or 4B, fix before trying again.
+        //               If TrimLeft(TrimRight(rbResult.Text)) = 'BAD QRG'  Then
+        //               Begin
+        //                    globalData.rbLoggedIn := False;
+        //                    dlog.fileDebug('RB Login fails:  Bad QRG value.');
+        //                    globalData.rbecode := 'QRG';
+        //               end;
+        //               If TrimLeft(TrimRight(rbResult.Text)) = 'BAD GRID' Then
+        //               Begin
+        //                    globalData.rbLoggedIn := False;
+        //                    dlog.fileDebug('RB Login fails:  Bad GRID value.');
+        //                    globalData.rbecode := 'GRID';
+        //               end;
+        //               If TrimLeft(TrimRight(rbResult.Text)) = 'BAD CALL' Then
+        //               Begin
+        //                    globalData.rbLoggedIn := False;
+        //                    dlog.fileDebug('RB Login fails:  Bad CALL value.');
+        //                    globalData.rbecode := 'CALL';
+        //               end;
+        //               If TrimLeft(TrimRight(rbResult.Text)) = 'BAD MODE' Then
+        //               Begin
+        //                    globalData.rbLoggedIn := False;
+        //                    dlog.fileDebug('RB Login fails:  Bad MODE value.');
+        //                    globalData.rbecode := 'MODE';
+        //               end;
+        //               If TrimLeft(TrimRight(rbResult.Text)) = 'NO' Then
+        //               Begin
+        //                    globalData.rbLoggedIn := False;
+        //                    globalData.rbecode := 'NO'; // NO indicates a server error for login vs a local problem for others.
+        //               end;
+        //          End;
+        //          rbResult.Free;
+        //     end;
+        //     HTTP.Free;
+        //end
+        //else
+        //begin
+        //     globalData.rbLoggedIn := False;
+        //     dlog.fileDebug('RB Login fails:  Bad QRG value.');
+        //     globalData.rbecode := 'QRG';
+        //end;
      Except
         dlog.fileDebug('Exception in doLogin');
         globalData.rbLoggedIn := False;
@@ -273,25 +295,25 @@ Begin
              // plain text message.
              if length(word3) >=3 Then
              Begin
-                  if parseCallSign.validateCallsign(word3) Then
-                  Begin
-                       // Have a callsign in the right place.  This is a
-                       // valid report that will be sent/saved.
-                       callsign := word3;
-                       resolved := True;
-                  end
-                  else
-                  begin
-                       // Entry was invalid, but it still needs to be marked processed.
-                       // Text in callsign position did not validate.
-                       //globalData.rbsFailLog[globalData.rbsFailIdx] := 'No TX call found in correct position.  Exchange was:  ' + globalData.rbReports[i].rbDecoded;
-                       //inc(globalData.rbsFailIdx);
-                       //if globalData.rbsFailIdx > 499 Then globalData.rbsFailIdx := 0;
-                       glrbReports[i].rbProcessed := True;
-                       grid := '';
-                       callsign := '';
-                       Resolved := False;
-                  end;
+                  //if parseCallSign.validateCallsign(word3) Then
+                  //Begin
+                  //     // Have a callsign in the right place.  This is a
+                  //     // valid report that will be sent/saved.
+                  //     callsign := word3;
+                  //     resolved := True;
+                  //end
+                  //else
+                  //begin
+                  //     // Entry was invalid, but it still needs to be marked processed.
+                  //     // Text in callsign position did not validate.
+                  //     //globalData.rbsFailLog[globalData.rbsFailIdx] := 'No TX call found in correct position.  Exchange was:  ' + globalData.rbReports[i].rbDecoded;
+                  //     //inc(globalData.rbsFailIdx);
+                  //     //if globalData.rbsFailIdx > 499 Then globalData.rbsFailIdx := 0;
+                  //     glrbReports[i].rbProcessed := True;
+                  //     grid := '';
+                  //     callsign := '';
+                  //     Resolved := False;
+                  //end;
              End
              Else
              Begin
@@ -313,34 +335,34 @@ Begin
              // grid.  Will check for both cases.  Need a callsign to begin with.
              if length(word2) >=3 Then
              Begin
-                  if parseCallSign.validateCallsign(word2) Then
-                  Begin
-                       callsign := word2;
-                       // word2 validates as call.  This is a valid report and
-                       // will be sent/saved.  Check for grid in word3
-                       if length(word3) >3 Then
-                       Begin
-                            if parseCallSign.isGrid(word3) Then grid := word3 else grid := '';
-                       End
-                       Else
-                       Begin
-                            // word3 is too short to be a grid.
-                            grid := '';
-                       End;
-                       resolved := True;
-                  end
-                  else
-                  begin
-                       // Entry was invalid, but it still needs to be marked processed.
-                       // Text in callsign position did not validate.
-                       //globalData.rbsFailLog[globalData.rbsFailIdx] := 'No TX call found in correct position.  Exchange was:  ' + globalData.rbReports[i].rbDecoded;
-                       //inc(globalData.rbsFailIdx);
-                       //if globalData.rbsFailIdx > 499 Then globalData.rbsFailIdx := 0;
-                       glrbReports[i].rbProcessed := True;
-                       grid := '';
-                       callsign := '';
-                       resolved := False;
-                  end;
+                  //if parseCallSign.validateCallsign(word2) Then
+                  //Begin
+                  //     callsign := word2;
+                  //     // word2 validates as call.  This is a valid report and
+                  //     // will be sent/saved.  Check for grid in word3
+                  //     if length(word3) >3 Then
+                  //     Begin
+                  //          if parseCallSign.isGrid(word3) Then grid := word3 else grid := '';
+                  //     End
+                  //     Else
+                  //     Begin
+                  //          // word3 is too short to be a grid.
+                  //          grid := '';
+                  //     End;
+                  //     resolved := True;
+                  //end
+                  //else
+                  //begin
+                  //     // Entry was invalid, but it still needs to be marked processed.
+                  //     // Text in callsign position did not validate.
+                  //     //globalData.rbsFailLog[globalData.rbsFailIdx] := 'No TX call found in correct position.  Exchange was:  ' + globalData.rbReports[i].rbDecoded;
+                  //     //inc(globalData.rbsFailIdx);
+                  //     //if globalData.rbsFailIdx > 499 Then globalData.rbsFailIdx := 0;
+                  //     glrbReports[i].rbProcessed := True;
+                  //     grid := '';
+                  //     callsign := '';
+                  //     resolved := False;
+                  //end;
              end
              else
              begin
@@ -375,90 +397,90 @@ Begin
         if length(word1) >=3 Then
         Begin
              //globalData.debugLine1 := 'Calling validateCallsign(), timestamp:  ' + stToString();
-             if parseCallSign.validateCallsign(word1) Then
-             Begin
-                  // Now... I could have another call in word2
-                  // with a grid or a report/ack in word3 or
-                  // I could have a grid in word2 and no word3
-                  // Check for a call in word2
-                  if length(word2) >= 3 Then
-                  Begin
-                       if parseCallSign.validateCallsign(word2) Then
-                       Begin
-                            callsign := word2;
-                            resolved := True;
-                            // OK.. this is call in word1 being called by call in word2
-                            // and should have a grid or report/ack in word3. Check word3
-                            if length(word3) >3 Then
-                            Begin
-                                 if parseCallSign.isGrid(word3) Then grid := word3 else grid := '';
-                            End
-                            Else
-                            Begin
-                                 grid := '';
-                            End;
-                       End
-                       Else
-                       Begin
-                            // since word2 is not a call I can check to see if word2
-                            // is a grid or the word TEST which will validate word1
-                            // as the sender's callsign.
-                            If word2 = 'TEST' Then
-                            Begin
-                                 callsign := word1;
-                                 grid := '';
-                                 resolved := True;
-                                 // some_call + TEST
-                            End
-                            Else
-                            Begin
-                                 if length(word2) > 3 Then
-                                 Begin
-                                      if parseCallSign.isGrid(word2) Then
-                                      Begin
-                                           grid := word2;
-                                           resolved := True;
-                                      End
-                                      Else
-                                      Begin
-                                           // Entry was invalid, but it still needs to be marked processed.
-                                           //globalData.rbsFailLog[globalData.rbsFailIdx] := 'No TX call found in correct position.  Exchange was:  ' + globalData.rbReports[i].rbDecoded;
-                                           //inc(globalData.rbsFailIdx);
-                                           //if globalData.rbsFailIdx > 499 Then globalData.rbsFailIdx := 0;
-                                           glrbReports[i].rbProcessed := True;
-                                           grid := '';
-                                           callsign := '';
-                                      End;
-                                 End
-                                 Else
-                                 Begin
-                                      // Entry was invalid, but it still needs to be marked processed.
-                                      //globalData.rbsFailLog[globalData.rbsFailIdx] := 'No TX call found in correct position.  Exchange was:  ' + globalData.rbReports[i].rbDecoded;
-                                      //inc(globalData.rbsFailIdx);
-                                      //if globalData.rbsFailIdx > 499 Then globalData.rbsFailIdx := 0;
-                                      glrbReports[i].rbProcessed := True;
-                                      grid := '';
-                                      callsign := '';
-                                 End;
-                            End;
-                       End;
-                  End
-                  Else
-                  Begin
-                       // Word2 too short to be callsign
-                  End;
-             End
-             Else
-             Begin
-                  // Entry was invalid, but it still needs to be marked processed.
-                  // Does not start with a valid callsign.
-                  //globalData.rbsFailLog[globalData.rbsFailIdx] := 'Could not resolve message.  Exchange was:  ' + globalData.rbReports[i].rbDecoded;
-                  //inc(globalData.rbsFailIdx);
-                  //if globalData.rbsFailIdx > 499 Then globalData.rbsFailIdx := 0;
-                  glrbReports[i].rbProcessed := True;
-                  grid := '';
-                  callsign := '';
-             End;
+             //if parseCallSign.validateCallsign(word1) Then
+             //Begin
+             //     // Now... I could have another call in word2
+             //     // with a grid or a report/ack in word3 or
+             //     // I could have a grid in word2 and no word3
+             //     // Check for a call in word2
+             //     if length(word2) >= 3 Then
+             //     Begin
+             //          if parseCallSign.validateCallsign(word2) Then
+             //          Begin
+             //               callsign := word2;
+             //               resolved := True;
+             //               // OK.. this is call in word1 being called by call in word2
+             //               // and should have a grid or report/ack in word3. Check word3
+             //               if length(word3) >3 Then
+             //               Begin
+             //                    if parseCallSign.isGrid(word3) Then grid := word3 else grid := '';
+             //               End
+             //               Else
+             //               Begin
+             //                    grid := '';
+             //               End;
+             //          End
+             //          Else
+             //          Begin
+             //               // since word2 is not a call I can check to see if word2
+             //               // is a grid or the word TEST which will validate word1
+             //               // as the sender's callsign.
+             //               If word2 = 'TEST' Then
+             //               Begin
+             //                    callsign := word1;
+             //                    grid := '';
+             //                    resolved := True;
+             //                    // some_call + TEST
+             //               End
+             //               Else
+             //               Begin
+             //                    if length(word2) > 3 Then
+             //                    Begin
+             //                         if parseCallSign.isGrid(word2) Then
+             //                         Begin
+             //                              grid := word2;
+             //                              resolved := True;
+             //                         End
+             //                         Else
+             //                         Begin
+             //                              // Entry was invalid, but it still needs to be marked processed.
+             //                              //globalData.rbsFailLog[globalData.rbsFailIdx] := 'No TX call found in correct position.  Exchange was:  ' + globalData.rbReports[i].rbDecoded;
+             //                              //inc(globalData.rbsFailIdx);
+             //                              //if globalData.rbsFailIdx > 499 Then globalData.rbsFailIdx := 0;
+             //                              glrbReports[i].rbProcessed := True;
+             //                              grid := '';
+             //                              callsign := '';
+             //                         End;
+             //                    End
+             //                    Else
+             //                    Begin
+             //                         // Entry was invalid, but it still needs to be marked processed.
+             //                         //globalData.rbsFailLog[globalData.rbsFailIdx] := 'No TX call found in correct position.  Exchange was:  ' + globalData.rbReports[i].rbDecoded;
+             //                         //inc(globalData.rbsFailIdx);
+             //                         //if globalData.rbsFailIdx > 499 Then globalData.rbsFailIdx := 0;
+             //                         glrbReports[i].rbProcessed := True;
+             //                         grid := '';
+             //                         callsign := '';
+             //                    End;
+             //               End;
+             //          End;
+             //     End
+             //     Else
+             //     Begin
+             //          // Word2 too short to be callsign
+             //     End;
+             //End
+             //Else
+             //Begin
+             //     // Entry was invalid, but it still needs to be marked processed.
+             //     // Does not start with a valid callsign.
+             //     //globalData.rbsFailLog[globalData.rbsFailIdx] := 'Could not resolve message.  Exchange was:  ' + globalData.rbReports[i].rbDecoded;
+             //     //inc(globalData.rbsFailIdx);
+             //     //if globalData.rbsFailIdx > 499 Then globalData.rbsFailIdx := 0;
+             //     glrbReports[i].rbProcessed := True;
+             //     grid := '';
+             //     callsign := '';
+             //End;
              //globalData.debugLine2 := 'validateCallsign() returned, timestamp:  ' + stToString();
         End
         Else
@@ -602,8 +624,8 @@ Begin
              begin
                   // Cache file structure
                   //Report,Processed
-                  word1 := ExtractWord(1,lArray[i],parseCallSign.CsvDelim); // URL
-                  word2 := ExtractWord(2,lArray[i],parseCallSign.CsvDelim); // Processed
+                  //word1 := ExtractWord(1,lArray[i],parseCallSign.CsvDelim); // URL
+                  //word2 := ExtractWord(2,lArray[i],parseCallSign.CsvDelim); // Processed
                   validLine := True;
                   if word2 <> 'F' Then validLine := False;
                   if validLine Then
@@ -625,8 +647,8 @@ Begin
              i := 0;
              while i < Length(lArray) do
              begin
-                  word1 := ExtractWord(1,lArray[i],parseCallSign.CsvDelim); // URL
-                  word2 := ExtractWord(2,lArray[i],parseCallSign.CsvDelim); // Processed
+                  //word1 := ExtractWord(1,lArray[i],parseCallSign.CsvDelim); // URL
+                  //word2 := ExtractWord(2,lArray[i],parseCallSign.CsvDelim); // Processed
                   if word2 = 'F' Then inc(ecount);
                   inc(i);
              end;
@@ -638,8 +660,8 @@ Begin
                   i := 0;
                   while i < Length(lArray) do
                   Begin
-                       word1 := ExtractWord(1,lArray[i],parseCallSign.CsvDelim); // URL
-                       word2 := ExtractWord(2,lArray[i],parseCallSign.CsvDelim); // Processed
+                       //word1 := ExtractWord(1,lArray[i],parseCallSign.CsvDelim); // URL
+                       //word2 := ExtractWord(2,lArray[i],parseCallSign.CsvDelim); // Processed
                        if word2 = 'F' Then writeLn(cacheFile,lArray[i]);
                        inc(i);
                   End;
@@ -747,52 +769,52 @@ begin
                        if glrbReports[i].rbMode = 4 then rbmode := '4B';
                   End;
                   If TryStrToFloat(glrbReports[i].rbFrequency, floatvar) Then intvar := trunc(floatvar) Else intvar := 0;
-                  If parseCallSign.valQRG(intvar) Then
-                  Begin
-                       // QRG Validates
-                       // Attempt to determine form of rbDecoded.
-                       // Remove any excess space characters.
-                       glrbReports[i].rbDecoded := trimDecoded(i);
-                       // Break rbDecoded into individual words. I could do this into an array,
-                       // but I know I'm going to ONLY have 1, 2 or 3 words in ANY sequence
-                       // which will validate so I'll assign them to 3 string vars.
-                       word1 := ExtractWord(1,glrbReports[i].rbDecoded,parseCallSign.WordDelimiter);
-                       word2 := ExtractWord(2,glrbReports[i].rbDecoded,parseCallSign.WordDelimiter);
-                       word3 := ExtractWord(3,glrbReports[i].rbDecoded,parseCallSign.WordDelimiter);
-                       // If I couldn't extract any of the 3 words above it will = ''
-                       resolved := False;
-                       callsign := '';
-                       grid := '';
-                       msgtype := 0;
-                       // If callsign or grid not = '' after all the evaluations then
-                       // I'll need to send/save report.
-                       // Determine 'form' of message.
-                       if word1 = 'CQ' then msgtype := 1;
-                       if word1 = 'QRZ' then msgtype := 1;
-                       if word1 = 'TEST' then msgtype := 1;
-                       if word1 = 'CQDX' then msgtype := 1;
-                       // Handle message format 1.
-                       If msgtype = 1 Then
-                       Begin
-                            if resolveType1(word2, word3, i, callsign, grid) Then resolved := True else resolved := False;
-                       End;
-                       // Handle not message format 1.
-                       If msgtype = 0 Then
-                       Begin
-                            if resolveType0(word1, word2, word3, i, callsign, grid) Then resolved := True else resolved := False;
-                       end;
-                  End
-                  Else
-                  Begin
-                       // Entry was invalid, but it still needs to be marked processed.
-                       //globalData.rbsFailLog[globalData.rbsFailIdx] := 'Invalid QRG.  QRG = ' + globalData.rbReports[i].rbFrequency;
-                       //Inc(globalData.rbsFailIdx);
-                       //if globalData.rbsFailIdx > 499 Then globalData.rbsFailIdx := 0;
-                       glrbReports[i].rbProcessed := True;
-                       grid := '';
-                       callsign := '';
-                       resolved := False;
-                  End;
+                  //If parseCallSign.valQRG(intvar) Then
+                  //Begin
+                  //     // QRG Validates
+                  //     // Attempt to determine form of rbDecoded.
+                  //     // Remove any excess space characters.
+                  //     glrbReports[i].rbDecoded := trimDecoded(i);
+                  //     // Break rbDecoded into individual words. I could do this into an array,
+                  //     // but I know I'm going to ONLY have 1, 2 or 3 words in ANY sequence
+                  //     // which will validate so I'll assign them to 3 string vars.
+                  //     word1 := ExtractWord(1,glrbReports[i].rbDecoded,parseCallSign.WordDelimiter);
+                  //     word2 := ExtractWord(2,glrbReports[i].rbDecoded,parseCallSign.WordDelimiter);
+                  //     word3 := ExtractWord(3,glrbReports[i].rbDecoded,parseCallSign.WordDelimiter);
+                  //     // If I couldn't extract any of the 3 words above it will = ''
+                  //     resolved := False;
+                  //     callsign := '';
+                  //     grid := '';
+                  //     msgtype := 0;
+                  //     // If callsign or grid not = '' after all the evaluations then
+                  //     // I'll need to send/save report.
+                  //     // Determine 'form' of message.
+                  //     if word1 = 'CQ' then msgtype := 1;
+                  //     if word1 = 'QRZ' then msgtype := 1;
+                  //     if word1 = 'TEST' then msgtype := 1;
+                  //     if word1 = 'CQDX' then msgtype := 1;
+                  //     // Handle message format 1.
+                  //     If msgtype = 1 Then
+                  //     Begin
+                  //          if resolveType1(word2, word3, i, callsign, grid) Then resolved := True else resolved := False;
+                  //     End;
+                  //     // Handle not message format 1.
+                  //     If msgtype = 0 Then
+                  //     Begin
+                  //          if resolveType0(word1, word2, word3, i, callsign, grid) Then resolved := True else resolved := False;
+                  //     end;
+                  //End
+                  //Else
+                  //Begin
+                  //     // Entry was invalid, but it still needs to be marked processed.
+                  //     //globalData.rbsFailLog[globalData.rbsFailIdx] := 'Invalid QRG.  QRG = ' + globalData.rbReports[i].rbFrequency;
+                  //     //Inc(globalData.rbsFailIdx);
+                  //     //if globalData.rbsFailIdx > 499 Then globalData.rbsFailIdx := 0;
+                  //     glrbReports[i].rbProcessed := True;
+                  //     grid := '';
+                  //     callsign := '';
+                  //     resolved := False;
+                  //End;
                   // At this point if resolved then I have something to report and/
                   // or save to disk.
 
