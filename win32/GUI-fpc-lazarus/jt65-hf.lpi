@@ -51,7 +51,7 @@
         <PackageName Value="LCL"/>
       </Item3>
     </RequiredPackages>
-    <Units Count="36">
+    <Units Count="37">
       <Unit0>
         <Filename Value="jt65-hf.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -246,6 +246,11 @@
         <IsPartOfProject Value="True"/>
         <UnitName Value="hrdobject"/>
       </Unit35>
+      <Unit36>
+        <Filename Value="serialobject.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="serialobject"/>
+      </Unit36>
     </Units>
   </ProjectOptions>
   <CompilerOptions>

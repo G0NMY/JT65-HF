@@ -30,7 +30,7 @@ uses
   StdCtrls, CTypes, StrUtils, Math, ExtCtrls, ComCtrls, Spin,
   Windows, DateUtils, encode65, globalData, XMLPropStorage,
   ClipBrd, dlog, rawdec, guiConfig, verHolder,
-  PSKReporter, Menus, synaser, rbc, log, diagout, synautil,
+  PSKReporter, Menus, rbc, log, diagout, synautil,
   waterfall, d65, spectrum, about, fileutil, cfgobject, guidedconfig, rigobject;//,valobject;
 
 Const
@@ -246,8 +246,6 @@ type
     //procedure lowerPTT();
     //procedure altRaisePTT();
     //procedure altLowerPTT();
-    //procedure hrdRaisePTT();
-    //procedure hrdLowerPTT();
     procedure initDecode();
     procedure updateSR();
     procedure genTX1();
@@ -361,7 +359,6 @@ type
      pskrStats                  : PSKReporter.REPORTER_STATISTICS;
      audioAve1, audioAve2       : Integer;
      sopQRG, eopQRG             : Double;
-     mnpttSerial                : TBlockSerial;
      doRB                       : Boolean;
      rbsHeardList               : Array[0..499] Of rbHeard;
      csvEntries                 : Array[0..99] of String;
@@ -1061,243 +1058,6 @@ Begin
           end;
      End;
 End;
-
-//procedure TForm1.si570Raiseptt();
-//Begin
-//     mnpttOpened := False;
-//     Try
-//        if cfgvtwo.Form6.checkSi570.Checked Then
-//        Begin
-//             cfgvtwo.glsi57.SetPTT(True);
-//             mnpttOpened := True;
-//        End
-//        Else
-//        Begin
-//             dlog.fileDebug('Si570 PTT raise failed.  Device not enabled.');
-//        End;
-//     Except
-//        dlog.fileDebug('Si570 PTT raise failed.  Exception.');
-//     End;
-//End;
-
-//procedure TForm1.si570Lowerptt();
-//Begin
-//     mnpttOpened := False;
-//     Try
-//        if cfgvtwo.Form6.checkSi570.Checked Then
-//        Begin
-//             cfgvtwo.glsi57.SetPTT(False);
-//             mnpttOpened := False;
-//        End
-//        Else
-//        Begin
-//             dlog.fileDebug('Si570 PTT lower failed.  Device not enabled.');
-//        End;
-//     Except
-//        dlog.fileDebug('Si570 PTT lower failed.  Exception.');
-//     End;
-//End;
-
-//procedure TForm1.altRaisePTT();
-//var
-//   np : Integer;
-//Begin
-//     mnpttOpened := False;
-//     if not mnpttOpened Then
-//     Begin
-//          mnnport := '';
-//          mnnport := cfgvtwo.Form6.editUserDefinedPort1.Text;
-//          if mnnport = 'None' Then mnnport := '';
-//          if mnnport = 'NONE' Then mnnport := '';
-//          if Length(mnnport) > 3 Then
-//          Begin
-//               try
-//                  mnpttSerial := TBlockSerial.Create;
-//                  mnpttSerial.RaiseExcept := True;
-//                  mnpttSerial.Connect(mnnport);
-//                  mnpttSerial.Config(9600,8,'N',0,false,true);
-//                  mnpttOpened := True;
-//               except
-//                  dlog.fileDebug('PTT Port [' + mnnport + '] failed to key up.');
-//               end;
-//          End
-//          Else
-//          Begin
-//               np := 0;
-//               if tryStrToInt(cfgvtwo.Form6.editUserDefinedPort1.Text,np) Then
-//               Begin
-//                    Try
-//                       mnpttSerial := TBlockSerial.Create;
-//                       mnpttSerial.RaiseExcept := True;
-//                       mnpttSerial.Connect('COM' + IntToStr(np));
-//                       mnpttSerial.Config(9600,8,'N',0,false,true);
-//                       mnpttOpened := True;
-//                    Except
-//                       dlog.fileDebug('PTT Port [COM' + IntToStr(np) + '] failed to key up.');
-//                    End;
-//               End
-//               Else
-//               Begin
-//                    mnpttOpened := False;
-//               End;
-//          End;
-//     End;
-//End;
-
-//procedure TForm1.altLowerPTT();
-//Begin
-//     if mnpttOpened Then
-//     Begin
-//          mnpttOpened := False;
-//          mnpttSerial.Free;
-//     End
-//     Else
-//     Begin
-//          mnpttOpened := False;
-//     End;
-//End;
-
-//procedure TForm1.raisePTT();
-//var
-//   np, ntx, iptt, ioresult : CTypes.cint;
-//   msg                     : CTypes.cschar;
-//   tmp                     : String;
-//Begin
-//     ioresult := 0;
-//     msg := 0;
-//     np := 0;
-//     ntx := 1;
-//     iptt := 0;
-//     tmp := '';
-//     mnpttOpened := False;
-//     if not mnpttOpened Then
-//     Begin
-//          mnnport := '';
-//
-//          mnnport := UpperCase(cfgvtwo.Form6.editUserDefinedPort1.Text);
-//
-//          if mnnport = 'None' Then mnnport := '';
-//          if mnnport = 'NONE' Then mnnport := '';
-//
-//          if Length(mnnport) > 3 Then
-//          Begin
-//               if Length(mnnport) = 4 Then
-//               Begin
-//                    // Length = 4 = COM#
-//                    tmp := '';
-//                    tmp := mnnport[4];
-//               End;
-//               if Length(mnnport) = 5 Then
-//               Begin
-//                    // Length = 5 = COM##
-//                    tmp := '';
-//                    tmp := mnnport[4..5];
-//               End;
-//               If Length(mnnport) = 6 Then
-//               Begin
-//                    // Length = 6 = COM###
-//                    tmp := '';
-//                    tmp := mnnport[4..6];
-//               End;
-//               np := StrToInt(tmp);
-//               if np > 0 Then ioresult := ptt(@np, @msg, @ntx, @iptt);
-//               if ioresult = 1 Then dlog.fileDebug('PTT Port [' + mnnport + '] failed to key up.');
-//               if ioresult = 0 Then mnpttOpened := True else mnpttOpened := False;
-//          End
-//          Else
-//          Begin
-//               np := 0;
-//               if tryStrToInt(cfgvtwo.Form6.editUserDefinedPort1.Text,np) Then
-//               Begin
-//                    if np > 0 Then ioresult := ptt(@np, @msg, @ntx, @iptt);
-//                    if ioresult = 1 Then dlog.fileDebug('PTT Port [' + mnnport + '] failed to key up.');
-//                    if ioresult = 0 Then mnpttOpened := True else mnpttOpened := False;
-//               End
-//               Else
-//               Begin
-//                    mnpttOpened := False;
-//               End;
-//          End;
-//     End;
-//End;
-
-//procedure TForm1.lowerPTT();
-//var
-//   np, ntx, iptt, ioresult : CTypes.cint;
-//   msg                     : CTypes.cschar;
-//   tmp                     : String;
-//Begin
-//     ioresult := 0;
-//     msg := 0;
-//     np := 0;
-//     ntx := 0;
-//     iptt := 0;
-//     tmp := '';
-//     mnpttOpened := False;
-//     mnnport := '';
-//
-//     mnnport := UpperCase(cfgvtwo.Form6.editUserDefinedPort1.Text);
-//
-//     if mnnport = 'None' Then mnnport := '';
-//     if mnnport = 'NONE' Then mnnport := '';
-//
-//     if Length(mnnport) > 3 Then
-//     Begin
-//          if Length(mnnport) = 4 Then
-//          Begin
-//               // Length = 4 = COM#
-//               tmp := '';
-//               tmp := mnnport[4];
-//          End;
-//          if Length(mnnport) = 5 Then
-//          Begin
-//               // Length = 5 = COM##
-//               tmp := '';
-//               tmp := mnnport[4..5];
-//          End;
-//          If Length(mnnport) = 6 Then
-//          Begin
-//               // Length = 6 = COM###
-//               tmp := '';
-//               tmp := mnnport[4..6];
-//          End;
-//          np := StrToInt(tmp);
-//          if np > 0 Then ioresult := ptt(@np, @msg, @ntx, @iptt);
-//          if ioresult = 1 Then dlog.fileDebug('PTT Port [' + mnnport + '] failed to key down.');
-//          if ioresult = 0 Then mnpttOpened := True else mnpttOpened := False;
-//     End
-//     Else
-//     Begin
-//          np := 0;
-//          if tryStrToInt(cfgvtwo.Form6.editUserDefinedPort1.Text,np) Then
-//          Begin
-//               if np > 0 Then ioresult := ptt(@np, @msg, @ntx, @iptt);
-//               if ioresult = 1 Then dlog.fileDebug('PTT Port [' + mnnport + '] failed to key down.');
-//               if ioresult = 0 Then mnpttOpened := False;
-//          End;
-//     End;
-//End;
-
-//procedure TForm1.hrdRaisePTT();
-//begin
-//     if cfgvtwo.Form6.rbHRD4.Checked Then globalData.hrdVersion := 4;
-//     if cfgvtwo.Form6.rbHRD5.Checked Then globalData.hrdVersion := 5;
-//     mnpttOpened := False;
-//     if globalData.hrdcatControlcurrentRig.hrdAlive Then
-//     Begin
-//          mnpttOpened := catControl.writeHRD('[' + globalData.hrdcatControlcurrentRig.radioContext + '] set button-select ' + globalData.hrdcatControlcurrentRig.txControl + ' 1');
-//     end;
-//end;
-
-//procedure TForm1.hrdLowerPTT();
-//begin
-//     if cfgvtwo.Form6.rbHRD4.Checked Then globalData.hrdVersion := 4;
-//     if cfgvtwo.Form6.rbHRD5.Checked Then globalData.hrdVersion := 5;
-//     if globalData.hrdcatControlcurrentRig.hrdAlive Then
-//     Begin
-//          if catControl.writeHRD('[' + globalData.hrdcatControlcurrentRig.radioContext + '] set button-select ' + globalData.hrdcatControlcurrentRig.txControl + ' 0') then mnpttopened := False;
-//     end;
-//end;
 
 procedure TForm1.initDecode();
 Var
