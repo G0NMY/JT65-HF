@@ -51,7 +51,7 @@
         <PackageName Value="LCL"/>
       </Item3>
     </RequiredPackages>
-    <Units Count="34">
+    <Units Count="36">
       <Unit0>
         <Filename Value="jt65-hf.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -236,6 +236,16 @@
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="srgraph"/>
       </Unit33>
+      <Unit34>
+        <Filename Value="hrdinterface5.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="hrdinterface5"/>
+      </Unit34>
+      <Unit35>
+        <Filename Value="hrdobject.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="hrdobject"/>
+      </Unit35>
     </Units>
   </ProjectOptions>
   <CompilerOptions>

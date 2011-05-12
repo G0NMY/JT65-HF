@@ -49,6 +49,8 @@ type
         prddeTopic           : PChar;
         prddeItem            : PChar;
         prhszItem            : HSZ;
+        prddeData            : String;
+        prhszData            : HSZ;
         prdataBuff           : array[0..4095] of ctypes.cuint8;
         prddehConv           : HCONV;
         prddePContext        : CONVCONTEXT;
@@ -73,8 +75,11 @@ type
         // connect, read item, disconnect and cleanup.
         function  doDDERdTransaction() : String;
         // With the Service Name, Topic and Item create an instance then,
-        // connect, read item, disconnect and cleanup.
+        // connect, write item, disconnect and cleanup.
         procedure doDDEWrTransaction();
+        // With the Service Name, Topic and Item create an instance then,
+        // connect, write value to item, disconnect and cleanup.
+        procedure doDDEPokeTransaction();
         // Get last DDE transaction error code
         //function  getDDEError() : String;
         // Call validate to return an overall status of configuration object.
@@ -90,6 +95,8 @@ type
         property ddeItem      : String
            read  getDDEItem
            write setDDEItem;
+        property ddeData      : String
+           write prddeData;
         property ddeGetItem   : String
            read  doDDERdTransaction;
         property ddeResult    : String
@@ -274,6 +281,62 @@ end;
                         dlen := length(foo)+1;
 
                         prhszResult := windows.DdeClientTransaction(@bfoo[0],dlen,prddehConv,0,0,XTYP_EXECUTE,0,nil);
+                        if prhszResult > 0 then
+                        begin
+                             prddeError := 'No Error';
+                        end
+                        else
+                        begin
+                             prddeError := 'DDE Client Transaction Error:  ' + errorToStr(windows.DdeGetLastError(prddeInst));
+                        end;
+                        windows.DdeDisconnect(prddehConv);
+                        windows.DdeFreeStringHandle(prddeInst,prhszService);
+                        windows.DdeFreeStringHandle(prddeInst,prhszTopic);
+                   end;
+                   windows.DdeUninitialize(prddeInst);
+              end;
+         end
+         else
+         begin
+              prddeError := 'Initialize DDE Error:  ' + errorToStr(windows.DdeGetLastError(prddeInst));
+         end;
+    end;
+    // This pokes the value in prddeData to item in prddeItem
+    procedure TDDEConversation.doDDEPokeTransaction();
+    var
+         foo  : String;
+         bfoo : Array[0..2047] Of Byte;
+         dlen : DWORD;
+         i    : integer;
+    Begin
+         prddeInst := 0;
+         if windows.DdeInitialize(@prddeInst,prhszCallback,prddeMode,0) = 0 then
+         begin
+              prhszService := windows.DdeCreateStringHandle(prddeInst, prddeService, CP_WINANSI);
+              prhszTopic   := windows.DdeCreateStringHandle(prddeInst, prddeTopic, CP_WINANSI);
+              prhszItem    := windows.DdeCreateStringHandle(prddeInst, prddeItem, CP_WINANSI);
+              if (prhszService = 0) or (prhszTopic = 0) or (prhszItem = 0) then
+              begin
+                   prddeError := 'DDE String Alloc Error:  ' + errorToStr(windows.DdeGetLastError(prddeInst));
+              end
+              else
+              begin
+                   prddehConv := windows.DdeConnect(prddeInst, prhszService, prhszTopic, prddePContext);
+                   if prddehConv < 1 Then
+                   begin
+                        prddeError := 'Connect DDE Error:  ' + errorToStr(windows.DdeGetLastError(prddeInst));
+                   end
+                   else
+                   Begin
+                        // We're talking...
+                        foo := trimleft(trimright(prddeData));
+                        for i := 0 to 2047 do begin bfoo[i] := 0; end;
+                        for i := 1 to length(foo) do
+                        begin
+                             bfoo[i-1] := ord(foo[i]);
+                        end;
+                        dlen := length(foo)+1;
+                        prhszResult := windows.DdeClientTransaction(@bfoo[0],dlen,prddehConv,prhszItem,CF_TEXT,XTYP_POKE,0,nil);
                         if prhszResult > 0 then
                         begin
                              prddeError := 'No Error';

@@ -37,7 +37,7 @@ Type
       prRigType   : string;
       prRigName   : string;
       prRigOnline : Boolean;
-      prTXOn      : Boolean;
+      prPTT       : Boolean;
       prState     : string;
 
    public
@@ -47,6 +47,10 @@ Type
       procedure pollRig();
       // Call this to write properties to rig
       procedure setRig();
+      // Toggle PTT State
+      procedure togglePTT();
+      // Set QRG
+      procedure setQRG(qrg : Integer);
 
       property rxqrg : String
          read  prRXQRG
@@ -65,9 +69,8 @@ Type
          read  prState;
       property rigReady : Boolean
          read  prRigOnline;
-      property txOn : Boolean
-         read  prTXOn
-         write prTXOn;
+      property pttState : Boolean
+         read  prPTT;
 end;
 
 var
@@ -84,35 +87,66 @@ begin
      prRigName    := '';
      prState      := '';
      prRigOnline  := false;
-     prTXOn       := false;
+     prPTT        := false;
      dde1         := ddeobject.TDDEConversation.create();
 end;
 
 procedure THrdDdeRig.pollRig();
 begin
-     // DDE Object at long last completed.  Below is example of its use.  I've used it to
-     // (so far) interface with CI-V Commander and HRD.
+     // Set the Service and Topic
      dde1.ddeService := 'HRD_RADIO_000';
      dde1.ddeTopic   := 'HRD_CAT';
+     // Get QRG
      dde1.ddeItem    := 'HRD_HERTZ';
      prRXQRG := dde1.ddeGetItem;
-     dde1.ddeItem := 'HRD_HERTZ';
-     prTXQRG := dde1.ddeGetItem;
+     prTXQRG := prRXQRG;
+     // Get mode
      dde1.ddeItem := 'HRD_MODE';
      prMode := dde1.ddeGetItem;
-     //dde1.ddeItem := 'RadioState';
-     //prState := dde1.ddeGetItem;
+     // Get radio name
+     dde1.ddeItem := 'HRD_RADIO';
+     prRigType := dde1.ddeGetItem;
+     prRigName := prRigType;
+     // Unused with HRD
      prState := '';
-     //dde1.ddeItem := 'RadioModel';
-     //prRigType := dde1.ddeGetItem;
-     prRigType := '';
-     //dde1.ddeItem := 'RadioName';
-     //prRigName := dde1.ddeGetItem;
-     prRigName := '';
 end;
 
 procedure THrdDdeRig.setRig();
 begin
+end;
+
+procedure THrdDdeRig.setQRG(qrg : Integer);
+begin
+       dde1.ddeService := 'HRD_RADIO_000';
+       dde1.ddeTopic   := 'HRD_CAT';
+       dde1.ddeItem    := 'HRD_HERTZ';
+       dde1.ddeData    := intToStr(qrg);
+       dde1.doDDEPokeTransaction();
+       prRXQRG := intToStr(qrg);
+       prTXQRG := intToStr(qrg);
+end;
+
+procedure THrdDdeRig.togglePTT();
+begin
+     if prPTT then
+     begin
+       dde1.ddeService := 'HRD_RADIO_000';
+       dde1.ddeTopic   := 'HRD_CAT';
+       dde1.ddeItem    := 'HRD_TX';
+       dde1.ddeData    := 'Off';
+       dde1.doDDEPokeTransaction();
+       prPTT := False;
+     end
+     else
+     begin
+       dde1.ddeService := 'HRD_RADIO_000';
+       dde1.ddeTopic   := 'HRD_CAT';
+       dde1.ddeItem    := 'HRD_TX';
+       dde1.ddeData    := 'On';
+       dde1.doDDEPokeTransaction();
+       prPTT := True;
+     end;
+
 end;
 
 end.

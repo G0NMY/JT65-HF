@@ -1380,31 +1380,28 @@ var
      foo : String;
 begin
      Memo1.Clear;
-     // Set the rig control method [none, hrd, commander, omni, hamlib, si570]
-     if rbHRD.Checked then
+     // Set the rig control method [none, hrd, commander, omni ]
+     if rbHRD.Checked then rig1.rigcontroller       := 'hrd';
+     if rbOmni.Checked then rig1.rigcontroller      := 'omni';
+     if rbNoCAT.Checked then rig1.rigcontroller     := 'none';
+     if rbCommander.Checked then rig1.rigcontroller := 'commander';
+     if (rig1.rigcontroller = 'hrd') or (rig1.rigcontroller = 'omni') or (rig1.rigcontroller = 'none') or (rig1.rigcontroller = 'commander') then
      begin
-          rig1.rigcontroller := 'hrd';
-          rig1.pollRig();
-     end;
-
-     if rbCommander.Checked then
-     begin
-          rig1.rigcontroller := 'commander';
           rig1.pollRig();
           foo := 'QRG = ' + intToStr(rig1.qrg) + ' Hz, Set QRG = 28076000 Hz, ';
-          rig1.command := '000xcvrfreqmode<xcvrfreq:8>28076.00<xcvrmode:3>USB';
-          sleep(100);
+          rig1.setQRG(28076000);
+          sleep(500);
           rig1.pollRig();
-          foo := foo + 'QRG = ' + intToStr(rig1.qrg) + ' Hz'
+          foo := foo + 'QRG = ' + intToStr(rig1.qrg) + ' Hz';
+          foo := foo + sLineBreak + 'Rig = ' + rig1.rig;
+          if cbCatPtt.Checked then
+          begin
+               rig1.togglePTT();
+               sleep(1000);
+               rig1.togglePTT();
+          end;
+          Memo1.Text := foo;
      end;
-
-     if rbOmni.Checked then
-     begin
-          rig1.rigcontroller := 'omni';
-          rig1.pollRig();
-     end;
-
-     Memo1.Text := foo;
 end;
 
 initialization

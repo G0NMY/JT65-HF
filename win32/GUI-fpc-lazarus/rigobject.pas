@@ -26,7 +26,7 @@ unit rigobject ;
 interface
 
 uses
-  Classes , SysUtils, StrUtils, omnirigobject, civobject, ddehrdobject;
+  Classes , SysUtils, StrUtils, omnirigobject, civobject, hrdobject;
 
 type
   // This class encapsulates all the things related to rig control be it manual
@@ -43,57 +43,28 @@ type
   // upon the rig control method type.
   TRadio = Class
      private
-        // Features available
-        sthasAFGain   : Boolean;
-        sthasRFGain   : Boolean;
-        sthasMicGain  : Boolean;
-        sthasPAGain   : Boolean;
-        sthasPTT      : Boolean;
-        sthasSMeter   : Boolean;
-        sthasAutoTune : Boolean;
         // Control values
         stRig         : String;  // Rig's name
         stControl     : String;  // Rig's controller
         stQRG         : Integer; // Current frequency in Hz
-        stSMeter      : Integer; // Current S Meter value [0 ... 255]
-        stAUOut       : Integer; // Rig's volume control
-        stAUIn        : Integer; // Rig's input level control
-        stPALevel     : Integer; // Rig's PA level control
-        stRFGain      : Integer; // Rig's RF Gain setting
         stPTT         : Boolean; // Rig's PTT State
-        stCommand     : String;  // Command string to send
 
      public
         Constructor create();
-        // Set the rig control method [none, hrd, commander, omni, hamlib, si570]
+        // Set the rig control method [none, hrd, commander, omni]
         procedure setRigController(msg : String);
-        // Set the rig's QRG
         // Call validate to return an overall status of configuration object.
         // Anything critical that is incorrect will lead to a false result.
-        function  validate() : Boolean;
+        //function  validate() : Boolean;
         // Feed this a QRG (string) and it will return a value in hertz (integer)
         function  testQRG(qrg : String) : Integer;
         // Sets QRG, returns false if bad value input
         function  setQRG(qrg : Integer) : Boolean;
         // Once all is setup use pollRig to populate the properties.
         procedure pollRig();
-        // Passes a command to rig
-        procedure writeRig(msg : String);
+        // Toggle PTT
+        procedure togglePTT();
 
-        property hasAFGain : Boolean
-           read  sthasAFGain;
-        property hasRFGain : Boolean
-           read  sthasRFGain;
-        property hasMicGain : Boolean
-           read  sthasMicGain;
-        property hasPAGain : Boolean
-           read  sthasPAGain;
-        property hasPTT : Boolean
-           read  sthasPTT;
-        property hasSMeter : Boolean
-           read  sthasSMeter;
-        property hasAutoTune : Boolean
-           read  sthasAutoTune;
         property rig : String
            read  stRig;
         property rigcontroller : String
@@ -101,64 +72,28 @@ type
            write setRigController;
         property qrg : Integer
            read  stQRG;
-        property smeter : Integer
-           read stSMeter;
-        property volumeOut : Integer
-           read  stAUOut
-           write stAUOut;
-        property volumeIn : Integer
-           read  stAUIn
-           write stAUIn;
-        property rfoutput : Integer
-           read  stPALevel
-           write stPALevel;
-        property rfgain : Integer
-           read  stRFGain
-           write stRFGain;
         property pttstate : Boolean
            read  stPTT
            write stPTT;
-        property configurationValid : Boolean
-           read validate;
-        property command : String
-           write writeRig;
   end;
 
 var
    civ1   : civobject.TCIVCommander;
    omni1  : omnirigobject.TOmniRig;
-   dhrd1  : ddehrdobject.THrdDdeRig;
+   hrd1   : hrdobject.THrdRig;
 
 implementation
    constructor TRadio.Create();
    begin
-        sthasAFGain   := False;
-        sthasRFGain   := False;
-        sthasMicGain  := False;
-        sthasPAGain   := False;
-        sthasPTT      := False;
-        sthasSMeter   := False;
-        sthasAutoTune := False;
         // Control values
         stRig         := '';
         stControl     := 'none';
         stQRG         := 0;
-        stSMeter      := 0;
-        stAUOut       := 0;
-        stAUIn        := 0;
-        stPALevel     := 0;
-        stRFGain      := 0;
         stPTT         := False;
-        stCommand     := '';
         civ1          := civobject.TCIVCommander.create();
         omni1         := omnirigobject.TOmniRig.create();
-        dhrd1         := ddehrdobject.THrdDdeRig.create();
-        //si570         := si570object.TSi570Rig.create();
-   end;
+        hrd1          := hrdobject.THrdRig.create();
 
-   function TRadio.validate() : Boolean;
-   Begin
-        result := true;
    end;
 
    procedure TRadio.setRigController(msg : String);
@@ -166,21 +101,19 @@ implementation
         valid : Boolean;
    begin
         valid := False;
-        // Set the rig control method [none, hrd, commander, omni, hamlib, si570]
+        // Set the rig control method [none, hrd, commander, omni]
         if msg = 'none' then valid := True;
         if msg = 'hrd' then valid := True;
         if msg = 'commander' then valid := True;
         if msg = 'omni' then valid := True;
-        if msg = 'hamlib' then valid := True;
-        if msg = 'si570' then valid := True;
         if valid then stControl := msg else stControl := 'none';
    end;
 
    function TRadio.setQRG(qrg : Integer) : Boolean;
    var
-        foo   : String;
-        valid : Boolean;
-        vqrg  : Integer;
+        foo, foo1 : String;
+        valid     : Boolean;
+        vqrg      : Integer;
    begin
         foo := IntToStr(qrg);
         vqrg := testQRG(foo);
@@ -191,10 +124,37 @@ implementation
              begin
                   stQRG := qrg;
                   result := true;
-             end
-             else
+             end;
+             if stControl = 'commander' Then
              begin
-                  // Not manual so here we go with rig control
+                  stQRG := qrg;
+                  // Commander wants QRG in KHz as string
+                  foo1 := floatToStr(qrg/1000);
+                  foo := '000xcvrfreqmode<xcvrfreq:' + intToStr(length(foo1)) + '>' + foo1 + '<xcvrmode:3>USB';
+                  civ1.setRig(foo);
+                  result := true;
+             end;
+
+             if stControl = 'omni' Then
+             begin
+             end;
+
+             if stControl = 'hrd' Then
+             begin
+                  stQRG := qrg;
+                  // HRD wants QRG in Hz as string
+                  hrd1.setQRG(qrg);
+                  result := true;
+             end;
+
+             if stControl = 'hamlib' Then
+             begin
+                  // Not implemented (yet) do nothing
+             end;
+
+             if stControl = 'none' Then
+             begin
+                  stQRG := qrg;
                   result := true;
              end;
         end
@@ -329,36 +289,21 @@ implementation
              end;
              stQRG         := testQRG(foo2);
              stRig         := civ1.rigname;
-             stSMeter      := 0;
-             stAUOut       := 0;
-             stAUIn        := 0;
-             stPALevel     := 0;
-             stRFGain      := 0;
-             stPTT         := false;
+             stPTT         := civ1.txOn;
         end;
         if stControl = 'omni' Then
         begin
              omni1.pollRig();
              stRig         := omni1.rig1;
              stQRG         := testQRG(omni1.qrg1);
-             stSMeter      := 0;
-             stAUOut       := 0;
-             stAUIn        := 0;
-             stPALevel     := 0;
-             stRFGain      := 0;
-             stPTT         := False;
+             //stPTT         := False;
         end;
         if stControl = 'hrd' Then
         begin
-             dhrd1.pollRig();
-             stQRG         := testQRG(dhrd1.rxqrg);
-             stRig         := dhrd1.rigname;
-             stSMeter      := 0;
-             stAUOut       := 0;
-             stAUIn        := 0;
-             stPALevel     := 0;
-             stRFGain      := 0;
-             stPTT         := dhrd1.txOn;
+             hrd1.pollRig();
+             stQRG         := testQRG(hrd1.rxqrg);
+             stRig         := hrd1.rigname;
+             stPTT         := hrd1.pttState;
         end;
         if stControl = 'hamlib' Then
         begin
@@ -367,32 +312,50 @@ implementation
         if stControl = 'none' Then
         begin
              // Do nothing
+             stQRG         := 0;
+             stRig         := 'None';
+             stPTT         := false;
         end;
    end;
 
-   procedure TRadio.writeRig(msg : String);
-   begin
+   procedure TRadio.togglePTT();
+   Begin
+        // Toggles PTT State
         if stControl = 'commander' Then
         begin
-             civ1.command := '';
-             civ1.setRig(msg);
+             if stPTT then
+             begin
+                  civ1.setRig('000receive');
+                  stPTT := false;
+             end
+             else
+             begin
+                  civ1.setRig('000transmit');
+                  stPTT := true;
+             end;
+        end;
+
+        if stControl = 'hrd' Then
+        begin
+             if stPTT then
+             begin
+                  hrd1.togglePTT();
+                  stPTT := false;
+             end
+             else
+             begin
+                  hrd1.togglePTT();
+                  stPTT := true;
+             end;
         end;
 
         if stControl = 'omni' Then
         begin
         end;
 
-        if stControl = 'hrd' Then
-        begin
-        end;
-
         if stControl = 'hamlib' Then
         begin
              // Not implemented (yet) do nothing
-        end;
-
-        if stControl = 'si570' Then
-        begin
         end;
 
         if stControl = 'none' Then
@@ -400,5 +363,6 @@ implementation
              // Do nothing
         end;
    end;
+
 end.
 
