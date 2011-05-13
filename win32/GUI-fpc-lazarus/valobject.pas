@@ -6,7 +6,13 @@ interface
 
 uses
   Classes, SysUtils, StrUtils;
+
+Const
+     JT65delimiter = ['A'..'Z','0'..'9','+','-','.','/','?',' '];
+
 type
+  JT65Characters = Set Of Char;
+
   TValidator = Class
      private
         // Station callsign and grid
@@ -41,7 +47,8 @@ type
         //procedure setSuffix(msg : Integer);
         //procedure setRBInfo(msg : String);
         //procedure validate();
-        function asciiValidate(msg : String) : Boolean;
+        function asciiValidate(msg : Char; mode : String) : Boolean;
+        function testQRG(const qrg : String; var qrgk : Double; var qrghz : Integer) : Boolean;
 
      property callsign      : String
         read  prCall
@@ -599,33 +606,283 @@ implementation
         end;
    end;
 
-   function TValidator.asciiValidate(msg : String) : Boolean;
+   function TValidator.asciiValidate(msg : Char; mode : String) : Boolean;
+   Var
+        tstArray1 : Array[0..41] Of String;
+        tstArray2 : Array[0..35] Of String;
+        tstArray3 : Array[0..36] Of String;
+        tstArray4 : Array[0..11] Of String;
    begin
-        If (AnsiContainsText(msg,'/')) Or (AnsiContainsText(msg,'.')) Or
-           (AnsiContainsText(msg,'-')) Or (AnsiContainsText(msg,'\')) Or
-           (AnsiContainsText(msg,',')) Or (AnsiContainsText(msg,' ')) Or
-           (AnsiContainsText(msg,'Ø')) Then
-        Begin
-             result := False;
-             // Contains bad character
-             prCallError := 'May not contain the characters / . - \ , Ø or space.';
-        end
-        else
+        tstArray1[0] := 'A';
+        tstArray1[1] := 'B';
+        tstArray1[2] := 'C';
+        tstArray1[3] := 'D';
+        tstArray1[4] := 'E';
+        tstArray1[5] := 'F';
+        tstArray1[6] := 'G';
+        tstArray1[7] := 'H';
+        tstArray1[8] := 'I';
+        tstArray1[9] := 'J';
+        tstArray1[10] := 'K';
+        tstArray1[11] := 'L';
+        tstArray1[12] := 'M';
+        tstArray1[13] := 'N';
+        tstArray1[14] := 'O';
+        tstArray1[15] := 'P';
+        tstArray1[16] := 'Q';
+        tstArray1[17] := 'R';
+        tstArray1[18] := 'S';
+        tstArray1[19] := 'T';
+        tstArray1[20] := 'U';
+        tstArray1[21] := 'V';
+        tstArray1[22] := 'W';
+        tstArray1[23] := 'X';
+        tstArray1[24] := 'Y';
+        tstArray1[25] := 'Z';
+        tstArray1[26] := '0';
+        tstArray1[27] := '1';
+        tstArray1[28] := '2';
+        tstArray1[29] := '3';
+        tstArray1[30] := '4';
+        tstArray1[31] := '5';
+        tstArray1[32] := '6';
+        tstArray1[33] := '7';
+        tstArray1[34] := '8';
+        tstArray1[35] := '9';
+        tstArray1[36] := '+';
+        tstArray1[37] := '-';
+        tstArray1[38] := '.';
+        tstArray1[39] := '/';
+        tstArray1[40] := '?';
+        tstArray1[41] := ' ';
+
+        tstArray2[0] := 'A';
+        tstArray2[1] := 'B';
+        tstArray2[2] := 'C';
+        tstArray2[3] := 'D';
+        tstArray2[4] := 'E';
+        tstArray2[5] := 'F';
+        tstArray2[6] := 'G';
+        tstArray2[7] := 'H';
+        tstArray2[8] := 'I';
+        tstArray2[9] := 'J';
+        tstArray2[10] := 'K';
+        tstArray2[11] := 'L';
+        tstArray2[12] := 'M';
+        tstArray2[13] := 'N';
+        tstArray2[14] := 'O';
+        tstArray2[15] := 'P';
+        tstArray2[16] := 'Q';
+        tstArray2[17] := 'R';
+        tstArray2[18] := 'S';
+        tstArray2[19] := 'T';
+        tstArray2[20] := 'U';
+        tstArray2[21] := 'V';
+        tstArray2[22] := 'W';
+        tstArray2[23] := 'X';
+        tstArray2[24] := 'Y';
+        tstArray2[25] := 'Z';
+        tstArray2[26] := '0';
+        tstArray2[27] := '1';
+        tstArray2[28] := '2';
+        tstArray2[29] := '3';
+        tstArray2[30] := '4';
+        tstArray2[31] := '5';
+        tstArray2[32] := '6';
+        tstArray2[33] := '7';
+        tstArray2[34] := '8';
+        tstArray2[35] := '9';
+
+        tstArray3[0] := 'A';
+        tstArray3[1] := 'B';
+        tstArray3[2] := 'C';
+        tstArray3[3] := 'D';
+        tstArray3[4] := 'E';
+        tstArray3[5] := 'F';
+        tstArray3[6] := 'G';
+        tstArray3[7] := 'H';
+        tstArray3[8] := 'I';
+        tstArray3[9] := 'J';
+        tstArray3[10] := 'K';
+        tstArray3[11] := 'L';
+        tstArray3[12] := 'M';
+        tstArray3[13] := 'N';
+        tstArray3[14] := 'O';
+        tstArray3[15] := 'P';
+        tstArray3[16] := 'Q';
+        tstArray3[17] := 'R';
+        tstArray3[18] := 'S';
+        tstArray3[19] := 'T';
+        tstArray3[20] := 'U';
+        tstArray3[21] := 'V';
+        tstArray3[22] := 'W';
+        tstArray3[23] := 'X';
+        tstArray3[24] := 'Y';
+        tstArray3[25] := 'Z';
+        tstArray3[26] := '0';
+        tstArray3[27] := '1';
+        tstArray3[28] := '2';
+        tstArray3[29] := '3';
+        tstArray3[30] := '4';
+        tstArray3[31] := '5';
+        tstArray3[32] := '6';
+        tstArray3[33] := '7';
+        tstArray3[34] := '8';
+        tstArray3[35] := '9';
+        tstArray3[36] := '/';
+
+        tstArray4[0]  := '0';
+        tstArray4[1]  := '1';
+        tstArray4[2]  := '2';
+        tstArray4[3]  := '3';
+        tstArray4[4]  := '4';
+        tstArray4[5]  := '5';
+        tstArray4[6]  := '6';
+        tstArray4[7]  := '7';
+        tstArray4[8]  := '8';
+        tstArray4[9]  := '9';
+        tstArray4[10] := '.';
+        tstArray4[11] := ',';
+
+        if mode = 'csign' then
         begin
-             prCallError := '';
-             result := True;
+             If ansiIndexStr(msg,tstArray2)>-1 then result := true else result := false;
+        end;
+        if mode = 'gsign' then
+        begin
+             If ansiIndexStr(upcase(msg),tstArray2)>-1 then result := true else result := false;
+        end;
+        if mode = 'xcsign' then
+        begin
+             If ansiIndexStr(msg,tstArray3)>-1 then result := true else result := false;
+        end;
+        if mode = 'free' then
+        begin
+             If ansiIndexStr(msg,tstArray1)>-1 then result := true else result := false;
+        end;
+        if mode = 'numeric' then
+        begin
+             If ansiIndexStr(msg,tstArray4)>-1 then result := true else result := false;
         end;
    end;
 
-//   function TConfiguration.validate() : Boolean;
-   //Var
-   //     valid : Boolean;
-   //Begin
-   //     valid := True;
-   //     if length(stCallsign) > 0 then valid := True else valid := False;
-   //     if length(spCallsign) > 0 then valid := True else valid := False;
-   //     if length(stGrid) > 0 then valid := True else valid := False;
-   //     result := valid;
-   //end;
+   function TValidator.testQRG(const qrg : String; var qrgk : Double; var qrghz : Integer) : Boolean;
+   var
+        tstint   : Integer;
+        tstflt   : Double;
+   begin
+        // Takes QRG value as string in qrg if convertable returns qrg in KHz as float in qrgk
+        // qrg in Hz as integer in qrghz and true/fale if conversion works.
+        // Trying this one last time to streamline it.  According to the RTL docs tryStrToFloat
+        // takes into consideration the locale specific decimal seperator.
+        // "Description:  TryStrToFloat tries to convert the string S to a floating point value, and stores
+        //                the result in Value. It returns True if the operation was succesful, and False if
+        //                it failed. This operation takes into account the system settings for floating point
+        //                representations."
+        tstflt := 0.0;
+        if not tryStrToFloat(qrg,tstflt) then tstflt := 0.0;
+        if tstflt > 0 then
+        begin
+             // I now have a float > 0 so lets see if it can be evaluated as being in Hz, KHz or MHz
+             // QRG Range of interest for MHz is 1.8 ... 450 (I'll say 500 MHz)
+             // QRG Range of interest for KHz is 1800 ... 500000
+             // QRG Range of interest for Hz is 1800000 ... 500000000
+             tstint := 0;
+             if tstflt < 1800.0 then
+             begin
+                  // Probably MHz
+                  tstint := trunc(tstflt * 1000000);
+             end;
+             if (tstflt > 500) and (tstflt < 1800000) then
+             begin
+                  // Probably KHz
+                  tstint := trunc(tstflt * 1000);
+             end;
+             if tstflt > 500000 then
+             begin
+                  // Probably Hz
+                  tstint := trunc(tstflt);
+             end;
+             if tstint > 0 then
+             begin
+                  // I think I have something in Hz now
+                  if (tstint > 1799999) and (tstint < 500000001) then
+                  begin
+                       qrgk   := tstint/1000;
+                       qrghz  := tstint;
+                       result := true;
+                  end
+                  else
+                  begin
+                       qrgk   := 0.0;
+                       qrghz  := 0;
+                       result := false;
+                  end;
+             end;
+        end;
+        //// Test for , in value and replace with .
+        //foo := trimleft(trimright(qrg));
+        //j := length(foo);
+        //for i := 1 to j do
+        //begin
+        //     if foo[i] = ',' then foo[i] := '.';
+        //end;
+        //// Test for non-numerics
+        //valid := true;
+        //for i := 1 to j do
+        //begin
+        //     if valid then
+        //     begin
+        //          case foo[i] of '0'..'9': valid := True else valid := False; end;
+        //          if not valid then
+        //          begin
+        //               case foo[i] of '.': valid := True else valid := False; end;
+        //          end;
+        //     end;
+        //end;
+        //if valid then
+        //begin
+        //     tstint := 0;
+        //     tstflt := 0.0;
+        //     // Now it's time to attempt a conversion of what I've been given
+        //     // to hertz.  I may get Hz, KHz or MHz input.
+        //     // Test to see if it's an integer or float first.
+        //     If not AnsiContainsText(foo,'.') then
+        //     begin
+        //          // It's an integer
+        //          If TryStrToInt(qrg, tstint) Then tstflt := tstint * 1.0 else tstflt := 0.0;
+        //     end
+        //     else
+        //     begin
+        //          // It's a floater
+        //          If TryStrToFloat(qrg,tstflt) Then tstflt := tstflt * 1.0 else tstflt := 0.0;
+        //     end;
+        //     // tstflt now contains a floating point value of the submitted string
+        //     // parse it and convert to Hz
+        //     // Ranges:
+        //     // 1.8 ... 450 MHz
+        //     // 1800 ... 450000 KHz
+        //     // 1,800,000 ... 450,000,000 Hz
+        //     If tstflt < 1800 then
+        //     begin
+        //          // Seems to be MHz
+        //          result := trunc(tstflt * 1000000);
+        //     end;
+        //     if (tstflt > 1799.9) and (tstflt < 450000.1) then
+        //     begin
+        //          // Seems to be KHz
+        //          result := trunc(tstflt * 1000);
+        //     end;
+        //     if (tstflt > 1799999.0) and (tstflt < 450000000.1) then
+        //     begin
+        //          // Seems to be Hz
+        //          result := trunc(tstflt);
+        //     end;
+        //end
+        //else
+        //begin
+        //     result := 0;
+        //end;
+   end;
 
 end.

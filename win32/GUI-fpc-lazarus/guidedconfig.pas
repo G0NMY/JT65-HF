@@ -7,13 +7,16 @@ interface
 uses
   Classes, SysUtils, FileUtil, LResources, Forms, Controls, Graphics,
   Dialogs, StdCtrls, ExtCtrls, ComCtrls, ColorBox, Spin, valobject,
-  rigobject, paobject, CTypes, srgraph;
+  rigobject, paobject, CTypes, srgraph, serialobject;
 
 type
+  tmacrolist = array of String;
+  tqrglist   = array of integer;
 
   { TForm7 }
 
   TForm7 = class(TForm )
+    buttonContinue8 : TButton ;
     buttonTestCAT : TButton ;
     buttonTestSerialPTT : TButton ;
     buttonTestSound : TButton ;
@@ -23,7 +26,7 @@ type
     buttonContinue5 : TButton ;
     buttonContinue6 : TButton ;
     buttonContinue7 : TButton ;
-    buttonContinue8 : TButton ;
+    buttonContinue9 : TButton ;
     buttonEnableSuffixPrefix : TButton ;
     buttonContinue1 : TButton ;
     buttonContinue0 : TButton ;
@@ -44,8 +47,8 @@ type
     CheckBox21 : TCheckBox ;
     cbNoSpotting : TCheckBox ;
     cbForceMonoIO : TCheckBox ;
-    CheckBox4 : TCheckBox ;
-    CheckBox5 : TCheckBox ;
+    cbRBEnable : TCheckBox ;
+    cbPSKREnable : TCheckBox ;
     cbDisableColorCoding : TCheckBox ;
     CheckBox7 : TCheckBox ;
     CheckBox8 : TCheckBox ;
@@ -59,9 +62,13 @@ type
     comboSuffix : TComboBox ;
     cqtext : TLabel ;
     cqtext1 : TLabel ;
+    Label35 : TLabel ;
+    Label44 : TLabel ;
+    Label45 : TLabel ;
+    Label46 : TLabel ;
     rbcall : TEdit ;
     edRBCallsign : TEdit ;
-    Edit2 : TEdit ;
+    edRBInfo : TEdit ;
     editMacro1 : TEdit ;
     editMacro10 : TEdit ;
     editMacro11 : TEdit ;
@@ -180,6 +187,7 @@ type
     Colors : TTabSheet ;
     Advanced : TTabSheet ;
     Review : TTabSheet ;
+    AutoQSY : TTabSheet ;
     Timer1 : TTimer ;
     tometext : TLabel ;
     tometext1 : TLabel ;
@@ -192,6 +200,7 @@ type
     procedure buttonContinue6Click (Sender : TObject );
     procedure buttonContinue7Click (Sender : TObject );
     procedure buttonContinue8Click (Sender : TObject );
+    procedure buttonContinue9Click (Sender : TObject );
     procedure buttonEnableSuffixPrefixClick (Sender : TObject );
     procedure buttonTestCATClick (Sender : TObject );
     procedure buttonTestSerialPTTClick (Sender : TObject );
@@ -199,6 +208,7 @@ type
     procedure cbDisableColorCodingChange (Sender : TObject );
     procedure cbForceMonoIOChange (Sender : TObject );
     procedure cbNoSpottingChange (Sender : TObject );
+    procedure cbRBEnableChange (Sender : TObject );
     procedure colorBoxCQChange (Sender : TObject );
     procedure colorBoxMineChange (Sender : TObject );
     procedure colorBoxQSOChange (Sender : TObject );
@@ -206,6 +216,8 @@ type
     procedure comboSoundInChange (Sender : TObject );
     procedure comboSoundOutChange (Sender : TObject );
     procedure comboSuffixChange (Sender : TObject );
+    procedure editMacro1Change (Sender : TObject );
+    procedure editQRG1Change (Sender : TObject );
     procedure edPTTPortChange (Sender : TObject );
     procedure edStationCallsignChange (Sender : TObject );
     procedure rbPTTCatChange (Sender : TObject );
@@ -226,15 +238,15 @@ type
 
   TSettings = Class
     private
-      // Tab 1 Values
+      // Tab 1 Values Callsign/Grid
       prCallsign     : String;
       prCWCallsign   : String;
       prRBCallsign   : String;
       prGrid         : String;
-      // Tab 2 Values
+      // Tab 2 Values Callsign Suffix/Prefix
       prPrefix       : Integer;  // Index of selected prefix
       prSuffix       : Integer;  // Index of selected suffix
-      // Tab 3 Values
+      // Tab 3 Values Sound Device
       prSoundInN     : Integer;  // Sound input device index (pa device id)
       prSoundOutN    : Integer;  // Sound output device index (pa device id)
       prSoundInS     : String;   // Sound input device name
@@ -245,13 +257,31 @@ type
       prSoundMonoRX  : Boolean;  // ADC must be in mono mode?
       prSoundMonoTX  : Boolean;  // DAC must be in mono mode?
       prForceMono    : Boolean;  // User selected force mono i/o?
-      // Tab 4 Values
+      // Tab 4 Values PTT And Rig Control
       prPTTMethod    : String;
       prCATMethod    : String;
       prPTTPort      : String;
       prAltPTT       : Boolean;
       prPTTLines     : String;
       prPTTTested    : Boolean;
+      // Tab 5 Values Spotting Network
+      prNoSpot       : Boolean;
+      prRB           : Boolean;
+      prPSKR         : Boolean;
+      prRBInfo       : String;
+      // Tab 6 Values Macros
+      prMacros       : tmacrolist;
+      prQRGs         : tqrglist;
+      // Tab 7 Values Colors
+      prCQColor      : TColor;
+      prQSOColor     : TColor;
+      prMyColor      : TColor;
+      prNoColor      : Boolean;
+      // Tab 8 Values Advanced Settings
+
+      // Tab 9 Values Auto QSY
+
+      // Tab 10 Value Review
 
     public
       Constructor create();
@@ -331,13 +361,17 @@ var
   rig1  : rigobject.TRadio;
   cfg   : guidedconfig.TSettings;
   dsp   : paobject.TpaDSP;
+  ser   : serialobject.TSerial;
   fail  : Boolean;
   going : Boolean;
+
 
 implementation
 
 { TForm7 }
 constructor TSettings.Create();
+var
+  i : integer;
 begin
      // Tab 1 Values
       prCallsign   := '';
@@ -364,6 +398,30 @@ begin
       prAltPTT     := False;
       prPTTLines   := '';
       prPTTTested  := False;
+      // Tab 5 Values Spotting Network
+      prNoSpot     := False;
+      prRB         := False;
+      prPSKR       := False;
+      prRBInfo     := '';
+      // Tab 6 Values Macros
+      setLength(prMacros,64);
+      setLength(prQRGs,64);
+      for i := 0 to 63 do
+      begin
+           prMacros[i] := '';
+           prQRGs[i] := 0;
+      end;
+      // Tab 7 Values Colors
+      prCQColor      := clLime;
+      prQSOColor     := clSilver;
+      prMyColor      := clRed;
+      prNoColor      := False;
+      // Tab 8 Values Advanced Settings
+
+      // Tab 9 Values Auto QSY
+
+      // Tab 10 Value Review
+
 end;
 
 function  TSettings.validateSound() : Boolean;
@@ -499,6 +557,7 @@ var
    foo   : String;
    i,j,k : integer;
 begin
+     // Called from Callsign/Grid Tab
      // Set values for suffix, prefix, cwcall and rbcall
      cfg.prefix := comboPrefix.ItemIndex;
      cfg.suffix := comboSuffix.ItemIndex;
@@ -555,16 +614,18 @@ end;
 
 procedure TForm7.buttonContinue2Click(Sender : TObject);
 begin
+     // Called from Callsign Suffix/Prefix Tab
      // Configure sound device and continue on to tab 3 (PTT/Rig Control)
+     Label44.Caption := ser.serialList;
      if cfg.callsign = 'SWL' Then
      begin
           // Stations using SWL as callsign do not need PTT :)
           RadioGroup1.Enabled := False;
-          GroupBox1.Enabled := False;
-          cbCATPTT.Enabled := False;
-          cbCATPTT.Visible := False;
-          cfg.PTTMethod := 'DISABLED';
-          cfg.AltPTT    := false;
+          GroupBox1.Enabled   := False;
+          cbCATPTT.Enabled    := False;
+          cbCATPTT.Visible    := False;
+          cfg.PTTMethod       := 'DISABLED';
+          cfg.AltPTT          := false;
      end
      else
      begin
@@ -581,6 +642,7 @@ end;
 
 procedure TForm7.buttonContinue3Click(Sender : TObject);
 begin
+     // Called from Callsign PTT and Rig Control Tab
      // Save PTT/CAT Settings
      if rbPTTVox.Checked then cfg.PTTMethod := 'VOX';
      if rbPTTCom.Checked then cfg.PTTMethod := 'COM';
@@ -594,37 +656,103 @@ begin
      if rbCommander.Checked then cfg.CATMethod :='COMMANDER';
      if rbOmni.Checked then cfg.CATMethod := 'OMNI';
      if rbNoCAT.Checked then cfg.CATMethod := 'NONE';
-
+     cfg.PTTPort := edPTTPort.Text;
      PageControl1.Pages[4].TabVisible := true;
      PageControl1.ActivePageIndex := 4;
 end;
 
 procedure TForm7.buttonContinue4Click(Sender : TObject);
 begin
+     // Called from Spotting Networks Tab
+     // Save spotting network settings and move on to Macros
+     if cbNoSpotting.Checked Then cfg.prNoSpot := True else cfg.prNoSpot := False;
+     if cbRBEnable.Checked Then cfg.prRB := True else cfg.prRB := False;
+     if cbPSKREnable.Checked Then cfg.prPSKR := True else cfg.prPSKR := False;
+     cfg.prRBInfo := edRBInfo.Text;
      PageControl1.Pages[5].TabVisible := true;
      PageControl1.ActivePageIndex := 5;
 end;
 
 procedure TForm7.buttonContinue5Click(Sender : TObject);
+var
+   tstflt : Double;
 begin
+     // Called from Macros Tab
+     // Now... can I learn to iterate the controls via code or do I have to do this by 'hand'
+
+     cfg.prMacros[0] :=  trimleft(trimright(upcase(editMacro1.Text)));
+     cfg.prMacros[1] :=  trimleft(trimright(upcase(editMacro2.Text)));
+     cfg.prMacros[2] :=  trimleft(trimright(upcase(editMacro3.Text)));
+     cfg.prMacros[3] :=  trimleft(trimright(upcase(editMacro4.Text)));
+     cfg.prMacros[4] :=  trimleft(trimright(upcase(editMacro5.Text)));
+     cfg.prMacros[5] :=  trimleft(trimright(upcase(editMacro6.Text)));
+     cfg.prMacros[6] :=  trimleft(trimright(upcase(editMacro7.Text)));
+     cfg.prMacros[7] :=  trimleft(trimright(upcase(editMacro8.Text)));
+     cfg.prMacros[8] :=  trimleft(trimright(upcase(editMacro9.Text)));
+     cfg.prMacros[9] :=  trimleft(trimright(upcase(editMacro10.Text)));
+     cfg.prMacros[10] := trimleft(trimright(upcase(editMacro11.Text)));
+     cfg.prMacros[11] := trimleft(trimright(upcase(editMacro12.Text)));
+     cfg.prMacros[12] := trimleft(trimright(upcase(editMacro13.Text)));
+     cfg.prMacros[13] := trimleft(trimright(upcase(editMacro14.Text)));
+     cfg.prMacros[14] := trimleft(trimright(upcase(editMacro15.Text)));
+     cfg.prMacros[15] := trimleft(trimright(upcase(editMacro16.Text)));
+     cfg.prMacros[16] := trimleft(trimright(upcase(editMacro17.Text)));
+     cfg.prMacros[17] := trimleft(trimright(upcase(editMacro18.Text)));
+     cfg.prMacros[18] := trimleft(trimright(upcase(editMacro19.Text)));
+     cfg.prMacros[19] := trimleft(trimright(upcase(editMacro20.Text)));
+     cfg.prMacros[20] := trimleft(trimright(upcase(editMacro21.Text)));
+     cfg.prMacros[21] := trimleft(trimright(upcase(editMacro22.Text)));
+     cfg.prMacros[22] := trimleft(trimright(upcase(editMacro23.Text)));
+     cfg.prMacros[23] := trimleft(trimright(upcase(editMacro24.Text)));
+     //
+     // TValidator.testQRG(const qrg : String; var qrgk : Double; var qrghz : Integer) : Boolean;
+     //
+     tstflt := 0.0;
+     val1.testQRG(editQRG1.Text,tstflt,cfg.prQRGs[0]);
+     val1.testQRG(editQRG2.Text,tstflt,cfg.prQRGs[1]);
+     val1.testQRG(editQRG3.Text,tstflt,cfg.prQRGs[2]);
+     val1.testQRG(editQRG4.Text,tstflt,cfg.prQRGs[3]);
+     val1.testQRG(editQRG5.Text,tstflt,cfg.prQRGs[4]);
+     val1.testQRG(editQRG6.Text,tstflt,cfg.prQRGs[5]);
+     val1.testQRG(editQRG7.Text,tstflt,cfg.prQRGs[6]);
+     val1.testQRG(editQRG8.Text,tstflt,cfg.prQRGs[7]);
+     val1.testQRG(editQRG9.Text,tstflt,cfg.prQRGs[8]);
+     val1.testQRG(editQRG10.Text,tstflt,cfg.prQRGs[9]);
+     val1.testQRG(editQRG11.Text,tstflt,cfg.prQRGs[10]);
+     val1.testQRG(editQRG12.Text,tstflt,cfg.prQRGs[11]);
+     val1.testQRG(editQRG13.Text,tstflt,cfg.prQRGs[12]);
+     val1.testQRG(editQRG14.Text,tstflt,cfg.prQRGs[13]);
+     val1.testQRG(editQRG15.Text,tstflt,cfg.prQRGs[14]);
+     val1.testQRG(editQRG16.Text,tstflt,cfg.prQRGs[15]);
      PageControl1.Pages[6].TabVisible := true;
      PageControl1.ActivePageIndex := 6;
 end;
 
 procedure TForm7.buttonContinue6Click(Sender : TObject);
 begin
+     // Called from Colors Tab
      PageControl1.Pages[7].TabVisible := true;
      PageControl1.ActivePageIndex := 7;
 end;
 
 procedure TForm7.buttonContinue7Click(Sender : TObject);
 begin
+     // Called from Advanced Tab
      PageControl1.Pages[8].TabVisible := true;
      PageControl1.ActivePageIndex := 8;
 end;
 
 procedure TForm7.buttonContinue8Click(Sender : TObject);
 begin
+     // Called from Auto QSY Tab
+     PageControl1.Pages[9].TabVisible := true;
+     PageControl1.ActivePageIndex := 9;
+end;
+
+procedure TForm7.buttonContinue9Click(Sender : TObject);
+begin
+     // Called from Review Tab
+
      // Configuration complete and user has theoretically reviewed and
      // approved the configuration.  All done, hide window and back to
      // main program loop.
@@ -676,7 +804,12 @@ end;
 
 procedure TForm7.buttonTestSerialPTTClick(Sender : TObject);
 begin
-     // Need to write PTT Object before I can get to this
+     ser.port := trimleft(trimright(upcase(edPTTPort.Text)));
+     ser.ptt  := false;
+     ser.togglePTT();
+     sleep(1000);
+     ser.togglePTT();
+     cfg.pttTested := true;
 end;
 
 procedure TForm7.comboSoundInChange(Sender : TObject);
@@ -778,6 +911,81 @@ begin
      end;
 end;
 
+procedure TForm7.edStationCallsignChange(Sender : TObject);
+var
+   i     : integer;
+   valid : Boolean;
+   foo   : String;
+begin
+     // Universal routine to handle validation of fields edStationCallsign, edCWCallsign and edRBCallsign
+     valid := True;
+     foo := TEdit(sender).Text;
+     for i := 1 to length(foo) do
+     begin
+          if Sender = edStationCallSign then
+          begin
+               if not val1.asciiValidate(Char(foo[i]),'csign') then valid := false;
+               if not val1.asciiValidate(Char(foo[i]),'csign') then foo[i] := ' ';
+          end;
+          if Sender = edStationGrid then
+          begin
+               if not val1.asciiValidate(Char(foo[i]),'gsign') then valid := false;
+               if not val1.asciiValidate(Char(foo[i]),'gsign') then foo[i] := ' ';
+          end;
+          if (Sender = edCWCallsign) or (Sender = edRBCallsign) then
+          begin
+               if not val1.asciiValidate(Char(foo[i]),'xcsign') then valid := false;
+               if not val1.asciiValidate(Char(foo[i]),'xcsign') then foo[i] := ' ';
+          end;
+     end;
+     foo := trimleft(trimright(foo));
+     if not valid then TEdit(sender).Text := foo;
+     if not valid then TEdit(sender).SelStart := length(TEdit(sender).Text);
+     if Sender = edStationCallSign then
+     begin
+          edCWCallsign.Text := edStationCallsign.Text;
+          edRBCallsign.Text := edStationCallsign.Text;
+     end;
+end;
+
+procedure TForm7.editMacro1Change(Sender : TObject);
+var
+   i     : integer;
+   valid : Boolean;
+   foo   : String;
+begin
+     // Universal routine to handle validation of macro definition fields
+     valid := True;
+     foo := TEdit(sender).Text;
+     for i := 1 to length(foo) do
+     begin
+          if not val1.asciiValidate(Char(foo[i]),'free') then valid := false;
+          if not val1.asciiValidate(Char(foo[i]),'free') then foo[i] := ' ';
+     end;
+     foo := trimleft(trimright(foo));
+     if not valid then TEdit(sender).Text := foo;
+     if not valid then TEdit(sender).SelStart := length(TEdit(sender).Text);
+end;
+
+procedure TForm7.editQRG1Change(Sender : TObject);
+var
+   i     : integer;
+   valid : Boolean;
+   foo   : String;
+begin
+     // Universal routine to handle validation of QRG definition fields
+     valid := True;
+     foo := TEdit(sender).Text;
+     for i := 1 to length(foo) do
+     begin
+          if not val1.asciiValidate(Char(foo[i]),'numeric') then valid := false;
+          if not val1.asciiValidate(Char(foo[i]),'numeric') then foo[i] := ' ';
+     end;
+     foo := trimleft(trimright(foo));
+     if not valid then TEdit(sender).Text := foo;
+     if not valid then TEdit(sender).SelStart := length(TEdit(sender).Text);
+end;
+
 procedure TForm7.comboPrefixChange(Sender : TObject);
 begin
      // A prefix has been selectected.  Insure that suffix is set to -1
@@ -816,27 +1024,6 @@ end;
 procedure TForm7.edPTTPortChange(Sender : TObject);
 begin
      if edPTTPort.Text = 'COMXXX' then buttonTestSerialPTT.Enabled := false else buttonTestSerialPTT.Enabled := true;
-end;
-
-procedure TForm7.edStationCallsignChange(Sender : TObject);
-var
-   i : integer;
-   s : string;
-begin
-     if val1.asciiValidate(edStationCallsign.Text) Then
-     Begin
-          edCWCallsign.Text := edStationCallsign.Text;
-          edRBCallsign.Text := edStationCallsign.Text;
-     end
-     else
-     begin
-          i := length(edStationCallsign.Text);
-          dec(i);
-          s := edStationCallsign.Text[1..i];
-          edStationCallsign.Text := s;
-          edCWCallsign.Text := edStationCallsign.Text;
-          edRBCallsign.Text := edStationCallsign.Text;
-     end;
 end;
 
 procedure TForm7.rbPTTCatChange(Sender : TObject);
@@ -1357,6 +1544,21 @@ begin
      if cbNoSpotting.Checked then GroupBox3.Enabled := false else GroupBox3.Enabled :=true;
 end;
 
+procedure TForm7.cbRBEnableChange(Sender : TObject);
+begin
+     if cbRBEnable.Checked or cbPSKREnable.Checked Then
+     Begin
+          Label45.Caption := 'Notice:  When RB or PSK Reporter spotting is enabled you will need an active Internet connection' + sLineBreak +
+                             'while the program is running.  Also, please make your best effort to maintain an accurate QRG' + sLineBreak +
+                             'value either manually or via rig control software.';
+
+     end
+     else
+     begin
+          Label45.Caption := '';
+     end;
+end;
+
 procedure TForm7.colorBoxCQChange(Sender : TObject);
 begin
      cqtext.Color := colorBoxCQ.Colors[colorBoxCQ.ItemIndex];
@@ -1411,5 +1613,6 @@ initialization
   rig1  := rigobject.TRadio.create();
   cfg   := guidedconfig.TSettings.create();
   dsp   := paobject.TpaDSP.create();
+  ser   := serialobject.TSerial.create();
 end.
 

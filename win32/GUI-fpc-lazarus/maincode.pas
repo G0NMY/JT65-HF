@@ -33,8 +33,8 @@ uses
   PSKReporter, Menus, rbc, log, diagout, synautil,
   waterfall, d65, spectrum, about, fileutil, cfgobject, guidedconfig, rigobject;//,valobject;
 
-Const
-  JT_DLL = 'jt65.dll';
+//Const
+//  JT_DLL = 'jt65.dll';
 
 type
   { TForm1 }
@@ -242,10 +242,6 @@ type
     procedure initializerCode();
     procedure audioChange();
     procedure processOngoing();
-    //procedure raisePTT();
-    //procedure lowerPTT();
-    //procedure altRaisePTT();
-    //procedure altLowerPTT();
     procedure initDecode();
     procedure updateSR();
     procedure genTX1();
@@ -270,8 +266,6 @@ type
     procedure WaterfallMouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
     procedure addToDisplayTX(exchange : String);
     procedure saveCSV();
-    //procedure si570Raiseptt();
-    //procedure si570Lowerptt();
     function valConfig() : boolean;
 
   private
@@ -405,8 +399,6 @@ begin
      FreeOnTerminate := True;
      inherited Create(CreateSuspended);
 end;
-
-function ptt(nport : Pointer; msg : Pointer; ntx : Pointer; iptt : Pointer) : CTypes.cint; cdecl; external JT_DLL name 'ptt_';
 
 procedure TForm1.DisableFloatingPointExceptions();
 begin

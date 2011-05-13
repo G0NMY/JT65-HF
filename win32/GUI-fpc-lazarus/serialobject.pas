@@ -5,7 +5,10 @@ unit serialobject;
 interface
 
 uses
-  Classes, SysUtils, synaser;
+  Classes, SysUtils, synaser, CTypes;
+
+Const
+  JT_DLL = 'jt65.dll';
 
 Type
     // Encapsulates all the possible serial port PTT routines/methods/variants
@@ -23,8 +26,13 @@ Type
               // If string is DTR then PTT toggles DTR but RTS is always on
               prPortString  : String;  // Port as string as in COM1 or COM31 or COM192
               prPortNumeral : Integer; // Port as integer as in 1 or 31 or 192
+              prpttSerial   : TBlockSerial;
+              prpttOpened   : Boolean;
 
               function  portValid() : Boolean;
+              function  portList() : String;
+              procedure altPTT(stat : Boolean);
+              procedure regPTT(stat : Boolean);
 
        public
              Constructor create();
@@ -42,9 +50,11 @@ Type
              property ptt : Boolean
                 read  prPTT
                 write prPTT;
+             property serialList : String
+                read  portList;
        end;
-var
-   mnpttSerial : TBlockSerial;
+
+       function  jtptt(nport : Pointer; msg : Pointer; ntx : Pointer; iptt : Pointer) : CTypes.cint; cdecl; external JT_DLL name 'ptt_';
 
 implementation
 
@@ -55,6 +65,11 @@ Begin
       prAlternate   := false;
       prPTT         := false;
 End;
+
+function TSerial.portList() : String;
+Begin
+     result := synaser.GetSerialPortNames;
+end;
 
 function TSerial.portValid() : Boolean;
 var
@@ -193,194 +208,79 @@ end;
 
 procedure TSerial.togglePTT();
 begin
-      if prAlternate then
+      if portValid then
       begin
-           // Working with alternate PTT routines (synaser)
-      end
-      else
-      begin
-           // Working with WSJT (libWSJT) routines
+           if prAlternate then
+           begin
+                if prPTT then altPTT(false) else altPTT(true);
+           end
+           else
+           begin
+                if prPTT then regPTT(false) else regPTT(true);
+           end;
       end;
 end;
-//procedure TForm1.altRaisePTT();
-//var
-//   np : Integer;
-//Begin
-//     mnpttOpened := False;
-//     if not mnpttOpened Then
-//     Begin
-//          mnnport := '';
-//          mnnport := cfgvtwo.Form6.editUserDefinedPort1.Text;
-//          if mnnport = 'None' Then mnnport := '';
-//          if mnnport = 'NONE' Then mnnport := '';
-//          if Length(mnnport) > 3 Then
-//          Begin
-//               try
-//                  mnpttSerial := TBlockSerial.Create;
-//                  mnpttSerial.RaiseExcept := True;
-//                  mnpttSerial.Connect(mnnport);
-//                  mnpttSerial.Config(9600,8,'N',0,false,true);
-//                  mnpttOpened := True;
-//               except
-//                  dlog.fileDebug('PTT Port [' + mnnport + '] failed to key up.');
-//               end;
-//          End
-//          Else
-//          Begin
-//               np := 0;
-//               if tryStrToInt(cfgvtwo.Form6.editUserDefinedPort1.Text,np) Then
-//               Begin
-//                    Try
-//                       mnpttSerial := TBlockSerial.Create;
-//                       mnpttSerial.RaiseExcept := True;
-//                       mnpttSerial.Connect('COM' + IntToStr(np));
-//                       mnpttSerial.Config(9600,8,'N',0,false,true);
-//                       mnpttOpened := True;
-//                    Except
-//                       dlog.fileDebug('PTT Port [COM' + IntToStr(np) + '] failed to key up.');
-//                    End;
-//               End
-//               Else
-//               Begin
-//                    mnpttOpened := False;
-//               End;
-//          End;
-//     End;
-//End;
 
-//procedure TForm1.altLowerPTT();
-//Begin
-//     if mnpttOpened Then
-//     Begin
-//          mnpttOpened := False;
-//          mnpttSerial.Free;
-//     End
-//     Else
-//     Begin
-//          mnpttOpened := False;
-//     End;
-//End;
+procedure TSerial.altPTT(stat : Boolean);
+begin
+     if stat then
+     begin
+          // Working with alternate PTT routines (synaser)
+          // prPort holds a validated string value for com port to open
+          if Length(prPortString) > 3 Then
+          Begin
+               try
+                  prpttSerial := TBlockSerial.Create;
+                  prpttSerial.RaiseExcept := True;
+                  prpttSerial.Connect(prPortString);
+                  prpttSerial.Config(9600,8,'N',0,false,true);
+                  prpttOpened := True;
+               except
+                  //dlog.fileDebug('PTT Port [' + mnnport + '] failed to key up.');
+               end;
+               prPTT := True;
+          end;
+     end
+     else
+     begin
+          if prpttOpened Then
+          Begin
+               prpttOpened := False;
+               prpttSerial.Free;
+          End;
+          prPTT := False;
+     end;
+end;
 
-//procedure TForm1.raisePTT();
-//var
-//   np, ntx, iptt, ioresult : CTypes.cint;
-//   msg                     : CTypes.cschar;
-//   tmp                     : String;
-//Begin
-//     ioresult := 0;
-//     msg := 0;
-//     np := 0;
-//     ntx := 1;
-//     iptt := 0;
-//     tmp := '';
-//     mnpttOpened := False;
-//     if not mnpttOpened Then
-//     Begin
-//          mnnport := '';
-//
-//          mnnport := UpperCase(cfgvtwo.Form6.editUserDefinedPort1.Text);
-//
-//          if mnnport = 'None' Then mnnport := '';
-//          if mnnport = 'NONE' Then mnnport := '';
-//
-//          if Length(mnnport) > 3 Then
-//          Begin
-//               if Length(mnnport) = 4 Then
-//               Begin
-//                    // Length = 4 = COM#
-//                    tmp := '';
-//                    tmp := mnnport[4];
-//               End;
-//               if Length(mnnport) = 5 Then
-//               Begin
-//                    // Length = 5 = COM##
-//                    tmp := '';
-//                    tmp := mnnport[4..5];
-//               End;
-//               If Length(mnnport) = 6 Then
-//               Begin
-//                    // Length = 6 = COM###
-//                    tmp := '';
-//                    tmp := mnnport[4..6];
-//               End;
-//               np := StrToInt(tmp);
-//               if np > 0 Then ioresult := ptt(@np, @msg, @ntx, @iptt);
-//               if ioresult = 1 Then dlog.fileDebug('PTT Port [' + mnnport + '] failed to key up.');
-//               if ioresult = 0 Then mnpttOpened := True else mnpttOpened := False;
-//          End
-//          Else
-//          Begin
-//               np := 0;
-//               if tryStrToInt(cfgvtwo.Form6.editUserDefinedPort1.Text,np) Then
-//               Begin
-//                    if np > 0 Then ioresult := ptt(@np, @msg, @ntx, @iptt);
-//                    if ioresult = 1 Then dlog.fileDebug('PTT Port [' + mnnport + '] failed to key up.');
-//                    if ioresult = 0 Then mnpttOpened := True else mnpttOpened := False;
-//               End
-//               Else
-//               Begin
-//                    mnpttOpened := False;
-//               End;
-//          End;
-//     End;
-//End;
-
-//procedure TForm1.lowerPTT();
-//var
-//   np, ntx, iptt, ioresult : CTypes.cint;
-//   msg                     : CTypes.cschar;
-//   tmp                     : String;
-//Begin
-//     ioresult := 0;
-//     msg := 0;
-//     np := 0;
-//     ntx := 0;
-//     iptt := 0;
-//     tmp := '';
-//     mnpttOpened := False;
-//     mnnport := '';
-//
-//     mnnport := UpperCase(cfgvtwo.Form6.editUserDefinedPort1.Text);
-//
-//     if mnnport = 'None' Then mnnport := '';
-//     if mnnport = 'NONE' Then mnnport := '';
-//
-//     if Length(mnnport) > 3 Then
-//     Begin
-//          if Length(mnnport) = 4 Then
-//          Begin
-//               // Length = 4 = COM#
-//               tmp := '';
-//               tmp := mnnport[4];
-//          End;
-//          if Length(mnnport) = 5 Then
-//          Begin
-//               // Length = 5 = COM##
-//               tmp := '';
-//               tmp := mnnport[4..5];
-//          End;
-//          If Length(mnnport) = 6 Then
-//          Begin
-//               // Length = 6 = COM###
-//               tmp := '';
-//               tmp := mnnport[4..6];
-//          End;
-//          np := StrToInt(tmp);
-//          if np > 0 Then ioresult := ptt(@np, @msg, @ntx, @iptt);
-//          if ioresult = 1 Then dlog.fileDebug('PTT Port [' + mnnport + '] failed to key down.');
-//          if ioresult = 0 Then mnpttOpened := True else mnpttOpened := False;
-//     End
-//     Else
-//     Begin
-//          np := 0;
-//          if tryStrToInt(cfgvtwo.Form6.editUserDefinedPort1.Text,np) Then
-//          Begin
-//               if np > 0 Then ioresult := ptt(@np, @msg, @ntx, @iptt);
-//               if ioresult = 1 Then dlog.fileDebug('PTT Port [' + mnnport + '] failed to key down.');
-//               if ioresult = 0 Then mnpttOpened := False;
-//          End;
-//     End;
-//End;
-
+procedure TSerial.regPTT(stat : Boolean);
+var
+   ntx, iptt, ioresult : CTypes.cint;
+   msg                 : CTypes.cschar;
+begin
+     if stat then
+     begin
+          ioresult := 0;
+          msg      := 0;
+          ntx      := 1;
+          iptt     := 0;
+          prPTT    := False;
+          // prPortNumeral already holds a valid integer (>0 <256)
+          if prPortNumeral > 0 Then ioresult := jtptt(@prPortNumeral, @msg, @ntx, @iptt);
+          //if ioresult = 1 Then dlog.fileDebug('PTT Port [' + mnnport + '] failed to key up.');
+          if ioresult = 0 Then prPTT := True else prPTT := False;
+     end
+     else
+     begin
+          ioresult := 0;
+          msg      := 0;
+          ntx      := 1;
+          iptt     := 0;
+          prPTT    := True;
+          // prPortNumeral already holds a valid integer (>0 <256)
+          if prPortNumeral > 0 Then ioresult := jtptt(@prPortNumeral, @msg, @ntx, @iptt);
+          //if ioresult = 1 Then dlog.fileDebug('PTT Port [' + mnnport + '] failed to key down.');
+          if ioresult = 0 Then prPTT := False;
+     end;
+end;
 end.
 
