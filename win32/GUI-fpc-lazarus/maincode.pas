@@ -165,13 +165,13 @@ type
     rbUseRight: TRadioButton;
     spinDecoderBW: TSpinEdit;
     spinDecoderCF: TSpinEdit;
-    SpinEdit1: TSpinEdit;
+    spinSpecSpeed: TSpinEdit;
     spinGain: TSpinEdit;
     spinTXCF: TSpinEdit;
     Timer1: TTimer;
     cfg: TXMLPropStorage;
-    TrackBar1: TTrackBar;
-    TrackBar2: TTrackBar;
+    tbDgainL: TTrackBar;
+    tbDGainR: TTrackBar;
     Waterfall : TWaterfallControl;
     tbBright: TTrackBar;
     tbContrast: TTrackBar;
@@ -191,7 +191,6 @@ type
     procedure buttonEndQSO1Click(Sender: TObject);
     procedure buttonSendReportClick(Sender: TObject);
     procedure buttonSetupClick(Sender: TObject);
-    procedure cbEnPSKRClick(Sender: TObject);
     procedure cbEnRBChange(Sender: TObject);
     procedure cbSmoothChange(Sender: TObject);
     procedure chkAFCChange(Sender: TObject);
@@ -221,7 +220,7 @@ type
     procedure menuTXLogClick(Sender: TObject);
     procedure rbFreeMsgChange(Sender: TObject);
     procedure spinDecoderBWChange(Sender: TObject);
-    procedure SpinEdit1Change(Sender: TObject);
+    procedure spinSpecSpeedChange(Sender: TObject);
     procedure spinGainChange(Sender: TObject);
     procedure spinTXCFChange(Sender: TObject);
     procedure tbBrightChange(Sender: TObject);
@@ -234,8 +233,8 @@ type
     procedure spinDecoderCFChange(Sender: TObject);
     procedure Timer1Timer(Sender: TObject);
     procedure addToDisplay(i, m : Integer);
-    procedure TrackBar1Change(Sender: TObject);
-    procedure TrackBar2Change(Sender: TObject);
+    procedure tbDgainLChange(Sender: TObject);
+    procedure tbDGainRChange(Sender: TObject);
     procedure updateAudio();
     procedure updateStatus(i : Integer);
     procedure DisableFloatingPointExceptions();
@@ -1353,44 +1352,16 @@ begin
      //cfgvtwo.Form6.BringToFront;
 end;
 
-procedure TForm1.cbEnPSKRClick(Sender: TObject);
-begin
-     //if not globaldata.validgrid Then
-     //begin
-     //     cfgvtwo.Form6.Notebook1.ActivePage := 'Station Setup';
-     //     cfgvtwo.Form6.Show;
-     //     cfgvtwo.Form6.BringToFront;
-     //     cfgvtwo.Form6.cbUsePSKReporter.Checked := False;
-     //     Form1.cbEnPSKR.Checked := False;
-     //end
-     //else
-     //begin
-     //     If Form1.cbEnPSKR.Checked Then cfgvtwo.Form6.cbUsePSKReporter.Checked := True else cfgvtwo.Form6.cbUsePSKReporter.Checked := False;
-     //end;
-end;
-
 procedure TForm1.cbEnRBChange(Sender: TObject);
 begin
-     //if not globaldata.validgrid Then
-     //begin
-     //     cfgvtwo.Form6.Notebook1.ActivePage := 'Station Setup';
-     //     cfgvtwo.Form6.Show;
-     //     cfgvtwo.Form6.BringToFront;
-     //     cfgvtwo.Form6.cbUseRB.Checked := False;
-     //     Form1.cbEnRB.Checked := False;
-     //end
-     //else
-     //begin
-     //     If Form1.cbEnRB.Checked Then cfgvtwo.Form6.cbUseRB.Checked := True else cfgvtwo.Form6.cbUseRB.Checked := False;
-     //     If cfgvtwo.Form6.cbUseRB.Checked And not cfgvtwo.Form6.cbNoInet.Checked Then cfgvtwo.glrbcLogin := True else cfgvtwo.glrbcLogout := True;
-     //     // Handle case of rb having been online but now set to offline mode.
-     //     If (cfgvtwo.Form6.cbNoInet.Checked) And (globalData.rbLoggedIn) Then cfgvtwo.glrbcLogout := True;
-     //end;
+     If cbEnRB.Checked Then guidedconfig.cfg.useRB := true else guidedconfig.cfg.useRB := false;
+     If cbEnPSKR.Checked Then guidedconfig.cfg.usePSKR := true else guidedconfig.cfg.usePSKR := false;
 end;
 
 procedure TForm1.cbSmoothChange(Sender: TObject);
 begin
-     if Form1.cbSmooth.Checked Then spectrum.specSmooth := True else spectrum.specSmooth := False;
+     if cbSmooth.Checked Then spectrum.specSmooth := True else spectrum.specSmooth := False;
+     if cbSmooth.Checked Then guidedconfig.cfg.specSmooth := True else guidedconfig.cfg.specSmooth := False;
 end;
 
 procedure TForm1.rbFreeMsgChange(Sender: TObject);
@@ -1415,13 +1386,15 @@ begin
      if spinDecoderBW.Value = 2 Then edit2.Text := '50';
      if spinDecoderBW.Value = 3 Then edit2.Text := '100';
      if spinDecoderBW.Value = 4 Then edit2.Text := '200';
+     guidedconfig.cfg.decoderBW := spinDecoderBW.Value;
 end;
 
-procedure TForm1.SpinEdit1Change(Sender: TObject);
+procedure TForm1.spinSpecSpeedChange(Sender: TObject);
 begin
-     if spinEdit1.Value > 5 then spinEdit1.Value := 5;
-     if spinEdit1.Value < 0 then spinEdit1.Value := 0;
-     spectrum.specSpeed2 := Form1.SpinEdit1.Value;
+     if spinSpecSpeed.Value > 5 then spinSpecSpeed.Value := 5;
+     if spinSpecSpeed.Value < 0 then spinSpecSpeed.Value := 0;
+     spectrum.specSpeed2 := spinSpecSpeed.Value;
+     guidedconfig.cfg.specSpeed := spinSpecSpeed.Value;
 end;
 
 procedure TForm1.spinGainChange(Sender: TObject);
@@ -1429,50 +1402,57 @@ begin
      if spinGain.value > 6 Then spinGain.Value := 6;
      if spinGain.value < -6 Then spinGain.Value := -6;
      spectrum.specVGain := 7 + spinGain.Value;
+     guidedconfig.cfg.specGain := spinGain.Value;
 end;
 
 procedure TForm1.chkAFCChange(Sender: TObject);
 begin
-  If Form1.chkAFC.Checked Then Form1.chkAFC.Font.Color := clRed else
-  Form1.chkAFC.Font.Color := clBlack;
-  if Form1.chkAFC.Checked then d65.glNafc := 1 Else d65.glNafc := 0;
+     If chkAFC.Checked Then chkAFC.Font.Color := clRed else
+     chkAFC.Font.Color := clBlack;
+     if chkAFC.Checked then d65.glNafc := 1 Else d65.glNafc := 0;
+     if chkAFC.Checked then guidedconfig.cfg.afc := true else guidedconfig.cfg.afc := false;
 end;
 
 procedure TForm1.chkAutoTxDFChange(Sender: TObject);
 begin
      If Form1.chkAutoTxDF.Checked Then
      Begin
-          Form1.Label39.Font.Color := clRed;
-          Form1.spinTXCF.Value := Form1.spinDecoderCF.Value;
+          Label39.Font.Color := clRed;
+          spinTXCF.Value := Form1.spinDecoderCF.Value;
+          guidedconfig.cfg.useTXeqRXDF := True;
      End
      Else
      Begin
-          Form1.Label39.Font.Color := clBlack;
+          Label39.Font.Color := clBlack;
+          guidedconfig.cfg.useTXeqRXDF := False;
      End;
 end;
 
 procedure TForm1.chkMultiDecodeChange(Sender: TObject);
 begin
 
-     If Form1.chkMultiDecode.Checked Then
+     If chkMultiDecode.Checked Then
      Begin
-          Form1.chkMultiDecode.Font.Color := clBlack;
+          chkMultiDecode.Font.Color := clBlack;
+          guidedconfig.cfg.multi := true;
      End
      Else
      Begin
-          Form1.chkMultiDecode.Font.Color := clRed;
+          chkMultiDecode.Font.Color := clRed;
+          guidedconfig.cfg.multi := false;
      End;
 end;
 
 procedure TForm1.chkNBChange(Sender: TObject);
 begin
-  If Form1.chkNB.Checked Then Form1.chkNB.Font.Color := clRed else
-  Form1.chkNB.Font.Color := clBlack;
+     If chkNB.Checked Then chkNB.Font.Color := clRed else chkNB.Font.Color := clBlack;
+     if chkNB.Checked then guidedconfig.cfg.noiseblank := True else guidedconfig.cfg.noiseblank := false;
 end;
 
 procedure TForm1.cbSpecPalChange(Sender: TObject);
 begin
-  spectrum.specColorMap := Form1.cbSpecPal.ItemIndex;
+     spectrum.specColorMap := cbSpecPal.ItemIndex;
+     guidedconfig.cfg.specColor := cbSpecPal.ItemIndex;
 end;
 
 procedure TForm1.WaterFallMouseDown(Sender: TObject; Button: TMouseButton;
@@ -1518,11 +1498,12 @@ end;
 
 procedure TForm1.editManQRGChange(Sender: TObject);
 begin
-     if globalData.rbLoggedIn Then
-     Begin
-          globalData.rbLoggedIn := False;
+     { TODO : Validate QRG, convert to integer Hz and pass 'up' the chain. }
+     //if globalData.rbLoggedIn Then
+     //Begin
+          //globalData.rbLoggedIn := False;
           //cfgvtwo.glrbcLogin := True;
-     End;
+     //End;
 end;
 
 procedure TForm1.edMsgDblClick(Sender: TObject);
@@ -2448,8 +2429,8 @@ end;
 
 procedure TForm1.rbUseMixChange(Sender: TObject);
 begin
-  //If Form1.rbUseLeft.Checked Then adc.adcChan  := 1;
-  //If Form1.rbUseRight.Checked Then adc.adcChan := 2;
+     If rbUseLeft.Checked Then guidedconfig.cfg.useAudioLeft  := True else guidedconfig.cfg.useAudioLeft := False;
+     If rbUseRight.Checked Then guidedconfig.cfg.useAudioRight := True else guidedconfig.cfg.useAudioRight := False;
 end;
 
 
@@ -2475,12 +2456,14 @@ end;
 
 procedure TForm1.tbBrightChange(Sender: TObject);
 begin
-     spectrum.specGain := Form1.tbBright.Position;
+     spectrum.specGain := tbBright.Position;
+     guidedconfig.cfg.specBright := tbBright.Position;
 end;
 
 procedure TForm1.tbContrastChange(Sender: TObject);
 begin
-     spectrum.specContrast := Form1.tbContrast.Position;
+     spectrum.specContrast := tbContrast.Position;
+     guidedconfig.cfg.specContrast := tbContrast.Position;
 end;
 
 procedure TForm1.btnZeroTXClick(Sender: TObject);
@@ -2845,21 +2828,20 @@ Begin
      end;
 End;
 
-procedure TForm1.TrackBar1Change(Sender: TObject);
+procedure TForm1.tbDgainLChange(Sender: TObject);
 begin
-  // Handle change to Digital Gain
-  //adc.adcLDgain := Form1.TrackBar1.Position;
-  //madc.adcLDgain := Form1.TrackBar1.Position;
-  Form1.Label10.Caption := 'L: ' + IntToStr(Form1.TrackBar1.Position);
-  If Form1.TrackBar1.Position <> 0 Then Form1.Label10.Font.Color := clRed else Form1.Label10.Font.Color := clBlack;
+     // Handle change to Digital Gain
+     guidedconfig.cfg.dgainL := tbDGainL.Position;
+     guidedconfig.cfg.dgainR := tbDGainR.Position;
+     Form1.Label10.Caption := 'L: ' + IntToStr(tbDGainL.Position);
+     If tbDGainL.Position <> 0 Then Form1.Label10.Font.Color := clRed else Form1.Label10.Font.Color := clBlack;
+     Form1.Label11.Caption := 'R: ' + IntToStr(tbDGainR.Position);
+     If tbDGainR.Position <> 0 Then Form1.Label11.Font.Color := clRed else Form1.Label11.Font.Color := clBlack;
 end;
 
-procedure TForm1.TrackBar2Change(Sender: TObject);
+procedure TForm1 .tbDGainRChange (Sender : TObject );
 begin
-  //adc.adcRDgain := Form1.TrackBar2.Position;
-  //madc.adcRDgain := Form1.TrackBar2.Position;
-  Form1.Label11.Caption := 'R: ' + IntToStr(Form1.TrackBar2.Position);
-  If Form1.TrackBar2.Position <> 0 Then Form1.Label11.Font.Color := clRed else Form1.Label11.Font.Color := clBlack;
+
 end;
 
 procedure TForm1.updateAudio();
@@ -3298,43 +3280,97 @@ Begin
                 Application.ProcessMessages
           until not guidedconfig.going;
           guidedconfig.Form7.Visible := False;
+          // Read back the recently saved configuration
+          guidedconfig.cfg.configFile := fname;
+          guidedconfig.prepop := true;
+          guidedconfig.Form7.readConfig(fname);
           self.Visible := true;
           self.Show;
           self.BringToFront;
-          if guidedconfig.cfg.soundTested then foo := 'Sound devices tested' + sLineBreak else foo := 'Sound devices not tested' + sLineBreak;
-          if guidedconfig.cfg.soundExtendedTested then foo := foo + 'Sound devices extended tested' + sLineBreak else foo := foo + 'Sound devices not extended tested' + sLineBreak;
-          if guidedconfig.cfg.soundValid then foo := foo + 'Sound system is valid' + sLineBreak else foo := foo + 'Sound system is not valid' + sLineBreak;
-          showmessage('Callsign = ' + guidedconfig.cfg.callsign + sLineBreak +
-                      'CW ID = ' + guidedconfig.cfg.cwcallsign + sLineBreak +
-                      'RB ID = ' + guidedconfig.cfg.rbcallsign + sLineBreak +
-                      'Prefix = ' + IntToStr(guidedconfig.cfg.prefix) + sLineBreak +
-                      'Suffix = ' + IntToStr(guidedconfig.cfg.suffix) + sLineBreak +
-                      'RX PA Device = ' + IntToStr(guidedconfig.cfg.soundIn) + sLineBreak +
-                      'RX PA Device = ' + guidedconfig.cfg.soundInS + sLineBreak +
-                      'TX PA Device = ' + IntToStr(guidedconfig.cfg.soundOut) + sLineBreak +
-                      'TX PA Device = ' + guidedconfig.cfg.soundOutS + sLineBreak +
-                      foo
-                      );
+          //if guidedconfig.cfg.soundTested then foo := 'Sound devices tested' + sLineBreak else foo := 'Sound devices not tested' + sLineBreak;
+          //if guidedconfig.cfg.soundExtendedTested then foo := foo + 'Sound devices extended tested' + sLineBreak else foo := foo + 'Sound devices not extended tested' + sLineBreak;
+          //if guidedconfig.cfg.soundValid then foo := foo + 'Sound system is valid' + sLineBreak else foo := foo + 'Sound system is not valid' + sLineBreak;
+          //showmessage('Callsign = ' + guidedconfig.cfg.callsign + sLineBreak +
+          //            'CW ID = ' + guidedconfig.cfg.cwcallsign + sLineBreak +
+          //            'RB ID = ' + guidedconfig.cfg.rbcallsign + sLineBreak +
+          //            'Prefix = ' + IntToStr(guidedconfig.cfg.prefix) + sLineBreak +
+          //            'Suffix = ' + IntToStr(guidedconfig.cfg.suffix) + sLineBreak +
+          //            'RX PA Device = ' + IntToStr(guidedconfig.cfg.soundIn) + sLineBreak +
+          //            'RX PA Device = ' + guidedconfig.cfg.soundInS + sLineBreak +
+          //            'TX PA Device = ' + IntToStr(guidedconfig.cfg.soundOut) + sLineBreak +
+          //            'TX PA Device = ' + guidedconfig.cfg.soundOutS + sLineBreak +
+          //            foo
+          //            );
      End
      Else
      Begin
-          guidedconfig.Form7.readConfig(fname);
           guidedconfig.cfg.configFile := fname;
           guidedconfig.prepop := true;
+          guidedconfig.Form7.readConfig(fname);
           guidedconfig.Form7.PageControl1.ActivePageIndex := 0;
-          guidedconfig.Form7.Show;
-          guidedconfig.Form7.BringToFront;
-          self.Visible := false;
-          guidedconfig.going := true;
-          repeat
-                sleep(10);
-                Application.ProcessMessages
-          until not guidedconfig.going;
-          guidedconfig.Form7.Visible := False;
-          self.Visible := true;
-          self.Show;
-          self.BringToFront;
-     End;
+          if not (verholder.verReturn() = guidedconfig.cfg.version) then
+          begin
+               guidedconfig.cfg.version := verholder.verReturn();
+               guidedconfig.Form7.Show;
+               guidedconfig.Form7.BringToFront;
+               self.Visible := false;
+               guidedconfig.going := true;
+               repeat
+                     sleep(10);
+                     Application.ProcessMessages
+               until not guidedconfig.going;
+               guidedconfig.Form7.Visible := False;
+               self.Visible := true;
+               self.Show;
+               self.BringToFront;
+          End;
+     end;
+     // At this point configuration has been read (or created and read if needed)
+     // All configurable variables now exist in the guidedconfig.cfg object
+     // Now set GUI elements to pre-configured values or sane defaults
+     rbUseLeft.Checked := guidedconfig.cfg.useAudioLeft;
+     rbUseMixChange(rbUseLeft);
+     rbUseRight.Checked := guidedconfig.cfg.useAudioRight;
+     rbUseMixChange(rbUseRight);
+     tbDgainL.Position := guidedconfig.cfg.dgainL;
+     tbDgainLChange(tbDgainL);
+     tbDGainR.Position := guidedconfig.cfg.dgainR;
+     tbDgainLChange(tbDGainR);
+     cbSpecPal.ItemIndex := guidedconfig.cfg.specColor;
+     cbSpecPalChange(cbSpecPal);
+     tbBright.Position := guidedconfig.cfg.specBright;
+     tbBrightChange(tbBright);
+     tbContrast.Position := guidedconfig.cfg.specContrast;
+     tbContrastChange(tbContrast);
+     spinSpecSpeed.Value := guidedconfig.cfg.specSpeed;
+     spinSpecSpeedChange(spinSpecSpeed);
+     spinGain.Value := guidedconfig.cfg.specGain;
+     spinGainChange(spinGain);
+     cbSmooth.Checked := guidedconfig.cfg.specSmooth;
+     cbSmoothChange(cbSmooth);
+     chkAutoTXDF.Checked := guidedconfig.cfg.useTXeqRXDF;
+     chkAutoTxDFChange(chkAutoTXDF);
+     spinDecoderBW.Value := guidedconfig.cfg.decoderBW;
+     spinDecoderBWChange(spinDecoderBW);
+     chkAFC.Checked := guidedconfig.cfg.afc;
+     chkAFCChange(chkAFC);
+     chkNB.Checked := guidedconfig.cfg.noiseblank;
+     chkNBChange(chkNB);
+     chkMultiDecode.Checked := guidedconfig.cfg.multi;
+     chkMultiDecodeChange(chkMultiDecode);
+     cbEnRB.Checked := guidedconfig.cfg.useRB;
+     cbEnRBChange(cbEnRB);
+     cbEnPSKR.Checked := guidedconfig.cfg.usePSKR;
+     cbEnRBChange(cbEnPSKR);
+     editManQRG.Text := floatToStrf((guidedconfig.cfg.guiQRG/1000),ffFixed,0,2);
+     editManQRGChange(editManQRG);
+     for i := 0 to 1000 do
+     begin
+          application.ProcessMessages;
+          sleep(10);
+     end;
+     guidedconfig.Form7.saveConfig(fname);
+     halt;
      // Create the decoder thread with param False so it starts.
      //d65.glinProg := False;
      //decoderThread := decodeThread.Create(False);
@@ -3414,8 +3450,8 @@ Begin
      //     halt;
      //End;
 
-     Halt;
-          // Setup default sane value for config form.
+
+     // Setup default sane value for config form.
           //cfgvtwo.Form6.edMyCall.Clear;
           //cfgvtwo.Form6.edMyGrid.Clear;
           //cfgvtwo.Form6.cbAudioIn.ItemIndex := 0;

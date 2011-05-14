@@ -268,7 +268,6 @@ type
     procedure edQSYTime1Change (Sender : TObject );
     procedure edStationCallsignChange(Sender : TObject);
     procedure FormShow (Sender : TObject );
-    procedure PageControl1Change (Sender : TObject );
     procedure rbPTTCatChange(Sender : TObject);
     procedure rbPTTComChange(Sender : TObject);
     procedure rbPTTNoTXChange(Sender : TObject);
@@ -375,6 +374,31 @@ type
       prlogdir        : String;
       prcfgdir        : String;
       prkvdir         : String;
+      // General Program settings not covered in configuration
+      prVersion       : String;
+      // Spectrum Display settings
+      prSpecColor     : Integer;
+      prSpecContrast  : Integer;
+      prSpecBright    : Integer;
+      prSpecSpeed     : Integer;
+      prSpecGain      : Integer;
+      prSpecSmooth    : Boolean;
+      // Audio I/O settings
+      prAudioUseLeft  : Boolean;
+      prAudioUseRight : Boolean;
+      prAudioDGainL   : Integer;
+      prAudioDGainR   : Integer;
+      // Decoder settings
+      prTXRXDF        : Boolean;
+      prAFC           : Boolean;
+      prNoiseBlank    : Boolean;
+      prMulti         : Boolean;
+      prDecoderBW     : Integer;
+      prMultiBW       : Integer;
+      prQRG           : Integer;
+      // Spotting
+      prRBEnable      : Boolean;
+      prPSKREnable    : Boolean;
 
     public
       Constructor create();
@@ -462,6 +486,66 @@ type
       property kvdir : String
         read  prKVDir
         write prKVDir;
+      property version : String
+        read  prVersion
+        write prVersion;
+      property specColor : Integer
+        read  prSpecColor
+        write prSpecColor;
+      property specContrast : Integer
+        read  prSpecContrast
+        write prSpecContrast;
+      property specBright : Integer
+        read  prSpecBright
+        write prSpecBright;
+      property specSpeed : Integer
+        read  prSpecSpeed
+        write prSpecSpeed;
+      property specGain : Integer
+        read  prSpecGain
+        write prSpecGain;
+      property specSmooth : Boolean
+        read  prSpecSmooth
+        write prSpecSmooth;
+      property useAudioLeft : Boolean
+        read  prAudioUseLeft
+        write prAudioUseLeft;
+      property useAudioRight : Boolean
+        read  prAudioUseRight
+        write prAudioUseRight;
+      property dgainL : Integer
+        read  prAudioDGainL
+        write prAudioDGainL;
+      property dgainR : Integer
+        read  prAudioDGainR
+        write prAudioDGainR;
+      property afc : Boolean
+        read  prAFC
+        write prAFC;
+      property noiseblank : Boolean
+        read  prNoiseBlank
+        write prNoiseBlank;
+      property multi : Boolean
+        read  prMulti
+        write prMulti;
+      property decoderBW : Integer
+        read  prDecoderBW
+        write prDecoderBW;
+      property multiBW : Integer
+        read  prMultiBW
+        write prMultiBW;
+      property guiQRG : Integer
+        read  prQRG
+        write prQRG;
+      property useRB : Boolean
+        read  prRBEnable
+        write prRBEnable;
+      property usePSKR : Boolean
+        read  prPSKREnable
+        write prPSKREnable;
+      property useTXeqRXDF : Boolean
+        read  prTXRXDF
+        write prTXRXDF;
   end;
 
 var
@@ -549,7 +633,28 @@ begin
       prTXAutoSR      := False;
       // Tab 10 Value Review
       prCFGName       := '';
-
+      // General Program settings not covered in configuration
+      prVersion       := '0.0.0';
+      // Spectrum Display settings
+      prSpecColor     := 0;
+      prSpecContrast  := 0;
+      prSpecBright    := 0;
+      prSpecSpeed     := 0;
+      prSpecGain      := 0;
+      prSpecSmooth    := False;
+      // Audio I/O settings
+      prAudioUseLeft  := False;
+      prAudioUseRight := False;
+      prAudioDGainL   := 0;
+      prAudioDGainR   := 0;
+      // Decoder settings
+      prTXRXDF        := False;
+      prAFC           := False;
+      prNoiseBlank    := False;
+      prMulti         := False;
+      prDecoderBW     := 0;
+      prMultiBW       := 0;
+      prQRG           := 0;
 end;
 
 function  TSettings.validateSound() : Boolean;
@@ -1200,11 +1305,6 @@ begin
           PageControl1.Pages[10].TabVisible := false;
           PageControl1.ActivePageIndex := 0;
      end;
-end;
-
-procedure TForm7 .PageControl1Change (Sender : TObject );
-begin
-
 end;
 
 procedure TForm7.editMacro1Change(Sender : TObject);
@@ -1954,7 +2054,6 @@ begin
      begin
           ini.IniFileName := cfgname;
           ini.IniSection := 'JT65HF';
-          ini.WriteString('version','2.0.0');
           ini.WriteString('callsign', cfg.prCallsign);
           ini.WriteString('cwcallsign', cfg.prCWCallsign);
           ini.WriteString('rbcallsign', cfg.prRBCallsign);
@@ -2034,6 +2133,24 @@ begin
           ini.WriteBoolean('usekv',cfg.prUseKV);
           ini.WriteBoolean('rxsrauto',cfg.prRXAutoSR);
           ini.WriteBoolean('txsrauto',cfg.prTXAutoSR);
+          ini.WriteString('version',cfg.prVersion);
+          ini.WriteInteger('speccolor',cfg.prSpecColor);
+          ini.WriteInteger('speccontrast',cfg.prSpecContrast);
+          ini.WriteInteger('specbright',cfg.prSpecBright);
+          ini.WriteInteger('specspeed',cfg.prSpecSpeed);
+          ini.WriteInteger('specgain',cfg.prSpecGain);
+          ini.WriteBoolean('specsmooth',cfg.prSpecSmooth);
+          ini.WriteBoolean('audioleft',cfg.prAudioUseLeft);
+          ini.WriteBoolean('audioright',cfg.prAudioUseRight);
+          ini.WriteInteger('dgainl',cfg.prAudioDGainL);
+          ini.WriteInteger('dgainr',cfg.prAudioDGainR);
+          ini.WriteBoolean('txrxdf',cfg.prTXRXDF);
+          ini.WriteBoolean('afc',cfg.prAFC);
+          ini.WriteBoolean('nb',cfg.prNoiseBlank);
+          ini.WriteBoolean('multion',cfg.prMulti);
+          ini.WriteInteger('decbw',cfg.prDecoderBW);
+          ini.WriteInteger('multibw',cfg.prMultiBW);
+          ini.WriteInteger('guiqrg',cfg.prQRG);
           ini.Save;
      end;
 end;
@@ -2049,6 +2166,7 @@ begin
      begin
         ini.IniFileName := cfgname;
         ini.IniSection :='JT65HF';
+        cfg.prVersion := ini.ReadString('version','0.0.0');
         cfg.prCallsign := ini.ReadString('callsign','');
         cfg.prCWCallsign := ini.ReadString('cwcallsign','');
         cfg.prRBCallsign := ini.ReadString('rbcallsign','');
@@ -2130,7 +2248,24 @@ begin
         cfg.prUseKV := ini.ReadBoolean('usekv',True);
         cfg.prRXAutoSR := ini.ReadBoolean('rxsrauto',True);
         cfg.prTXAutoSR := ini.ReadBoolean('txsrauto',True);
-        // Configuration read now set the GUI elements
+        cfg.prSpecColor := ini.ReadInteger('speccolor',0);
+        cfg.prSpecContrast := ini.ReadInteger('speccontrast',0);
+        cfg.prSpecBright := ini.ReadInteger('specbright',0);
+        cfg.prSpecSpeed := ini.ReadInteger('specspeed',0);
+        cfg.prSpecGain := ini.ReadInteger('specgain',0);
+        cfg.prSpecSmooth := ini.ReadBoolean('specsmooth',False);
+        cfg.prAudioUseLeft := ini.ReadBoolean('audioleft',False);
+        cfg.prAudioUseRight := ini.ReadBoolean('audioright',False);
+        cfg.prAudioDGainL := ini.ReadInteger('dgainl',0);
+        cfg.prAudioDGainR := ini.ReadInteger('dgainr',0);
+        cfg.prTXRXDF := ini.ReadBoolean('txrxdf',False);
+        cfg.prAFC := ini.ReadBoolean('afc',False);
+        cfg.prNoiseBlank := ini.ReadBoolean('nb',False);
+        cfg.prMulti := ini.ReadBoolean('multion',False);
+        cfg.prDecoderBW := ini.ReadInteger('decbw',0);
+        cfg.prMultiBW := ini.ReadInteger('multibw',0);
+        cfg.prQRG := ini.ReadInteger('guiqrg',0);
+        // Configuration read now set the GUI elements in guidedconfig
         // Tab 0 Values Callsign/Grid
         edStationCallsign.Text := cfg.prCallsign;
         edCWCallsign.Text := cfg.prCWCallsign;
