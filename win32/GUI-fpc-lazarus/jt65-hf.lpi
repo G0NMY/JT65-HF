@@ -51,7 +51,7 @@
         <PackageName Value="LCL"/>
       </Item3>
     </RequiredPackages>
-    <Units Count="37">
+    <Units Count="36">
       <Unit0>
         <Filename Value="jt65-hf.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -183,74 +183,69 @@
         <UnitName Value="about"/>
       </Unit23>
       <Unit24>
-        <Filename Value="cfgobject.pas"/>
-        <IsPartOfProject Value="True"/>
-        <UnitName Value="cfgobject"/>
-      </Unit24>
-      <Unit25>
         <Filename Value="rigobject.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="rigobject"/>
-      </Unit25>
-      <Unit26>
+      </Unit24>
+      <Unit25>
         <Filename Value="ddeobject.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="ddeobject"/>
-      </Unit26>
-      <Unit27>
+      </Unit25>
+      <Unit26>
         <Filename Value="omnirigobject.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="omnirigobject"/>
-      </Unit27>
-      <Unit28>
+      </Unit26>
+      <Unit27>
         <Filename Value="civobject.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="civobject"/>
-      </Unit28>
-      <Unit29>
+      </Unit27>
+      <Unit28>
         <Filename Value="ddehrdobject.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="ddehrdobject"/>
-      </Unit29>
-      <Unit30>
+      </Unit28>
+      <Unit29>
         <Filename Value="guidedconfig.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="Form7"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="guidedconfig"/>
-      </Unit30>
-      <Unit31>
+      </Unit29>
+      <Unit30>
         <Filename Value="valobject.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="valobject"/>
-      </Unit31>
-      <Unit32>
+      </Unit30>
+      <Unit31>
         <Filename Value="paobject.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="paobject"/>
-      </Unit32>
-      <Unit33>
+      </Unit31>
+      <Unit32>
         <Filename Value="srgraph.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="Form8"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="srgraph"/>
-      </Unit33>
-      <Unit34>
+      </Unit32>
+      <Unit33>
         <Filename Value="hrdinterface5.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="hrdinterface5"/>
-      </Unit34>
-      <Unit35>
+      </Unit33>
+      <Unit34>
         <Filename Value="hrdobject.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="hrdobject"/>
-      </Unit35>
-      <Unit36>
+      </Unit34>
+      <Unit35>
         <Filename Value="serialobject.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="serialobject"/>
-      </Unit36>
+      </Unit35>
     </Units>
   </ProjectOptions>
   <CompilerOptions>

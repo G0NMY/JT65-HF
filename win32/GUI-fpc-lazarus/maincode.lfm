@@ -15,7 +15,6 @@ object Form1: TForm1
   Font.Name = 'Arial'
   Menu = MainMenu1
   OnClose = FormClose
-  OnCreate = FormCreate
   SessionProperties = 'Left;Top'
   ShowHint = True
   LCLVersion = '0.9.30'

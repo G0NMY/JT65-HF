@@ -8,6 +8,7 @@ object Form7: TForm7
   ClientWidth = 785
   Font.Height = -16
   Font.Name = 'Arial'
+  OnShow = FormShow
   LCLVersion = '0.9.30'
   Visible = True
   object PageControl1: TPageControl
@@ -15,8 +16,8 @@ object Form7: TForm7
     Height = 545
     Top = 8
     Width = 767
-    ActivePage = Advanced
-    TabIndex = 7
+    ActivePage = CallsignGrid
+    TabIndex = 0
     TabOrder = 0
     object CallsignGrid: TTabSheet
       Caption = 'Callsign/Grid'
@@ -862,7 +863,7 @@ object Form7: TForm7
         Font.Style = [fsBold]
         OnClick = buttonContinue2Click
         ParentFont = False
-        TabOrder = 5
+        TabOrder = 6
       end
       object Label6: TLabel
         Left = 4
@@ -961,7 +962,7 @@ object Form7: TForm7
         Font.Name = 'Courier New'
         ItemHeight = 0
         ParentFont = False
-        TabOrder = 6
+        TabOrder = 5
         TabStop = False
       end
       object cbSRErrorCheck: TCheckBox
@@ -1293,8 +1294,8 @@ object Form7: TForm7
         ParentFont = False
       end
     end
-    object Spotting: TTabSheet
-      Caption = 'Spotting Networks'
+    object AutoQSY: TTabSheet
+      Caption = 'Auto QSY'
       ClientHeight = 514
       ClientWidth = 759
       TabVisible = False
@@ -1308,6 +1309,346 @@ object Form7: TForm7
         Font.Name = 'Arial'
         Font.Style = [fsBold]
         OnClick = buttonContinue4Click
+        ParentFont = False
+        TabOrder = 0
+      end
+      object Label47: TLabel
+        Left = 4
+        Height = 20
+        Top = 5
+        Width = 627
+        Caption = 'All time values defined in reference to UTC.  QRG Values should be entered in KHz.'
+        Font.Height = -16
+        Font.Name = 'Arial'
+        Font.Style = [fsBold]
+        ParentColor = False
+        ParentFont = False
+      end
+      object Label48: TLabel
+        Left = 100
+        Height = 20
+        Top = 37
+        Width = 99
+        Caption = 'Time To QSY'
+        Font.Height = -16
+        Font.Name = 'Arial'
+        Font.Style = [fsBold]
+        ParentColor = False
+        ParentFont = False
+      end
+      object Label49: TLabel
+        Left = 273
+        Height = 20
+        Top = 37
+        Width = 37
+        Caption = 'QRG'
+        Font.Height = -16
+        Font.Name = 'Arial'
+        Font.Style = [fsBold]
+        ParentColor = False
+        ParentFont = False
+      end
+      object Label50: TLabel
+        Left = 388
+        Height = 20
+        Top = 37
+        Width = 164
+        Caption = 'Run Auto-Tune Cycle'
+        Font.Height = -16
+        Font.Name = 'Arial'
+        Font.Style = [fsBold]
+        ParentColor = False
+        ParentFont = False
+      end
+      object Label51: TLabel
+        Left = 4
+        Height = 20
+        Top = 37
+        Width = 54
+        Caption = 'Enable'
+        Font.Height = -16
+        Font.Name = 'Arial'
+        Font.Style = [fsBold]
+        ParentColor = False
+        ParentFont = False
+      end
+      object cbEnAutoQSY1: TCheckBox
+        Left = 20
+        Height = 19
+        Top = 76
+        Width = 20
+        TabOrder = 1
+      end
+      object cbEnAutoQSY2: TCheckBox
+        Left = 20
+        Height = 19
+        Top = 116
+        Width = 20
+        TabOrder = 2
+      end
+      object cbEnAutoQSY3: TCheckBox
+        Left = 20
+        Height = 19
+        Top = 156
+        Width = 20
+        TabOrder = 3
+      end
+      object cbEnAutoQSY4: TCheckBox
+        Left = 20
+        Height = 19
+        Top = 196
+        Width = 20
+        TabOrder = 4
+      end
+      object cbEnAutoQSY5: TCheckBox
+        Left = 20
+        Height = 19
+        Top = 236
+        Width = 20
+        TabOrder = 5
+      end
+      object cbEnAutoQSY6: TCheckBox
+        Left = 20
+        Height = 19
+        Top = 276
+        Width = 20
+        TabOrder = 6
+      end
+      object edQSYTime1: TEdit
+        Left = 100
+        Height = 27
+        Top = 69
+        Width = 94
+        Alignment = taCenter
+        Font.Height = -16
+        Font.Name = 'Arial'
+        Font.Style = [fsBold]
+        OnChange = edQSYTime1Change
+        ParentFont = False
+        TabOrder = 7
+      end
+      object edQSYTime2: TEdit
+        Left = 100
+        Height = 27
+        Top = 109
+        Width = 94
+        Alignment = taCenter
+        Font.Height = -16
+        Font.Name = 'Arial'
+        Font.Style = [fsBold]
+        OnChange = edQSYTime1Change
+        ParentFont = False
+        TabOrder = 8
+      end
+      object edQSYTime3: TEdit
+        Left = 100
+        Height = 27
+        Top = 149
+        Width = 94
+        Alignment = taCenter
+        Font.Height = -16
+        Font.Name = 'Arial'
+        Font.Style = [fsBold]
+        OnChange = edQSYTime1Change
+        ParentFont = False
+        TabOrder = 9
+      end
+      object edQSYTime4: TEdit
+        Left = 100
+        Height = 27
+        Top = 189
+        Width = 94
+        Alignment = taCenter
+        Font.Height = -16
+        Font.Name = 'Arial'
+        Font.Style = [fsBold]
+        OnChange = edQSYTime1Change
+        ParentFont = False
+        TabOrder = 10
+      end
+      object edQSYTime5: TEdit
+        Left = 100
+        Height = 27
+        Top = 229
+        Width = 94
+        Alignment = taCenter
+        Font.Height = -16
+        Font.Name = 'Arial'
+        Font.Style = [fsBold]
+        OnChange = edQSYTime1Change
+        ParentFont = False
+        TabOrder = 11
+      end
+      object edQSYTime6: TEdit
+        Left = 100
+        Height = 27
+        Top = 269
+        Width = 94
+        Alignment = taCenter
+        Font.Height = -16
+        Font.Name = 'Arial'
+        Font.Style = [fsBold]
+        OnChange = edQSYTime1Change
+        ParentFont = False
+        TabOrder = 12
+      end
+      object edQRG1: TEdit
+        Left = 244
+        Height = 27
+        Top = 69
+        Width = 96
+        Alignment = taCenter
+        Font.Height = -16
+        Font.Name = 'Arial'
+        Font.Style = [fsBold]
+        ParentFont = False
+        TabOrder = 13
+      end
+      object edQRG2: TEdit
+        Left = 244
+        Height = 27
+        Top = 109
+        Width = 96
+        Alignment = taCenter
+        Font.Height = -16
+        Font.Name = 'Arial'
+        Font.Style = [fsBold]
+        ParentFont = False
+        TabOrder = 14
+      end
+      object edQRG3: TEdit
+        Left = 244
+        Height = 27
+        Top = 149
+        Width = 96
+        Alignment = taCenter
+        Font.Height = -16
+        Font.Name = 'Arial'
+        Font.Style = [fsBold]
+        ParentFont = False
+        TabOrder = 15
+      end
+      object edQRG4: TEdit
+        Left = 244
+        Height = 27
+        Top = 189
+        Width = 96
+        Alignment = taCenter
+        Font.Height = -16
+        Font.Name = 'Arial'
+        Font.Style = [fsBold]
+        ParentFont = False
+        TabOrder = 16
+      end
+      object edQRG5: TEdit
+        Left = 244
+        Height = 27
+        Top = 229
+        Width = 96
+        Alignment = taCenter
+        Font.Height = -16
+        Font.Name = 'Arial'
+        Font.Style = [fsBold]
+        ParentFont = False
+        TabOrder = 17
+      end
+      object edQRG6: TEdit
+        Left = 244
+        Height = 27
+        Top = 269
+        Width = 96
+        Alignment = taCenter
+        Font.Height = -16
+        Font.Name = 'Arial'
+        Font.Style = [fsBold]
+        ParentFont = False
+        TabOrder = 18
+      end
+      object cbEnAT1: TCheckBox
+        Left = 458
+        Height = 19
+        Top = 76
+        Width = 20
+        OnChange = cbEnAT1Change
+        TabOrder = 19
+      end
+      object cbEnAT2: TCheckBox
+        Left = 458
+        Height = 19
+        Top = 116
+        Width = 20
+        OnChange = cbEnAT1Change
+        TabOrder = 20
+      end
+      object cbEnAT3: TCheckBox
+        Left = 458
+        Height = 19
+        Top = 156
+        Width = 20
+        OnChange = cbEnAT1Change
+        TabOrder = 21
+      end
+      object cbEnAT4: TCheckBox
+        Left = 458
+        Height = 19
+        Top = 196
+        Width = 20
+        OnChange = cbEnAT1Change
+        TabOrder = 22
+      end
+      object cbEnAT5: TCheckBox
+        Left = 458
+        Height = 19
+        Top = 236
+        Width = 20
+        OnChange = cbEnAT1Change
+        TabOrder = 23
+      end
+      object cbEnAT6: TCheckBox
+        Left = 458
+        Height = 19
+        Top = 276
+        Width = 20
+        OnChange = cbEnAT1Change
+        TabOrder = 24
+      end
+      object Label52: TLabel
+        Left = 12
+        Height = 58
+        Top = 405
+        Width = 699
+        Caption = 'WARNING!  You have enabled auto tune for at least one QSY.  This means the transmitter will'#13#10'be keyed and a brief tone at 1270 Hz will be transmitted.  The length of TX tone is about 1'#13#10'second.'
+        Font.Height = -16
+        Font.Name = 'Arial'
+        Font.Style = [fsBold]
+        ParentColor = False
+        ParentFont = False
+        Visible = False
+      end
+      object Label62: TLabel
+        Left = 20
+        Height = 37
+        Top = 309
+        Width = 371
+        Caption = 'Enter times as UTC formatted like 00:00 or 23:35'#13#10'Enter QRG as KHz formatted like 14076.2 or 28075.7'
+        ParentColor = False
+      end
+    end
+    object Spotting: TTabSheet
+      Caption = 'Spotting Networks'
+      ClientHeight = 514
+      ClientWidth = 759
+      TabVisible = False
+      object buttonContinue5: TButton
+        Left = 4
+        Height = 30
+        Top = 477
+        Width = 736
+        Caption = 'Continue'
+        Font.Height = -16
+        Font.Name = 'Arial'
+        Font.Style = [fsBold]
+        OnClick = buttonContinue5Click
         ParentFont = False
         TabOrder = 2
       end
@@ -1397,7 +1738,7 @@ object Form7: TForm7
       ClientHeight = 514
       ClientWidth = 759
       TabVisible = False
-      object buttonContinue5: TButton
+      object buttonContinue6: TButton
         Left = 4
         Height = 30
         Top = 477
@@ -1406,7 +1747,7 @@ object Form7: TForm7
         Font.Height = -16
         Font.Name = 'Arial'
         Font.Style = [fsBold]
-        OnClick = buttonContinue5Click
+        OnClick = buttonContinue6Click
         ParentFont = False
         TabOrder = 40
       end
@@ -1989,7 +2330,7 @@ object Form7: TForm7
       ClientHeight = 514
       ClientWidth = 759
       TabVisible = False
-      object buttonContinue6: TButton
+      object buttonContinue7: TButton
         Left = 4
         Height = 30
         Top = 477
@@ -1998,7 +2339,7 @@ object Form7: TForm7
         Font.Height = -16
         Font.Name = 'Arial'
         Font.Style = [fsBold]
-        OnClick = buttonContinue6Click
+        OnClick = buttonContinue7Click
         ParentFont = False
         TabOrder = 4
       end
@@ -2174,213 +2515,59 @@ object Form7: TForm7
         Transparent = False
       end
     end
-    object Advanced: TTabSheet
-      Caption = 'Advanced Options'
+    object Logging: TTabSheet
+      Caption = 'Logging'
       ClientHeight = 514
       ClientWidth = 759
       TabVisible = False
-      object buttonContinue7: TButton
-        Left = 4
-        Height = 30
-        Top = 477
-        Width = 736
-        Caption = 'Continue'
-        Font.Height = -16
-        Font.Name = 'Arial'
-        Font.Style = [fsBold]
-        OnClick = buttonContinue7Click
-        ParentFont = False
-        TabOrder = 12
-      end
-      object Label32: TLabel
-        Left = 4
-        Height = 39
-        Top = 341
-        Width = 718
-        Caption = 'These settings should, in general, be left at their default values.  You should revew the JT65-HF'#13#10'manual before changing these.'
-        Font.Height = -16
-        Font.Name = 'Arial'
-        Font.Style = [fsBold]
-        ParentColor = False
-        ParentFont = False
-      end
-      object CheckBox7: TCheckBox
+      object cbSaveCSV: TCheckBox
         Left = 4
         Height = 22
-        Top = 381
-        Width = 219
-        Caption = 'Enable Optimal FFT routines'
-        Checked = True
-        State = cbChecked
-        TabOrder = 13
-        TabStop = False
-      end
-      object CheckBox8: TCheckBox
-        Left = 4
-        Height = 22
-        Top = 405
-        Width = 239
-        Caption = 'Enable KVASD error correction'
-        Checked = True
-        State = cbChecked
-        TabOrder = 14
-        TabStop = False
-      end
-      object CheckBox9: TCheckBox
-        Left = 4
-        Height = 22
-        Top = 429
-        Width = 446
-        Caption = 'Enable automatic sample rate error correction for input device'
-        Checked = True
-        State = cbChecked
-        TabOrder = 15
-        TabStop = False
-      end
-      object CheckBox10: TCheckBox
-        Left = 4
-        Height = 22
-        Top = 453
-        Width = 455
-        Caption = 'Enable automatic sample rate error correction for output device'
-        Checked = True
-        State = cbChecked
-        TabOrder = 16
-        TabStop = False
-      end
-      object Label33: TLabel
-        Left = 4
-        Height = 37
-        Top = 5
-        Width = 713
-        Caption = 'Please review the following configuration options.  Most of these default to proper values, but are safe to'#13#10'change as you see fit.'
-        ParentColor = False
-      end
-      object CheckBox11: TCheckBox
-        Left = 4
-        Height = 22
-        Top = 45
+        Top = 13
         Width = 402
         Caption = 'Save log of recptions and transmissions in CSV format.'
         Checked = True
         State = cbChecked
         TabOrder = 0
       end
-      object CheckBox12: TCheckBox
+      object cbSaveDB: TCheckBox
         Left = 4
         Height = 22
-        Top = 69
+        Top = 37
         Width = 704
         Caption = 'Maintain database of heard callsigns along with count, first and last heard dates and other statistics.'
         Enabled = False
         TabOrder = 1
       end
-      object CheckBox13: TCheckBox
+      object cbSaveADIF: TCheckBox
         Left = 4
         Height = 22
-        Top = 93
-        Width = 632
-        Caption = 'Disable multiple decoder while in QSQ (Enable this if decoder is too slow during a QSO).'
-        TabOrder = 2
-      end
-      object CheckBox14: TCheckBox
-        Left = 4
-        Height = 22
-        Top = 117
-        Width = 623
-        Caption = 'Enable multiple decoder when QSO complete (Only applies if option above is selected).'
-        Checked = True
-        State = cbChecked
-        TabOrder = 3
-      end
-      object CheckBox15: TCheckBox
-        Left = 4
-        Height = 22
-        Top = 285
-        Width = 639
-        Caption = 'Disable TX after sending same message too many times (Prevents unintend TX runaway).'
-        Checked = True
-        State = cbChecked
-        TabOrder = 10
-      end
-      object SpinEdit1: TSpinEdit
-        Left = 4
-        Height = 26
-        Top = 309
-        Width = 58
-        MaxValue = 15
-        MinValue = 3
-        TabOrder = 11
-        Value = 10
-      end
-      object Label34: TLabel
-        Left = 72
-        Height = 19
-        Top = 312
-        Width = 381
-        Caption = 'Maximum number of duplicate message transmissions.'
-        ParentColor = False
-      end
-      object CheckBox16: TCheckBox
-        Left = 4
-        Height = 22
-        Top = 165
+        Top = 61
         Width = 517
         Caption = 'Save ADIF log file even if direct JT65-HF to logging program is enabled.'
         Checked = True
+        Enabled = False
         State = cbChecked
-        TabOrder = 5
+        TabOrder = 2
       end
-      object CheckBox17: TCheckBox
+      object cbdoeqsl: TCheckBox
         Left = 4
         Height = 22
-        Top = 189
+        Top = 85
         Width = 608
         Caption = 'Enable direct QSL upload to eQSL (Requires eQSL account and Internet connection).'
         Enabled = False
-        TabOrder = 6
+        TabOrder = 3
       end
-      object CheckBox18: TCheckBox
+      object cbdoDXLab: TCheckBox
         Left = 4
         Height = 22
-        Top = 213
+        Top = 109
         Width = 658
         Caption = 'Enable DX Lab applications integration (Requires DX Lab be properly installed and running).'
         Enabled = False
-        TabOrder = 7
-      end
-      object CheckBox19: TCheckBox
-        Left = 4
-        Height = 22
-        Top = 141
-        Width = 372
-        Caption = 'Restore Defaults buttons enables multiple decoder.'
-        Checked = True
-        State = cbChecked
         TabOrder = 4
       end
-      object CheckBox20: TCheckBox
-        Left = 4
-        Height = 22
-        Top = 237
-        Width = 684
-        Caption = 'Enable CW ID when sending free form text message or SH 73 (Only sent with free text or SH 73).'
-        TabOrder = 8
-      end
-      object CheckBox21: TCheckBox
-        Left = 4
-        Height = 22
-        Top = 261
-        Width = 742
-        Caption = 'Enable CW ID with  all closing messages (Sent when sending formatted 73 message, SH 73 or free text).'
-        TabOrder = 9
-      end
-    end
-    object AutoQSY: TTabSheet
-      Caption = 'Auto QSY'
-      ClientHeight = 514
-      ClientWidth = 759
-      TabVisible = False
       object buttonContinue8: TButton
         Left = 4
         Height = 30
@@ -2392,11 +2579,11 @@ object Form7: TForm7
         Font.Style = [fsBold]
         OnClick = buttonContinue8Click
         ParentFont = False
-        TabOrder = 0
+        TabOrder = 5
       end
     end
-    object Review: TTabSheet
-      Caption = 'Review Settings'
+    object Advanced: TTabSheet
+      Caption = 'Advanced Options'
       ClientHeight = 514
       ClientWidth = 759
       TabVisible = False
@@ -2405,13 +2592,240 @@ object Form7: TForm7
         Height = 30
         Top = 477
         Width = 736
-        Caption = 'Save Configuration and Continue'
+        Caption = 'Continue'
         Font.Height = -16
         Font.Name = 'Arial'
         Font.Style = [fsBold]
         OnClick = buttonContinue9Click
         ParentFont = False
+        TabOrder = 7
+      end
+      object Label32: TLabel
+        Left = 4
+        Height = 39
+        Top = 317
+        Width = 718
+        Caption = 'These settings should, in general, be left at their default values.  You should revew the JT65-HF'#13#10'manual before changing these.'
+        Font.Height = -16
+        Font.Name = 'Arial'
+        Font.Style = [fsBold]
+        ParentColor = False
+        ParentFont = False
+      end
+      object cbUseOptFFT: TCheckBox
+        Left = 4
+        Height = 22
+        Top = 365
+        Width = 219
+        Caption = 'Enable Optimal FFT routines'
+        Checked = True
+        State = cbChecked
+        TabOrder = 8
+        TabStop = False
+      end
+      object cbUseKV: TCheckBox
+        Left = 4
+        Height = 22
+        Top = 389
+        Width = 239
+        Caption = 'Enable KVASD error correction'
+        Checked = True
+        State = cbChecked
+        TabOrder = 9
+        TabStop = False
+      end
+      object cbAutoRXSR: TCheckBox
+        Left = 4
+        Height = 22
+        Top = 413
+        Width = 446
+        Caption = 'Enable automatic sample rate error correction for input device'
+        Checked = True
+        State = cbChecked
+        TabOrder = 10
+        TabStop = False
+      end
+      object cbAutoTXSR: TCheckBox
+        Left = 4
+        Height = 22
+        Top = 437
+        Width = 455
+        Caption = 'Enable automatic sample rate error correction for output device'
+        Checked = True
+        State = cbChecked
+        TabOrder = 11
+        TabStop = False
+      end
+      object Label33: TLabel
+        Left = 4
+        Height = 37
+        Top = 5
+        Width = 713
+        Caption = 'Please review the following configuration options.  Most of these default to proper values, but are safe to'#13#10'change as you see fit.'
+        ParentColor = False
+      end
+      object cbDisableMultiInQSO: TCheckBox
+        Left = 4
+        Height = 22
+        Top = 53
+        Width = 632
+        Caption = 'Disable multiple decoder while in QSQ (Enable this if decoder is too slow during a QSO).'
         TabOrder = 0
+      end
+      object cbEnableMultiAfterQSO: TCheckBox
+        Left = 4
+        Height = 22
+        Top = 77
+        Width = 623
+        Caption = 'Enable multiple decoder when QSO complete (Only applies if option above is selected).'
+        Checked = True
+        State = cbChecked
+        TabOrder = 1
+      end
+      object cbTXWatchdog: TCheckBox
+        Left = 4
+        Height = 22
+        Top = 205
+        Width = 639
+        Caption = 'Disable TX after sending same message too many times (Prevents unintend TX runaway).'
+        Checked = True
+        State = cbChecked
+        TabOrder = 5
+      end
+      object spinTXCount: TSpinEdit
+        Left = 4
+        Height = 26
+        Top = 232
+        Width = 58
+        MaxValue = 15
+        MinValue = 3
+        TabOrder = 6
+        Value = 10
+      end
+      object Label34: TLabel
+        Left = 72
+        Height = 19
+        Top = 235
+        Width = 381
+        Caption = 'Maximum number of duplicate message transmissions.'
+        ParentColor = False
+      end
+      object cbRestoresDefaultsMulti: TCheckBox
+        Left = 4
+        Height = 22
+        Top = 101
+        Width = 372
+        Caption = 'Restore Defaults buttons enables multiple decoder.'
+        Checked = True
+        State = cbChecked
+        TabOrder = 2
+      end
+      object cbSendCWIDFree: TCheckBox
+        Left = 4
+        Height = 22
+        Top = 141
+        Width = 684
+        Caption = 'Enable CW ID when sending free form text message or SH 73 (Only sent with free text or SH 73).'
+        TabOrder = 3
+      end
+      object cbSendCWIDAll: TCheckBox
+        Left = 4
+        Height = 22
+        Top = 165
+        Width = 742
+        Caption = 'Enable CW ID with  all closing messages (Sent when sending formatted 73 message, SH 73 or free text).'
+        TabOrder = 4
+      end
+    end
+    object Review: TTabSheet
+      Caption = 'Review Settings'
+      ClientHeight = 514
+      ClientWidth = 759
+      TabVisible = False
+      object buttonContinue10: TButton
+        Left = 4
+        Height = 30
+        Top = 477
+        Width = 736
+        Caption = 'Save Configuration and Continue'
+        Font.Height = -16
+        Font.Name = 'Arial'
+        Font.Style = [fsBold]
+        OnClick = buttonContinue10Click
+        ParentFont = False
+        TabOrder = 0
+      end
+      object Label53: TLabel
+        Left = 12
+        Height = 19
+        Top = 21
+        Width = 328
+        Caption = 'Callsign Used for Over The Air Transmissions:  '
+        ParentColor = False
+      end
+      object Label54: TLabel
+        Left = 67
+        Height = 19
+        Top = 53
+        Width = 273
+        Caption = 'Callsign Used for Over The Air CW ID:  '
+        ParentColor = False
+      end
+      object Label55: TLabel
+        Left = 13
+        Height = 19
+        Top = 85
+        Width = 327
+        Caption = 'Callsign Used for Internet Spotting Network(s):  '
+        ParentColor = False
+      end
+      object Label56: TLabel
+        Left = 242
+        Height = 19
+        Top = 125
+        Width = 98
+        Caption = 'Grid Square:  '
+        ParentColor = False
+      end
+      object Label57: TLabel
+        Left = 158
+        Height = 19
+        Top = 173
+        Width = 182
+        Caption = 'Sound Device for Output:  '
+        ParentColor = False
+      end
+      object Label58: TLabel
+        Left = 171
+        Height = 19
+        Top = 205
+        Width = 169
+        Caption = 'Sound Device for Input:  '
+        ParentColor = False
+      end
+      object Label59: TLabel
+        Left = 188
+        Height = 19
+        Top = 245
+        Width = 152
+        Caption = 'PTT Control Method:  '
+        ParentColor = False
+      end
+      object Label60: TLabel
+        Left = 193
+        Height = 19
+        Top = 273
+        Width = 147
+        Caption = 'Rig Control Method:  '
+        ParentColor = False
+      end
+      object Label61: TLabel
+        Left = 13
+        Height = 19
+        Top = 325
+        Width = 311
+        Caption = 'CW ID is enabled for SH and Text Messages'
+        ParentColor = False
       end
     end
   end
@@ -2421,5 +2835,11 @@ object Form7: TForm7
     OnTimer = Timer1Timer
     left = 736
     top = 40
+  end
+  object ini: TIniPropStorage
+    StoredValues = <>
+    IniFileName = 'jt65hf.ini'
+    left = 736
+    top = 104
   end
 end

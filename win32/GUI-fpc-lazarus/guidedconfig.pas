@@ -5,9 +5,10 @@ unit guidedconfig;
 interface
 
 uses
-  Classes, SysUtils, FileUtil, LResources, Forms, Controls, Graphics,
-  Dialogs, StdCtrls, ExtCtrls, ComCtrls, ColorBox, Spin, valobject,
-  rigobject, paobject, CTypes, srgraph, serialobject;
+  Classes , SysUtils , FileUtil , LResources , Forms , Controls , Graphics ,
+  Dialogs , StdCtrls , ExtCtrls , ComCtrls , ColorBox , Spin , IniPropStorage ,
+  EditBtn , valobject , rigobject , paobject , CTypes , srgraph , serialobject,
+  StrUtils;
 
 type
   tmacrolist = array of String;
@@ -17,42 +18,55 @@ type
 
   TForm7 = class(TForm )
     buttonContinue8 : TButton ;
+    buttonContinue4 : TButton ;
     buttonTestCAT : TButton ;
     buttonTestSerialPTT : TButton ;
     buttonTestSound : TButton ;
     buttonContinue2 : TButton ;
     buttonContinue3 : TButton ;
-    buttonContinue4 : TButton ;
     buttonContinue5 : TButton ;
     buttonContinue6 : TButton ;
     buttonContinue7 : TButton ;
     buttonContinue9 : TButton ;
+    buttonContinue10 : TButton ;
     buttonEnableSuffixPrefix : TButton ;
     buttonContinue1 : TButton ;
     buttonContinue0 : TButton ;
+    cbEnAT2 : TCheckBox ;
+    cbEnAT3 : TCheckBox ;
+    cbEnAT4 : TCheckBox ;
+    cbEnAT5 : TCheckBox ;
+    cbEnAT6 : TCheckBox ;
+    cbEnAutoQSY2 : TCheckBox ;
+    cbEnAutoQSY3 : TCheckBox ;
+    cbEnAutoQSY4 : TCheckBox ;
+    cbEnAutoQSY5 : TCheckBox ;
+    cbEnAutoQSY6 : TCheckBox ;
+    cbEnAT1 : TCheckBox ;
     cbSRErrorCheck : TCheckBox ;
     cbCATPTT : TCheckBox ;
-    CheckBox10 : TCheckBox ;
-    CheckBox11 : TCheckBox ;
-    CheckBox12 : TCheckBox ;
-    CheckBox13 : TCheckBox ;
-    CheckBox14 : TCheckBox ;
-    CheckBox15 : TCheckBox ;
-    CheckBox16 : TCheckBox ;
-    CheckBox17 : TCheckBox ;
-    CheckBox18 : TCheckBox ;
-    CheckBox19 : TCheckBox ;
+    cbEnAutoQSY1 : TCheckBox ;
+    cbAutoTXSR : TCheckBox ;
+    cbSaveCSV : TCheckBox ;
+    cbSaveDB : TCheckBox ;
+    cbDisableMultiInQSO : TCheckBox ;
+    cbEnableMultiAfterQSO : TCheckBox ;
+    cbTXWatchdog : TCheckBox ;
+    cbSaveADIF : TCheckBox ;
+    cbdoeqsl : TCheckBox ;
+    cbdoDXLab : TCheckBox ;
+    cbRestoresDefaultsMulti : TCheckBox ;
     cbPTTAltCode : TCheckBox ;
-    CheckBox20 : TCheckBox ;
-    CheckBox21 : TCheckBox ;
+    cbSendCWIDFree : TCheckBox ;
+    cbSendCWIDAll : TCheckBox ;
     cbNoSpotting : TCheckBox ;
     cbForceMonoIO : TCheckBox ;
     cbRBEnable : TCheckBox ;
     cbPSKREnable : TCheckBox ;
     cbDisableColorCoding : TCheckBox ;
-    CheckBox7 : TCheckBox ;
-    CheckBox8 : TCheckBox ;
-    CheckBox9 : TCheckBox ;
+    cbUseOptFFT : TCheckBox ;
+    cbUseKV : TCheckBox ;
+    cbAutoRXSR : TCheckBox ;
     colorBoxCQ : TColorBox ;
     colorBoxQSO : TColorBox ;
     colorBoxMine : TColorBox ;
@@ -62,10 +76,39 @@ type
     comboSuffix : TComboBox ;
     cqtext : TLabel ;
     cqtext1 : TLabel ;
+    edQRG1 : TEdit ;
+    edQRG2 : TEdit ;
+    edQRG3 : TEdit ;
+    edQRG4 : TEdit ;
+    edQRG5 : TEdit ;
+    edQRG6 : TEdit ;
+    edQSYTime1 : TEdit ;
+    edQSYTime2 : TEdit ;
+    edQSYTime3 : TEdit ;
+    edQSYTime4 : TEdit ;
+    edQSYTime5 : TEdit ;
+    edQSYTime6 : TEdit ;
+    ini : TIniPropStorage ;
     Label35 : TLabel ;
     Label44 : TLabel ;
     Label45 : TLabel ;
     Label46 : TLabel ;
+    Label47 : TLabel ;
+    Label48 : TLabel ;
+    Label49 : TLabel ;
+    Label50 : TLabel ;
+    Label51 : TLabel ;
+    Label52 : TLabel ;
+    Label53 : TLabel ;
+    Label54 : TLabel ;
+    Label55 : TLabel ;
+    Label56 : TLabel ;
+    Label57 : TLabel ;
+    Label58 : TLabel ;
+    Label59 : TLabel ;
+    Label60 : TLabel ;
+    Label61 : TLabel ;
+    Label62 : TLabel ;
     rbcall : TEdit ;
     edRBCallsign : TEdit ;
     edRBInfo : TEdit ;
@@ -180,56 +223,59 @@ type
     rbCommander : TRadioButton ;
     RadioGroup1 : TRadioGroup ;
     SoundDevice : TTabSheet ;
-    PTTRigControl : TTabSheet ;
-    SpinEdit1 : TSpinEdit ;
-    Spotting : TTabSheet ;
-    Macros : TTabSheet ;
-    Colors : TTabSheet ;
-    Advanced : TTabSheet ;
-    Review : TTabSheet ;
-    AutoQSY : TTabSheet ;
-    Timer1 : TTimer ;
-    tometext : TLabel ;
-    tometext1 : TLabel ;
-    procedure buttonContinue0Click (Sender : TObject );
-    procedure buttonContinue1Click (Sender : TObject );
-    procedure buttonContinue2Click (Sender : TObject );
-    procedure buttonContinue3Click (Sender : TObject );
-    procedure buttonContinue4Click (Sender : TObject );
-    procedure buttonContinue5Click (Sender : TObject );
-    procedure buttonContinue6Click (Sender : TObject );
-    procedure buttonContinue7Click (Sender : TObject );
-    procedure buttonContinue8Click (Sender : TObject );
-    procedure buttonContinue9Click (Sender : TObject );
-    procedure buttonEnableSuffixPrefixClick (Sender : TObject );
-    procedure buttonTestCATClick (Sender : TObject );
-    procedure buttonTestSerialPTTClick (Sender : TObject );
-    procedure buttonTestSoundClick (Sender : TObject );
-    procedure cbDisableColorCodingChange (Sender : TObject );
-    procedure cbForceMonoIOChange (Sender : TObject );
-    procedure cbNoSpottingChange (Sender : TObject );
-    procedure cbRBEnableChange (Sender : TObject );
-    procedure colorBoxCQChange (Sender : TObject );
-    procedure colorBoxMineChange (Sender : TObject );
-    procedure colorBoxQSOChange (Sender : TObject );
-    procedure comboPrefixChange (Sender : TObject );
-    procedure comboSoundInChange (Sender : TObject );
-    procedure comboSoundOutChange (Sender : TObject );
-    procedure comboSuffixChange (Sender : TObject );
-    procedure editMacro1Change (Sender : TObject );
-    procedure editQRG1Change (Sender : TObject );
-    procedure edPTTPortChange (Sender : TObject );
-    procedure edStationCallsignChange (Sender : TObject );
-    procedure rbPTTCatChange (Sender : TObject );
-    procedure rbPTTComChange (Sender : TObject );
-    procedure rbPTTNoTXChange (Sender : TObject );
-    procedure rbPTTVoxChange (Sender : TObject );
-    procedure Timer1Timer (Sender : TObject );
-//    procedure buttonTestCATClick (Sender : TObject );
-//    procedure cbAltPTTChange (Sender : TObject );
-//    procedure Label16Click (Sender : TObject );
-//    procedure rgCATClick (Sender : TObject );
-//    procedure rgPTTClick (Sender : TObject );
+    PTTRigControl : TTabSheet;
+    spinTXCount : TSpinEdit;
+    Spotting : TTabSheet;
+    Macros : TTabSheet;
+    Colors : TTabSheet;
+    Advanced : TTabSheet;
+    Review : TTabSheet;
+    AutoQSY : TTabSheet;
+    Logging : TTabSheet;
+    Timer1 : TTimer;
+    tometext : TLabel;
+    tometext1 : TLabel;
+    procedure buttonContinue0Click(Sender : TObject);
+    procedure buttonContinue1Click(Sender : TObject);
+    procedure buttonContinue2Click(Sender : TObject);
+    procedure buttonContinue3Click(Sender : TObject);
+    procedure buttonContinue4Click(Sender : TObject);
+    procedure buttonContinue5Click(Sender : TObject);
+    procedure buttonContinue6Click(Sender : TObject);
+    procedure buttonContinue7Click(Sender : TObject);
+    procedure buttonContinue8Click(Sender : TObject);
+    procedure buttonContinue9Click(Sender : TObject);
+    procedure buttonContinue10Click(Sender : TObject);
+    procedure buttonEnableSuffixPrefixClick(Sender : TObject);
+    procedure buttonTestCATClick(Sender : TObject);
+    procedure buttonTestSerialPTTClick(Sender : TObject);
+    procedure buttonTestSoundClick(Sender : TObject);
+    procedure cbDisableColorCodingChange(Sender : TObject);
+    procedure cbEnAT1Change(Sender : TObject);
+    procedure cbForceMonoIOChange(Sender : TObject);
+    procedure cbNoSpottingChange(Sender : TObject);
+    procedure cbRBEnableChange(Sender : TObject);
+    procedure colorBoxCQChange(Sender : TObject);
+    procedure colorBoxMineChange(Sender : TObject);
+    procedure colorBoxQSOChange(Sender : TObject);
+    procedure comboPrefixChange(Sender : TObject);
+    procedure comboSoundInChange(Sender : TObject);
+    procedure comboSoundOutChange(Sender : TObject);
+    procedure comboSuffixChange(Sender : TObject);
+    procedure editMacro1Change(Sender : TObject);
+    procedure editQRG1Change(Sender : TObject);
+    procedure edPTTPortChange(Sender : TObject);
+    procedure edQSYTime1Change (Sender : TObject );
+    procedure edStationCallsignChange(Sender : TObject);
+    procedure FormShow (Sender : TObject );
+    procedure rbPTTCatChange(Sender : TObject);
+    procedure rbPTTComChange(Sender : TObject);
+    procedure rbPTTNoTXChange(Sender : TObject);
+    procedure rbPTTVoxChange(Sender : TObject);
+    procedure Timer1Timer(Sender : TObject);
+    procedure saveConfig(cfgname : string);
+    procedure readConfig(cfgname : string);
+    function  macroVal(macro : String) : String;
   private
     { private declarations }
   public
@@ -238,50 +284,96 @@ type
 
   TSettings = Class
     private
-      // Tab 1 Values Callsign/Grid
-      prCallsign     : String;
-      prCWCallsign   : String;
-      prRBCallsign   : String;
-      prGrid         : String;
-      // Tab 2 Values Callsign Suffix/Prefix
-      prPrefix       : Integer;  // Index of selected prefix
-      prSuffix       : Integer;  // Index of selected suffix
-      // Tab 3 Values Sound Device
-      prSoundInN     : Integer;  // Sound input device index (pa device id)
-      prSoundOutN    : Integer;  // Sound output device index (pa device id)
-      prSoundInS     : String;   // Sound input device name
-      prSoundOutS    : String;   // Sound output device name
-      prSoundTested  : Boolean;  // Has sound device test ran and passed?
-      prSoundETested : Boolean;  // Has extended device test ran and passed?
-      prSoundValid   : Boolean;  // Is sound configuration valid?
-      prSoundMonoRX  : Boolean;  // ADC must be in mono mode?
-      prSoundMonoTX  : Boolean;  // DAC must be in mono mode?
-      prForceMono    : Boolean;  // User selected force mono i/o?
-      // Tab 4 Values PTT And Rig Control
-      prPTTMethod    : String;
-      prCATMethod    : String;
-      prPTTPort      : String;
-      prAltPTT       : Boolean;
-      prPTTLines     : String;
-      prPTTTested    : Boolean;
+      // Tab 0 Values Callsign/Grid
+      prCallsign      : String;
+      prCWCallsign    : String;
+      prRBCallsign    : String;
+      prGrid          : String;
+      // Tab 1 Values Callsign Suffix/Prefix
+      prPrefix        : Integer;  // Index of selected prefix
+      prSuffix        : Integer;  // Index of selected suffix
+      // Tab 2 Values Sound Device
+      prSoundInN      : Integer;  // Sound input device index (pa device id)
+      prSoundOutN     : Integer;  // Sound output device index (pa device id)
+      prSoundInS      : String;   // Sound input device name
+      prSoundOutS     : String;   // Sound output device name
+      prSoundTested   : Boolean;  // Has sound device test ran and passed?
+      prSoundETested  : Boolean;  // Has extended device test ran and passed?
+      prSoundValid    : Boolean;  // Is sound configuration valid?
+      prSoundMonoRX   : Boolean;  // ADC must be in mono mode?
+      prSoundMonoTX   : Boolean;  // DAC must be in mono mode?
+      prForceMono     : Boolean;  // User selected force mono i/o?
+      // Tab 3 Values PTT And Rig Control
+      prPTTMethod     : String;
+      prCATMethod     : String;
+      prPTTPort       : String;
+      prAltPTT        : Boolean;
+      prPTTLines      : String;
+      prPTTTested     : Boolean;
+      prCATEnabled    : Boolean;
+      // Tab 4 Values Auto QSY
+      prEnQSY1        : Boolean;
+      prEnQSY2        : Boolean;
+      prEnQSY3        : Boolean;
+      prEnQSY4        : Boolean;
+      prEnQSY5        : Boolean;
+      prEnQSY6        : Boolean;
+      prQSYTime1      : String;
+      prQSYTime2      : String;
+      prQSYTime3      : String;
+      prQSYTime4      : String;
+      prQSYTime5      : String;
+      prQSYTime6      : String;
+      prQSYQRG1       : String;
+      prQSYQRG2       : String;
+      prQSYQRG3       : String;
+      prQSYQRG4       : String;
+      prQSYQRG5       : String;
+      prQSYQRG6       : String;
+      prQSYTune1      : Boolean;
+      prQSYTune2      : Boolean;
+      prQSYTune3      : Boolean;
+      prQSYTune4      : Boolean;
+      prQSYTune5      : Boolean;
+      prQSYTune6      : Boolean;
       // Tab 5 Values Spotting Network
-      prNoSpot       : Boolean;
-      prRB           : Boolean;
-      prPSKR         : Boolean;
-      prRBInfo       : String;
+      prNoSpot        : Boolean;
+      prRB            : Boolean;
+      prPSKR          : Boolean;
+      prRBInfo        : String;
       // Tab 6 Values Macros
-      prMacros       : tmacrolist;
-      prQRGs         : tqrglist;
+      prMacros        : tmacrolist;
+      prQRGs          : tqrglist;
       // Tab 7 Values Colors
-      prCQColor      : TColor;
-      prQSOColor     : TColor;
-      prMyColor      : TColor;
-      prNoColor      : Boolean;
-      // Tab 8 Values Advanced Settings
-
-      // Tab 9 Values Auto QSY
-
+      prCQColor       : TColor;
+      prQSOColor      : TColor;
+      prMyColor       : TColor;
+      prNoColor       : Boolean;
+      // Tab 8 Values Logging
+      prSaveCSV       : Boolean;
+      prSaveDB        : Boolean;
+      prSaveADIF      : Boolean;
+      prdoeQSL        : Boolean;
+      prdodxLab       : Boolean;
+      // Tab 9 Values Advanced Settings
+      prNoMultiQSO    : Boolean;
+      prMultiRestore  : Boolean;
+      prMultiDefMulti : Boolean;
+      prCWIDfree      : Boolean;
+      prCWIDall       : Boolean;
+      prTXWatchdog    : Boolean;
+      prTXWatchdogInt : Integer;
+      prUseOptFFT     : Boolean;
+      prUseKV         : Boolean;
+      prRXAutoSR      : Boolean;
+      prTXAutoSR      : Boolean;
       // Tab 10 Value Review
+      prCFGName       : String;
+      prbasedir       : String;
+      prsrcdir        : String;
+      prlogdir        : String;
+      prcfgdir        : String;
+      prkvdir         : String;
 
     public
       Constructor create();
@@ -352,18 +444,35 @@ type
       property forceMono : Boolean
         read  prForceMono
         write prForceMono;
+      property configFile : String
+        write prCFGName;
+      property baseDir : String
+        read  prBaseDir
+        write prBaseDir;
+      property srcdir : String
+        read  prSrcDir
+        write prSrcDir;
+      property logdir : String
+        read  prLogDir
+        write prLogDir;
+      property cfgdir : String
+        read  prCfgDir
+        write prCfgDir;
+      property kvdir : String
+        read  prKVDir
+        write prKVDir;
   end;
 
 var
-  Form7 : TForm7;
-  phase : Integer;
-  val1  : valobject.TValidator;
-  rig1  : rigobject.TRadio;
-  cfg   : guidedconfig.TSettings;
-  dsp   : paobject.TpaDSP;
-  ser   : serialobject.TSerial;
-  fail  : Boolean;
-  going : Boolean;
+  Form7  : TForm7;
+  val1   : valobject.TValidator;
+  rig1   : rigobject.TRadio;
+  cfg    : guidedconfig.TSettings;
+  dsp    : paobject.TpaDSP;
+  ser    : serialobject.TSerial;
+  fail   : Boolean;
+  going  : Boolean;
+  prepop : Boolean;
 
 
 implementation
@@ -373,54 +482,72 @@ constructor TSettings.Create();
 var
   i : integer;
 begin
-     // Tab 1 Values
-      prCallsign   := '';
-      prCWCallsign := '';
-      prRBCallsign := '';
-      prGrid       := '';
-      // Tab 2 Values
-      prPrefix     := 0;
-      prSuffix     := 0;
-      // Tab 3 Values
-      prSoundInN     := -1;
-      prSoundOutN    := -1;
-      prSoundInS     := '';
-      prSoundOutS    := '';
-      prSoundTested  := false;
-      prSoundETested := false;
-      prSoundValid   := false;
-      prSoundMonoRX  := false;
-      prSoundMonoTX  := false;
-      // Tab 4 Values
-      prPTTMethod  := '';
-      prCATMethod  := '';
-      prPTTPort    := '';
-      prAltPTT     := False;
-      prPTTLines   := '';
-      prPTTTested  := False;
+      // Tab 0 Values Callsign/Grid
+      prCallsign      := '';
+      prCWCallsign    := '';
+      prRBCallsign    := '';
+      prGrid          := '';
+      // Tab 1 Values Callsign Suffix/Prefix
+      prPrefix        := 0;
+      prSuffix        := 0;
+      // Tab 2 Values Sound Device
+      prSoundInN      := -1;
+      prSoundOutN     := -1;
+      prSoundInS      := '';
+      prSoundOutS     := '';
+      prSoundTested   := false;
+      prSoundETested  := false;
+      prSoundValid    := false;
+      prSoundMonoRX   := false;
+      prSoundMonoTX   := false;
+      // Tab 3 Values PTT And Rig Control
+      prPTTMethod     := '';
+      prCATMethod     := '';
+      prPTTPort       := '';
+      prAltPTT        := False;
+      prPTTLines      := '';
+      prPTTTested     := False;
+      prCATEnabled    := False;
+      // Tab 4 Values Auto QSY
+
       // Tab 5 Values Spotting Network
-      prNoSpot     := False;
-      prRB         := False;
-      prPSKR       := False;
-      prRBInfo     := '';
+      prNoSpot        := False;
+      prRB            := False;
+      prPSKR          := False;
+      prRBInfo        := '';
       // Tab 6 Values Macros
       setLength(prMacros,64);
       setLength(prQRGs,64);
       for i := 0 to 63 do
       begin
            prMacros[i] := '';
-           prQRGs[i] := 0;
+           prQRGs[i]   := 0;
       end;
       // Tab 7 Values Colors
-      prCQColor      := clLime;
-      prQSOColor     := clSilver;
-      prMyColor      := clRed;
-      prNoColor      := False;
-      // Tab 8 Values Advanced Settings
-
-      // Tab 9 Values Auto QSY
-
+      prCQColor       := clLime;
+      prQSOColor      := clSilver;
+      prMyColor       := clRed;
+      prNoColor       := False;
+      // Tab 8 Values Logging
+      prSaveCSV       := false;
+      prSaveDB        := false;
+      prSaveADIF      := false;
+      prdoeQSL        := false;
+      prdodxLab       := false;
+      // Tab 9 Values Advanced Settings
+      prNoMultiQSO    := False;
+      prMultiRestore  := False;
+      prMultiDefMulti := False;
+      prCWIDfree      := False;
+      prCWIDall       := False;
+      prTXWatchdog    := False;
+      prTXWatchdogInt := 10;
+      prUseOptFFT     := False;
+      prUseKV         := False;
+      prRXAutoSR      := False;
+      prTXAutoSR      := False;
       // Tab 10 Value Review
+      prCFGName       := '';
 
 end;
 
@@ -511,19 +638,20 @@ begin
 
      if svalid and cvalid and rvalid and gvalid then
      begin
-          // All good, moving on to suffix/prefix
+          // All good, moving on to Tab 1  Values Callsign Suffix/Prefix
+
           comboPrefix.ItemIndex := 0;
           comboSuffix.ItemIndex := 0;
           label4.Visible := false;
           label7.Visible := false;
           label8.Visible := false;
-          PageControl1.Pages[1].TabVisible := true;
-          PageControl1.ActivePageIndex := 1;
           Label17.Caption := 'Callsign:  ' + comboPrefix.Items[comboPrefix.ItemIndex] + edStationCallsign.Text + comboSuffix.Items[comboSuffix.ItemIndex] + '  ' + 'Grid:  ' + edStationGrid.Text + '  CW ID:  ' + edCWCallsign.Text + '  RB ID:  ' + edRBCallsign.Text;
           Label17.Visible := True;
           fullcall.Text := comboPrefix.Items[comboPrefix.ItemIndex] + edStationCallsign.Text + comboSuffix.Items[comboSuffix.ItemIndex];
           cwcall.Text := val1.cwCallsign;
           rbcall.Text := val1.rbCallsign;
+          PageControl1.Pages[1].TabVisible := true;
+          PageControl1.ActivePageIndex := 1;
      end
      else
      begin
@@ -657,11 +785,28 @@ begin
      if rbOmni.Checked then cfg.CATMethod := 'OMNI';
      if rbNoCAT.Checked then cfg.CATMethod := 'NONE';
      cfg.PTTPort := edPTTPort.Text;
-     PageControl1.Pages[4].TabVisible := true;
-     PageControl1.ActivePageIndex := 4;
+     if rbHRD.Checked or rbCommander.Checked or rbOmni.Checked then cfg.prCATEnabled := true;
+     // Move to Tab 4  Values Spotting Network
+     if cfg.prCATEnabled then
+     begin
+          PageControl1.Pages[4].TabVisible := true;
+          PageControl1.ActivePageIndex := 4;
+     end
+     else
+     begin
+          PageControl1.Pages[5].TabVisible := true;
+          PageControl1.ActivePageIndex := 5;
+     end;
 end;
 
 procedure TForm7.buttonContinue4Click(Sender : TObject);
+begin
+     // Called from Auto QSY Tab
+     PageControl1.Pages[5].TabVisible := true;
+     PageControl1.ActivePageIndex := 5;
+end;
+
+procedure TForm7.buttonContinue5Click(Sender : TObject);
 begin
      // Called from Spotting Networks Tab
      // Save spotting network settings and move on to Macros
@@ -669,11 +814,11 @@ begin
      if cbRBEnable.Checked Then cfg.prRB := True else cfg.prRB := False;
      if cbPSKREnable.Checked Then cfg.prPSKR := True else cfg.prPSKR := False;
      cfg.prRBInfo := edRBInfo.Text;
-     PageControl1.Pages[5].TabVisible := true;
-     PageControl1.ActivePageIndex := 5;
+     PageControl1.Pages[6].TabVisible := true;
+     PageControl1.ActivePageIndex := 6;
 end;
 
-procedure TForm7.buttonContinue5Click(Sender : TObject);
+procedure TForm7.buttonContinue6Click(Sender : TObject);
 var
    tstflt : Double;
 begin
@@ -724,39 +869,85 @@ begin
      val1.testQRG(editQRG14.Text,tstflt,cfg.prQRGs[13]);
      val1.testQRG(editQRG15.Text,tstflt,cfg.prQRGs[14]);
      val1.testQRG(editQRG16.Text,tstflt,cfg.prQRGs[15]);
-     PageControl1.Pages[6].TabVisible := true;
-     PageControl1.ActivePageIndex := 6;
-end;
-
-procedure TForm7.buttonContinue6Click(Sender : TObject);
-begin
-     // Called from Colors Tab
      PageControl1.Pages[7].TabVisible := true;
      PageControl1.ActivePageIndex := 7;
 end;
 
 procedure TForm7.buttonContinue7Click(Sender : TObject);
 begin
-     // Called from Advanced Tab
+     // Called from Colors Tab
+     // Save colors values
+     // Tab 7 Values Colors
+     if cbDisableColorCoding.Checked then
+     begin
+          cfg.prNoColor := true;
+          cfg.prCQColor  := clWhite;
+          cfg.prQSOColor := clWhite;
+          cfg.prMyColor  := clWhite;
+     end
+     else
+     begin
+          cfg.prNoColor  := false;
+          cfg.prCQColor  := colorBoxCQ.Colors[colorBoxCQ.ItemIndex];
+          cfg.prQSOColor := colorBoxQSO.Colors[colorBoxQSO.ItemIndex];
+          cfg.prMyColor  := colorBoxMine.Colors[colorBoxMine.ItemIndex];
+     end;
      PageControl1.Pages[8].TabVisible := true;
      PageControl1.ActivePageIndex := 8;
 end;
 
 procedure TForm7.buttonContinue8Click(Sender : TObject);
 begin
-     // Called from Auto QSY Tab
+     // Called from Logging Tab
+     // Save values for Logging Tab
+     if cbSaveCSV.Checked then cfg.prSaveCSV := true else cfg.prSaveCSV := false;
+     if cbSaveDB.Checked then cfg.prSaveDB := true else cfg.prSaveDB := false;
+     if cbSaveADIF.Checked then cfg.prSaveADIF := true else cfg.prSaveADIF :=false;
+     if cbdoeqsl.Checked then cfg.prdoeQSL := true else cfg.prdoeQSL := false;
+     if cbdoDXLab.Checked then cfg.prdodxLab := true else cfg.prdodxLab := false;
      PageControl1.Pages[9].TabVisible := true;
      PageControl1.ActivePageIndex := 9;
 end;
 
 procedure TForm7.buttonContinue9Click(Sender : TObject);
 begin
+     // Called from Advanced Tab
+     if cbDisableMultiInQSO.Checked then cfg.prNoMultiQSO := true else cfg.prNoMultiQSO := false;
+     if cbEnableMultiAfterQSO.Checked then cfg.prMultiRestore := true else cfg.prMultiRestore := false;
+     if cbRestoresDefaultsMulti.Checked then cfg.prMultiDefMulti := true else cfg.prMultiDefMulti := false;
+     if cbSendCWIDFree.Checked then cfg.prCWIDfree := true else cfg.prCWIDfree := false;
+     if cbSendCWIDAll.Checked then cfg.prCWIDall := true else cfg.prCWIDall := false;
+     if cbTXWatchdog.Checked then cfg.prTXWatchDog := true else cfg.prTXWatchdog := false;
+     cfg.prTXWatchdogInt := spinTXCount.Value;
+     if cbUseOptFFT.Checked then cfg.prUseOptFFT := true else cfg.prUseOptFFT := false;
+     if cbUseKV.Checked then cfg.prUseKV := true else cfg.prUseKV := false;
+     if cbAutoRXSR.Checked then cfg.prRXAutoSR := true else cfg.prRXAutoSR := false;
+     if cbAutoTXSR.Checked then cfg.prTXAutoSR := true else cfg.prTXAutoSR := false;
+     // Setup Review Tab
+     Label53.Caption := 'Callsign Used for Over The Air Transmissions:  ' + cfg.prCallsign;
+     Label54.Caption := 'Callsign Used for Over The Air CW ID:  ' + cfg.prCWCallsign;
+     Label55.Caption := 'Callsign Used for Internet Spotting Network(s):  ' + cfg.prRBCallsign;
+     Label56.Caption := 'Grid Square:  ' + cfg.prGrid;
+     Label57.Caption := 'Sound Device for Output:  ' + cfg.prSoundOutS;
+     Label58.Caption := 'Sound Device for Input:  ' + cfg.prSoundInS;
+     Label59.Caption := 'PTT Control Method:  ' + cfg.prPTTMethod;
+     Label60.Caption := 'Rig Control Method:  ' + cfg.prCATMethod;
+     if cfg.prCWIDfree then Label61.Caption := 'CW ID is enabled for SH and Text Messages';
+     if cfg.prCWIDall  then Label61.Caption := 'CW ID is enabled for SH, Text and normal 73 Messages';
+     if not cfg.prCWIDall and not cfg.prCWIDfree then Label61.Visible := false else Label61.Visible := true;
+     // Move to Tab 10 Review
+     PageControl1.Pages[10].TabVisible := true;
+     PageControl1.ActivePageIndex := 10;
+end;
+
+procedure TForm7.buttonContinue10Click(Sender : TObject);
+begin
      // Called from Review Tab
-
      // Configuration complete and user has theoretically reviewed and
-     // approved the configuration.  All done, hide window and back to
-     // main program loop.
-
+     // approved the configuration.
+     // Need to save the configuration
+     saveConfig(cfg.prCFGName);
+     // All done, hide window and back to main program loop.
      // Free the portaudio object now that we're done with it.
      srgraph.Form8.series1.Clear;
      srgraph.Form8.series2.Clear;
@@ -948,6 +1139,40 @@ begin
      end;
 end;
 
+procedure TForm7.FormShow(Sender : TObject);
+begin
+     if prepop then
+     begin
+          PageControl1.Pages[0].TabVisible := true;
+          PageControl1.Pages[1].TabVisible := true;
+          PageControl1.Pages[2].TabVisible := true;
+          PageControl1.Pages[3].TabVisible := true;
+          PageControl1.Pages[4].TabVisible := true;
+          PageControl1.Pages[5].TabVisible := true;
+          PageControl1.Pages[6].TabVisible := true;
+          PageControl1.Pages[7].TabVisible := true;
+          PageControl1.Pages[8].TabVisible := true;
+          PageControl1.Pages[9].TabVisible := true;
+          PageControl1.Pages[10].TabVisible := true;
+          PageControl1.ActivePageIndex := 0;
+     end
+     else
+     begin
+          PageControl1.Pages[0].TabVisible := true;
+          PageControl1.Pages[1].TabVisible := false;
+          PageControl1.Pages[2].TabVisible := false;
+          PageControl1.Pages[3].TabVisible := false;
+          PageControl1.Pages[4].TabVisible := false;
+          PageControl1.Pages[5].TabVisible := false;
+          PageControl1.Pages[6].TabVisible := false;
+          PageControl1.Pages[7].TabVisible := false;
+          PageControl1.Pages[8].TabVisible := false;
+          PageControl1.Pages[9].TabVisible := false;
+          PageControl1.Pages[10].TabVisible := false;
+          PageControl1.ActivePageIndex := 0;
+     end;
+end;
+
 procedure TForm7.editMacro1Change(Sender : TObject);
 var
    i     : integer;
@@ -965,6 +1190,21 @@ begin
      foo := trimleft(trimright(foo));
      if not valid then TEdit(sender).Text := foo;
      if not valid then TEdit(sender).SelStart := length(TEdit(sender).Text);
+end;
+
+function  TForm7.macroVal(macro : String) : String;
+Var
+   i : Integer;
+   foo : String;
+Begin
+     // Routine to handle validation of macros when reading back from saved configuration
+     foo := macro;
+     for i := 1 to length(foo) do
+     begin
+          if not val1.asciiValidate(Char(foo[i]),'free') then foo[i] := ' ';
+     end;
+     foo := trimleft(trimright(foo));
+     result := foo;
 end;
 
 procedure TForm7.editQRG1Change(Sender : TObject);
@@ -1024,6 +1264,67 @@ end;
 procedure TForm7.edPTTPortChange(Sender : TObject);
 begin
      if edPTTPort.Text = 'COMXXX' then buttonTestSerialPTT.Enabled := false else buttonTestSerialPTT.Enabled := true;
+end;
+
+procedure TForm7.edQSYTime1Change(Sender : TObject);
+var
+   valarray : Array[0..10] of String;
+   i, j     : Integer;
+   valid    : Boolean;
+   foo      : String;
+   hh,mm    : Integer;
+begin
+     valarray[0] := '0';
+     valarray[1] := '1';
+     valarray[2] := '2';
+     valarray[3] := '3';
+     valarray[4] := '4';
+     valarray[5] := '5';
+     valarray[6] := '6';
+     valarray[7] := '7';
+     valarray[8] := '8';
+     valarray[9] := '9';
+     valarray[10] := ':';
+     // Universal validator for time input fields
+     valid := true;
+     foo := TEdit(sender).Text;
+     for i := 1 to length(foo) do
+     begin
+          j := ansiIndexStr(foo[i],valarray);
+          If j > -1 then foo[i] := foo[i] else foo[i] := '0';
+     end;
+     if (length(foo) = 4) or (length(foo) = 5) then
+     begin
+          // Lets see if we have a winner...
+          if length(foo) = 5 then
+          begin
+               // This should be ##:##
+               if foo[3] = ':' then
+               begin
+                    hh := strToInt(foo[1..2]);
+                    mm := strToInt(foo[4..5]);
+                    if ((hh > -1) and (hh < 24)) and ((mm > -1) and (mm < 60)) then valid := true else valid := false;
+                    if not valid then foo := '';
+               end;
+          end;
+          if length(foo) = 4 then
+          begin
+               // This could be #### or ##:# with ##:# being an incomplete entry
+               if foo[3] = ':' then
+               begin
+                    // Nada
+               end
+               else
+               begin
+                    hh := strToInt(foo[1..2]);
+                    mm := strToInt(foo[3..4]);
+                    if ((hh > -1) and (hh < 24)) and ((mm > -1) and (hh < 60)) then valid := true else valid := false;
+                    if not valid then foo := '';
+               end;
+          end;
+     end;
+     TEdit(Sender).Text := foo;
+
 end;
 
 procedure TForm7.rbPTTCatChange(Sender : TObject);
@@ -1534,6 +1835,11 @@ begin
      end;
 end;
 
+procedure TForm7.cbEnAT1Change(Sender : TObject);
+begin
+     if cbEnAT1.Checked or cbEnAT2.Checked or cbEnAT3.Checked or cbEnAT4.Checked or cbEnAT5.Checked or cbEnAT6.Checked then Label52.Visible := true else Label52.Visible := false;
+end;
+
 procedure TForm7.cbForceMonoIOChange(Sender : TObject);
 begin
      if cbForceMonoIO.Checked then cfg.forceMono := true else cfg.forceMono := false;
@@ -1606,13 +1912,322 @@ begin
      end;
 end;
 
+procedure TForm7.saveConfig(cfgname : string);
+var
+   i       : Integer;
+begin
+     if length(cfgname) > 0 then
+     begin
+          ini.IniFileName := cfgname;
+          ini.IniSection := 'JT65HF';
+          ini.WriteString('version','2.0.0');
+          ini.WriteString('callsign', cfg.prCallsign);
+          ini.WriteString('cwcallsign', cfg.prCWCallsign);
+          ini.WriteString('rbcallsign', cfg.prRBCallsign);
+          ini.WriteString('grid',cfg.prGrid);
+          ini.WriteInteger('prefix',cfg.prPrefix);
+          ini.WriteInteger('suffix',cfg.prSuffix);
+          ini.WriteInteger('soundin',cfg.prSoundInN);
+          ini.WriteInteger('soundout',cfg.prSoundOutN);
+          ini.WriteString('soundinname',cfg.prSoundInS);
+          ini.WriteString('soundoutname',cfg.prSoundOutS);
+          ini.WriteBoolean('soundtested',cfg.prSoundTested);
+          ini.WriteBoolean('soundetested',cfg.prSoundETested);
+          ini.WriteBoolean('soundvalid',cfg.prSoundValid);
+          ini.WriteBoolean('soundmonorx',cfg.prSoundMonoRX);
+          ini.WriteBoolean('soundmonotx',cfg.prSoundMonoTX);
+          ini.WriteBoolean('forcemono',cfg.prForceMono);
+          ini.WriteString('pttmethod',cfg.prPTTMethod);
+          ini.WriteString('catmethod',cfg.prCATMethod);
+          ini.WriteString('pttport',cfg.prPTTPort);
+          ini.WriteBoolean('altptt',cfg.prAltPTT);
+          ini.WriteString('pttlines',cfg.prPTTLines);
+          ini.WriteBoolean('ptttested',cfg.prPTTTested);
+          ini.WriteBoolean('catenabled',cfg.prCATEnabled);
+          ini.WriteBoolean('enqsy1',cfg.prEnQSY1);
+          ini.WriteBoolean('enqsy2',cfg.prEnQSY2);
+          ini.WriteBoolean('enqsy3',cfg.prEnQSY3);
+          ini.WriteBoolean('enqsy4',cfg.prEnQSY4);
+          ini.WriteBoolean('enqsy5',cfg.prEnQSY5);
+          ini.WriteBoolean('enqsy6',cfg.prEnQSY6);
+          ini.WriteString('qsytime1',cfg.prQSYTime1);
+          ini.WriteString('qsytime2',cfg.prQSYTime2);
+          ini.WriteString('qsytime3',cfg.prQSYTime3);
+          ini.WriteString('qsytime4',cfg.prQSYTime4);
+          ini.WriteString('qsytime5',cfg.prQSYTime5);
+          ini.WriteString('qsytime6',cfg.prQSYTime6);
+          ini.WriteString('qsyqrg1',cfg.prQSYQRG1);
+          ini.WriteString('qsyqrg2',cfg.prQSYQRG2);
+          ini.WriteString('qsyqrg3',cfg.prQSYQRG3);
+          ini.WriteString('qsyqrg4',cfg.prQSYQRG4);
+          ini.WriteString('qsyqrg5',cfg.prQSYQRG5);
+          ini.WriteString('qsyqrg6',cfg.prQSYQRG6);
+          ini.WriteBoolean('qsyatune1',cfg.prQSYTune1);
+          ini.WriteBoolean('qsyatune2',cfg.prQSYTune2);
+          ini.WriteBoolean('qsyatune3',cfg.prQSYTune3);
+          ini.WriteBoolean('qsyatune4',cfg.prQSYTune4);
+          ini.WriteBoolean('qsyatune5',cfg.prQSYTune5);
+          ini.WriteBoolean('qsyatune6',cfg.prQSYTune6);
+          ini.WriteBoolean('nospotting',cfg.prNoSpot);
+          ini.WriteBoolean('enablerb',cfg.prRB);
+          ini.WriteBoolean('enablepskr',cfg.prPSKR);
+          ini.WriteString('rbinfo',cfg.prRBInfo);
+          for i := 0 to 63 do
+          begin
+               ini.WriteString('macro'+intToStr(i),cfg.prMacros[i]);
+          end;
+          for i := 0 to 63 do
+          begin
+               ini.WriteInteger('qrg'+intToStr(i),cfg.prQRGs[i]);
+          end;
+          ini.WriteInteger('cqcolor',cfg.prCQColor);
+          ini.WriteInteger('qsocolor',cfg.prQSOColor);
+          ini.WriteInteger('mycolor',cfg.prMyColor);
+          ini.WriteBoolean('nocolor',cfg.prNoColor);
+          ini.WriteBoolean('savecsv',cfg.prSaveCSV);
+          ini.WriteBoolean('savedb',cfg.prSaveDB);
+          ini.WriteBoolean('saveadif',cfg.prSaveADIF);
+          ini.WriteBoolean('doeqsl',cfg.prdoeQSL);
+          ini.WriteBoolean('dodxlab',cfg.prdodxLab);
+          ini.WriteBoolean('nomultiqso',cfg.prNoMultiQSO);
+          ini.WriteBoolean('multirestore',cfg.prMultiRestore);
+          ini.WriteBoolean('multidefmulti',cfg.prMultiDefMulti);
+          ini.WriteBoolean('cwidfree',cfg.prCWIDfree);
+          ini.WriteBoolean('cwidall',cfg.prCWIDall);
+          ini.WriteBoolean('txwatchdog',cfg.prTXWatchdog);
+          ini.WriteInteger('txwatchdogcount',cfg.prTXWatchdogInt);
+          ini.WriteBoolean('optfft',cfg.prUseOptFFT);
+          ini.WriteBoolean('usekv',cfg.prUseKV);
+          ini.WriteBoolean('rxsrauto',cfg.prRXAutoSR);
+          ini.WriteBoolean('txsrauto',cfg.prTXAutoSR);
+          ini.Save;
+     end;
+end;
+
+procedure TForm7.readConfig(cfgname : string);
+var
+   i       : Integer;
+   tmpflt  : double;
+   foo     : String;
+begin
+     tmpflt := 0.0;
+     if length(cfgname) > 0 then
+     begin
+        ini.IniFileName := cfgname;
+        ini.IniSection :='JT65HF';
+        cfg.prCallsign := ini.ReadString('callsign','');
+        cfg.prCWCallsign := ini.ReadString('cwcallsign','');
+        cfg.prRBCallsign := ini.ReadString('rbcallsign','');
+        cfg.prGrid := ini.ReadString('grid','');
+        cfg.prPrefix := ini.ReadInteger('prefix',0);
+        cfg.prSuffix := ini.ReadInteger('suffix',0);
+        cfg.prSoundInN := ini.ReadInteger('soundin',0);
+        cfg.prSoundOutN := ini.ReadInteger('soundout',0);
+        cfg.prSoundInS := ini.ReadString('soundinname','');
+        cfg.prSoundOutS := ini.ReadString('soundoutname','');
+        cfg.prSoundTested := ini.ReadBoolean('soundtested',False);
+        cfg.prSoundETested := ini.ReadBoolean('soundetested',False);
+        cfg.prSoundValid := ini.ReadBoolean('soundvalid',False);
+        cfg.prsoundMonoRX := ini.ReadBoolean('soundmonorx',False);
+        cfg.prsoundMonoTX := ini.ReadBoolean('soundmonotx',False);
+        cfg.prForceMono := ini.ReadBoolean('forcemono',False);
+        cfg.prPTTMethod := ini.ReadString('pttmethod','');
+        cfg.prCATMethod := ini.ReadString('catmethod','');
+        cfg.prPTTPort := ini.ReadString('pttport','');
+        cfg.prAltPTT := ini.ReadBoolean('altptt',False);
+        cfg.prPTTLines := ini.ReadString('pttlines','');
+        cfg.prPTTTested := ini.ReadBoolean('ptttested',False);
+        cfg.prCATEnabled := ini.ReadBoolean('catenabled',False);
+        cfg.prEnQSY1 := ini.ReadBoolean('enqsy1',False);
+        cfg.prEnQSY2 := ini.ReadBoolean('enqsy2',False);
+        cfg.prEnQSY3 := ini.ReadBoolean('enqsy3',False);
+        cfg.prEnQSY4 := ini.ReadBoolean('enqsy4',False);
+        cfg.prEnQSY5 := ini.ReadBoolean('enqsy5',False);
+        cfg.prEnQSY6 := ini.ReadBoolean('enqsy6',False);
+        cfg.prQSYTime1 := ini.ReadString('qsytime1','');
+        cfg.prQSYTime2 := ini.ReadString('qsytime2','');
+        cfg.prQSYTime3 := ini.ReadString('qsytime3','');
+        cfg.prQSYTime4 := ini.ReadString('qsytime4','');
+        cfg.prQSYTime5 := ini.ReadString('qsytime5','');
+        cfg.prQSYTime6 := ini.ReadString('qsytime6','');
+        cfg.prQSYQRG1 := ini.ReadString('qsyqrg1','');
+        cfg.prQSYQRG2 := ini.ReadString('qsyqrg2','');
+        cfg.prQSYQRG3 := ini.ReadString('qsyqrg3','');
+        cfg.prQSYQRG4 := ini.ReadString('qsyqrg4','');
+        cfg.prQSYQRG5 := ini.ReadString('qsyqrg5','');
+        cfg.prQSYQRG6 := ini.ReadString('qsyqrg6','');
+        cfg.prQSYTune1 := ini.ReadBoolean('qsyatune1',False);
+        cfg.prQSYTune2 := ini.ReadBoolean('qsyatune2',False);
+        cfg.prQSYTune3 := ini.ReadBoolean('qsyatune3',False);
+        cfg.prQSYTune4 := ini.ReadBoolean('qsyatune4',False);
+        cfg.prQSYTune5 := ini.ReadBoolean('qsyatune5',False);
+        cfg.prQSYTune6 := ini.ReadBoolean('qsyatune6',False);
+        cfg.prNoSpot := ini.ReadBoolean('nospotting',False);
+        cfg.prRB := ini.ReadBoolean('enablerb',False);
+        cfg.prPSKR := ini.ReadBoolean('enablepskr',False);
+        cfg.prRBInfo := ini.ReadString('rbinfo','');
+        for i := 0 to 63 do
+        begin
+             foo := 'macro'+intToStr(i);
+             cfg.prMacros[i] := ini.ReadString(foo,'');
+        end;
+        for i := 0 to 63 do
+        begin
+             foo := 'qrg'+intToStr(i);
+             cfg.prQRGs[i] := ini.ReadInteger(foo,0);
+        end;
+        cfg.prCQColor := ini.ReadInteger('cqcolor',clLime);
+        cfg.prQSOColor := ini.ReadInteger('qsocolor',clSilver);
+        cfg.prMyColor := ini.ReadInteger('mycolor',clRed);
+        cfg.prNoColor := ini.ReadBoolean('nocolor',False);
+        cfg.prSaveCSV := ini.ReadBoolean('savecsv',False);
+        cfg.prSaveDB := ini.ReadBoolean('savedb',False);
+        cfg.prSaveADIF := ini.ReadBoolean('saveadif',False);
+        cfg.prdoeQSL := ini.ReadBoolean('doeqsl',False);
+        cfg.prdodxLab := ini.ReadBoolean('dodxlab',False);
+        cfg.prNoMultiQSO := ini.ReadBoolean('nomultiqso',False);
+        cfg.prMultiRestore := ini.ReadBoolean('multirestore',False);
+        cfg.prMultiDefMulti := ini.ReadBoolean('multidefmulti',False);
+        cfg.prCWIDfree := ini.ReadBoolean('cwidfree',False);
+        cfg.prCWIDall := ini.ReadBoolean('cwidall',False);
+        cfg.prTXWatchdog := ini.ReadBoolean('txwatchdog',False);
+        cfg.prTXWatchdogInt := ini.ReadInteger('txwatchdogcount',10);
+        cfg.prUseOptFFT := ini.ReadBoolean('optfft',True);
+        cfg.prUseKV := ini.ReadBoolean('usekv',True);
+        cfg.prRXAutoSR := ini.ReadBoolean('rxsrauto',True);
+        cfg.prTXAutoSR := ini.ReadBoolean('txsrauto',True);
+        // Configuration read now set the GUI elements
+        // Tab 0 Values Callsign/Grid
+        edStationCallsign.Text := cfg.prCallsign;
+        edCWCallsign.Text := cfg.prCWCallsign;
+        edRBCallsign.Text := cfg.prRBCallsign;
+        edStationGrid.Text := cfg.prGrid;
+        // Tab 1 Values Callsign Suffix/Prefix
+        comboPrefix.ItemIndex := cfg.prPrefix;
+        comboSuffix.ItemIndex := cfg.prSuffix;
+        // Tab 2 Values Sound Device
+        comboSoundIn.ItemIndex := cfg.prSoundInN;
+        comboSoundOut.ItemIndex := cfg.prSoundOutN;
+        cbForceMonoIO.Checked := cfg.prForceMono;
+        // Tab 3 Values PTT And Rig Control
+        if cfg.prPTTMethod = 'VOX' then rbPTTVox.Checked := true else rbPTTVox.Checked := False;
+        if cfg.prPTTMethod = 'COM' then rbPTTCom.Checked := true else rbPTTCom.checked := False;
+        if cfg.prPTTMethod = 'CAT' then rbPTTCat.Checked := true else rbPTTCat.checked := False;
+        if cfg.prPTTMethod = 'OFF' then rbPTTNoTX.Checked := true else rbPTTNoTX.checked := False;
+        if cfg.pttLines = 'DTRRTS' then rbDTRRTS.Checked := true else rbDTRRTS.Checked := false;
+        if cfg.pttLines = 'RTS' then rbRTS.Checked := true else rbRTS.Checked := false;
+        if cfg.pttLines = 'DTR' then rbDTR.Checked := true else rbDTR.Checked := false;
+        if cfg.CATMethod = 'HRD' then rbHRD.Checked := true else rbHRD.Checked := false;;
+        if cfg.CATMethod = 'COMMANDER' then rbCommander.Checked := true else rbCommander.Checked := false;
+        if cfg.CATMethod = 'OMNI' then rbOmni.Checked := true else rbOmni.Checked := false;
+        if cfg.CATMethod = 'NONE' then rbNoCAT.Checked := true else rbNoCAT.checked := false;
+        edPTTPort.Text := cfg.prPTTPort;
+        cbPTTAltCode.checked := cfg.prAltPTT;
+        // Tab 4 Values Auto QSY
+        if cfg.prEnQSY1 then cbEnAutoQSY1.Checked := true else cbEnAutoQSY1.Checked := false;
+        if cfg.prEnQSY2 then cbEnAutoQSY2.Checked := true else cbEnAutoQSY2.Checked := false;
+        if cfg.prEnQSY3 then cbEnAutoQSY3.Checked := true else cbEnAutoQSY3.Checked := false;
+        if cfg.prEnQSY4 then cbEnAutoQSY4.Checked := true else cbEnAutoQSY4.Checked := false;
+        if cfg.prEnQSY5 then cbEnAutoQSY5.Checked := true else cbEnAutoQSY5.Checked := false;
+        if cfg.prEnQSY6 then cbEnAutoQSY6.Checked := true else cbEnAutoQSY6.Checked := false;
+        edQSYTime1.Text := cfg.prQSYTime1;
+        edQSYTime2.Text := cfg.prQSYTime2;
+        edQSYTime3.Text := cfg.prQSYTime3;
+        edQSYTime4.Text := cfg.prQSYTime4;
+        edQSYTime5.Text := cfg.prQSYTime5;
+        edQSYTime6.Text := cfg.prQSYTime6;
+        edQRG1.Text := cfg.prQSYQRG1;
+        edQRG2.Text := cfg.prQSYQRG2;
+        edQRG3.Text := cfg.prQSYQRG3;
+        edQRG4.Text := cfg.prQSYQRG4;
+        edQRG5.Text := cfg.prQSYQRG5;
+        edQRG6.Text := cfg.prQSYQRG6;
+        if cfg.prQSYTune1 then cbEnAT1.Checked := true else cbEnAT1.Checked := false;
+        if cfg.prQSYTune2 then cbEnAT2.Checked := true else cbEnAT2.Checked := false;
+        if cfg.prQSYTune3 then cbEnAT3.Checked := true else cbEnAT3.Checked := false;
+        if cfg.prQSYTune4 then cbEnAT4.Checked := true else cbEnAT4.Checked := false;
+        if cfg.prQSYTune5 then cbEnAT5.Checked := true else cbEnAT5.Checked := false;
+        if cfg.prQSYTune6 then cbEnAT6.Checked := true else cbEnAT6.Checked := false;
+        // Tab 5 Values Spotting Network
+        if cfg.prNoSpot then cbNoSpotting.Checked := true else cbNoSpotting.Checked := false;
+        if cfg.prRB then cbRBEnable.Checked := true else cbRBEnable.Checked := false;
+        if cfg.prPSKR then cbPSKREnable.Checked := true else cbPSKREnable.checked := false;
+        edRBInfo.Text := cfg.prRBInfo;
+        // Tab 6 Values Macros
+        editMacro1.Text := macroVal(cfg.prMacros[0]);
+        editMacro2.Text := macroVal(cfg.prMacros[1]);
+        editMacro3.Text := macroVal(cfg.prMacros[2]);
+        editMacro4.Text := macroVal(cfg.prMacros[3]);
+        editMacro5.Text := macroVal(cfg.prMacros[4]);
+        editMacro6.Text := macroVal(cfg.prMacros[5]);
+        editMacro7.Text := macroVal(cfg.prMacros[6]);
+        editMacro8.Text := macroVal(cfg.prMacros[7]);
+        editMacro9.Text := macroVal(cfg.prMacros[8]);
+        editMacro10.Text := macroVal(cfg.prMacros[9]);
+        editMacro11.Text := macroVal(cfg.prMacros[10]);
+        editMacro12.Text := macroVal(cfg.prMacros[11]);
+        editMacro13.Text := macroVal(cfg.prMacros[12]);
+        editMacro14.Text := macroVal(cfg.prMacros[13]);
+        editMacro15.Text := macroVal(cfg.prMacros[14]);
+        editMacro16.Text := macroVal(cfg.prMacros[15]);
+        editMacro17.Text := macroVal(cfg.prMacros[16]);
+        editMacro18.Text := macroVal(cfg.prMacros[17]);
+        editMacro19.Text := macroVal(cfg.prMacros[18]);
+        editMacro20.Text := macroVal(cfg.prMacros[19]);
+        editMacro21.Text := macroVal(cfg.prMacros[20]);
+        editMacro22.Text := macroVal(cfg.prMacros[21]);
+        editMacro23.Text := macroVal(cfg.prMacros[22]);
+        editMacro24.Text := macroVal(cfg.prMacros[23]);
+        //floatToStrF(dsp.adcErate,ffFixed,0,4)
+        if val1.testQRG(inttostr(cfg.prQRGs[0]),tmpflt,i) then editQRG1.Text := floatToStrF(tmpflt,ffFixed,0,2) else editQRG1.Text := '0';
+        if val1.testQRG(inttostr(cfg.prQRGs[1]),tmpflt,i) then editQRG2.Text := floatToStrF(tmpflt,ffFixed,0,2) else editQRG2.Text := '0';
+        if val1.testQRG(inttostr(cfg.prQRGs[2]),tmpflt,i) then editQRG3.Text := floatToStrF(tmpflt,ffFixed,0,2) else editQRG3.Text := '0';
+        if val1.testQRG(inttostr(cfg.prQRGs[3]),tmpflt,i) then editQRG4.Text := floatToStrF(tmpflt,ffFixed,0,2) else editQRG4.Text := '0';
+        if val1.testQRG(inttostr(cfg.prQRGs[4]),tmpflt,i) then editQRG5.Text := floatToStrF(tmpflt,ffFixed,0,2) else editQRG5.Text := '0';
+        if val1.testQRG(inttostr(cfg.prQRGs[5]),tmpflt,i) then editQRG6.Text := floatToStrF(tmpflt,ffFixed,0,2) else editQRG6.Text := '0';
+        if val1.testQRG(inttostr(cfg.prQRGs[6]),tmpflt,i) then editQRG7.Text := floatToStrF(tmpflt,ffFixed,0,2) else editQRG7.Text := '0';
+        if val1.testQRG(inttostr(cfg.prQRGs[7]),tmpflt,i) then editQRG8.Text := floatToStrF(tmpflt,ffFixed,0,2) else editQRG8.Text := '0';
+        if val1.testQRG(inttostr(cfg.prQRGs[8]),tmpflt,i) then editQRG9.Text := floatToStrF(tmpflt,ffFixed,0,2) else editQRG9.Text := '0';
+        if val1.testQRG(inttostr(cfg.prQRGs[9]),tmpflt,i) then editQRG10.Text := floatToStrF(tmpflt,ffFixed,0,2) else editQRG10.Text := '0';
+        if val1.testQRG(inttostr(cfg.prQRGs[10]),tmpflt,i) then editQRG11.Text := floatToStrF(tmpflt,ffFixed,0,2) else editQRG11.Text := '0';
+        if val1.testQRG(inttostr(cfg.prQRGs[11]),tmpflt,i) then editQRG12.Text := floatToStrF(tmpflt,ffFixed,0,2) else editQRG12.Text := '0';
+        if val1.testQRG(inttostr(cfg.prQRGs[12]),tmpflt,i) then editQRG13.Text := floatToStrF(tmpflt,ffFixed,0,2) else editQRG13.Text := '0';
+        if val1.testQRG(inttostr(cfg.prQRGs[13]),tmpflt,i) then editQRG14.Text := floatToStrF(tmpflt,ffFixed,0,2) else editQRG14.Text := '0';
+        if val1.testQRG(inttostr(cfg.prQRGs[14]),tmpflt,i) then editQRG15.Text := floatToStrF(tmpflt,ffFixed,0,2) else editQRG15.Text := '0';
+        if val1.testQRG(inttostr(cfg.prQRGs[15]),tmpflt,i) then editQRG16.Text := floatToStrF(tmpflt,ffFixed,0,2) else editQRG16.Text := '0';
+        // Tab 7 Values Colors
+        //prCQColor       : TColor;
+        //prQSOColor      : TColor;
+        //prMyColor       : TColor;
+        if cfg.prNoColor then cbDisableColorCoding.Checked := true else cbDisableColorCoding.Checked := false;
+        // Tab 8 Values Logging
+        if cfg.prSaveCSV then cbSaveCSV.Checked := true else cbSaveCSV.Checked := false;
+        if cfg.prSaveDB then cbSaveDB.checked := true else cbSaveDB.checked := false;
+        if cfg.prSaveADIF then cbSaveADIF.checked := true else cbSaveADIF.checked := false;
+        if cfg.prdoeQSL then cbdoeqsl.Checked := true else cbdoeqsl.checked := false;
+        if cfg.prdodxLab then cbdoDXLab.Checked := true else cbdoDXLab.checked := false;
+        // Tab 9 Values Advanced Settings
+        if cfg.prNoMultiQSO then cbDisableMultiInQSO.Checked := true else cbDisableMultiInQSO.Checked := false;
+        if cfg.prMultiRestore then cbEnableMultiAfterQSO.Checked := true else cbEnableMultiAfterQSO.Checked := false;
+        if cfg.prMultiDefMulti then cbRestoresDefaultsMulti.Checked := true else cbRestoresDefaultsMulti.Checked := false;
+        if cfg.prCWIDfree then cbSendCWIDFree.Checked := true else cbSendCWIDFree.Checked := false;
+        if cfg.prCWIDall then cbSendCWIDAll.Checked := true else cbSendCWIDAll.Checked := false;
+        if cfg.prTXWatchdog then cbTXWatchdog.Checked := true else cbTXWatchdog.Checked := false;
+        spinTXCount.Value := cfg.prTXWatchdogInt;
+        if cfg.prUseOptFFT then cbUseOptFFT.Checked := true else cbUseOptFFT.Checked := false;
+        if cfg.prUseKV then cbUseKV.Checked := true else cbUseKV.Checked := false;
+        if cfg.prRXAutoSR then cbAutoRXSR.Checked := true else cbAutoRXSR.Checked := false;
+        if cfg.prTXAutoSR then cbAutoTXSR.Checked := true else cbAutoTXSR.Checked := false;
+     end;
+end;
+
 initialization
   {$I guidedconfig.lrs}
-  phase := 0;
-  val1  := valobject.TValidator.create();
-  rig1  := rigobject.TRadio.create();
-  cfg   := guidedconfig.TSettings.create();
-  dsp   := paobject.TpaDSP.create();
-  ser   := serialobject.TSerial.create();
+  prepop := False;
+  val1   := valobject.TValidator.create();
+  rig1   := rigobject.TRadio.create();
+  cfg    := guidedconfig.TSettings.create();
+  dsp    := paobject.TpaDSP.create();
+  ser    := serialobject.TSerial.create();
 end.
 
