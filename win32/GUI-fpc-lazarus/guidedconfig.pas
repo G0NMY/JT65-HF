@@ -268,6 +268,7 @@ type
     procedure edQSYTime1Change (Sender : TObject );
     procedure edStationCallsignChange(Sender : TObject);
     procedure FormShow (Sender : TObject );
+    procedure PageControl1Change (Sender : TObject );
     procedure rbPTTCatChange(Sender : TObject);
     procedure rbPTTComChange(Sender : TObject);
     procedure rbPTTNoTXChange(Sender : TObject);
@@ -802,6 +803,34 @@ end;
 procedure TForm7.buttonContinue4Click(Sender : TObject);
 begin
      // Called from Auto QSY Tab
+     if cbEnAutoQSY1.Checked then cfg.prEnQSY1 := true else cfg.prEnQSY1 := false;
+     if cbEnAutoQSY2.Checked then cfg.prEnQSY2 := true else cfg.prEnQSY2 := false;
+     if cbEnAutoQSY3.Checked then cfg.prEnQSY3 := true else cfg.prEnQSY3 := false;
+     if cbEnAutoQSY4.Checked then cfg.prEnQSY4 := true else cfg.prEnQSY4 := false;
+     if cbEnAutoQSY5.Checked then cfg.prEnQSY5 := true else cfg.prEnQSY5 := false;
+     if cbEnAutoQSY6.Checked then cfg.prEnQSY6 := true else cfg.prEnQSY6 := false;
+
+     cfg.prQSYTime1 := edQSYTime1.Text;
+     cfg.prQSYTime2 := edQSYTime2.Text;
+     cfg.prQSYTime3 := edQSYTime3.Text;
+     cfg.prQSYTime4 := edQSYTime4.Text;
+     cfg.prQSYTime5 := edQSYTime5.Text;
+     cfg.prQSYTime6 := edQSYTime6.Text;
+
+     cfg.prQSYQRG1 := edQRG1.Text;
+     cfg.prQSYQRG2 := edQRG2.Text;
+     cfg.prQSYQRG3 := edQRG3.Text;
+     cfg.prQSYQRG4 := edQRG4.Text;
+     cfg.prQSYQRG5 := edQRG5.Text;
+     cfg.prQSYQRG6 := edQRG6.Text;
+
+     if cbEnAT1.Checked then cfg.prQSYTune1 := true else cfg.prQSYTune1 := false;
+     if cbEnAT2.Checked then cfg.prQSYTune2 := true else cfg.prQSYTune2 := false;
+     if cbEnAT3.Checked then cfg.prQSYTune3 := true else cfg.prQSYTune3 := false;
+     if cbEnAT4.Checked then cfg.prQSYTune4 := true else cfg.prQSYTune4 := false;
+     if cbEnAT5.Checked then cfg.prQSYTune5 := true else cfg.prQSYTune5 := false;
+     if cbEnAT6.Checked then cfg.prQSYTune6 := true else cfg.prQSYTune6 := false;
+
      PageControl1.Pages[5].TabVisible := true;
      PageControl1.ActivePageIndex := 5;
 end;
@@ -1171,6 +1200,11 @@ begin
           PageControl1.Pages[10].TabVisible := false;
           PageControl1.ActivePageIndex := 0;
      end;
+end;
+
+procedure TForm7 .PageControl1Change (Sender : TObject );
+begin
+
 end;
 
 procedure TForm7.editMacro1Change(Sender : TObject);
@@ -2136,12 +2170,12 @@ begin
         edQSYTime4.Text := cfg.prQSYTime4;
         edQSYTime5.Text := cfg.prQSYTime5;
         edQSYTime6.Text := cfg.prQSYTime6;
-        edQRG1.Text := cfg.prQSYQRG1;
-        edQRG2.Text := cfg.prQSYQRG2;
-        edQRG3.Text := cfg.prQSYQRG3;
-        edQRG4.Text := cfg.prQSYQRG4;
-        edQRG5.Text := cfg.prQSYQRG5;
-        edQRG6.Text := cfg.prQSYQRG6;
+        if val1.testQRG(cfg.prQSYQRG1,tmpflt,i) then edQRG1.Text := floatToStrF(tmpflt,ffFixed,0,2) else editQRG1.Text := '0';
+        if val1.testQRG(cfg.prQSYQRG2,tmpflt,i) then edQRG2.Text := floatToStrF(tmpflt,ffFixed,0,2) else editQRG2.Text := '0';
+        if val1.testQRG(cfg.prQSYQRG3,tmpflt,i) then edQRG3.Text := floatToStrF(tmpflt,ffFixed,0,2) else editQRG3.Text := '0';
+        if val1.testQRG(cfg.prQSYQRG4,tmpflt,i) then edQRG4.Text := floatToStrF(tmpflt,ffFixed,0,2) else editQRG4.Text := '0';
+        if val1.testQRG(cfg.prQSYQRG5,tmpflt,i) then edQRG5.Text := floatToStrF(tmpflt,ffFixed,0,2) else editQRG5.Text := '0';
+        if val1.testQRG(cfg.prQSYQRG6,tmpflt,i) then edQRG6.Text := floatToStrF(tmpflt,ffFixed,0,2) else editQRG6.Text := '0';
         if cfg.prQSYTune1 then cbEnAT1.Checked := true else cbEnAT1.Checked := false;
         if cfg.prQSYTune2 then cbEnAT2.Checked := true else cbEnAT2.Checked := false;
         if cfg.prQSYTune3 then cbEnAT3.Checked := true else cbEnAT3.Checked := false;
@@ -2178,7 +2212,6 @@ begin
         editMacro22.Text := macroVal(cfg.prMacros[21]);
         editMacro23.Text := macroVal(cfg.prMacros[22]);
         editMacro24.Text := macroVal(cfg.prMacros[23]);
-        //floatToStrF(dsp.adcErate,ffFixed,0,4)
         if val1.testQRG(inttostr(cfg.prQRGs[0]),tmpflt,i) then editQRG1.Text := floatToStrF(tmpflt,ffFixed,0,2) else editQRG1.Text := '0';
         if val1.testQRG(inttostr(cfg.prQRGs[1]),tmpflt,i) then editQRG2.Text := floatToStrF(tmpflt,ffFixed,0,2) else editQRG2.Text := '0';
         if val1.testQRG(inttostr(cfg.prQRGs[2]),tmpflt,i) then editQRG3.Text := floatToStrF(tmpflt,ffFixed,0,2) else editQRG3.Text := '0';

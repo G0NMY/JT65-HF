@@ -3319,6 +3319,7 @@ Begin
      Else
      Begin
           guidedconfig.Form7.readConfig(fname);
+          guidedconfig.cfg.configFile := fname;
           guidedconfig.prepop := true;
           guidedconfig.Form7.PageControl1.ActivePageIndex := 0;
           guidedconfig.Form7.Show;
