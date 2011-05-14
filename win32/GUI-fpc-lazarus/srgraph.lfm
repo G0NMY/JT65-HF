@@ -1,7 +1,7 @@
 object Form8: TForm8
   Left = 15
   Height = 484
-  Top = 86
+  Top = 11
   Width = 900
   BorderIcons = [biSystemMenu, biMinimize]
   Caption = 'Sample Rate Error Statistics'
@@ -11,9 +11,9 @@ object Form8: TForm8
   Constraints.MaxWidth = 900
   Constraints.MinHeight = 484
   Constraints.MinWidth = 900
+  Font.Name = 'Arial'
   OnCreate = FormCreate
   LCLVersion = '0.9.30'
-  Visible = True
   object srChart: TChart
     Left = 16
     Height = 200
@@ -49,7 +49,6 @@ object Form8: TForm8
     DoubleBuffered = True
     ParentColor = False
     PopupMenu = PopupMenu1
-    OnDblClick = srChartDblClick
     object series1: TLineSeries
       Legend.Multiplicity = lmPoint
       Legend.Visible = False
@@ -93,7 +92,6 @@ object Form8: TForm8
     )
     DoubleBuffered = True
     ParentColor = False
-    OnDblClick = srChart1DblClick
     object series3: TLineSeries
       Legend.Visible = False
       Title = 'Short Avg'

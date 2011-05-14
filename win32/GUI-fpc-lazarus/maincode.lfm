@@ -278,7 +278,7 @@ object Form1: TForm1
     Left = 667
     Height = 17
     Hint = 'Double click to disable PSKR'
-    Top = 645
+    Top = 610
     Width = 8
     Caption = '0'
     Font.Height = -13
@@ -290,7 +290,7 @@ object Form1: TForm1
   object Label12: TLabel
     Left = 805
     Height = 17
-    Top = 587
+    Top = 576
     Width = 88
     Caption = 'Dial QRG KHz'
     Font.Height = -13
@@ -312,7 +312,7 @@ object Form1: TForm1
     Left = 667
     Height = 17
     Hint = 'Double click to disable RB'
-    Top = 621
+    Top = 586
     Width = 8
     Caption = '0'
     Font.Height = -13
@@ -320,17 +320,6 @@ object Form1: TForm1
     ParentColor = False
     ParentFont = False
     OnDblClick = Label30DblClick
-  end
-  object Label2: TLabel
-    Left = 639
-    Height = 15
-    Top = 606
-    Width = 64
-    Caption = 'Reports Sent'
-    Font.Height = -11
-    Font.Name = 'Arial'
-    ParentColor = False
-    ParentFont = False
   end
   object edMsg: TEdit
     Left = 556
@@ -970,7 +959,7 @@ object Form1: TForm1
   object chkNB: TCheckBox
     Left = 677
     Height = 19
-    Top = 554
+    Top = 528
     Width = 84
     Caption = 'Noise Blank'
     Font.Height = -11
@@ -983,7 +972,7 @@ object Form1: TForm1
   object chkAFC: TCheckBox
     Left = 677
     Height = 19
-    Top = 533
+    Top = 504
     Width = 42
     Caption = 'AFC'
     Font.Height = -11
@@ -994,9 +983,9 @@ object Form1: TForm1
     TabOrder = 27
   end
   object chkMultiDecode: TCheckBox
-    Left = 556
+    Left = 625
     Height = 19
-    Top = 587
+    Top = 555
     Width = 136
     Caption = 'Enable Multi-decoder'
     Checked = True
@@ -1101,7 +1090,7 @@ object Form1: TForm1
   object editManQRG: TEdit
     Left = 764
     Height = 37
-    Top = 606
+    Top = 600
     Width = 166
     Alignment = taCenter
     Font.Height = -24
@@ -1129,7 +1118,7 @@ object Form1: TForm1
   object cbEnRB: TCheckBox
     Left = 556
     Height = 20
-    Top = 619
+    Top = 584
     Width = 82
     Caption = 'Enable RB'
     OnChange = cbEnRBChange
@@ -1138,7 +1127,7 @@ object Form1: TForm1
   object cbEnPSKR: TCheckBox
     Left = 556
     Height = 20
-    Top = 643
+    Top = 608
     Width = 100
     Caption = 'Enable PSKR'
     OnChange = cbEnRBChange
@@ -1160,7 +1149,7 @@ object Form1: TForm1
     Text = '100'
   end
   object btnReDecode: TButton
-    Left = 437
+    Left = 129
     Height = 25
     Top = 639
     Width = 115
@@ -1191,390 +1180,12 @@ object Form1: TForm1
   object Timer1: TTimer
     Interval = 220
     OnTimer = Timer1Timer
-    left = 648
-    top = 56
-  end
-  object cfg: TXMLPropStorage
-    StoredValues = <    
-      item
-        Name = 'call'
-      end    
-      item
-        Name = 'grid'
-      end    
-      item
-        Name = 'txCF'
-        Value = '0'
-      end    
-      item
-        Name = 'rxCF'
-        Value = '0'
-      end    
-      item
-        Name = 'multirange'
-        Value = '1000'
-      end    
-      item
-        Name = 'soundin'
-        Value = '0'
-      end    
-      item
-        Name = 'soundout'
-        Value = '0'
-      end    
-      item
-        Name = 'ldgain'
-        Value = '0'
-      end    
-      item
-        Name = 'rdgain'
-        Value = '0'
-      end    
-      item
-        Name = 'samfacin'
-        Value = '1'
-      end    
-      item
-        Name = 'samfacout'
-        Value = '1'
-      end    
-      item
-        Name = 'audiochan'
-        Value = '0'
-      end    
-      item
-        Name = 'autoSR'
-        Value = '0'
-      end    
-      item
-        Name = 'pttPort'
-        Value = 'None'
-      end    
-      item
-        Name = 'catPort'
-        Value = 'None'
-      end    
-      item
-        Name = 'afc'
-        Value = '0'
-      end    
-      item
-        Name = 'noiseblank'
-        Value = '0'
-      end    
-      item
-        Name = 'brightness'
-        Value = '0'
-      end    
-      item
-        Name = 'contrast'
-        Value = '0'
-      end    
-      item
-        Name = 'colormap'
-        Value = '0'
-      end    
-      item
-        Name = 'specspeed'
-        Value = '0'
-      end    
-      item
-        Name = 'version'
-        Value = 'A13'
-      end    
-      item
-        Name = 'txWatchDog'
-        Value = '1'
-      end    
-      item
-        Name = 'multiQSOToggle'
-        Value = '1'
-      end    
-      item
-        Name = 'multiQSOWatchDog'
-        Value = '1'
-      end    
-      item
-        Name = 'saveCSV'
-        Value = '1'
-      end    
-      item
-        Name = 'csvPath'
-      end    
-      item
-        Name = 'adiPath'
-      end    
-      item
-        Name = 'hamlibRig'
-        Value = '0'
-      end    
-      item
-        Name = 'hamlibSpeed'
-        Value = '9600'
-      end    
-      item
-        Name = 'hamlibHandshake'
-        Value = 'None'
-      end    
-      item
-        Name = 'hamlibDBits'
-        Value = '8'
-      end    
-      item
-        Name = 'hamlibParity'
-        Value = 'None'
-      end    
-      item
-        Name = 'hamlibSBits'
-        Value = '1'
-      end    
-      item
-        Name = 'hamLibRTS'
-        Value = 'Unset'
-      end    
-      item
-        Name = 'hamlibDTR'
-        Value = 'Unset'
-      end    
-      item
-        Name = 'hamlibCIV'
-        Value = '5E'
-      end    
-      item
-        Name = 'catBy'
-        Value = 'none'
-      end    
-      item
-        Name = 'usePSKR'
-        Value = 'no'
-      end    
-      item
-        Name = 'useRB'
-        Value = 'no'
-      end    
-      item
-        Name = 'pskrAntenna'
-      end    
-      item
-        Name = 'pskrCall'
-      end    
-      item
-        Name = 'optFFT'
-        Value = 'on'
-      end    
-      item
-        Name = 'useAltPTT'
-        Value = 'no'
-      end    
-      item
-        Name = 'useHRDPTT'
-        Value = 'no'
-      end    
-      item
-        Name = 'userQRG1'
-        Value = '0'
-      end    
-      item
-        Name = 'userQRG2'
-        Value = '0'
-      end    
-      item
-        Name = 'userQRG3'
-        Value = '0'
-      end    
-      item
-        Name = 'userQRG4'
-        Value = '0'
-      end    
-      item
-        Name = 'usrMsg1'
-      end    
-      item
-        Name = 'usrMsg2'
-      end    
-      item
-        Name = 'usrMsg3'
-      end    
-      item
-        Name = 'usrMsg4'
-      end    
-      item
-        Name = 'usrMsg5'
-      end    
-      item
-        Name = 'usrMsg6'
-      end    
-      item
-        Name = 'usrMsg7'
-      end    
-      item
-        Name = 'usrMsg8'
-      end    
-      item
-        Name = 'usrMsg9'
-      end    
-      item
-        Name = 'usrMsg10'
-      end    
-      item
-        Name = 'smooth'
-        Value = 'on'
-      end    
-      item
-        Name = 'restoreMulti'
-        Value = 'on'
-      end    
-      item
-        Name = 'specVGain'
-        Value = '0'
-      end    
-      item
-        Name = 'binspace'
-        Value = '3'
-      end    
-      item
-        Name = 'cqColor'
-        Value = '8'
-      end    
-      item
-        Name = 'callColor'
-        Value = '7'
-      end    
-      item
-        Name = 'qsoColor'
-        Value = '6'
-      end    
-      item
-        Name = 'pfx'
-        Value = '0'
-      end    
-      item
-        Name = 'sfx'
-        Value = '0'
-      end    
-      item
-        Name = 'si570mul'
-        Value = '4'
-      end    
-      item
-        Name = 'si570cor'
-        Value = '0'
-      end    
-      item
-        Name = 'si570qrg'
-        Value = '0'
-      end    
-      item
-        Name = 'si570ptt'
-        Value = 'n'
-      end    
-      item
-        Name = 'useCWID'
-        Value = '0'
-      end    
-      item
-        Name = 'useCATTxDF'
-        Value = 'no'
-      end    
-      item
-        Name = 'enAutoQSY1'
-        Value = 'no'
-      end    
-      item
-        Name = 'enAutoQSY2'
-        Value = 'no'
-      end    
-      item
-        Name = 'enAutoQSY3'
-        Value = 'no'
-      end    
-      item
-        Name = 'enAutoQSY4'
-        Value = 'no'
-      end    
-      item
-        Name = 'enAutoQSY5'
-        Value = 'no'
-      end    
-      item
-        Name = 'autoQSYUTC1'
-        Value = '0000'
-      end    
-      item
-        Name = 'autoQSYUTC2'
-        Value = '0000'
-      end    
-      item
-        Name = 'autoQSYUTC3'
-        Value = '0000'
-      end    
-      item
-        Name = 'autoQSYUTC4'
-        Value = '0000'
-      end    
-      item
-        Name = 'autoQSYUTC5'
-        Value = '0000'
-      end    
-      item
-        Name = 'autoQSYQRG1'
-        Value = '14076000'
-      end    
-      item
-        Name = 'autoQSYQRG2'
-        Value = '14076000'
-      end    
-      item
-        Name = 'autoQSYQRG3'
-        Value = '14076000'
-      end    
-      item
-        Name = 'autoQSYQRG4'
-        Value = '14076000'
-      end    
-      item
-        Name = 'autoQSYQRG5'
-        Value = '14076000'
-      end    
-      item
-        Name = 'autoQSYAT1'
-        Value = 'no'
-      end    
-      item
-        Name = 'autoQSYAT2'
-        Value = 'no'
-      end    
-      item
-        Name = 'autoQSYAT3'
-        Value = 'no'
-      end    
-      item
-        Name = 'autoQSYAT4'
-        Value = 'no'
-      end    
-      item
-        Name = 'autoQSYAT5'
-        Value = 'no'
-      end    
-      item
-        Name = 'hrdAddress'
-        Value = 'localhost'
-      end    
-      item
-        Name = 'hrdPort'
-        Value = '7809'
-      end    
-      item
-        Name = 'txWatchDogCount'
-        Value = '15'
-      end>
-    FileName = 'station.xml'
-    left = 688
-    top = 56
+    left = 800
+    top = 40
   end
   object popupQRG: TPopupMenu
-    left = 552
-    top = 56
+    left = 704
+    top = 40
     object MenuItem12: TMenuItem
       Caption = '1838'
       OnClick = MenuItemHandler
@@ -1652,8 +1263,8 @@ object Form1: TForm1
     end
   end
   object popupMsgs: TPopupMenu
-    left = 600
-    top = 56
+    left = 704
+    top = 96
     object MenuItem13: TMenuItem
       Caption = 'Short-hand RO'
       OnClick = MenuItemHandler
@@ -1708,8 +1319,8 @@ object Form1: TForm1
     end
   end
   object MainMenu1: TMainMenu
-    left = 728
-    top = 56
+    left = 880
+    top = 40
     object menuSetup: TMenuItem
       Caption = 'Setup'
       OnClick = menuSetupClick
@@ -1734,5 +1345,11 @@ object Form1: TForm1
       Caption = 'About JT65-HF'
       OnClick = menuAboutClick
     end
+  end
+  object Timer2: TTimer
+    Interval = 2000
+    OnTimer = Timer2Timer
+    left = 800
+    top = 96
   end
 end

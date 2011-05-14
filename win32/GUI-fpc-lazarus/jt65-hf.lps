@@ -25,11 +25,11 @@
         <IsVisibleTab Value="True"/>
         <EditorIndex Value="1"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="3354"/>
-        <CursorPos X="24" Y="3367"/>
+        <TopLine Value="17"/>
+        <CursorPos X="33" Y="36"/>
         <UsageCount Value="215"/>
         <Bookmarks Count="1">
-          <Item0 X="1" Y="3340" ID="0"/>
+          <Item0 X="36" Y="1537" ID="0"/>
         </Bookmarks>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
@@ -341,8 +341,8 @@
         <UnitName Value="valobject"/>
         <EditorIndex Value="3"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="1"/>
-        <CursorPos X="1" Y="13"/>
+        <TopLine Value="28"/>
+        <CursorPos X="1" Y="52"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
       </Unit30>
@@ -354,7 +354,7 @@
         <WindowIndex Value="0"/>
         <TopLine Value="155"/>
         <CursorPos X="1" Y="170"/>
-        <UsageCount Value="187"/>
+        <UsageCount Value="192"/>
         <Loaded Value="True"/>
       </Unit31>
       <Unit32>
@@ -365,10 +365,11 @@
         <UnitName Value="srgraph"/>
         <EditorIndex Value="7"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="1"/>
-        <CursorPos X="18" Y="14"/>
-        <UsageCount Value="164"/>
+        <TopLine Value="13"/>
+        <CursorPos X="1" Y="28"/>
+        <UsageCount Value="169"/>
         <Loaded Value="True"/>
+        <LoadedDesigner Value="True"/>
       </Unit32>
       <Unit33>
         <Filename Value="hrdinterface5.pas"/>
@@ -378,7 +379,7 @@
         <WindowIndex Value="0"/>
         <TopLine Value="1"/>
         <CursorPos X="15" Y="12"/>
-        <UsageCount Value="95"/>
+        <UsageCount Value="100"/>
         <Loaded Value="True"/>
       </Unit33>
       <Unit34>
@@ -389,7 +390,7 @@
         <WindowIndex Value="0"/>
         <TopLine Value="488"/>
         <CursorPos X="1" Y="508"/>
-        <UsageCount Value="95"/>
+        <UsageCount Value="100"/>
         <Loaded Value="True"/>
       </Unit34>
       <Unit35>
@@ -400,7 +401,7 @@
         <WindowIndex Value="0"/>
         <TopLine Value="39"/>
         <CursorPos X="30" Y="66"/>
-        <UsageCount Value="90"/>
+        <UsageCount Value="95"/>
         <Loaded Value="True"/>
       </Unit35>
     </Units>

@@ -26,12 +26,11 @@ unit maincode;
 interface
 
 uses
-  Classes, SysUtils, LResources, Forms, Controls, Graphics, Dialogs,
-  StdCtrls, CTypes, StrUtils, Math, ExtCtrls, ComCtrls, Spin,
-  Windows, DateUtils, encode65, globalData, XMLPropStorage,
-  ClipBrd, dlog, rawdec, guiConfig, verHolder,
-  PSKReporter, Menus, rbc, log, diagout, synautil,
-  waterfall, d65, spectrum, about, fileutil, guidedconfig;
+  Classes, SysUtils, LResources, Forms, Controls, Graphics, Dialogs, StdCtrls,
+  CTypes, StrUtils, Math, ExtCtrls, ComCtrls, Spin, Windows, DateUtils,
+  encode65, globalData, ClipBrd, dlog, rawdec, guiConfig, verHolder, valobject,
+  PSKReporter, Menus, rbc, log, diagout, synautil, waterfall, d65, spectrum,
+  about, fileutil, guidedconfig;
   //, rigobject;//,valobject;
 
 //Const
@@ -84,7 +83,6 @@ type
     Label17: TLabel;
     Label18 : TLabel ;
     Label19: TLabel;
-    Label2: TLabel;
     Label20: TLabel;
     Label22: TLabel;
     Label23: TLabel;
@@ -169,9 +167,9 @@ type
     spinGain: TSpinEdit;
     spinTXCF: TSpinEdit;
     Timer1: TTimer;
-    cfg: TXMLPropStorage;
     tbDgainL: TTrackBar;
     tbDGainR: TTrackBar;
+    Timer2 : TTimer ;
     Waterfall : TWaterfallControl;
     tbBright: TTrackBar;
     tbContrast: TTrackBar;
@@ -234,7 +232,7 @@ type
     procedure Timer1Timer(Sender: TObject);
     procedure addToDisplay(i, m : Integer);
     procedure tbDgainLChange(Sender: TObject);
-    procedure tbDGainRChange(Sender: TObject);
+    procedure Timer2Timer (Sender : TObject );
     procedure updateAudio();
     procedure updateStatus(i : Integer);
     procedure DisableFloatingPointExceptions();
@@ -376,8 +374,8 @@ type
      txmode                     : Integer;
      reDecode, haveEvenBuffer   : Boolean;
      actionSet                  : Boolean;
-     //config1, config2           : cfgobject.TConfiguration;
      //rig1                       : rigobject.TRadio;
+     val                        : valobject.TValidator;
 implementation
 
 { TForm1 }
@@ -1498,12 +1496,27 @@ end;
 
 procedure TForm1.editManQRGChange(Sender: TObject);
 begin
-     { TODO : Validate QRG, convert to integer Hz and pass 'up' the chain. }
-     //if globalData.rbLoggedIn Then
-     //Begin
-          //globalData.rbLoggedIn := False;
-          //cfgvtwo.glrbcLogin := True;
-     //End;
+     // In theory, QRG is entered by user as a floating point value in KHz.
+     // Theory does not always bear true.  So.  I need to look at the input
+     // value and attempt to convert it to Hz as that's the internal representation
+     // used by JT65-HF.
+     //
+     // Now... this gets tricky as I need to allow entry to complete before trying
+     // to validate the QRG.  In the past I've attempted to do this on the fly, but
+     // now I'm about using a timer that's triggered upon first change to this field.
+     // Each time the input box changes timer2 will be reset to 0 and enabled to
+     // fire at 2 second intervals.  If the timer makes it to 2 seconds then, and
+     // only then, the field will be evaluated, validated and, if valid, set the
+     // QRG variables that feed 'up the chain'.
+     if not timer2.Enabled then
+     begin
+          timer2.Enabled := true;
+     end
+     else
+     begin
+          timer2.Enabled := false;
+          timer2.Enabled := true;
+     end;
 end;
 
 procedure TForm1.edMsgDblClick(Sender: TObject);
@@ -1522,188 +1535,25 @@ var
    foo          : String;
 begin
      Form1.Timer1.Enabled := False;
-     //diagout.Form3.ListBox1.Clear;
-     //diagout.Form3.Show;
-     //diagout.Form3.BringToFront;
-     //diagout.Form3.ListBox1.Items.Add('Closing JT65-HF.  This will take a few seconds.');
-     //diagout.Form3.ListBox1.Items.Add('Saving Configuration');
-     //if CloseAction = caFree Then
-     //Begin
-     //     // Update configuration settings.
-     //     cfg.StoredValue['call']         := UpperCase(cfgvtwo.glmycall);
-     //     cfg.StoredValue['pfx']          := IntToStr(cfgvtwo.Form6.comboPrefix.ItemIndex);
-     //     cfg.StoredValue['sfx']          := IntToStr(cfgvtwo.Form6.comboSuffix.ItemIndex);
-     //     cfg.StoredValue['grid']         := cfgvtwo.Form6.edMyGrid.Text;
-     //     cfg.StoredValue['txCF'] := IntToStr(Form1.spinTXCF.Value);
-     //     cfg.StoredValue['rxCF'] := IntToStr(Form1.spinDecoderCF.Value);
-     //     cfg.StoredValue['soundin']      := IntToStr(cfgvtwo.Form6.cbAudioIn.ItemIndex);
-     //     cfg.StoredValue['soundout']     := IntToStr(cfgvtwo.Form6.cbAudioOut.ItemIndex);
-     //     cfg.StoredValue['ldgain']       := IntToStr(Form1.TrackBar1.Position);
-     //     cfg.StoredValue['rdgain']       := IntToStr(Form1.TrackBar2.Position);
-     //     cfg.StoredValue['samfacin']     := cfgvtwo.Form6.edRXSRCor.Text;
-     //     cfg.StoredValue['samfacout']    := cfgvtwo.Form6.edTXSRCor.Text;
-     //     if Form1.rbUseLeft.Checked Then cfg.StoredValue['audiochan'] := 'L' Else cfg.StoredValue['audiochan'] := 'R';
-     //     If cfgvtwo.Form6.chkEnableAutoSR.Checked Then cfg.StoredValue['autoSR'] := '1' else cfg.StoredValue['autoSR'] := '0';
-     //     cfg.StoredValue['pttPort']      := UpperCase(cfgvtwo.Form6.editUserDefinedPort1.Text);
-     //     if Form1.chkAFC.Checked Then cfg.StoredValue['afc'] := '1' Else cfg.StoredValue['afc'] := '0';
-     //     if Form1.chkNB.Checked Then cfg.StoredValue['noiseblank'] := '1' Else cfg.StoredValue['noiseblank'] := '0';
-     //     cfg.StoredValue['brightness']   := IntToStr(Form1.tbBright.Position);
-     //     cfg.StoredValue['contrast']     := IntToStr(Form1.tbContrast.Position);
-     //     cfg.StoredValue['colormap']     := IntToStr(Form1.cbSpecPal.ItemIndex);
-     //     cfg.StoredValue['specspeed']    := IntToStr(Form1.SpinEdit1.Value);
-     //     cfg.StoredValue['version'] := verHolder.verReturn();
-     //     if cfgvtwo.Form6.cbTXWatchDog.Checked Then cfg.StoredValue['txWatchDog'] := '1' else cfg.StoredValue['txWatchDog'] := '0';
-     //     cfg.StoredValue['txWatchDogCount'] := IntToStr(cfgvtwo.Form6.spinTXCounter.Value);
-     //     if cfgvtwo.Form6.cbDisableMultiQSO.Checked Then cfg.StoredValue['multiQSOToggle'] := '1' else cfg.StoredValue['multiQSOToggle'] := '0';
-     //     if cfgvtwo.Form6.cbMultiAutoEnable.Checked Then cfg.StoredValue['multiQSOWatchDog'] := '1' else cfg.StoredValue['multiQSOWatchDog'] := '0';
-     //     if cfgvtwo.Form6.cbSaveCSV.Checked Then cfg.StoredValue['saveCSV'] := '1' else cfg.StoredValue['saveCSV'] := '0';
-     //     cfg.StoredValue['csvPath'] := cfgvtwo.Form6.DirectoryEdit1.Directory;
-     //     cfg.StoredValue['adiPath'] := cfgvtwo.Form6.DirectoryEdit1.Directory;
-     //     cfg.StoredValue['catBy'] := cfgvtwo.glcatBy;
-     //     if cfgvtwo.Form6.cbUsePSKReporter.Checked Then cfg.StoredValue['usePSKR'] := 'yes' else cfg.StoredValue['usePSKR'] := 'no';
-     //     if cfgvtwo.Form6.cbUseRB.Checked Then cfg.StoredValue['useRB'] := 'yes' else cfg.StoredValue['useRB'] := 'no';
-     //     cfg.StoredValue['pskrAntenna'] := cfgvtwo.Form6.editPSKRAntenna.Text;
-     //     cfg.StoredValue['pskrCall'] := cfgvtwo.Form6.editPSKRCall.Text;
-     //     cfg.StoredValue['userQRG1'] := cfgvtwo.Form6.edUserQRG1.Text;
-     //     cfg.StoredValue['userQRG2'] := cfgvtwo.Form6.edUserQRG2.Text;
-     //     cfg.StoredValue['userQRG3'] := cfgvtwo.Form6.edUserQRG3.Text;
-     //     cfg.StoredValue['userQRG4'] := cfgvtwo.Form6.edUserQRG4.Text;
-     //     cfg.StoredValue['usrMsg1'] := cfgvtwo.Form6.edUserMsg4.Text;
-     //     cfg.StoredValue['usrMsg2'] := cfgvtwo.Form6.edUserMsg5.Text;
-     //     cfg.StoredValue['usrMsg3'] := cfgvtwo.Form6.edUserMsg6.Text;
-     //     cfg.StoredValue['usrMsg4'] := cfgvtwo.Form6.edUserMsg7.Text;
-     //     cfg.StoredValue['usrMsg5'] := cfgvtwo.Form6.edUserMsg8.Text;
-     //     cfg.StoredValue['usrMsg6'] := cfgvtwo.Form6.edUserMsg9.Text;
-     //     cfg.StoredValue['usrMsg7'] := cfgvtwo.Form6.edUserMsg10.Text;
-     //     cfg.StoredValue['usrMsg8'] := cfgvtwo.Form6.edUserMsg11.Text;
-     //     cfg.StoredValue['usrMsg9'] := cfgvtwo.Form6.edUserMsg12.Text;
-     //     cfg.StoredValue['usrMsg10'] := cfgvtwo.Form6.edUserMsg13.Text;
-     //     if Form1.cbSmooth.Checked Then cfg.StoredValue['smooth'] := 'on' else cfg.StoredValue['smooth'] := 'off';
-     //     if cfgvtwo.Form6.cbRestoreMulti.Checked Then cfg.StoredValue['restoreMulti'] := 'on' else cfg.StoredValue['restoreMulti'] := 'off';
-     //     if cfgvtwo.Form6.chkNoOptFFT.Checked Then cfg.StoredValue['optFFT'] := 'off' else cfg.StoredValue['optFFT'] := 'on';
-     //     if cfgvtwo.Form6.cbUseAltPTT.Checked Then cfg.StoredValue['useAltPTT'] := 'yes' else cfg.StoredValue['useAltPTT'] := 'no';
-     //     if cfgvtwo.Form6.chkHRDPTT.Checked Then cfg.StoredValue['useHRDPTT'] := 'yes' else cfg.StoredValue['useHRDPTT'] := 'no';
-     //     cfg.StoredValue['specVGain'] := IntToStr(spinGain.Value);
-     //     cfg.StoredValue['binspace'] := '100';
-     //     cfg.StoredValue['cqColor'] := IntToStr(cfgvtwo.Form6.ComboBox1.ItemIndex);
-     //     cfg.StoredValue['callColor'] := IntToStr(cfgvtwo.Form6.ComboBox2.ItemIndex);
-     //     cfg.StoredValue['qsoColor'] := IntToStr(cfgvtwo.Form6.ComboBox3.ItemIndex);
-     //     if cfgvtwo.Form6.radioSI570X1.Checked Then cfg.StoredValue['si570mul'] := '1';
-     //     if cfgvtwo.Form6.radioSI570X2.Checked Then cfg.StoredValue['si570mul'] := '2';
-     //     if cfgvtwo.Form6.radioSI570X4.Checked Then cfg.StoredValue['si570mul'] := '4';
-     //     cfg.StoredValue['si570cor'] := cfgvtwo.Form6.editSI570FreqOffset.Text;
-     //     cfg.StoredValue['si570qrg'] := cfgvtwo.Form6.editSI570Freq.Text;
-     //     if cfgvtwo.Form6.cbSi570PTT.Checked Then cfg.StoredValue['si570ptt'] := 'y' else cfg.StoredValue['si570ptt'] := 'n';
-     //     if cfgvtwo.Form6.cbCWID.Checked Then cfg.StoredValue['useCWID'] := 'y' else cfg.StoredValue['useCWID'] := 'n';
-     //     if cfgvtwo.Form6.chkTxDFVFO.Checked Then cfg.StoredValue['useCATTxDF'] := 'yes' else cfg.StoredValue['useCATTxDF'] := 'no';
-     //     if cfgvtwo.Form6.cbEnableQSY1.Checked Then cfg.StoredValue['enAutoQSY1'] := 'yes' else cfg.StoredValue['enAutoQSY1'] := 'no';
-     //     if cfgvtwo.Form6.cbEnableQSY2.Checked Then cfg.StoredValue['enAutoQSY2'] := 'yes' else cfg.StoredValue['enAutoQSY2'] := 'no';
-     //     if cfgvtwo.Form6.cbEnableQSY3.Checked Then cfg.StoredValue['enAutoQSY3'] := 'yes' else cfg.StoredValue['enAutoQSY3'] := 'no';
-     //     if cfgvtwo.Form6.cbEnableQSY4.Checked Then cfg.StoredValue['enAutoQSY4'] := 'yes' else cfg.StoredValue['enAutoQSY4'] := 'no';
-     //     if cfgvtwo.Form6.cbEnableQSY5.Checked Then cfg.StoredValue['enAutoQSY5'] := 'yes' else cfg.StoredValue['enAutoQSY5'] := 'no';
-     //     if cfgvtwo.Form6.cbATQSY1.Checked Then cfg.StoredValue['autoQSYAT1'] := 'yes' else cfg.StoredValue['autoQSYAT1'] := 'no';
-     //     if cfgvtwo.Form6.cbATQSY2.Checked Then cfg.StoredValue['autoQSYAT2'] := 'yes' else cfg.StoredValue['autoQSYAT2'] := 'no';
-     //     if cfgvtwo.Form6.cbATQSY3.Checked Then cfg.StoredValue['autoQSYAT3'] := 'yes' else cfg.StoredValue['autoQSYAT3'] := 'no';
-     //     if cfgvtwo.Form6.cbATQSY4.Checked Then cfg.StoredValue['autoQSYAT4'] := 'yes' else cfg.StoredValue['autoQSYAT4'] := 'no';
-     //     if cfgvtwo.Form6.cbATQSY5.Checked Then cfg.StoredValue['autoQSYAT5'] := 'yes' else cfg.StoredValue['autoQSYAT5'] := 'no';
-     //     cfg.StoredValue['autoQSYQRG1'] := cfgvtwo.Form6.edQRGQSY1.Text;
-     //     cfg.StoredValue['autoQSYQRG2'] := cfgvtwo.Form6.edQRGQSY2.Text;
-     //     cfg.StoredValue['autoQSYQRG3'] := cfgvtwo.Form6.edQRGQSY3.Text;
-     //     cfg.StoredValue['autoQSYQRG4'] := cfgvtwo.Form6.edQRGQSY4.Text;
-     //     cfg.StoredValue['autoQSYQRG5'] := cfgvtwo.Form6.edQRGQSY5.Text;
-     //     cfg.StoredValue['hrdAddress'] := cfgvtwo.Form6.hrdAddress.Text;
-     //     cfg.StoredValue['hrdPort'] := cfgvtwo.Form6.hrdPort.Text;
-     //     if cfgvtwo.Form6.qsyHour1.Value < 10 Then
-     //     Begin
-     //          foo := '0' + IntToStr(cfgvtwo.Form6.qsyHour1.Value);
-     //     End
-     //     Else
-     //     Begin
-     //          foo := IntToStr(cfgvtwo.Form6.qsyHour1.Value);
-     //     end;
-     //     if cfgvtwo.Form6.qsyMinute1.Value < 10 Then
-     //     Begin
-     //          foo := foo + '0' + IntToStr(cfgvtwo.Form6.qsyMinute1.Value);
-     //     End
-     //     Else
-     //     Begin
-     //          foo := foo + IntToStr(cfgvtwo.Form6.qsyMinute1.Value);
-     //     end;
-     //     cfg.StoredValue['autoQSYUTC1'] := foo;
-     //
-     //     if cfgvtwo.Form6.qsyHour2.Value < 10 Then
-     //     Begin
-     //          foo := '0' + IntToStr(cfgvtwo.Form6.qsyHour2.Value);
-     //     End
-     //     Else
-     //     Begin
-     //          foo := IntToStr(cfgvtwo.Form6.qsyHour2.Value);
-     //     end;
-     //     if cfgvtwo.Form6.qsyMinute2.Value < 10 Then
-     //     Begin
-     //          foo := foo + '0' + IntToStr(cfgvtwo.Form6.qsyMinute2.Value);
-     //     End
-     //     Else
-     //     Begin
-     //          foo := foo + IntToStr(cfgvtwo.Form6.qsyMinute2.Value);
-     //     end;
-     //     cfg.StoredValue['autoQSYUTC2'] := foo;
-     //
-     //     if cfgvtwo.Form6.qsyHour3.Value < 10 Then
-     //     Begin
-     //          foo := '0' + IntToStr(cfgvtwo.Form6.qsyHour3.Value);
-     //     End
-     //     Else
-     //     Begin
-     //          foo := IntToStr(cfgvtwo.Form6.qsyHour3.Value);
-     //     end;
-     //     if cfgvtwo.Form6.qsyMinute3.Value < 10 Then
-     //     Begin
-     //          foo := foo + '0' + IntToStr(cfgvtwo.Form6.qsyMinute3.Value);
-     //     End
-     //     Else
-     //     Begin
-     //          foo := foo + IntToStr(cfgvtwo.Form6.qsyMinute3.Value);
-     //     end;
-     //     cfg.StoredValue['autoQSYUTC3'] := foo;
-     //
-     //     if cfgvtwo.Form6.qsyHour4.Value < 10 Then
-     //     Begin
-     //          foo := '0' + IntToStr(cfgvtwo.Form6.qsyHour4.Value);
-     //     End
-     //     Else
-     //     Begin
-     //          foo := IntToStr(cfgvtwo.Form6.qsyHour4.Value);
-     //     end;
-     //     if cfgvtwo.Form6.qsyMinute4.Value < 10 Then
-     //     Begin
-     //          foo := foo + '0' + IntToStr(cfgvtwo.Form6.qsyMinute4.Value);
-     //     End
-     //     Else
-     //     Begin
-     //          foo := foo + IntToStr(cfgvtwo.Form6.qsyMinute4.Value);
-     //     end;
-     //     cfg.StoredValue['autoQSYUTC4'] := foo;
-     //
-     //     if cfgvtwo.Form6.qsyHour5.Value < 10 Then
-     //     Begin
-     //          foo := '0' + IntToStr(cfgvtwo.Form6.qsyHour5.Value);
-     //     End
-     //     Else
-     //     Begin
-     //          foo := IntToStr(cfgvtwo.Form6.qsyHour5.Value);
-     //     end;
-     //     if cfgvtwo.Form6.qsyMinute5.Value < 10 Then
-     //     Begin
-     //          foo := foo + '0' + IntToStr(cfgvtwo.Form6.qsyMinute5.Value);
-     //     End
-     //     Else
-     //     Begin
-     //          foo := foo + IntToStr(cfgvtwo.Form6.qsyMinute5.Value);
-     //     end;
-     //     cfg.StoredValue['autoQSYUTC5'] := foo;
-     //     cfg.Save;
-     //     diagout.Form3.ListBox1.Items.Add('Saved configuration');
+     if rbUseLeft.Checked  then guidedconfig.cfg.useAudioLeft  := true else guidedconfig.cfg.useAudioLeft := false;
+     if rbUseRight.Checked then guidedconfig.cfg.useAudioRight := true else guidedconfig.cfg.useAudioRight := false;
+     guidedconfig.cfg.dgainL := tbDgainL.Position;
+     guidedconfig.cfg.dgainR := tbDGainR.Position;
+     guidedconfig.cfg.specColor := cbSpecPal.ItemIndex;
+     guidedconfig.cfg.specBright := tbBright.Position;
+     guidedconfig.cfg.specContrast := tbContrast.Position;
+     guidedconfig.cfg.specSpeed := spinSpecSpeed.Value;
+     guidedconfig.cfg.specGain := spinGain.Value;
+     if cbSmooth.Checked then guidedconfig.cfg.specSmooth := true else guidedconfig.cfg.specSmooth := false;
+     if chkAutoTXDF.Checked then guidedconfig.cfg.useTXeqRXDF := true else guidedconfig.cfg.useTXeqRXDF := false;
+     guidedconfig.cfg.decoderBW := spinDecoderBW.Value;
+     if chkAFC.Checked then guidedconfig.cfg.afc := true else guidedconfig.cfg.afc := false;
+     if chkNB.Checked then guidedconfig.cfg.noiseblank := true else guidedconfig.cfg.noiseblank := false;
+     if chkMultiDecode.Checked then guidedconfig.cfg.multi := true else guidedconfig.cfg.multi := false;
+     if cbEnRB.Checked then guidedconfig.cfg.useRB := true else guidedconfig.cfg.useRB := false;
+     if cbEnPSKR.Checked then guidedconfig.cfg.usePSKR := true else guidedconfig.cfg.usePSKR := false;
+     // GUI elements that are maintained in configuration file have now been updated for saving.
+     guidedconfig.Form7.saveConfig(guidedconfig.cfg.cfgdir+'\jt65hf.ini');
      //
      //     if mnpttOpened Then
      //     Begin
@@ -2839,9 +2689,39 @@ begin
      If tbDGainR.Position <> 0 Then Form1.Label11.Font.Color := clRed else Form1.Label11.Font.Color := clBlack;
 end;
 
-procedure TForm1 .tbDGainRChange (Sender : TObject );
+procedure TForm1.Timer2Timer(Sender : TObject);
+var
+   qrgk  : Double;
+   qrghz : Integer;
+   valid : Boolean;
 begin
-
+     Timer2.Enabled := false;
+     // OK, input was made to the QRG Entry field and seems to be completed so
+     // lets try to validate the field.
+     //function testQRG(const qrg : String; var qrgk : Double; var qrghz : Integer) : Boolean;
+     qrgk := 0.0;
+     qrghz := 0;
+     if val.testQRG(editManQRG.Text, qrgk, qrghz) then
+     begin
+          valid := false;
+          if (qrghz >   1799999) and (qrghz <   2000001) then valid := true;  // 160M
+          if (qrghz >   3499999) and (qrghz <   4000001) then valid := true;  //  80M
+          if (qrghz >   6999999) and (qrghz <   7300001) then valid := true;  //  40M
+          if (qrghz >  10099999) and (qrghz <  10150001) then valid := true;  //  30M
+          if (qrghz >  13999999) and (qrghz <  14350001) then valid := true;  //  20M
+          if (qrghz >  18067999) and (qrghz <  18168001) then valid := true;  //  17M
+          if (qrghz >  20999999) and (qrghz <  21450001) then valid := true;  //  15M
+          if (qrghz >  24889999) and (qrghz <  24990001) then valid := true;  //  12M
+          if (qrghz >  27999999) and (qrghz <  29700001) then valid := true;  //  10M
+          if (qrghz >  49999999) and (qrghz <  54000001) then valid := true;  //   6M
+          if (qrghz > 143999999) and (qrghz < 148000001) then valid := true;  //   2M
+          if (qrghz > 221999999) and (qrghz < 225000001) then valid := true;  //   1.25M
+          if (qrghz > 419999999) and (qrghz < 450000001) then valid := true;  //   70cm
+          if (qrghz > 901999999) and (qrghz < 928000001) then valid := true;  //   33cm
+     end;
+     if not valid then editManQRG.Text := '0.0';
+     if valid then guidedconfig.cfg.guiQRG := qrghz;
+     showmessage('Validated QRG in Hz = ' + intToStr(qrghz));
 end;
 
 procedure TForm1.updateAudio();
@@ -3364,7 +3244,7 @@ Begin
      cbEnRBChange(cbEnPSKR);
      editManQRG.Text := floatToStrf((guidedconfig.cfg.guiQRG/1000),ffFixed,0,2);
      editManQRGChange(editManQRG);
-     for i := 0 to 1000 do
+     for i := 0 to 10000 do
      begin
           application.ProcessMessages;
           sleep(10);
@@ -6147,5 +6027,8 @@ initialization
   //catControl.catControlcatTxDF := False;
   globalData.hrdcatControlcurrentRig.hrdAlive := False;
   globalData.hrdVersion := 5;
+  // This creates a access point to validation routines
+  val := valobject.TValidator.create();
+
 end.
 
