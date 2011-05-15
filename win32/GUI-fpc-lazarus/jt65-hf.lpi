@@ -284,9 +284,11 @@
     <Exceptions Count="2">
       <Item1>
         <Name Value="EOleSysError"/>
+        <Enabled Value="False"/>
       </Item1>
       <Item2>
         <Name Value="EConvertError"/>
+        <Enabled Value="False"/>
       </Item2>
     </Exceptions>
   </Debugging>

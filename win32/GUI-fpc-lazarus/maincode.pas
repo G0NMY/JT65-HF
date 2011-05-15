@@ -28,10 +28,9 @@ interface
 uses
   Classes, SysUtils, LResources, Forms, Controls, Graphics, Dialogs, StdCtrls,
   CTypes, StrUtils, Math, ExtCtrls, ComCtrls, Spin, Windows, DateUtils,
-  encode65, globalData, ClipBrd, dlog, rawdec, guiConfig, verHolder, valobject,
+  encode65, globalData, ClipBrd, dlog, rawdec, guiConfig, verHolder,
   PSKReporter, Menus, rbc, log, diagout, synautil, waterfall, d65, spectrum,
-  about, fileutil, guidedconfig;
-  //, rigobject;//,valobject;
+  about, fileutil, guidedconfig, valobject, rigobject;
 
 //Const
 //  JT_DLL = 'jt65.dll';
@@ -349,7 +348,7 @@ type
      preTXCF, preRXCF           : Integer;
      pskrStats                  : PSKReporter.REPORTER_STATISTICS;
      audioAve1, audioAve2       : Integer;
-     sopQRG, eopQRG             : Double;
+     sopQRG, eopQRG             : Single;
      doRB                       : Boolean;
      rbsHeardList               : Array[0..499] Of rbHeard;
      csvEntries                 : Array[0..99] of String;
@@ -374,7 +373,7 @@ type
      txmode                     : Integer;
      reDecode, haveEvenBuffer   : Boolean;
      actionSet                  : Boolean;
-     //rig1                       : rigobject.TRadio;
+     rig                        : rigobject.TRadio;
      val                        : valobject.TValidator;
 implementation
 
@@ -1833,9 +1832,10 @@ end;
 
 procedure TForm1.menuSetupClick(Sender: TObject);
 begin
-     //cfgvtwo.Form6.Notebook1.ActivePage := 'Station Setup';
-     //cfgvtwo.Form6.Show;
-     //cfgvtwo.Form6.BringToFront;
+     guidedconfig.prepop := true;
+     guidedconfig.Form7.PageControl1.ActivePageIndex := 0;
+     guidedconfig.Form7.Show;
+     guidedconfig.Form7.BringToFront;
 end;
 
 procedure TForm1.menuTXLogClick(Sender: TObject);
@@ -2325,7 +2325,7 @@ end;
 procedure TForm1.btnLogQSOClick(Sender: TObject);
 var
    ss   : String;
-   fqrg : Double;
+   fqrg : Single;
    sqrg : String;
 begin
      log.Form2.edLogCall.Text := edHisCall.Text;
@@ -2691,7 +2691,7 @@ end;
 
 procedure TForm1.Timer2Timer(Sender : TObject);
 var
-   qrgk  : Double;
+   qrgk  : Single;
    qrghz : Integer;
    valid : Boolean;
 begin
@@ -2721,7 +2721,6 @@ begin
      end;
      if not valid then editManQRG.Text := '0.0';
      if valid then guidedconfig.cfg.guiQRG := qrghz;
-     showmessage('Validated QRG in Hz = ' + intToStr(qrghz));
 end;
 
 procedure TForm1.updateAudio();
@@ -3062,7 +3061,7 @@ var
    vint, tstint       : Integer;
    vstr               : PChar;
    st                 : TSYSTEMTIME;
-   tstflt             : Double;
+   tstflt             : Single;
    fname              : String;
    verUpdate          : Boolean;
    PIDL               : PItemIDList;
@@ -3076,16 +3075,6 @@ Begin
      firstReport := True;
      itemsIn := False;
      guidedconfig.Form7.Hide;
-     //rig1 := rigobject.TRadio.create();              // Rig control object (Used even if control is manual)
-     // Set the rig control method [none, hrd, commander, omni, hamlib, si570]
-     //rig1.rigcontroller := 'commander';
-     //rig1.rigcontroller := 'omni';
-     //rig1.rigcontroller := 'hrd';
-     //rig1.pollRig();
-     //label18.Caption := rig1.rigcontroller + ' says QRG is ' + intToStr(rig1.qrg) + ' Hz';
-
-     // Disabled config copy so I can work with a 'clean' setup.
-
      // basedir holds path to current user's my documents space like:
      // C:\Users\Joe\Documents
      // I have confirmed this to work under Windows 7, Vista, XP and Wine
@@ -3242,14 +3231,22 @@ Begin
      cbEnRBChange(cbEnRB);
      cbEnPSKR.Checked := guidedconfig.cfg.usePSKR;
      cbEnRBChange(cbEnPSKR);
-     editManQRG.Text := floatToStrf((guidedconfig.cfg.guiQRG/1000),ffFixed,0,2);
+     editManQRG.Text := floatToStrf((guidedconfig.cfg.guiQRG/1000),ffFixed,0,3);
      editManQRGChange(editManQRG);
-     for i := 0 to 10000 do
+     guidedconfig.Form7.saveConfig(fname);
+     rig := rigobject.TRadio.create();  // Rig control object (Used even if control is manual)
+     // Set the rig control method [none, hrd, commander, omni, hamlib, si570]
+     rig1.rigcontroller := guidedconfig.cfg.CATMethod;
+     rig1.pollRig();
+     editManQRG.Text := floatToStr(rig1.qrg/1000);
+     //label18.Caption := rig1.rigcontroller + ' says QRG is ' + intToStr(rig1.qrg) + ' Hz';
+     for i := 0 to 60 do
      begin
           application.ProcessMessages;
-          sleep(10);
+          rig1.pollRig();
+          editManQRG.Text := floatToStr(rig1.qrg/1000);
+          sleep(1000);
      end;
-     guidedconfig.Form7.saveConfig(fname);
      halt;
      // Create the decoder thread with param False so it starts.
      //d65.glinProg := False;

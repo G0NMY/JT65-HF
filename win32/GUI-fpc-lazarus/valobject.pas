@@ -48,7 +48,7 @@ type
         //procedure setRBInfo(msg : String);
         //procedure validate();
         function asciiValidate(msg : Char; mode : String) : Boolean;
-        function testQRG(const qrg : String; var qrgk : Double; var qrghz : Integer) : Boolean;
+        function testQRG(const qrg : String; var qrgk : single; var qrghz : Integer) : Boolean;
 
      property callsign      : String
         read  prCall
@@ -766,7 +766,7 @@ implementation
         end;
    end;
 
-   function TValidator.testQRG(const qrg : String; var qrgk : Double; var qrghz : Integer) : Boolean;
+   function TValidator.testQRG(const qrg : String; var qrgk : Single; var qrghz : Integer) : Boolean;
    var
         tstint   : Integer;
         tstflt   : Double;
@@ -779,6 +779,7 @@ implementation
         //                the result in Value. It returns True if the operation was succesful, and False if
         //                it failed. This operation takes into account the system settings for floating point
         //                representations."
+        tstint := 0;
         tstflt := 0.0;
         if not tryStrToFloat(qrg,tstflt) then tstflt := 0.0;
         if tstflt > 0 then
@@ -787,21 +788,20 @@ implementation
              // QRG Range of interest for MHz is 1.8 ... 450 (I'll say 500 MHz)
              // QRG Range of interest for KHz is 1800 ... 500000
              // QRG Range of interest for Hz is 1800000 ... 500000000
-             tstint := 0;
              if tstflt < 1800.0 then
              begin
                   // Probably MHz
-                  tstint := trunc(tstflt * 1000000);
+                  tstint := round(tstflt * 1000000);
              end;
              if (tstflt > 500) and (tstflt < 1800000) then
              begin
                   // Probably KHz
-                  tstint := trunc(tstflt * 1000);
+                  tstint := round(tstflt * 1000);
              end;
              if tstflt > 500000 then
              begin
                   // Probably Hz
-                  tstint := trunc(tstflt);
+                  tstint := round(tstflt);
              end;
              if tstint > 0 then
              begin
@@ -820,69 +820,6 @@ implementation
                   end;
              end;
         end;
-        //// Test for , in value and replace with .
-        //foo := trimleft(trimright(qrg));
-        //j := length(foo);
-        //for i := 1 to j do
-        //begin
-        //     if foo[i] = ',' then foo[i] := '.';
-        //end;
-        //// Test for non-numerics
-        //valid := true;
-        //for i := 1 to j do
-        //begin
-        //     if valid then
-        //     begin
-        //          case foo[i] of '0'..'9': valid := True else valid := False; end;
-        //          if not valid then
-        //          begin
-        //               case foo[i] of '.': valid := True else valid := False; end;
-        //          end;
-        //     end;
-        //end;
-        //if valid then
-        //begin
-        //     tstint := 0;
-        //     tstflt := 0.0;
-        //     // Now it's time to attempt a conversion of what I've been given
-        //     // to hertz.  I may get Hz, KHz or MHz input.
-        //     // Test to see if it's an integer or float first.
-        //     If not AnsiContainsText(foo,'.') then
-        //     begin
-        //          // It's an integer
-        //          If TryStrToInt(qrg, tstint) Then tstflt := tstint * 1.0 else tstflt := 0.0;
-        //     end
-        //     else
-        //     begin
-        //          // It's a floater
-        //          If TryStrToFloat(qrg,tstflt) Then tstflt := tstflt * 1.0 else tstflt := 0.0;
-        //     end;
-        //     // tstflt now contains a floating point value of the submitted string
-        //     // parse it and convert to Hz
-        //     // Ranges:
-        //     // 1.8 ... 450 MHz
-        //     // 1800 ... 450000 KHz
-        //     // 1,800,000 ... 450,000,000 Hz
-        //     If tstflt < 1800 then
-        //     begin
-        //          // Seems to be MHz
-        //          result := trunc(tstflt * 1000000);
-        //     end;
-        //     if (tstflt > 1799.9) and (tstflt < 450000.1) then
-        //     begin
-        //          // Seems to be KHz
-        //          result := trunc(tstflt * 1000);
-        //     end;
-        //     if (tstflt > 1799999.0) and (tstflt < 450000000.1) then
-        //     begin
-        //          // Seems to be Hz
-        //          result := trunc(tstflt);
-        //     end;
-        //end
-        //else
-        //begin
-        //     result := 0;
-        //end;
    end;
 
 end.

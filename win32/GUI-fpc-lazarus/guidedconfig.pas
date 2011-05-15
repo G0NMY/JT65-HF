@@ -954,7 +954,7 @@ end;
 
 procedure TForm7.buttonContinue6Click(Sender : TObject);
 var
-   tstflt : Double;
+   tstflt : Single;
 begin
      // Called from Macros Tab
      // Now... can I learn to iterate the controls via code or do I have to do this by 'hand'
@@ -2158,7 +2158,7 @@ end;
 procedure TForm7.readConfig(cfgname : string);
 var
    i       : Integer;
-   tmpflt  : double;
+   tmpflt  : single;
    foo     : String;
 begin
      tmpflt := 0.0;
