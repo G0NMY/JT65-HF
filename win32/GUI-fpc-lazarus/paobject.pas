@@ -197,10 +197,21 @@ implementation
              Begin
                   prDevCount := portaudio.Pa_GetHostApiInfo(prHostApi)^.deviceCount;
                   prAPIName := StrPas(portaudio.Pa_GetHostApiInfo(prHostApi)^.name);
-                  prDefInput := portaudio.Pa_GetHostApiInfo(prHostApi)^.defaultInputDevice;
-                  prDefOutput := portaudio.Pa_GetHostApiInfo(prHostApi)^.defaultOutputDevice;
-                  prDefInputS := StrPas(portaudio.Pa_GetDeviceInfo(prDefInput)^.name);
-                  prDefOutputS := StrPas(portaudio.Pa_GetDeviceInfo(prDefOutput)^.name);
+                  // In case there is no default input (or any input) device available
+                  try
+                     prDefInput := portaudio.Pa_GetHostApiInfo(prHostApi)^.defaultInputDevice;
+                     prDefInputS := StrPas(portaudio.Pa_GetDeviceInfo(prDefInput)^.name);
+                  except
+                     prDefInput := -1;
+                     prDefInputS := 'Error (No input devices)';
+                  end;
+                  try
+                     prDefOutput := portaudio.Pa_GetHostApiInfo(prHostApi)^.defaultOutputDevice;
+                     prDefOutputS := StrPas(portaudio.Pa_GetDeviceInfo(prDefOutput)^.name);
+                  except
+                     prDefOutput := -1;
+                     prDefOutputS := 'Error (No output devices)';
+                  end;
                   i := prDevCount-1;
                   While i >= 0 do
                   Begin

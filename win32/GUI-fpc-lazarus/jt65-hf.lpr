@@ -32,7 +32,7 @@ uses
   guiConfig , verHolder , PSKReporter , synaser , rbc , adif , log , diagout ,
   waterfall , d65 , about , rigobject , ddeobject , omnirigobject ,
   civobject , ddehrdobject , guidedconfig , valobject , paobject , srgraph ,
-  hrdinterface5 , hrdobject , serialobject , adclite , daclite;
+  hrdinterface5 , hrdobject , serialobject , adclite , daclite , audiodiag;
 
 {$R *.res}
 
@@ -46,6 +46,7 @@ begin
   Application.CreateForm(TForm4, Form4);
   Application .CreateForm (TForm7 , Form7 );
   Application .CreateForm (TForm8 , Form8 );
+  Application .CreateForm (TForm6 , Form6 );
   Application.Run;
 end.
 

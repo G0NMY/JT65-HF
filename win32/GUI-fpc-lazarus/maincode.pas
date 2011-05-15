@@ -30,7 +30,8 @@ uses
   CTypes, StrUtils, Math, ExtCtrls, ComCtrls, Spin, Windows, DateUtils,
   encode65, globalData, ClipBrd, dlog, rawdec, guiConfig, verHolder,
   PSKReporter, Menus, rbc, log, diagout, synautil, waterfall, d65, spectrum,
-  about, fileutil, guidedconfig, valobject, rigobject, portaudio, adc, dac;
+  about, fileutil, guidedconfig, valobject, rigobject, portaudio, adc, dac,
+  audiodiag;
 
 //Const
 //  JT_DLL = 'jt65.dll';
@@ -285,13 +286,6 @@ type
             Constructor Create(CreateSuspended : boolean);
     end;
 
-    catThread = class(TThread)
-      protected
-        procedure Execute; override;
-      public
-        Constructor Create(CreateSuspended : boolean);
-    end;
-
     rbHeard = record
        callsign : String;
        count    : Integer;
@@ -307,7 +301,6 @@ type
      alreadyHere                : Boolean;
      mnlooper, ij               : Integer;
      decoderThread              : decodeThread;
-     rigThread                  : catThread;
      rbThread                   : rbcThread;
      rbcPing, dorbReport        : Boolean;
      rbcCache, primed           : Boolean;
@@ -375,16 +368,11 @@ type
      actionSet                  : Boolean;
      rig                        : rigobject.TRadio;
      val                        : valobject.TValidator;
+     soundvalid, fftvalid       : Boolean;
 implementation
 
 { TForm1 }
 constructor decodeThread.Create(CreateSuspended : boolean);
-begin
-     FreeOnTerminate := True;
-     inherited Create(CreateSuspended);
-end;
-
-constructor catThread.Create(CreateSuspended : boolean);
 begin
      FreeOnTerminate := True;
      inherited Create(CreateSuspended);
@@ -775,244 +763,6 @@ Begin
      foo := 0;
      If TryStrToInt(rigStr[1..4], foo) Then Result := foo else Result := 0;
 End;
-
-procedure catThread.Execute();
-//Var
-//   ifoo : Integer;
-//   foo  : WideString;
-//   efoo : WideString;
-//   tqrg : Double;
-//   bqrg : Boolean;
-begin
-     //while not Terminated And not Suspended And not catInProgress do
-     //begin
-     //     Try
-     //        catInProgress := True;
-     //        If doCAT Then
-     //        Begin
-     //             if cfgvtwo.glcatBy = 'omni' Then
-     //             Begin
-     //                  ifoo := 0;
-     //                  if cfgvtwo.Form6.radioOmni1.Checked Then ifoo := 1;
-     //                  if cfgvtwo.Form6.radioOmni2.Checked Then ifoo := 2;
-     //                  globalData.gqrg := catControl.readOmni(ifoo);
-     //             End;
-     //             if cfgvtwo.glcatBy = 'hrd' Then
-     //             Begin
-     //                  if cfgvtwo.Form6.rbHRD4.Checked Then globalData.hrdVersion := 4;
-     //                  if cfgvtwo.Form6.rbHRD5.Checked Then globalData.hrdVersion := 5;
-     //                  catControl.hrdrigCAPS();
-     //                  if globalData.hrdcatControlcurrentRig.hrdAlive Then
-     //                  Begin
-     //                       cfgvtwo.Form6.groupHRD.Caption := 'HRD Connected to ' + globalData.hrdcatControlcurrentRig.radioName;
-     //                       globalData.gqrg := catControl.readHRDQRG();
-     //
-     //                       if globalData.hrdcatControlcurrentRig.hasAFGain Then
-     //                       Begin
-     //                            // Read audio level
-     //                            cfgvtwo.Form6.sliderAFGain.Visible := True;
-     //                            cfgvtwo.Form6.Label11.Visible := True;
-     //                            cfgvtwo.Form6.pbAULeft.Visible := True;
-     //                            cfgvtwo.Form6.pbAURight.Visible := True;
-     //                            cfgvtwo.Form6.sliderAFGain.Min := globalData.hrdcatControlcurrentRig.afgMin;
-     //                            cfgvtwo.Form6.sliderAFGain.Max := globalData.hrdcatControlcurrentRig.afgMax;
-     //                            foo := catControl.readHRD('[' + globalData.hrdcatControlcurrentRig.radioContext + '] Get slider-pos ' + globalData.hrdcatControlcurrentRig.radioName + ' ' + globalData.hrdcatControlcurrentRig.afgControl);
-     //                            efoo := ExtractWord(1,foo,catControl.hrdDelim);
-     //                            ifoo := -1;
-     //                            If TryStrToInt(efoo, ifoo) Then cfgvtwo.Form6.sliderAFGain.Position := ifoo;
-     //                            cfgvtwo.Form6.Label11.Caption := 'Audio Gain (Currently:  ' + ExtractWord(2,foo,catControl.HRDDelim) + '%)';
-     //                       end
-     //                       else
-     //                       begin
-     //                            cfgvtwo.Form6.sliderAFGain.Visible := False;
-     //                            cfgvtwo.Form6.Label11.Visible := False;
-     //                            cfgvtwo.Form6.pbAULeft.Visible := False;
-     //                            cfgvtwo.Form6.pbAURight.Visible := False;
-     //                       end;
-     //                       if globalData.hrdcatControlcurrentRig.hasRFGain Then
-     //                       Begin
-     //                            // Read RF Gain level
-     //                            cfgvtwo.Form6.sliderRFGain.Visible := True;
-     //                            cfgvtwo.Form6.Label17.Visible := True;
-     //                            cfgvtwo.Form6.sliderRFGain.Min := globalData.hrdcatControlcurrentRig.rfgMin;
-     //                            cfgvtwo.Form6.sliderRFGain.Max := globalData.hrdcatControlcurrentRig.rfgMax;
-     //                            foo := catControl.readHRD('[' + globalData.hrdcatControlcurrentRig.radioContext + '] Get slider-pos ' + globalData.hrdcatControlcurrentRig.radioName + ' ' + globalData.hrdcatControlcurrentRig.rfgControl);
-     //                            efoo := ExtractWord(1,foo,catControl.hrdDelim);
-     //                            ifoo := -1;
-     //                            If TryStrToInt(efoo, ifoo) Then cfgvtwo.Form6.sliderRFGain.Position := ifoo;
-     //                            cfgvtwo.Form6.Label17.Caption := 'RF Gain (Currently:  ' + ExtractWord(2,foo,catControl.HRDDelim) + '%)';
-     //                       end
-     //                       else
-     //                       begin
-     //                            cfgvtwo.Form6.sliderRFGain.Visible := False;
-     //                            cfgvtwo.Form6.Label17.Visible := False;
-     //                       end;
-     //                       if globalData.hrdcatControlcurrentRig.hasMicGain Then
-     //                       Begin
-     //                            // Read Mic Gain level
-     //                            cfgvtwo.Form6.sliderMicGain.Visible := True;
-     //                            cfgvtwo.Form6.Label15.Visible := True;
-     //                            cfgvtwo.Form6.sliderMicGain.Min := globalData.hrdcatControlcurrentRig.micgMin;
-     //                            cfgvtwo.Form6.sliderMicGain.Max := globalData.hrdcatControlcurrentRig.micgMax;
-     //                            foo := catControl.readHRD('[' + globalData.hrdcatControlcurrentRig.radioContext + '] Get slider-pos ' + globalData.hrdcatControlcurrentRig.radioName + ' ' + globalData.hrdcatControlcurrentRig.micgControl);
-     //                            efoo := ExtractWord(1,foo,catControl.hrdDelim);
-     //                            ifoo := -1;
-     //                            If TryStrToInt(efoo, ifoo) Then cfgvtwo.Form6.sliderMicGain.Position := ifoo;
-     //                            cfgvtwo.Form6.Label15.Caption := 'Mic Gain (Currently:  ' + ExtractWord(2,foo,catControl.HRDDelim) + '%)';
-     //                       end
-     //                       else
-     //                       begin
-     //                            cfgvtwo.Form6.sliderMicGain.Visible := False;
-     //                            cfgvtwo.Form6.Label15.Visible := False;
-     //                       end;
-     //                       if globalData.hrdcatControlcurrentRig.hasPAGain Then
-     //                       Begin
-     //                            // Read PA limit level
-     //                            cfgvtwo.Form6.sliderPALevel.Visible := True;
-     //                            cfgvtwo.Form6.Label18.Visible := True;
-     //                            cfgvtwo.Form6.sliderPALevel.Min := globalData.hrdcatControlcurrentRig.pagMin;
-     //                            cfgvtwo.Form6.sliderPALevel.Max := globalData.hrdcatControlcurrentRig.pagMax;
-     //                            foo := catControl.readHRD('[' + globalData.hrdcatControlcurrentRig.radioContext + '] Get slider-pos ' + globalData.hrdcatControlcurrentRig.radioName + ' ' + globalData.hrdcatControlcurrentRig.pagControl);
-     //                            efoo := ExtractWord(1,foo,catControl.hrdDelim);
-     //                            ifoo := -1;
-     //                            If TryStrToInt(efoo, ifoo) Then cfgvtwo.Form6.sliderPALevel.Position := ifoo;
-     //                            cfgvtwo.Form6.Label18.Caption := 'RF Output Level (Currently:  ' + ExtractWord(2,foo,catControl.HRDDelim) + '%)';
-     //                       end
-     //                       else
-     //                       begin
-     //                            cfgvtwo.Form6.sliderPALevel.Visible := False;
-     //                            cfgvtwo.Form6.Label18.Visible := False;
-     //                       end;
-     //                       if globalData.hrdcatControlcurrentRig.hasSMeter Then
-     //                       Begin
-     //                            // Read S-Meter level
-     //                            // Smeter returns 3 csv values. 1 = Text S level, 2 = raw level and 3 = max level.
-     //                            foo := catControl.readHRD('[' + globalData.hrdcatControlcurrentRig.radioContext + '] Get ' + globalData.hrdcatControlcurrentRig.smeterControl);
-     //                            efoo := ExtractWord(3,foo,catControl.hrdDelim);
-     //                            ifoo := -1;
-     //                            cfgvtwo.Form6.pbSMeter.Min := 0;
-     //                            If TryStrToInt(efoo, ifoo) Then cfgvtwo.Form6.pbSMeter.Max := ifoo;
-     //                            efoo := ExtractWord(2,foo,catControl.hrdDelim);
-     //                            ifoo := -1;
-     //                            If TryStrToInt(efoo, ifoo) Then cfgvtwo.Form6.pbSMeter.Position := ifoo;
-     //                            cfgvtwo.Form6.Label24.Caption := ExtractWord(1,foo,catControl.HRDDelim);
-     //                       end;
-     //                       if globalData.hrdcatControlcurrentRig.hasTX Then
-     //                       begin
-     //                            cfgvtwo.Form6.chkHRDPTT.Visible := True;
-     //                            cfgvtwo.Form6.testHRDPTT.Visible := True;
-     //                       end
-     //                       else
-     //                       begin
-     //                            cfgvtwo.Form6.chkHRDPTT.Checked := False;
-     //                            cfgvtwo.Form6.chkHRDPTT.Visible := False;
-     //                            cfgvtwo.Form6.testHRDPTT.Visible := False;
-     //                       end;
-     //                       if globalData.hrdcatControlcurrentRig.hasAutoTune and globalData.hrdcatControlcurrentRig.hasAutoTuneDo Then
-     //                       Begin
-     //                            cfgvtwo.Form6.cbATQSY1.Visible := True;
-     //                            cfgvtwo.Form6.cbATQSY2.Visible := True;
-     //                            cfgvtwo.Form6.cbATQSY3.Visible := True;
-     //                            cfgvtwo.Form6.cbATQSY4.Visible := True;
-     //                            cfgvtwo.Form6.cbATQSY5.Visible := True;
-     //                       end
-     //                       else
-     //                       begin
-     //                            cfgvtwo.Form6.cbATQSY1.Checked := False;
-     //                            cfgvtwo.Form6.cbATQSY2.Checked := False;
-     //                            cfgvtwo.Form6.cbATQSY3.Checked := False;
-     //                            cfgvtwo.Form6.cbATQSY4.Checked := False;
-     //                            cfgvtwo.Form6.cbATQSY5.Checked := False;
-     //                            cfgvtwo.Form6.cbATQSY1.Visible := False;
-     //                            cfgvtwo.Form6.cbATQSY2.Visible := False;
-     //                            cfgvtwo.Form6.cbATQSY3.Visible := False;
-     //                            cfgvtwo.Form6.cbATQSY4.Visible := False;
-     //                            cfgvtwo.Form6.cbATQSY5.Visible := False;
-     //                       end;
-     //                  end
-     //                  else
-     //                  begin
-     //                       globalData.gqrg := 0.0;
-     //                       globalData.strqrg := '0';
-     //                  end;
-     //             End;
-     //             if cfgvtwo.glcatBy = 'commander' Then
-     //             Begin
-     //                  ifoo := 0;
-     //                  globalData.gqrg := catControl.readDXLabs();
-     //             End;
-     //             if cfgvtwo.glcatBy = 'si57' Then
-     //             Begin
-     //                  // Si570 is active and has QRG info.
-     //                  // glsi57QRGi is dial QRG in Hz.
-     //                  if cfgvtwo.glsi57QRGi > 999 Then tqrg := cfgvtwo.glsi57QRGi else tqrg := 0.0;
-     //                  if tqrg > 0 Then
-     //                  Begin
-     //                       globalData.gqrg := tqrg;
-     //                       globalData.strqrg := FloatToStr(tqrg);
-     //                  End
-     //                  Else
-     //                  Begin
-     //                       globalData.gqrg := 0.0;
-     //                       globalData.strqrg := '0.0';
-     //                  End;
-     //             End;
-     //             if cfgvtwo.glcatBy = 'none' Then
-     //             Begin
-     //                  tqrg := 0.0;
-     //                  if TryStrToFloat(Form1.editManQRG.Text, tqrg) Then
-     //                  Begin
-     //                       // Need to eval the box and try to determine if it's
-     //                       // Hz, KHz or MHz.
-     //                       // Valid range of MHz 1.8 ... 460 (for now)
-     //                       // Valid range of KHz 1800 460000
-     //                       // > 460000 must be Hz.
-     //                       bqrg := False;
-     //                       If tqrg > 1000000 Then
-     //                       Begin
-     //                            // Eval as Hz
-     //                            globalData.gqrg := tqrg;
-     //                            globalData.strqrg := FloatToStr(tqrg);
-     //                            bqrg := True;
-     //                       End;
-     //                       If (tqrg > 460) And (tqrg < 1000000) And not bqrg Then
-     //                       Begin
-     //                            // Eval as KHz
-     //                            globalData.gqrg := tqrg*1000;
-     //                            globalData.strqrg := FloatToStr(tqrg*1000);
-     //                            bqrg := True;
-     //                       End;
-     //                       If (tqrg > 0) And (tqrg < 461) And not bqrg Then
-     //                       Begin
-     //                            // Eval as MHz
-     //                            globalData.gqrg := tqrg*1000000;
-     //                            globalData.strqrg := FloatToStr(tqrg*1000000);
-     //                            bqrg := True;
-     //                       End;
-     //                       If not bqrg Then
-     //                       Begin
-     //                            // No idea....
-     //                            globalData.gqrg := 0.0;
-     //                            globalData.strqrg := '0';
-     //                            Form1.editManQRG.Text := '0';
-     //                       End;
-     //                  End
-     //                  Else
-     //                  Begin
-     //                       globalData.gqrg := 0.0;
-     //                       globalData.strqrg := '0';
-     //                  End;
-     //             End;
-     //             cfgvtwo.Form6.rigQRG.Text := globalData.strqrg;
-     //             doCAT := False;
-     //        end;
-     //        catInProgress := False;
-     //     except
-     //        dlog.fileDebug('Exception in rig thread');
-     //     end;
-     //     sleep(100);
-     //end;
-end;
 
 procedure TForm1.updateList(callsign : String);
 Var
@@ -1594,35 +1344,11 @@ begin
      //     decoderThread.Suspend;
      //     diagout.Form3.ListBox1.Items.Add('Terminated Decoder Thread');
      //
-     //     diagout.Form3.ListBox1.Items.Add('Terminating Rig Control Thread');
-     //     termcount :=0;
-     //     if catcontrol.hrdConnected() then diagout.Form3.ListBox1.Items.Add('Disconnecting HRD');
-     //     while catcontrol.hrdConnected() do
-     //     Begin
-     //          application.ProcessMessages;
-     //          catcontrol.hrdDisconnect();
-     //          sleep(1000);
-     //          inc(termcount);
-     //          if termcount > 9 Then break;
-     //     end;
-     //     termcount := 0;
-     //     while catInProgress Do
-     //     Begin
-     //          application.ProcessMessages;
-     //          sleep(1000);
-     //          inc(termcount);
-     //          if termcount > 9 then break;
-     //     end;
-     //     rigThread.Suspend;
-     //     diagout.Form3.ListBox1.Items.Add('Terminated Rig Control Thread');
-     //
      //     diagout.Form3.ListBox1.Items.Add('Freeing Threads');
      //     rbThread.Terminate;
      //     decoderThread.Terminate;
-     //     rigThread.Terminate;
      //     if not rbThread.FreeOnTerminate Then rbThread.Free;
      //     if not decoderThread.FreeOnTerminate Then decoderThread.Free;
-     //     if not rigThread.FreeOnTerminate Then rigThread.Free;
      //     diagout.Form3.ListBox1.Items.Add('Done');
 
           //diagout.Form3.ListBox1.Items.Add('Cleaning up Audio Streams');
@@ -3076,6 +2802,7 @@ Begin
      firstReport := True;
      itemsIn := False;
      guidedconfig.Form7.Hide;
+     audiodiag.Form6.Hide;
      // basedir holds path to current user's my documents space like:
      // C:\Users\Joe\Documents
      // I have confirmed this to work under Windows 7, Vista, XP and Wine
@@ -3228,23 +2955,24 @@ Begin
      for i := 0 to 60 do
      begin
           application.ProcessMessages;
-          rig1.pollRig();
-          editManQRG.Text := floatToStr(rig1.qrg/1000);
-          sleep(1000);
+         sleep(10);
      end;
-     halt;
 
      // Init PA.  If this doesn't work there's no reason to continue.
+     audiodiag.Form6.Show;
+     audiodiag.Form6.Visible := True;
+     audiodiag.Form6.BringToFront;
+     audiodiag.Form6.Label3.Caption := guidedconfig.cfg.soundInS;
+     audiodiag.Form6.Label4.Caption := guidedconfig.cfg.soundOutS;
+     audiodiag.Form6.Label5.Caption := 'Initializing PortAudio';
      PaResult := portaudio.Pa_Initialize();
      If PaResult <> 0 Then
      Begin
+          audiodiag.Form6.Label5.Caption := 'PortAudio open failed';
           ShowMessage('Fatal Error.  Could not initialize portaudio.');
           halt;
      end;
-     //If PaResult = 0 Then dlog.fileDebug('Portaudio initialized OK.');
      // Setup input device
-     //dlog.fileDebug('Setting up ADC.');
-     //foo := cfgvtwo.Form6.cbAudioIn.Items.Strings[cfgvtwo.Form6.cbAudioIn.ItemIndex];
      ppaInParams := @paInParams;
      paInParams.device := guidedconfig.cfg.soundIn;
      paInParams.sampleFormat := paInt16;
@@ -3256,31 +2984,64 @@ Begin
      adc.adcT := 0;
      adc.d65rxBufferPtr := @adc.d65rxBuffer[0];
      // Initialize rx stream.
+     audiodiag.Form6.Label5.Caption := 'Opening input device';
      if guidedconfig.cfg.forceMono then
      begin
           // Dealing with a mono stream either by necessity or user choice.
+          audiodiag.Form6.Label5.Caption := 'Opening input device in mono mode';
           paResult := portaudio.Pa_OpenStream(paInStream,ppaInParams,Nil,11025,2048,0,@adc.madcCallback,Pointer(Self));
      end
      else
      begin
+          audiodiag.Form6.Label5.Caption := 'Opening input device in stereo mode';
           paResult := portaudio.Pa_OpenStream(paInStream,ppaInParams,Nil,11025,2048,0,@adc.sadcCallback,Pointer(Self));
      end;
      if paResult <> 0 Then
      Begin
-          ShowMessage('PA Error:  ' + StrPas(portaudio.Pa_GetErrorText(paResult)) + ' Could not setup for stereo input.  Please check your setup.');
+          if guidedconfig.cfg.forceMono then audiodiag.Form6.Label5.Caption := 'Failed to open in mono mode';
+          if not guidedconfig.cfg.forceMono then audiodiag.Form6.Label5.Caption := 'Failed to open in stereo mode';
+          audiodiag.Form6.Label1.Caption := 'Input device status:  FAIL';
+          for i := 0 to 1000 do
+          begin
+               application.ProcessMessages;
+               sleep(10);
+          end;
+          ShowMessage('PA Error:  ' + StrPas(portaudio.Pa_GetErrorText(paResult)) + sLineBreak +
+                      'Could not setup for input.  Please check your setup.' + sLineBreak +
+                      'Attempted to open device:  ' + guidedconfig.cfg.soundInS);
           halt;
      end
      else
      begin
-         paResult := portaudio.Pa_StartStream(paInStream);
+          if guidedconfig.cfg.forceMono then audiodiag.Form6.Label5.Caption := 'Opened input in mono mode';
+          if not guidedconfig.cfg.forceMono then audiodiag.Form6.Label5.Caption := 'Opened input in stereo mode';
+          audiodiag.Form6.Label1.Caption := 'Input device status:  OK';
+          // Start the stream.
+          audiodiag.Form6.Label5.Caption := 'Starting input sample stream';
+          paResult := portaudio.Pa_StartStream(paInStream);
      end;
-     // Start the stream.
      if paResult <> 0 Then
      Begin
-          ShowMessage('PA Error:  ' + StrPas(portaudio.Pa_GetErrorText(paResult)));
-     End;
+          audiodiag.Form6.Label5.Caption := 'Input sample stream not running';
+          audiodiag.Form6.Label1.Caption := 'Input device status:  FAIL';
+          for i := 0 to 1000 do
+          begin
+               application.ProcessMessages;
+               sleep(10);
+          end;
+          ShowMessage('PA Error:  ' + StrPas(portaudio.Pa_GetErrorText(paResult)) + sLineBreak +
+                      'Could not setup for input.  Please check your setup.' + sLineBreak +
+                      'Attempted to open device:  ' + guidedconfig.cfg.soundInS);
+          halt;
+     End
+     else
+     begin
+          audiodiag.Form6.Label5.Caption := 'Input sample stream running';
+          audiodiag.Form6.Label1.Caption := 'Input device status:  OK';
+     end;
      // Setup output device
      //dlog.fileDebug('Setting up DAC.');
+     audiodiag.Form6.Label5.Caption := 'Opening output device';
      ppaOutParams := @paOutParams;
      paOutParams.device := guidedconfig.cfg.soundOut;
      paOutParams.sampleFormat := paInt16;
@@ -3295,122 +3056,182 @@ Begin
      if guidedconfig.cfg.forceMono then
      begin
           // Dealing with a mono stream either by necessity or user choice.
+          audiodiag.Form6.Label5.Caption := 'Opening output device in mono mode';
           paResult := portaudio.Pa_OpenStream(paOutStream,Nil,ppaOutParams,11025,2048,0,@dac.mdacCallback,Pointer(Self));
      end
      else
      begin
+          audiodiag.Form6.Label5.Caption := 'Opening output device in stereo mode';
           paResult := portaudio.Pa_OpenStream(paOutStream,Nil,ppaOutParams,11025,2048,0,@dac.sdacCallback,Pointer(Self));
      end;
      if paResult <> 0 Then
      Begin
-          ShowMessage('PA Error:  ' + StrPas(portaudio.Pa_GetErrorText(paResult)));
+          if guidedconfig.cfg.forceMono then audiodiag.Form6.Label5.Caption := 'Failed to open in mono mode';
+          if not guidedconfig.cfg.forceMono then audiodiag.Form6.Label5.Caption := 'Failed to open in stereo mode';
+          audiodiag.Form6.Label2.Caption := 'Output device status:  FAIL';
+          for i := 0 to 1000 do
+          begin
+               application.ProcessMessages;
+               sleep(10);
+          end;
+          ShowMessage('PA Error:  ' + StrPas(portaudio.Pa_GetErrorText(paResult)) + sLineBreak +
+                      'Could not setup for output.  Please check your setup.' + sLineBreak +
+                      'Attempted to open device:  ' + guidedconfig.cfg.soundOutS);
           halt;
-     End;
+     End
+     else
+     begin
+          if guidedconfig.cfg.forceMono then audiodiag.Form6.Label5.Caption := 'Opened output in mono mode';
+          if not guidedconfig.cfg.forceMono then audiodiag.Form6.Label5.Caption := 'Opened output in stereo mode';
+          audiodiag.Form6.Label2.Caption := 'Output device status:  OK';
+     end;
      // Start the stream.
+     audiodiag.Form6.Label5.Caption := 'Starting output sample stream';
      paResult := portaudio.Pa_StartStream(paOutStream);
      if paResult <> 0 Then
      Begin
-          ShowMessage('PA Error:  ' + StrPas(portaudio.Pa_GetErrorText(paResult)));
+          audiodiag.Form6.Label5.Caption := 'Output sample stream not running';
+          audiodiag.Form6.Label2.Caption := 'Output device status:  FAIL';
+          for i := 0 to 1000 do
+          begin
+               application.ProcessMessages;
+               sleep(10);
+          end;
+          ShowMessage('PA Error:  ' + StrPas(portaudio.Pa_GetErrorText(paResult)) + sLineBreak +
+                      'Could not setup for output.  Please check your setup.' + sLineBreak +
+                      'Attempted to open device:  ' + guidedconfig.cfg.soundOutS);
           halt;
-     End;
-
-     for i := 0 to 30 do
+     End
+     else
      begin
-          application.ProcessMessages;
-          sleep(1000);
+          audiodiag.Form6.Label5.Caption := 'Output sample stream running';
+          audiodiag.Form6.Label2.Caption := 'Output device status:  OK';
      end;
-
-     halt;
+     soundvalid := True;
+     audiodiag.Form6.Label5.Caption := 'Input/Output sample streams running';
+     while (adc.adcCount < 100) and (dac.dacCount < 100) do
+     begin
+          audiodiag.Form6.Label5.Caption := 'This window will close shortly, testing streams...' + sLineBreak + sLineBreak +
+                                            'ADC Calls:  ' + IntToStr(adc.adcCount) + sLineBreak + sLineBreak +
+                                            'DAC Calls:  ' + IntToStr(dac.dacCount) + sLineBreak + sLineBreak +
+                                            'ADC SR:  ' + FloatToStrF(adc.adcErate,ffFixed,0,4) + sLineBreak + sLineBreak +
+                                            'DAC SR:  ' + FloatToStrF(dac.dacErate,ffFixed,0,4);
+          application.ProcessMessages;
+          sleep(10);
+     end;
+     audiodiag.Form6.Hide;
 
      //With wisdom comes speed.
-     //d65.glfftFWisdom := 0;
-     //d65.glfftSWisdom := 0;
-     //if not cfgvtwo.Form6.chkNoOptFFT.Checked Then
-     //Begin
-     //     fname := globalData.cfgdir+'\wisdom2.dat';
-     //     if FileExists(fname) Then
-     //     Begin
-     //          // I have data for FFTW_MEASURE metrics use ical settings in
-     //          // decode65 for measure.
-     //          d65.glfftFWisdom := 1;  // Causes measure wisdom to be loaded on first pass of decode65
-     //          d65.glfftSWisdom := 11; // uses measure wisdom (no load/no save) on != first pass of decode65
-     //          dlog.fileDebug('Imported FFTW3 Wisdom.');
-     //     End
-     //     Else
-     //     Begin
-     //          dlog.fileDebug('FFT Wisdom missing... you should run optfft');
-     //     End;
-     //End
-     //Else
-     //Begin
-     //     d65.glfftFWisdom := 0;
-     //     d65.glfftSWisdom := 0;
-     //     dlog.fileDebug('Running without optimal FFT enabled by user request.');
-     //End;
+     d65.glfftFWisdom := 0;
+     d65.glfftSWisdom := 0;
+     if guidedconfig.cfg.useOptFFT Then
+     Begin
+          fname := guidedconfig.cfg.cfgdir+'\wisdom2.dat';
+          if FileExists(fname) Then
+          Begin
+               // I have data for FFTW_MEASURE metrics use ical settings in
+               // decode65 for measure.
+               d65.glfftFWisdom := 1;  // Causes measure wisdom to be loaded on first pass of decode65
+               d65.glfftSWisdom := 11; // uses measure wisdom (no load/no save) on != first pass of decode65
+               fftvalid := true;
+          End
+          Else
+          Begin
+               showMessage('FFT Wisdom missing.  Searched at:' + sLineBreak + fname);
+               fftvalid := false;
+          End;
+     End
+     Else
+     Begin
+          d65.glfftFWisdom := 0;
+          d65.glfftSWisdom := 0;
+          showMessage('Running without optimal FFT enabled by user request.');
+          fftvalid := false;
+     End;
 
-     //if cfgvtwo.Form6.cbUsePSKReporter.Checked Then
-     //Begin
-     //     // Initialize PSK Reporter DLL
-     //     If PSKReporter.ReporterInitialize('report.pskreporter.info','4739') = 0 Then pskrstat := 1 else pskrstat := 0;
-     //     Form1.cbEnPSKR.Checked := True;
-     //End
-     //Else
-     //Begin
-     //     Form1.cbEnPSKR.Checked := False;
-     //end;
-     //if cfgvtwo.Form6.cbUseRB.Checked then Form1.cbEnRB.Checked := True else Form1.cbEnRB.Checked := False;
      // Create and initialize TWaterfallControl
-     //Waterfall := TWaterfallControl.Create(Self);
-     //Waterfall.Height := 180;
-     //Waterfall.Width  := 750;
-     //Waterfall.Top    := 25;
-     //Waterfall.Left   := 177;
-     //Waterfall.Parent := Self;
-     //Waterfall.OnMouseDown := waterfallMouseDown;
-     //Waterfall.DoubleBuffered := True;
+     Waterfall := TWaterfallControl.Create(Self);
+     Waterfall.Height := 180;
+     Waterfall.Width  := 750;
+     Waterfall.Top    := 25;
+     Waterfall.Left   := 177;
+     Waterfall.Parent := Self;
+     Waterfall.OnMouseDown := waterfallMouseDown;
+     Waterfall.DoubleBuffered := True;
      //
      // Initialize various form items to startup values
      //
-     //st := utcTime();
-     //thisMinute := st.Minute;
-     //if st.Minute = 0 then
-     //Begin
-     //     lastMinute := 59;
-     //End
-     //Else
-     //Begin
-     //     lastMinute := st.Minute-1;
-     //End;
-     //if st.Minute = 59 then
-     //Begin
-     //     nextMinute := 0;
-     //End
-     //Else
-     //Begin
-     //     nextMinute := st.Minute+1;
-     //End;
-     // Setup rbstats
-     //i := 0;
-     //while i < 500 do
-     //begin
-     //     rbsHeardList[i].callsign := '';
-     //     rbsHeardList[i].count := 0;
-     //     rbc.glrbsLastCall[i] := '';
-     //     inc(i);
-     //end;
-     //rbc.glrbsSentCount := 0;
-     //rbc.glrbCallsign := TrimLeft(TrimRight(cfgvtwo.Form6.editPSKRCall.Text));
+     st := utcTime();
+     thisMinute := st.Minute;
+     if st.Minute = 0 then
+     Begin
+          lastMinute := 59;
+     End
+     Else
+     Begin
+          lastMinute := st.Minute-1;
+     End;
+     if st.Minute = 59 then
+     Begin
+          nextMinute := 0;
+     End
+     Else
+     Begin
+          nextMinute := st.Minute+1;
+     End;
      // Create the decoder thread with param False so it starts.
      //d65.glinProg := False;
      //decoderThread := decodeThread.Create(False);
-     // Create the CAT control thread with param True so it starts.
-     //rigThread := catThread.Create(False);
      // Create RB thread with param False so it starts.
      //cfgvtwo.glrbcLogin := False;
      //cfgvtwo.glrbcLogout := False;
      //rbcPing := False;
      //dorbReport := False;
      //rbThread := rbcThread.Create(False);
+     //
+     // RB/PSKR Setup
+     //
+     if not guidedconfig.cfg.noSpotting Then
+     Begin
+          cbEnRB.Checked   := True;
+          cbEnRB.Enabled   := True;
+          if guidedconfig.cfg.usePSKR then
+          begin
+               // Initialize PSK Reporter DLL
+               If PSKReporter.ReporterInitialize('report.pskreporter.info','4739') = 0 Then pskrstat := 1 else pskrstat := 0;
+               cbEnPSKR.Checked := True;
+          end
+          else
+          begin
+               cbEnPSKR.Checked := False;
+          end;
+          if guidedconfig.cfg.useRB then
+          begin
+               cbEnRB.Checked := True;
+          end
+          else
+          begin
+               cbEnRB.Checked := False;
+          end;
+     End
+     Else
+     Begin
+          cbEnPSKR.Checked := False;
+          cbEnPSKR.Enabled := False;
+          cbEnRB.Checked   := False;
+          cbEnRB.Enabled   := False;
+     end;
+     // Setup rbstats
+     i := 0;
+     while i < 500 do
+     begin
+          rbsHeardList[i].callsign := '';
+          rbsHeardList[i].count := 0;
+          rbc.glrbsLastCall[i] := '';
+          inc(i);
+     end;
+     rbc.glrbsSentCount := 0;
+     rbc.glrbCallsign := guidedconfig.cfg.rbcallsign;
 End;
 
 procedure TForm1.updateSR();
@@ -4660,7 +4481,7 @@ begin
           //ShowMessage('Main loop entered, calling initializer code...');
           // Read in initializer code items that can't be run from form create.
           initializerCode();
-          dlog.fileDebug('Initializer code complete.  Entering main timing loop.');
+          //dlog.fileDebug('Initializer code complete.  Entering main timing loop.');
           runOnce := False;
           Form1.Timer1.Enabled := True;
           // Go ahead and mark the stream as active.  It won't run a decode, but it will paint the spectrum during init.
@@ -4953,6 +4774,8 @@ initialization
   globalData.hrdVersion := 5;
   // This creates a access point to validation routines
   val := valobject.TValidator.create();
-
+  // These will, hopefully, be set true soon.
+  soundvalid := False;
+  fftvalid   := False;
 end.
 

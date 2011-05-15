@@ -546,6 +546,12 @@ type
       property useTXeqRXDF : Boolean
         read  prTXRXDF
         write prTXRXDF;
+      property useOptFFT : Boolean
+        read  prUseOptFFT
+        write prUseOptFFT;
+      property noSpotting : Boolean
+        read  prNoSpot
+        write prNoSpot;
   end;
 
 var
