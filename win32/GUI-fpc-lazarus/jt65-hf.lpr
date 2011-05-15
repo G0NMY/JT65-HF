@@ -32,7 +32,7 @@ uses
   guiConfig , verHolder , PSKReporter , synaser , rbc , adif , log , diagout ,
   waterfall , d65 , about , rigobject , ddeobject , omnirigobject ,
   civobject , ddehrdobject , guidedconfig , valobject , paobject , srgraph ,
-  hrdinterface5 , hrdobject , serialobject;
+  hrdinterface5 , hrdobject , serialobject , adclite , daclite;
 
 {$R *.res}
 

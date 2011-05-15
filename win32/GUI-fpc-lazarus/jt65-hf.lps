@@ -3,11 +3,11 @@
   <ProjectSession>
     <PathDelim Value="\"/>
     <Version Value="9"/>
-    <Units Count="36">
+    <Units Count="38">
       <Unit0>
         <Filename Value="jt65-hf.lpr"/>
         <IsPartOfProject Value="True"/>
-        <EditorIndex Value="20"/>
+        <EditorIndex Value="22"/>
         <WindowIndex Value="0"/>
         <TopLine Value="24"/>
         <CursorPos X="1" Y="47"/>
@@ -22,14 +22,15 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="maincode"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="1"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="2697"/>
-        <CursorPos X="23" Y="2707"/>
+        <TopLine Value="3307"/>
+        <CursorPos X="12" Y="3324"/>
         <UsageCount Value="215"/>
         <Bookmarks Count="2">
-          <Item0 X="36" Y="1536" ID="0"/>
-          <Item1 X="1" Y="1839" ID="1"/>
+          <Item0 X="1" Y="1839" ID="1"/>
+          <Item1 X="6" Y="3237" ID="0"/>
         </Bookmarks>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
@@ -49,7 +50,7 @@
         <Filename Value="encode65.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="encode65"/>
-        <EditorIndex Value="23"/>
+        <EditorIndex Value="25"/>
         <WindowIndex Value="0"/>
         <TopLine Value="81"/>
         <CursorPos X="1" Y="101"/>
@@ -60,7 +61,7 @@
         <Filename Value="globaldata.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="globalData"/>
-        <EditorIndex Value="24"/>
+        <EditorIndex Value="26"/>
         <WindowIndex Value="0"/>
         <TopLine Value="31"/>
         <CursorPos X="1" Y="58"/>
@@ -71,7 +72,7 @@
         <Filename Value="spectrum.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="spectrum"/>
-        <EditorIndex Value="25"/>
+        <EditorIndex Value="27"/>
         <WindowIndex Value="0"/>
         <TopLine Value="255"/>
         <CursorPos X="1" Y="261"/>
@@ -92,8 +93,8 @@
         <UnitName Value="adc"/>
         <EditorIndex Value="11"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="80"/>
-        <CursorPos X="86" Y="161"/>
+        <TopLine Value="22"/>
+        <CursorPos X="1" Y="1"/>
         <UsageCount Value="215"/>
         <Loaded Value="True"/>
       </Unit7>
@@ -109,10 +110,10 @@
         <Filename Value="dac.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="dac"/>
-        <EditorIndex Value="12"/>
+        <EditorIndex Value="13"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="100"/>
-        <CursorPos X="35" Y="126"/>
+        <TopLine Value="159"/>
+        <CursorPos X="1" Y="186"/>
         <UsageCount Value="201"/>
         <Loaded Value="True"/>
       </Unit9>
@@ -120,7 +121,7 @@
         <Filename Value="dlog.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="dlog"/>
-        <EditorIndex Value="21"/>
+        <EditorIndex Value="23"/>
         <WindowIndex Value="0"/>
         <TopLine Value="5"/>
         <CursorPos X="11" Y="33"/>
@@ -183,7 +184,7 @@
         <Filename Value="rbc.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="rbc"/>
-        <EditorIndex Value="19"/>
+        <EditorIndex Value="21"/>
         <WindowIndex Value="0"/>
         <TopLine Value="693"/>
         <CursorPos X="1" Y="717"/>
@@ -236,7 +237,7 @@
         <Filename Value="waterfall.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="waterfall"/>
-        <EditorIndex Value="26"/>
+        <EditorIndex Value="28"/>
         <WindowIndex Value="0"/>
         <TopLine Value="1"/>
         <CursorPos X="98" Y="10"/>
@@ -247,7 +248,7 @@
         <Filename Value="d65.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="d65"/>
-        <EditorIndex Value="22"/>
+        <EditorIndex Value="24"/>
         <WindowIndex Value="0"/>
         <TopLine Value="1"/>
         <CursorPos X="1" Y="22"/>
@@ -269,8 +270,7 @@
         <Filename Value="rigobject.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="rigobject"/>
-        <IsVisibleTab Value="True"/>
-        <EditorIndex Value="13"/>
+        <EditorIndex Value="15"/>
         <WindowIndex Value="0"/>
         <TopLine Value="466"/>
         <CursorPos X="50" Y="467"/>
@@ -281,7 +281,7 @@
         <Filename Value="ddeobject.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="ddeobject"/>
-        <EditorIndex Value="18"/>
+        <EditorIndex Value="20"/>
         <WindowIndex Value="0"/>
         <TopLine Value="85"/>
         <CursorPos X="39" Y="98"/>
@@ -301,7 +301,7 @@
         <Filename Value="civobject.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="civobject"/>
-        <EditorIndex Value="17"/>
+        <EditorIndex Value="19"/>
         <WindowIndex Value="0"/>
         <TopLine Value="88"/>
         <CursorPos X="1" Y="109"/>
@@ -312,7 +312,7 @@
         <Filename Value="ddehrdobject.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="ddehrdobject"/>
-        <EditorIndex Value="14"/>
+        <EditorIndex Value="16"/>
         <WindowIndex Value="0"/>
         <TopLine Value="92"/>
         <CursorPos X="12" Y="137"/>
@@ -350,8 +350,8 @@
         <UnitName Value="paobject"/>
         <EditorIndex Value="9"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="155"/>
-        <CursorPos X="1" Y="170"/>
+        <TopLine Value="19"/>
+        <CursorPos X="1" Y="30"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
       </Unit31>
@@ -365,7 +365,7 @@
         <WindowIndex Value="0"/>
         <TopLine Value="13"/>
         <CursorPos X="1" Y="28"/>
-        <UsageCount Value="183"/>
+        <UsageCount Value="185"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
       </Unit32>
@@ -373,22 +373,22 @@
         <Filename Value="hrdinterface5.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="hrdinterface5"/>
-        <EditorIndex Value="16"/>
+        <EditorIndex Value="18"/>
         <WindowIndex Value="0"/>
         <TopLine Value="1"/>
         <CursorPos X="15" Y="12"/>
-        <UsageCount Value="114"/>
+        <UsageCount Value="116"/>
         <Loaded Value="True"/>
       </Unit33>
       <Unit34>
         <Filename Value="hrdobject.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="hrdobject"/>
-        <EditorIndex Value="15"/>
+        <EditorIndex Value="17"/>
         <WindowIndex Value="0"/>
         <TopLine Value="488"/>
         <CursorPos X="1" Y="508"/>
-        <UsageCount Value="114"/>
+        <UsageCount Value="116"/>
         <Loaded Value="True"/>
       </Unit34>
       <Unit35>
@@ -399,9 +399,31 @@
         <WindowIndex Value="0"/>
         <TopLine Value="39"/>
         <CursorPos X="30" Y="66"/>
-        <UsageCount Value="109"/>
+        <UsageCount Value="111"/>
         <Loaded Value="True"/>
       </Unit35>
+      <Unit36>
+        <Filename Value="adclite.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="adclite"/>
+        <EditorIndex Value="12"/>
+        <WindowIndex Value="0"/>
+        <TopLine Value="58"/>
+        <CursorPos X="1" Y="73"/>
+        <UsageCount Value="21"/>
+        <Loaded Value="True"/>
+      </Unit36>
+      <Unit37>
+        <Filename Value="daclite.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="daclite"/>
+        <EditorIndex Value="14"/>
+        <WindowIndex Value="0"/>
+        <TopLine Value="40"/>
+        <CursorPos X="1" Y="64"/>
+        <UsageCount Value="21"/>
+        <Loaded Value="True"/>
+      </Unit37>
     </Units>
     <General>
       <ActiveWindowIndexAtStart Value="0"/>

@@ -5,7 +5,7 @@ unit paobject;
 interface
 
 uses
-  Classes, SysUtils, CTypes, portaudio, adc, dac;
+  Classes, SysUtils, CTypes, portaudio, adclite, daclite;
 
 type
   tdsparray   = array of CTypes.cint16;
@@ -160,8 +160,8 @@ implementation
         prOutParams.device := -1;
 
         // Setup some sane defaults for adc unit
-        adc.adcCount := 0;
-        adc.adcChan  := 1;
+        adclite.adcCount := 0;
+        adclite.adcChan  := 1;
 
         // Setup buffers and device lists.  Will free by destructor call
         setlength(prRXBuffer,661504);
@@ -331,23 +331,23 @@ implementation
    procedure TpaDSP.adcOn();
    begin
         prInParams.channelCount := 1;
-        adc.adcCount := 0;
-        adc.specLevel1 := 50;
-        adc.specLevel2 := 50;
-        adc.adcLDgain := 0;
-        adc.adcRDgain := 0;
-        adc.adcT := 0;
-        adc.adcErr := 0;
-        adc.adcErate := 1.000;
-        adc.adcOverrun := 0;
+        adclite.adcCount := 0;
+        adclite.specLevel1 := 50;
+        adclite.specLevel2 := 50;
+        adclite.adcLDgain := 0;
+        adclite.adcRDgain := 0;
+        adclite.adcT := 0;
+        adclite.adcErr := 0;
+        adclite.adcErate := 1.000;
+        adclite.adcOverrun := 0;
         prInStream := Nil;
         if prInParams.channelCount = 1 then
         begin
-             prResult := portaudio.Pa_OpenStream(prInStream,prpInParams,Nil,prSampleRate,2048,0,PPaStreamCallback(@adc.madcCallback),Pointer(Self));
+             prResult := portaudio.Pa_OpenStream(prInStream,prpInParams,Nil,prSampleRate,2048,0,PPaStreamCallback(@adclite.madcCallback),Pointer(Self));
         end;
         if prInParams.channelCount = 2 then
         begin
-             prResult := portaudio.Pa_OpenStream(prInStream,prpInParams,Nil,prSampleRate,2048,0,PPaStreamCallback(@adc.sadcCallback),Pointer(Self));
+             prResult := portaudio.Pa_OpenStream(prInStream,prpInParams,Nil,prSampleRate,2048,0,PPaStreamCallback(@adclite.sadcCallback),Pointer(Self));
         end;
 
         if (prInParams.channelCount < 1) or (prInParams.channelCount > 2) then prResult := paInvalidChannelCount;
@@ -378,18 +378,18 @@ implementation
 
    procedure TpaDSP.dacOn();
    begin
-        dac.d65txBufferIdx := 0;
-        dac.d65txBufferPtr := @dac.d65txBuffer[0];
-        dac.dacT := 0;
-        dac.dacEnTX := false;
+        daclite.d65txBufferIdx := 0;
+        daclite.d65txBufferPtr := @daclite.d65txBuffer[0];
+        daclite.dacT := 0;
+        daclite.dacEnTX := false;
         prOutParams.channelCount := 2;
         if prOutParams.channelCount = 1 Then
         begin
-             prResult := portaudio.Pa_OpenStream(prOutStream,Nil,prpOutParams,prSampleRate,2048,0,PPaStreamCallback(@dac.mdacCallback),Pointer(Self));
+             prResult := portaudio.Pa_OpenStream(prOutStream,Nil,prpOutParams,prSampleRate,2048,0,PPaStreamCallback(@daclite.mdacCallback),Pointer(Self));
         end;
         if prOutParams.channelCount = 2 Then
         begin
-             prResult := portaudio.Pa_OpenStream(prOutStream,Nil,prpOutParams,prSampleRate,2048,0,PPaStreamCallback(@dac.sdacCallback),Pointer(Self));
+             prResult := portaudio.Pa_OpenStream(prOutStream,Nil,prpOutParams,prSampleRate,2048,0,PPaStreamCallback(@daclite.sdacCallback),Pointer(Self));
         end;
 
         if (prOutParams.channelCount < 1) or (prOutParams.channelCount > 2) then prResult := paInvalidChannelCount;
@@ -420,47 +420,47 @@ implementation
 
    function  TpaDSP.getAUChannel() : Integer;
    begin
-        result := adc.adcChan;
+        result := adclite.adcChan;
    end;
 
    procedure TpaDSP.setAUChannel(chan : Integer);
    begin
-        adc.adcChan := chan;
+        adclite.adcChan := chan;
    end;
 
    function  TpaDSP.getAULevel1() : Integer;
    begin
-        result := adc.specLevel1;
+        result := adclite.specLevel1;
    end;
 
    function  TpaDSP.getAULevel2() : Integer;
    begin
-        result := adc.specLevel2;
+        result := adclite.specLevel2;
    end;
 
    function  TpaDSP.getADCCount() : Integer;
    begin
-        result := adc.adcCount;
+        result := adclite.adcCount;
    end;
 
    function  TpaDSP.getADCErate() : CDouble;
    begin
-        result := adc.adcErate;
+        result := adclite.adcErate;
    end;
 
    function  TpaDSP.getADCOverrun() : Integer;
    Begin
-        result := adc.adcOverrun;
+        result := adclite.adcOverrun;
    end;
 
    function  TpaDSP.getDACErate() : CDouble;
    begin
-        result := dac.dacErate;
+        result := daclite.dacErate;
    end;
 
    function  TpaDSP.getDACUnderrun() : Integer;
    Begin
-        result := dac.dacUnderrun;
+        result := daclite.dacUnderrun;
    end;
 end.
 

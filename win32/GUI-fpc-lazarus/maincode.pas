@@ -30,7 +30,7 @@ uses
   CTypes, StrUtils, Math, ExtCtrls, ComCtrls, Spin, Windows, DateUtils,
   encode65, globalData, ClipBrd, dlog, rawdec, guiConfig, verHolder,
   PSKReporter, Menus, rbc, log, diagout, synautil, waterfall, d65, spectrum,
-  about, fileutil, guidedconfig, valobject, rigobject;
+  about, fileutil, guidedconfig, valobject, rigobject, portaudio, adc, dac;
 
 //Const
 //  JT_DLL = 'jt65.dll';
@@ -300,9 +300,10 @@ type
   var
      Form1                      : TForm1;
      auOddBuffer, auEvenBuffer  : Packed Array[0..661503] of CTypes.cint16;
-     //paInParams, paOutParams    : TPaStreamParameters;
-     //ppaInParams, ppaOutParams  : PPaStreamParameters;
-     //paResult                   : TPaError;
+     paInParams, paOutParams    : TPaStreamParameters;
+     ppaInParams, ppaOutParams  : PPaStreamParameters;
+     paResult                   : TPaError;
+     paInStream, paOutStream    : PPaStream;
      alreadyHere                : Boolean;
      mnlooper, ij               : Integer;
      decoderThread              : decodeThread;
@@ -338,7 +339,6 @@ type
      mnnport                    : String;
      mnpttOpened, itemsIn       : Boolean;
      firstReport                : Boolean;
-     //paInStream, paOutStream    : PPaStream;
      lastMsg, curMsg            : String;
      gst, ost                   : TSYSTEMTIME;
      thisTX, lastTX             : String;
@@ -3157,20 +3157,6 @@ Begin
           self.Visible := true;
           self.Show;
           self.BringToFront;
-          //if guidedconfig.cfg.soundTested then foo := 'Sound devices tested' + sLineBreak else foo := 'Sound devices not tested' + sLineBreak;
-          //if guidedconfig.cfg.soundExtendedTested then foo := foo + 'Sound devices extended tested' + sLineBreak else foo := foo + 'Sound devices not extended tested' + sLineBreak;
-          //if guidedconfig.cfg.soundValid then foo := foo + 'Sound system is valid' + sLineBreak else foo := foo + 'Sound system is not valid' + sLineBreak;
-          //showmessage('Callsign = ' + guidedconfig.cfg.callsign + sLineBreak +
-          //            'CW ID = ' + guidedconfig.cfg.cwcallsign + sLineBreak +
-          //            'RB ID = ' + guidedconfig.cfg.rbcallsign + sLineBreak +
-          //            'Prefix = ' + IntToStr(guidedconfig.cfg.prefix) + sLineBreak +
-          //            'Suffix = ' + IntToStr(guidedconfig.cfg.suffix) + sLineBreak +
-          //            'RX PA Device = ' + IntToStr(guidedconfig.cfg.soundIn) + sLineBreak +
-          //            'RX PA Device = ' + guidedconfig.cfg.soundInS + sLineBreak +
-          //            'TX PA Device = ' + IntToStr(guidedconfig.cfg.soundOut) + sLineBreak +
-          //            'TX PA Device = ' + guidedconfig.cfg.soundOutS + sLineBreak +
-          //            foo
-          //            );
      End
      Else
      Begin
@@ -3236,11 +3222,9 @@ Begin
      editManQRGChange(editManQRG);
      guidedconfig.Form7.saveConfig(fname);
      rig := rigobject.TRadio.create();  // Rig control object (Used even if control is manual)
-     // Set the rig control method [none, hrd, commander, omni, hamlib, si570]
      rig1.rigcontroller := guidedconfig.cfg.CATMethod;
-     rig1.pollRig();
+     rig1.pollRig();  // Go ahead and attempt to read the rig and update the main gui
      editManQRG.Text := floatToStr(rig1.qrg/1000);
-     //label18.Caption := rig1.rigcontroller + ' says QRG is ' + intToStr(rig1.qrg) + ' Hz';
      for i := 0 to 60 do
      begin
           application.ProcessMessages;
@@ -3249,1107 +3233,94 @@ Begin
           sleep(1000);
      end;
      halt;
-     // Create the decoder thread with param False so it starts.
-     //d65.glinProg := False;
-     //decoderThread := decodeThread.Create(False);
-     // Create the CAT control thread with param True so it starts.
-     //rigThread := catThread.Create(False);
-     // Create RB thread with param False so it starts.
-     //cfgvtwo.glrbcLogin := False;
-     //cfgvtwo.glrbcLogout := False;
-     //rbcPing := False;
-     //dorbReport := False;
-     //rbThread := rbcThread.Create(False);
 
-     //// Init PA.  If this doesn't work there's no reason to continue.
-     //PaResult := portaudio.Pa_Initialize();
-     //If PaResult <> 0 Then
-     //Begin
-     //     ShowMessage('Fatal Error.  Could not initialize portaudio.');
-     //     halt;
-     //end;
+     // Init PA.  If this doesn't work there's no reason to continue.
+     PaResult := portaudio.Pa_Initialize();
+     If PaResult <> 0 Then
+     Begin
+          ShowMessage('Fatal Error.  Could not initialize portaudio.');
+          halt;
+     end;
      //If PaResult = 0 Then dlog.fileDebug('Portaudio initialized OK.');
-     //// Now I need to populate the Sound In/Out pulldowns.  First I'm going to get
-     //// a list of the portaudio API descriptions.  For now I'm going to stick with
-     //// the default windows interface, but in the future I may look at directsound
-     //// usage as well.
-     //paDefApi := portaudio.Pa_GetDefaultHostApi();
-     //if paDefApi >= 0 Then
-     //Begin
-     //     cfgvtwo.Form6.cbAudioIn.Clear;
-     //     cfgvtwo.Form6.cbAudioOut.Clear;
-     //     guidedconfig.Form7.comboSoundIn.Clear;
-     //     guidedconfig.Form7.comboSoundOut.Clear;
-     //     paDefApiDevCount := portaudio.Pa_GetHostApiInfo(paDefApi)^.deviceCount;
-     //     i := paDefApiDevCount-1;
-     //     While i >= 0 do
-     //     Begin
-     //          // I need to populate the pulldowns with the devices supported by
-     //          // the default portaudio API, select the default in/out devices for
-     //          // said API or restore the saved value of the user's choice of in
-     //          // out devices.
-     //          If portaudio.Pa_GetDeviceInfo(i)^.maxInputChannels > 0 Then
-     //          Begin
-     //               if i < 10 Then
-     //                  paInS := '0' + IntToStr(i) + '-' + StrPas(portaudio.Pa_GetDeviceInfo(i)^.name)
-     //               else
-     //                  paInS := IntToStr(i) + '-' + StrPas(portaudio.Pa_GetDeviceInfo(i)^.name);
-     //               cfgvtwo.Form6.cbAudioIn.Items.Insert(0,paInS);
-     //               guidedconfig.Form7.comboSoundIn.Items.Insert(0,paInS);
-     //          End;
-     //          If portaudio.Pa_GetDeviceInfo(i)^.maxOutputChannels > 0 Then
-     //          Begin
-     //               if i < 10 Then
-     //                  paOutS := '0' + IntToStr(i) +  '-' + StrPas(portaudio.Pa_GetDeviceInfo(i)^.name)
-     //               else
-     //                  paOutS := IntToStr(i) +  '-' + StrPas(portaudio.Pa_GetDeviceInfo(i)^.name);
-     //               cfgvtwo.Form6.cbAudioOut.Items.Insert(0,paOutS);
-     //               guidedconfig.Form7.comboSoundOut.Items.Insert(0,paOutS);
-     //          End;
-     //          dec(i);
-     //     End;
-     //     // pulldowns populated.  Now I need to select the portaudio default
-     //     // devices.  To map the values to the pulldown I simply use the integer
-     //     // value of the input device as the pulldown index, for the output I
-     //     // subtract 2 from the pa value to map the correct pulldown index.
-     //     cfgvtwo.Form6.cbAudioIn.ItemIndex := portaudio.Pa_GetHostApiInfo(paDefApi)^.defaultInputDevice;
-     //     cfgvtwo.Form6.cbAudioOut.ItemIndex := portaudio.Pa_GetHostApiInfo(paDefApi)^.defaultOutputDevice-2;
-     //     guidedconfig.Form7.comboSoundIn.ItemIndex := -1;
-     //     guidedconfig.Form7.comboSoundOut.ItemIndex := -1;
-     //     dlog.fileDebug('Audio Devices added to pulldowns.');
-     //End
-     //Else
-     //Begin
-     //     // This is yet another fatal error as portaudio can't function if it
-     //     // can't provide a default API value >= 0.  TODO Handle this should it
-     //     // happen.
-     //     dlog.fileDebug('FATAL:  Portaudio DID NOT INIT.  No defapi found.');
-     //     ShowMessage('FATAL:  Portaudio DID NOT INIT.  No default api found, program closing.');
-     //     halt;
-     //End;
+     // Setup input device
+     //dlog.fileDebug('Setting up ADC.');
+     //foo := cfgvtwo.Form6.cbAudioIn.Items.Strings[cfgvtwo.Form6.cbAudioIn.ItemIndex];
+     ppaInParams := @paInParams;
+     paInParams.device := guidedconfig.cfg.soundIn;
+     paInParams.sampleFormat := paInt16;
+     paInParams.suggestedLatency := 1;
+     paInParams.hostApiSpecificStreamInfo := Nil;
+     if guidedconfig.cfg.forceMono then paInParams.channelCount := 1 else paInParams.channelCount := 2;
+     // Set rxBuffer index to start of array and set ptr to start of buffer..
+     adc.d65rxBufferIdx := 0;
+     adc.adcT := 0;
+     adc.d65rxBufferPtr := @adc.d65rxBuffer[0];
+     // Initialize rx stream.
+     if guidedconfig.cfg.forceMono then
+     begin
+          // Dealing with a mono stream either by necessity or user choice.
+          paResult := portaudio.Pa_OpenStream(paInStream,ppaInParams,Nil,11025,2048,0,@adc.madcCallback,Pointer(Self));
+     end
+     else
+     begin
+          paResult := portaudio.Pa_OpenStream(paInStream,ppaInParams,Nil,11025,2048,0,@adc.sadcCallback,Pointer(Self));
+     end;
+     if paResult <> 0 Then
+     Begin
+          ShowMessage('PA Error:  ' + StrPas(portaudio.Pa_GetErrorText(paResult)) + ' Could not setup for stereo input.  Please check your setup.');
+          halt;
+     end
+     else
+     begin
+         paResult := portaudio.Pa_StartStream(paInStream);
+     end;
+     // Start the stream.
+     if paResult <> 0 Then
+     Begin
+          ShowMessage('PA Error:  ' + StrPas(portaudio.Pa_GetErrorText(paResult)));
+     End;
+     // Setup output device
+     //dlog.fileDebug('Setting up DAC.');
+     ppaOutParams := @paOutParams;
+     paOutParams.device := guidedconfig.cfg.soundOut;
+     paOutParams.sampleFormat := paInt16;
+     paOutParams.suggestedLatency := 1;
+     paOutParams.hostApiSpecificStreamInfo := Nil;
+     if guidedconfig.cfg.forceMono then paOutParams.channelCount := 1 else paOutParams.channelCount := 2;
+     // Set txBuffer index to start of array and set ptr to start of buffer.
+     dac.d65txBufferIdx := 0;
+     dac.dacT := 0;
+     dac.d65txBufferPtr := @dac.d65txBuffer[0];
+     // Initialize tx stream.
+     if guidedconfig.cfg.forceMono then
+     begin
+          // Dealing with a mono stream either by necessity or user choice.
+          paResult := portaudio.Pa_OpenStream(paOutStream,Nil,ppaOutParams,11025,2048,0,@dac.mdacCallback,Pointer(Self));
+     end
+     else
+     begin
+          paResult := portaudio.Pa_OpenStream(paOutStream,Nil,ppaOutParams,11025,2048,0,@dac.sdacCallback,Pointer(Self));
+     end;
+     if paResult <> 0 Then
+     Begin
+          ShowMessage('PA Error:  ' + StrPas(portaudio.Pa_GetErrorText(paResult)));
+          halt;
+     End;
+     // Start the stream.
+     paResult := portaudio.Pa_StartStream(paOutStream);
+     if paResult <> 0 Then
+     Begin
+          ShowMessage('PA Error:  ' + StrPas(portaudio.Pa_GetErrorText(paResult)));
+          halt;
+     End;
 
+     for i := 0 to 30 do
+     begin
+          application.ProcessMessages;
+          sleep(1000);
+     end;
 
-     // Setup default sane value for config form.
-          //cfgvtwo.Form6.edMyCall.Clear;
-          //cfgvtwo.Form6.edMyGrid.Clear;
-          //cfgvtwo.Form6.cbAudioIn.ItemIndex := 0;
-          //cfgvtwo.Form6.cbAudioOut.ItemIndex := 0;
-          //cfgvtwo.Form6.comboPrefix.ItemIndex := 0;
-          //cfgvtwo.Form6.comboSuffix.ItemIndex := 0;
-          //cfgvtwo.Form6.cbTXWatchDog.Checked := True;
-          //cfgvtwo.Form6.spinTXCounter.Value := 15;
-          //cfgvtwo.Form6.cbDisableMultiQSO.Checked := True;
-          //cfgvtwo.Form6.cbMultiAutoEnable.Checked := True;
-          //cfgvtwo.Form6.edRXSRCor.Text := '1.0000';
-          //cfgvtwo.Form6.edTXSRCor.Text := '1.0000';
-          //cfgvtwo.Form6.chkEnableAutoSR.Checked := True;
-          //cfgvtwo.Form6.cbSaveCSV.Checked := True;
-          //cfgvtwo.Form6.DirectoryEdit1.Directory := globalData.logdir;
-          //cfgvtwo.Form6.editUserDefinedPort1.Text := 'None';
-          //cfgvtwo.Form6.ComboBox1.ItemIndex := 8;
-          //cfgvtwo.Form6.ComboBox1.Color := clLime;
-          //cfgvtwo.Form6.ComboBox2.ItemIndex := 7;
-          //cfgvtwo.Form6.ComboBox2.Color := clRed;
-          //cfgvtwo.Form6.ComboBox3.ItemIndex := 6;
-          //cfgvtwo.Form6.ComboBox3.Color := clSilver;
-          //cfgvtwo.glcqColor := clLime;
-          //cfgvtwo.glcallColor := clRed;
-          //cfgvtwo.glqsoColor := clSilver;
-          //cfgvtwo.Form6.cbEnableQSY1.Checked := False;
-          //cfgvtwo.Form6.cbEnableQSY2.Checked := False;
-          //cfgvtwo.Form6.cbEnableQSY3.Checked := False;
-          //cfgvtwo.Form6.cbEnableQSY4.Checked := False;
-          //cfgvtwo.Form6.cbEnableQSY5.Checked := False;
-          //cfgvtwo.Form6.qsyHour1.Value := 0;
-          //cfgvtwo.Form6.qsyHour2.Value := 0;
-          //cfgvtwo.Form6.qsyHour3.Value := 0;
-          //cfgvtwo.Form6.qsyHour4.Value := 0;
-          //cfgvtwo.Form6.qsyHour5.Value := 0;
-          //cfgvtwo.Form6.qsyMinute1.Value := 0;
-          //cfgvtwo.Form6.qsyMinute2.Value := 0;
-          //cfgvtwo.Form6.qsyMinute3.Value := 0;
-          //cfgvtwo.Form6.qsyMinute4.Value := 0;
-          //cfgvtwo.Form6.qsyMinute5.Value := 0;
-          //cfgvtwo.Form6.edQRGQSY1.Text := '14076000';
-          //cfgvtwo.Form6.edQRGQSY2.Text := '14076000';
-          //cfgvtwo.Form6.edQRGQSY3.Text := '14076000';
-          //cfgvtwo.Form6.edQRGQSY4.Text := '14076000';
-          //cfgvtwo.Form6.edQRGQSY5.Text := '14076000';
-          //cfgvtwo.Form6.cbATQSY1.Checked := False;
-          //cfgvtwo.Form6.cbATQSY2.Checked := False;
-          //cfgvtwo.Form6.cbATQSY3.Checked := False;
-          //cfgvtwo.Form6.cbATQSY4.Checked := False;
-          //cfgvtwo.Form6.cbATQSY5.Checked := False;
-          //cfgvtwo.Form6.chkHRDPTT.Checked := False;
-          //cfgvtwo.Form6.chkTxDFVFO.Checked := False;
-          //cfgvtwo.Form6.hrdAddress.Text := 'localhost';
-          //cfgvtwo.Form6.hrdPort.Text := '7809';
-          //cfgvtwo.Form6.chkNoOptFFT.Checked := False;
-          //cfgvtwo.glcatBy := 'none';
-
-          //Form1.spinGain.Value := 0;
-          //Form1.spinTXCF.Value := 0;
-          //Form1.spinDecoderCF.Value := 0;
-          //Form1.spinDecoderBW.Value := 3;
-          //Form1.chkAFC.Checked := False;
-          //Form1.chkNB.Checked := False;
-          //Form1.cbSpecPal.ItemIndex := 0;
-          //Form1.tbBright.Position := 0;
-          //Form1.tbContrast.Position := 0;
-          //Form1.SpinEdit1.Value := 5;
-          //Form1.rbUseLeft.Checked := True;
-          //Form1.TrackBar1.Position := 0;
-          //Form1.TrackBar2.Position := 0;
-          //Form1.rbGenMsg.Checked := True;
-          //Form1.rbTX1.Checked := True;
-          //Form1.chkEnTX.Checked := False;
-          //Form1.edFreeText.Clear;
-          //Form1.edMsg.Clear;
-          //Form1.edHisCall.Clear;
-          //Form1.edHisGrid.Clear;
-          //Form1.edSigRep.Clear;
-
-     //     cfg.StoredValue['call']         := UpperCase(cfgvtwo.glmycall);
-     //     cfg.StoredValue['pfx']          := IntToStr(cfgvtwo.Form6.comboPrefix.ItemIndex);
-     //     cfg.StoredValue['sfx']          := IntToStr(cfgvtwo.Form6.comboSuffix.ItemIndex);
-     //     cfg.StoredValue['grid']         := cfgvtwo.Form6.edMyGrid.Text;
-     //     cfg.StoredValue['soundin']      := IntToStr(cfgvtwo.Form6.cbAudioIn.ItemIndex);
-     //     cfg.StoredValue['soundout']     := IntToStr(cfgvtwo.Form6.cbAudioOut.ItemIndex);
-     //     cfg.StoredValue['ldgain']       := IntToStr(Form1.TrackBar1.Position);
-     //     cfg.StoredValue['rdgain']       := IntToStr(Form1.TrackBar2.Position);
-     //     cfg.StoredValue['samfacin']     := cfgvtwo.Form6.edRXSRCor.Text;
-     //     cfg.StoredValue['samfacout']    := cfgvtwo.Form6.edTXSRCor.Text;
-     //     if Form1.rbUseLeft.Checked Then cfg.StoredValue['audiochan'] := 'L' Else cfg.StoredValue['audiochan'] := 'R';
-     //     If cfgvtwo.Form6.chkEnableAutoSR.Checked Then cfg.StoredValue['autoSR'] := '1' else cfg.StoredValue['autoSR'] := '0';
-     //     cfg.StoredValue['pttPort']      := UpperCase(cfgvtwo.Form6.editUserDefinedPort1.Text);
-     //     if Form1.chkAFC.Checked Then cfg.StoredValue['afc'] := '1' Else cfg.StoredValue['afc'] := '0';
-     //     If Form1.chkNB.Checked Then cfg.StoredValue['noiseblank'] := '1' Else cfg.StoredValue['noiseblank'] := '0';
-     //     cfg.StoredValue['brightness']   := IntToStr(Form1.tbBright.Position);
-     //     cfg.StoredValue['contrast']     := IntToStr(Form1.tbContrast.Position );
-     //     cfg.StoredValue['colormap']     := IntToStr(Form1.cbSpecPal.ItemIndex);
-     //     cfg.StoredValue['specspeed']    := IntToStr(Form1.SpinEdit1.Value);
-     //     cfg.StoredValue['txCF']         := '0';
-     //     cfg.StoredValue['rxCF']         := '0';
-     //     if cfgvtwo.Form6.cbTXWatchDog.Checked Then cfg.StoredValue['txWatchDog'] := '1' else cfg.StoredValue['txWatchDog'] := '0';
-     //     cfg.StoredValue['txWatchDogCount'] := IntToStr(cfgvtwo.Form6.spinTXCounter.Value);
-     //     If cfgvtwo.Form6.cbSaveCSV.Checked Then cfg.StoredValue['saveCSV'] := '1' Else cfg.StoredValue['saveCSV'] := '0';
-     //     cfg.StoredValue['csvPath'] := cfgvtwo.Form6.DirectoryEdit1.Directory;
-     //     cfg.StoredValue['adiPath'] := cfgvtwo.Form6.DirectoryEdit1.Directory;
-     //     cfg.StoredValue['version'] := verHolder.verReturn();
-     //     cfg.StoredValue['cqColor'] := IntToStr(cfgvtwo.Form6.ComboBox1.ItemIndex);
-     //     cfg.StoredValue['callColor'] := IntToStr(cfgvtwo.Form6.ComboBox2.ItemIndex);
-     //     cfg.StoredValue['qsoColor'] := IntToStr(cfgvtwo.Form6.ComboBox3.ItemIndex);
-     //     cfg.StoredValue['catBy'] := cfgvtwo.glcatBy;
-     //     if cfgvtwo.Form6.editPSKRCall.Text = '' Then cfgvtwo.Form6.editPSKRCall.Text := cfgvtwo.Form6.edMyCall.Text;
-     //     if cfgvtwo.Form6.cbUsePSKReporter.Checked Then cfg.StoredValue['usePSKR'] := 'yes' else cfg.StoredValue['usePSKR'] := 'no';
-     //     if cfgvtwo.Form6.cbUseRB.Checked Then cfg.StoredValue['useRB'] := 'yes' else cfg.StoredValue['useRB'] := 'no';
-     //     cfg.StoredValue['pskrCall'] := cfgvtwo.Form6.editPSKRCall.Text;
-     //     cfg.StoredValue['pskrAntenna'] := cfgvtwo.Form6.editPSKRAntenna.Text;
-     //     if cfgvtwo.Form6.chkNoOptFFT.Checked Then cfg.StoredValue['optFFT'] := 'off' else cfg.StoredValue['optFFT'] := 'on';
-     //     if cfgvtwo.Form6.cbUseAltPTT.Checked Then cfg.StoredValue['useAltPTT'] := 'yes' else cfg.StoredValue['useAltPTT'] := 'no';
-     //     if cfgvtwo.Form6.chkHRDPTT.Checked Then cfg.StoredValue['useHRDPTT'] := 'yes' else cfg.StoredValue['useHRDPTT'] := 'no';
-     //     cfg.StoredValue['userQRG1'] := cfgvtwo.Form6.edUserQRG1.Text;
-     //     cfg.StoredValue['userQRG2'] := cfgvtwo.Form6.edUserQRG2.Text;
-     //     cfg.StoredValue['userQRG3'] := cfgvtwo.Form6.edUserQRG3.Text;
-     //     cfg.StoredValue['userQRG4'] := cfgvtwo.Form6.edUserQRG4.Text;
-     //     cfg.StoredValue['usrMsg1'] := cfgvtwo.Form6.edUserMsg4.Text;
-     //     cfg.StoredValue['usrMsg2'] := cfgvtwo.Form6.edUserMsg5.Text;
-     //     cfg.StoredValue['usrMsg3'] := cfgvtwo.Form6.edUserMsg6.Text;
-     //     cfg.StoredValue['usrMsg4'] := cfgvtwo.Form6.edUserMsg7.Text;
-     //     cfg.StoredValue['usrMsg5'] := cfgvtwo.Form6.edUserMsg8.Text;
-     //     cfg.StoredValue['usrMsg6'] := cfgvtwo.Form6.edUserMsg9.Text;
-     //     cfg.StoredValue['usrMsg7'] := cfgvtwo.Form6.edUserMsg10.Text;
-     //     cfg.StoredValue['usrMsg8'] := cfgvtwo.Form6.edUserMsg11.Text;
-     //     cfg.StoredValue['usrMsg9'] := cfgvtwo.Form6.edUserMsg12.Text;
-     //     cfg.StoredValue['usrMsg10'] := cfgvtwo.Form6.edUserMsg13.Text;
-     //     cfg.StoredValue['binspace'] := '100';
-     //     if Form1.cbSmooth.Checked Then cfg.StoredValue['smooth'] := 'on' else cfg.StoredValue['smooth'] := 'off';
-     //     if cfgvtwo.Form6.cbRestoreMulti.Checked Then cfg.StoredValue['restoreMulti'] := 'on' else cfg.StoredValue['restoreMulti'] := 'off';
-     //     cfg.StoredValue['specVGain'] := IntToStr(spinGain.Value);
-     //     if cfgvtwo.Form6.radioSI570X1.Checked Then cfg.StoredValue['si570mul'] := '1';
-     //     if cfgvtwo.Form6.radioSI570X2.Checked Then cfg.StoredValue['si570mul'] := '2';
-     //     if cfgvtwo.Form6.radioSI570X4.Checked Then cfg.StoredValue['si570mul'] := '4';
-     //     cfg.StoredValue['si570cor'] := cfgvtwo.Form6.editSI570FreqOffset.Text;
-     //     cfg.StoredValue['si570qrg'] := cfgvtwo.Form6.editSI570Freq.Text;
-     //     if cfgvtwo.Form6.cbSi570PTT.Checked Then cfg.StoredValue['si570ptt'] := 'y' else cfg.StoredValue['si570ptt'] := 'n';
-     //     if cfgvtwo.Form6.cbSi570PTT.Checked Then cfg.StoredValue['si570ptt'] := 'y' else cfg.StoredValue['si570ptt'] := 'n';
-     //     if cfgvtwo.Form6.cbCWID.Checked Then cfg.StoredValue['useCWID'] := 'y' else cfg.StoredValue['useCWID'] := 'n';
-     //     if cfgvtwo.Form6.chkTxDFVFO.Checked Then cfg.StoredValue['useCATTxDF'] := 'yes' else cfg.StoredValue['useCATTxDF'] := 'no';
-     //     if cfgvtwo.Form6.cbEnableQSY1.Checked Then cfg.StoredValue['enAutoQSY1'] := 'yes' else cfg.StoredValue['enAutoQSY1'] := 'no';
-     //     if cfgvtwo.Form6.cbEnableQSY2.Checked Then cfg.StoredValue['enAutoQSY2'] := 'yes' else cfg.StoredValue['enAutoQSY2'] := 'no';
-     //     if cfgvtwo.Form6.cbEnableQSY3.Checked Then cfg.StoredValue['enAutoQSY3'] := 'yes' else cfg.StoredValue['enAutoQSY3'] := 'no';
-     //     if cfgvtwo.Form6.cbEnableQSY4.Checked Then cfg.StoredValue['enAutoQSY4'] := 'yes' else cfg.StoredValue['enAutoQSY4'] := 'no';
-     //     if cfgvtwo.Form6.cbEnableQSY5.Checked Then cfg.StoredValue['enAutoQSY5'] := 'yes' else cfg.StoredValue['enAutoQSY5'] := 'no';
-     //     if cfgvtwo.Form6.cbATQSY1.Checked Then cfg.StoredValue['autoQSYAT1'] := 'yes' else cfg.StoredValue['autoQSYAT1'] := 'no';
-     //     if cfgvtwo.Form6.cbATQSY2.Checked Then cfg.StoredValue['autoQSYAT2'] := 'yes' else cfg.StoredValue['autoQSYAT2'] := 'no';
-     //     if cfgvtwo.Form6.cbATQSY3.Checked Then cfg.StoredValue['autoQSYAT3'] := 'yes' else cfg.StoredValue['autoQSYAT3'] := 'no';
-     //     if cfgvtwo.Form6.cbATQSY4.Checked Then cfg.StoredValue['autoQSYAT4'] := 'yes' else cfg.StoredValue['autoQSYAT4'] := 'no';
-     //     if cfgvtwo.Form6.cbATQSY5.Checked Then cfg.StoredValue['autoQSYAT5'] := 'yes' else cfg.StoredValue['autoQSYAT5'] := 'no';
-     //     cfg.StoredValue['autoQSYQRG1'] := cfgvtwo.Form6.edQRGQSY1.Text;
-     //     cfg.StoredValue['autoQSYQRG2'] := cfgvtwo.Form6.edQRGQSY2.Text;
-     //     cfg.StoredValue['autoQSYQRG3'] := cfgvtwo.Form6.edQRGQSY3.Text;
-     //     cfg.StoredValue['autoQSYQRG4'] := cfgvtwo.Form6.edQRGQSY4.Text;
-     //     cfg.StoredValue['autoQSYQRG5'] := cfgvtwo.Form6.edQRGQSY5.Text;
-     //     if cfgvtwo.Form6.qsyHour1.Value < 10 Then
-     //     Begin
-     //          foo := '0' + IntToStr(cfgvtwo.Form6.qsyHour1.Value);
-     //     End
-     //     Else
-     //     Begin
-     //          foo := IntToStr(cfgvtwo.Form6.qsyHour1.Value);
-     //     end;
-     //     if cfgvtwo.Form6.qsyMinute1.Value < 10 Then
-     //     Begin
-     //          foo := foo + '0' + IntToStr(cfgvtwo.Form6.qsyMinute1.Value);
-     //     End
-     //     Else
-     //     Begin
-     //          foo := foo + IntToStr(cfgvtwo.Form6.qsyMinute1.Value);
-     //     end;
-     //     cfg.StoredValue['autoQSYUTC1'] := foo;
-     //
-     //     if cfgvtwo.Form6.qsyHour2.Value < 10 Then
-     //     Begin
-     //          foo := '0' + IntToStr(cfgvtwo.Form6.qsyHour2.Value);
-     //     End
-     //     Else
-     //     Begin
-     //          foo := IntToStr(cfgvtwo.Form6.qsyHour2.Value);
-     //     end;
-     //     if cfgvtwo.Form6.qsyMinute2.Value < 10 Then
-     //     Begin
-     //          foo := foo + '0' + IntToStr(cfgvtwo.Form6.qsyMinute2.Value);
-     //     End
-     //     Else
-     //     Begin
-     //          foo := foo + IntToStr(cfgvtwo.Form6.qsyMinute2.Value);
-     //     end;
-     //     cfg.StoredValue['autoQSYUTC2'] := foo;
-     //
-     //     if cfgvtwo.Form6.qsyHour3.Value < 10 Then
-     //     Begin
-     //          foo := '0' + IntToStr(cfgvtwo.Form6.qsyHour3.Value);
-     //     End
-     //     Else
-     //     Begin
-     //          foo := IntToStr(cfgvtwo.Form6.qsyHour3.Value);
-     //     end;
-     //     if cfgvtwo.Form6.qsyMinute3.Value < 10 Then
-     //     Begin
-     //          foo := foo + '0' + IntToStr(cfgvtwo.Form6.qsyMinute3.Value);
-     //     End
-     //     Else
-     //     Begin
-     //          foo := foo + IntToStr(cfgvtwo.Form6.qsyMinute3.Value);
-     //     end;
-     //     cfg.StoredValue['autoQSYUTC3'] := foo;
-     //
-     //     if cfgvtwo.Form6.qsyHour4.Value < 10 Then
-     //     Begin
-     //          foo := '0' + IntToStr(cfgvtwo.Form6.qsyHour4.Value);
-     //     End
-     //     Else
-     //     Begin
-     //          foo := IntToStr(cfgvtwo.Form6.qsyHour4.Value);
-     //     end;
-     //     if cfgvtwo.Form6.qsyMinute4.Value < 10 Then
-     //     Begin
-     //          foo := foo + '0' + IntToStr(cfgvtwo.Form6.qsyMinute4.Value);
-     //     End
-     //     Else
-     //     Begin
-     //          foo := foo + IntToStr(cfgvtwo.Form6.qsyMinute4.Value);
-     //     end;
-     //     cfg.StoredValue['autoQSYUTC4'] := foo;
-     //
-     //     if cfgvtwo.Form6.qsyHour5.Value < 10 Then
-     //     Begin
-     //          foo := '0' + IntToStr(cfgvtwo.Form6.qsyHour5.Value);
-     //     End
-     //     Else
-     //     Begin
-     //          foo := IntToStr(cfgvtwo.Form6.qsyHour5.Value);
-     //     end;
-     //     if cfgvtwo.Form6.qsyMinute5.Value < 10 Then
-     //     Begin
-     //          foo := foo + '0' + IntToStr(cfgvtwo.Form6.qsyMinute5.Value);
-     //     End
-     //     Else
-     //     Begin
-     //          foo := foo + IntToStr(cfgvtwo.Form6.qsyMinute5.Value);
-     //     end;
-     //     cfg.StoredValue['autoQSYUTC5'] := foo;
-     //     cfg.StoredValue['hrdAddress'] := cfgvtwo.Form6.hrdAddress.Text;
-     //     cfg.StoredValue['hrdPort'] := cfgvtwo.Form6.hrdPort.Text;
-     //     cfg.Save;
-     //     dlog.fileDebug('Ran initial configuration.');
-     //End;
-     //// Read configuration data from XMLpropstorage (cfg.)
-     //
-     //tstint := 0;
-     //
-     //config1.callsign := cfg.StoredValue['call'];
-     //config2.callsign := cfg.StoredValue['call'];
-     //if TryStrToInt(cfg.storedValue['pfx'],tstint) Then config1.prefix := tstint else config1.prefix := 0;
-     //config2.prefix := config1.prefix;
-     //if TryStrToInt(cfg.storedValue['sfx'],tstint) Then config1.suffix := tstint else config1.suffix := 0;
-     //config2.suffix := config1.suffix;
-     //config1.grid := cfg.StoredValue['grid'];
-     //if TryStrToInt(cfg.StoredValue['rxCF'],tstint) Then config1.decoderRXDF := tstint else config1.decoderRXDF := 0;
-     //config2.decoderRXDF := config1.decoderRXDF;
-     //if TryStrToInt(cfg.StoredValue['txCF'],tstint) Then config1.decoderTXDF := tstint else config1.decoderTXDF := 0;
-     //config2.decoderTXDF := config1.decoderTXDF;
-     //config1.decoderBW := 100;
-     //config2.decoderBW := config1.decoderBW;
-     //
-     //if TryStrToInt(cfg.StoredValue['soundin'],tstint) Then config1.rxAudio := tstint else config1.rxAudio := 0;
-     //config2.rxAudio := config1.rxAudio;
-     //if TryStrToInt(cfg.StoredValue['soundout'],tstint) Then config1.txAudio := tstint else config1.txAudio := 0;
-     //config2.txAudio := config1.txAudio;
-     //
-     //if TryStrToInt(cfg.StoredValue['ldgain'],tstint) Then config1.dgainL := tstint else config1.dgainL := 0;
-     //config2.dgainL := config1.dgainL;
-     //
-     //if TryStrToInt(cfg.StoredValue['rdgain'],tstint) Then config1.dgainR := tstint else config1.dgainR := 0;
-     //config2.dgainR := config1.dgainR;
-     //
-     //tstflt := 0.0;
-     //
-     //if TryStrToFloat(cfg.StoredValue['samfacin'],tstflt) Then config1.rxSRAdj := tstflt else config1.rxSRAdj := 1.0000;
-     //config2.rxSRAdj := config1.rxSRAdj;
-     //
-     //if TryStrToFloat(cfg.StoredValue['samfacout'],tstflt) Then config1.txSRAdj := tstflt else config1.txSRAdj := 1.0000;
-     //config2.txSRAdj := config1.txSRAdj;
-     //
-     //config1.rxChans := 2;
-     //config2.rxChans := config1.rxChans;
-     //
-     //config1.txChans := 2;
-     //config2.txChans := config1.txChans;
-     //
-     //if cfg.StoredValue['audiochan'] = 'L' Then config1.rxChan := 1;
-     //config2.rxChan := config1.rxChan;
-     //
-     //if cfg.StoredValue['audiochan'] = 'R' Then config1.rxChan := 2;
-     //config2.rxChan := config1.rxChan;
-     //
-     //if cfg.StoredValue['autoSR'] = '1' Then config1.autoSRcorrect := True else config1.autoSRcorrect := False;
-     //config2.autoSRcorrect := config1.autoSRcorrect;
-     //
-     //config1.pttDevice := TrimLeft(TrimRight(UpperCase(cfg.StoredValue['pttPort'])));
-     //config2.pttDevice := config1.pttDevice;
-     //
-     //config1.pttType := 'SERIALA';
-     //config2.pttType := config1.pttType;
-     //
-     //if cfg.StoredValue['useAltPTT'] = 'yes' Then config1.pttType := 'SERIALB';
-     //config2.pttType := config1.pttType;
-     //
-     //if cfg.StoredValue['afc'] = '1' Then config1.decoderAFC := True Else config1.decoderAFC := False;
-     //config2.decoderAFC := config1.decoderAFC;
-     //
-     //if cfg.StoredValue['noiseblank'] = '1' Then config1.decoderNB := True Else config1.decoderNB := False;
-     //config2.decoderNB := config1.decoderNB;
-     //
-     //If TryStrToInt(cfg.StoredValue['brightness'],tstint) Then config1.spectrumBrightness := tstint else config1.spectrumBrightness := 0;
-     //config2.spectrumBrightness := config1.spectrumBrightness;
-     //
-     //If TryStrToInt(cfg.StoredValue['contrast'],tstint) Then config1.spectrumContrast := tstint else config1.spectrumContrast := 0;
-     //config2.spectrumContrast := config1.spectrumContrast;
-     //
-     //If TryStrToInt(cfg.StoredValue['colormap'],tstint) Then config1.spectrumPallete := tstint else config1.spectrumPallete := 0;
-     //config2.spectrumPallete := config1.spectrumPallete;
-     //
-     //If TryStrToInt(cfg.StoredValue['specspeed'],tstint) Then config1.spectrumSpeed := tstint else config1.spectrumSpeed := 0;
-     //config2.spectrumSpeed := config1.spectrumSpeed;
-     //
-     //If TryStrToInt(cfg.StoredValue['specVGain'],tstint) Then config1.spectrumGain := tstint else config1.spectrumGain :=0;
-     //config2.spectrumGain := config1.spectrumGain;
-     //
-     //if cfg.StoredValue['saveCSV'] = '1' Then config1.logCSV := True else config1.logCSV := False;
-     //config2.logCSV := config1.logCSV;
-     //
-     //if Length(cfg.StoredValue['csvPath']) > 0 Then config1.logCSVpath := cfg.StoredValue['csvPath'] else config1.logCSVpath := globalData.logdir;
-     //config2.logCSVpath := config1.logCSVpath;
-     //
-     //if Length(cfg.StoredValue['adiPath']) > 0 Then config1.logADIpath := cfg.StoredValue['adiPath'] else config1.logADIpath := globalData.logdir;
-     //config2.logADIpath := config1.logADIpath;
-     //
-     //config1.swiVersion := verHolder.iverReturn();
-     //config2.swiVersion := config1.swiVersion;
-     //
-     //config1.swsVersion := verHolder.verReturn();
-     //config2.swsVersion := config1.swsVersion;
-     //
-     //if cfg.StoredValue['txWatchDog'] = '1' Then config1.txWatchDog := True else config1.txWatchDog := false;
-     //config2.txWatchDog := config1.txWatchDog;
-     //
-     //If TryStrToInt(cfg.StoredValue['txWatchDogCount'],tstint) Then config1.txWatchDogCount := tstint else config1.txWatchDogCount := 15;
-     //config2.txWatchDogCount := config1.txWatchDogCount;
-     //
-     //if cfg.StoredValue['multiQSOToggle'] = '1' Then config1.multiOffInQSO := True else config1.multiOffInQSO := False;
-     //config2.multiOffInQSO := config1.multiOffInQSO;
-     //
-     //if cfg.StoredValue['multiQSOWatchDog'] = '1' Then config1.multiOnQSOEnd := True else config1.multiOnQSOEnd := False;
-     //config2.multiOnQSOEnd := config1.multiOnQSOEnd;
-     //
-     //If TryStrToInt(cfg.StoredValue['cqColor'],tstint) Then config1.cqLineColor := tstint else config1.cqLineColor := 8;
-     //config2.cqLineColor := config1.cqLineColor;
-     //
-     //If TryStrToInt(cfg.StoredValue['callColor'],tstint) Then config1.mycallLineColor := tstint else config1.mycallLineColor := 7;
-     //config2.mycallLineColor := config1.mycallLineColor;
-     //
-     //If TryStrToInt(cfg.StoredValue['qsoColor'],tstint) Then config1.qsoLineColor := tstint else config1.qsoLineColor := 6;
-     //config2.qsoLineColor := config1.qsoLineColor;
-     //
-     //// String holding rig control type (none, hrd, commander, omni, si570, hamlib)
-     //config1.rigControl := cfg.StoredValue['catBy'];
-     //config2.rigControl := config1.rigControl;
-     //
-     //if cfg.StoredValue['pskrCall'] = '' Then config1.rbcallsign := config1.callsign else config1.rbcallsign := cfg.StoredValue['pskrCall'];
-     //config2.rbcallsign := config1.rbcallsign;
-     //
-     //if cfg.StoredValue['usePSKR'] = 'yes' Then config1.PSKROn := True else config1.PSKROn := False;
-     //config2.PSKROn := config1.PSKROn;
-     //
-     //if cfg.StoredValue['useRB'] = 'yes' Then config1.RBOn := True else config1.RBOn := False;
-     //config2.RBOn := config1.RBOn;
-     //
-     //config1.rbInfo := cfg.StoredValue['pskrAntenna'];
-     //config2.rbInfo := config1.rbInfo;
-     //
-     //if cfg.StoredValue['optFFT'] = 'on' Then config1.decoderOptFFT := true else config1.decoderOptFFT := false;
-     //config2.decoderOptFFT := config1.decoderOptFFT;
-     //
-     //if cfg.StoredValue['useHRDPTT'] = 'yes' Then
-     //begin
-     //     config1.pttType    := 'RIGCTRL';
-     //     config1.pttDevice  := 'RIGCTRL';
-     //     config1.rigControl := 'hrd';
-     //     config2.pttType    := 'RIGCTRL';
-     //     config2.pttDevice  := 'RIGCTRL';
-     //     config2.rigControl := 'hrd';
-     //end;
-     //
-     //if cfg.StoredValue['useCommanderPTT'] = 'yes' Then
-     //begin
-     //     config1.pttType    := 'RIGCTRL';
-     //     config1.pttDevice  := 'RIGCTRL';
-     //     config1.rigControl := 'commander';
-     //     config2.pttType    := 'RIGCTRL';
-     //     config2.pttDevice  := 'RIGCTRL';
-     //     config2.rigControl := 'commander';
-     //end;
-     //
-     //if cfg.StoredValue['useOmniPTT'] = 'yes' Then
-     //begin
-     //     config1.pttType    := 'RIGCTRL';
-     //     config1.pttDevice  := 'RIGCTRL';
-     //     config1.rigControl := 'omni';
-     //     config2.pttType    := 'RIGCTRL';
-     //     config2.pttDevice  := 'RIGCTRL';
-     //     config2.rigControl := 'omni';
-     //end;
-     //
-     //if cfg.StoredValue['useHamlibPTT'] = 'yes' Then
-     //begin
-     //     config1.pttType    := 'RIGCTRL';
-     //     config1.pttDevice  := 'RIGCTRL';
-     //     config1.rigControl := 'hamlib';
-     //     config2.pttType    := 'RIGCTRL';
-     //     config2.pttDevice  := 'RIGCTRL';
-     //     config2.rigControl := 'hamlib';
-     //end;
-     //
-     //if cfg.StoredValue['si570ptt'] = 'y' Then
-     //begin
-     //     config1.pttType    := 'RIGCTRL';
-     //     config1.pttDevice  := 'RIGCTRL';
-     //     config1.rigControl := 'si570';
-     //     config2.pttType    := 'RIGCTRL';
-     //     config2.pttDevice  := 'RIGCTRL';
-     //     config2.rigControl := 'si570';
-     //end;
-     //
-     //if cfg.StoredValue['useCATTxDF'] = 'yes' Then config1.txdfByCAT := True else config1.txdfByCAT := False;
-     //config2.txdfByCAT := config1.txdfByCAT;
-     //
-     //config1.txdfByCATtolerance := 300;
-     //config2.txdfByCATtolerance := config1.txdfByCATtolerance;
-     //
-     //config1.multiBinSpace := 100;
-     //config2.multiBinSpace := config1.multiBinSpace;
-     //
-     //if cfg.StoredValue['smooth'] = 'on' Then config1.spectrumSmooth := True else config1.spectrumSmooth := False;
-     //config2.spectrumSmooth := config1.spectrumSmooth;
-     //
-     //if cfg.StoredValue['restoreMulti'] = 'on' Then config1.multiOnQSOEnd := True else config1.multiOnQSOEnd := False;
-     //config2.multiOnQSOEnd := config1.multiOnQSOEnd;
-     //
-     //if cfg.storedValue['useCWID'] = 'y' then config1.cwID := True else config1.cwID := False;
-     //config2.cwID := config1.cwID;
-     //
-     //if (config1.callsign = '') or (config1.grid = '') or (config1.rbcallsign = '') Then
-     //begin
-     //     //showMessage('Configuration is NOT valid.  Debugging problem.');
-     //     if config1.callsign = '' then
-     //     begin
-     //          showMessage('Your callsign does not conform to the format' + sLineBreak +
-     //                      'required by the JT65 protocol.  It can not be' + sLineBreak +
-     //                      'used as entered.  Please review your settings.');
-     //          config1.canTX := False;
-     //     end;
-     //     if config1.grid = '' then
-     //     begin
-     //          showMessage('Your Maidenhead grid square value is invalid.' + sLineBreak +
-     //                      'Transmit can not be enabled until a correct' + sLineBreak +
-     //                      'value is entered.  RB and PSKR spotting is' + sLineBreak +
-     //                      'also disabled while grid value is incorrect.' + sLineBreak +
-     //                      'Please review your settings.');
-     //          config1.canTX   := False;
-     //          config1.canSpot := False;
-     //     end;
-     //     if config1.rbcallsign = '' then
-     //     begin
-     //          showMessage('Your RB and/or PSK Reporter callsign is' + sLineBreak +
-     //                      'It is either less than 3 characters or' + sLineBreak +
-     //                      'more than 32 characters long.  Either' + sLineBreak +
-     //                      'condition is invalid and disable RB and' + sLineBreak +
-     //                      'PSK Reporter spotting.  Please review' + sLineBreak +
-     //                      'your configuration');
-     //          config1.canSpot := False;
-     //     end;
-     //end
-     //else
-     //begin
-     //     config1.canTX   := True;
-     //     config1.canSpot := True;
-     //end;
-     //// Display error condition in decoder output window, if necessary.
-     //If not config1.canTX Then
-     //Begin
-     //     If firstReport Then
-     //     begin
-     //          Form1.ListBox1.Items.Strings[0] := 'ERROR: Transmit disabled. Bad callsign or grid.';
-     //          firstReport := False;
-     //          itemsIn := True;
-     //     end
-     //     Else
-     //     Begin
-     //          Form1.ListBox1.Items.Insert(0,'ERROR: Transmit disabled. Bad callsign or grid.');
-     //          itemsIn := True;
-     //     End;
-     //End;
-     //If not config1.canSpot Then
-     //Begin
-     //     If firstReport Then
-     //     begin
-     //          Form1.ListBox1.Items.Strings[0] := 'ERROR: RB/PSKR disabled. Bad callsign or grid.';
-     //          firstReport := False;
-     //          itemsIn := True;
-     //     end
-     //     Else
-     //     Begin
-     //          Form1.ListBox1.Items.Insert(0,'ERROR: RB/PSKR disabled. Bad callsign or grid.');
-     //          itemsIn := True;
-     //     End;
-     //End;
-     //// Configuration objects populated and good to go.
-     //
-     //tstint := 0;
-     //cfgvtwo.glmycall := cfg.StoredValue['call'];
-     //if TryStrToInt(cfg.storedValue['pfx'],tstint) Then cfgvtwo.Form6.comboPrefix.ItemIndex := tstint else cfgvtwo.Form6.comboPrefix.ItemIndex := 0;
-     //if TryStrToInt(cfg.storedValue['sfx'],tstint) Then cfgvtwo.Form6.comboSuffix.ItemIndex := tstint else cfgvtwo.Form6.comboSuffix.ItemIndex := 0;
-     //// Check for invalid case of suffix AND prefix being set.  If so prefix wins.
-     //if (cfgvtwo.Form6.comboPrefix.ItemIndex > 0) And (cfgvtwo.Form6.comboSuffix.ItemIndex > 0) Then cfgvtwo.Form6.comboSuffix.ItemIndex := 0;
-     //if cfgvtwo.Form6.comboPrefix.ItemIndex > 0 then mnHavePrefix := True else mnHavePrefix := False;
-     //if cfgvtwo.Form6.comboSuffix.ItemIndex > 0 then mnHaveSuffix := True else mnHaveSuffix := False;
-     //cfgvtwo.Form6.edMyCall.Text := cfgvtwo.glmycall;
-     //if mnHavePrefix or mnHaveSuffix Then
-     //Begin
-     //     if mnHavePrefix then globalData.fullcall := cfgvtwo.Form6.comboPrefix.Items[cfgvtwo.Form6.comboPrefix.ItemIndex] + '/' + cfgvtwo.glmycall;
-     //     if mnHaveSuffix then globalData.fullcall := cfgvtwo.glmycall + '/' + cfgvtwo.Form6.comboSuffix.Items[cfgvtwo.Form6.comboSuffix.ItemIndex];
-     //End
-     //Else
-     //Begin
-     //     globalData.fullcall := cfgvtwo.glmycall;
-     //End;
-     //cfgvtwo.Form6.edMyGrid.Text := cfg.StoredValue['grid'];
-     //tstint := 0;
-     //if TryStrToInt(cfg.StoredValue['rxCF'],tstint) Then Form1.spinDecoderCF.Value := tstint else Form1.spinDecoderCF.Value := 0;
-     //tstint := 0;
-     //if TryStrToInt(cfg.StoredValue['txCF'],tstint) Then Form1.spinTXCF.Value := tstint else Form1.spinTXCF.Value := 0;
-     //tstint := 0;
-     //Form1.spinDecoderBW.Value := 3;
-     //Form1.Edit2.Text := '100';
-     //tstint := 0;
-     //if TryStrToInt(cfg.StoredValue['soundin'],tstint) Then cfgvtwo.Form6.cbAudioIn.ItemIndex := tstint else cfgvtwo.Form6.cbAudioIn.ItemIndex := 0;
-     //tstint := 0;
-     //if TryStrToInt(cfg.StoredValue['soundout'],tstint) Then cfgvtwo.Form6.cbAudioOut.ItemIndex := tstint else cfgvtwo.Form6.cbAudioOut.ItemIndex := 0;
-     //tstint := 0;
-     //if TryStrToInt(cfg.StoredValue['ldgain'],tstint) Then
-     //Begin
-     //     Form1.TrackBar1.Position := tstint;
-     //     //adc.adcLDgain := Form1.TrackBar1.Position;
-     //End
-     //else
-     //Begin
-     //     Form1.TrackBar1.Position := 0;
-     //     //adc.adcLDgain := Form1.TrackBar1.Position;
-     //End;
-     //tstint := 0;
-     //if TryStrToInt(cfg.StoredValue['rdgain'],tstint) Then
-     //Begin
-     //     Form1.TrackBar2.Position := tstint;
-     //     //adc.adcRDgain := Form1.TrackBar2.Position;
-     //End
-     //else
-     //Begin
-     //     Form1.TrackBar2.Position := 0;
-     //     //adc.adcRDgain := Form1.TrackBar2.Position;
-     //End;
-     //Form1.Label10.Caption := 'L: ' + IntToStr(Form1.TrackBar1.Position);
-     //Form1.Label11.Caption := 'R: ' + IntToStr(Form1.TrackBar2.Position);
-     //If Form1.TrackBar1.Position <> 0 Then Form1.Label10.Font.Color := clRed else Form1.Label10.Font.Color := clBlack;
-     //If Form1.TrackBar2.Position <> 0 Then Form1.Label11.Font.Color := clRed else Form1.Label11.Font.Color := clBlack;
-     //tstflt := 0.0;
-     //if TryStrToFloat(cfg.StoredValue['samfacin'],tstflt) Then cfgvtwo.Form6.edRXSRCor.Text := cfg.StoredValue['samfacin'] else cfgvtwo.Form6.edRXSRCor.Text := '1.0000';
-     //tstflt := 0.0;
-     //if TryStrToFloat(cfg.StoredValue['samfacout'],tstflt) Then cfgvtwo.Form6.edTXSRCor.Text := cfg.StoredValue['samfacout'] else cfgvtwo.Form6.edTXSRCor.Text := '1.0000';
-     //if cfg.StoredValue['audiochan'] = 'L' Then Form1.rbUseLeft.Checked := True;
-     //if cfg.StoredValue['audiochan'] = 'R' Then Form1.rbUseRight.Checked := True;
-     ////If Form1.rbUseLeft.Checked Then adc.adcChan  := 1;
-     ////If Form1.rbUseRight.Checked Then adc.adcChan := 2;
-     //if cfg.StoredValue['autoSR'] = '1' Then
-     //Begin
-     //     cfgvtwo.Form6.chkEnableAutoSR.Checked := True;
-     //     cfgvtwo.glautoSR := True;
-     //end
-     //else
-     //begin
-     //     cfgvtwo.Form6.chkEnableAutoSR.Checked := False;
-     //     cfgvtwo.glautoSR := False;
-     //end;
-     //cfgvtwo.Form6.editUserDefinedPort1.Text := UpperCase(cfg.StoredValue['pttPort']);
-     //if cfg.StoredValue['afc'] = '1' Then Form1.chkAfc.Checked := True Else Form1.chkAfc.Checked := False;
-     //If Form1.chkAFC.Checked Then Form1.chkAFC.Font.Color := clRed else Form1.chkAFC.Font.Color := clBlack;
-     //if Form1.chkAFC.Checked then d65.glNafc := 1 Else d65.glNafc := 0;
-     //if cfg.StoredValue['noiseblank'] = '1' Then Form1.chkNB.Checked := True Else Form1.chkNB.Checked := False;
-     //If Form1.chkNB.Checked then Form1.chkNB.Font.Color := clRed else Form1.chkNB.Font.Color := clBlack;
-     //If Form1.chkNB.Checked then d65.glNblank := 1 Else d65.glNblank := 0;
-     //tstint := 0;
-     //If TryStrToInt(cfg.StoredValue['brightness'],tstint) Then Form1.tbBright.Position := tstint else Form1.tbBright.Position := 0;
-     //spectrum.specGain := Form1.tbBright.Position;
-     //tstint := 0;
-     //If TryStrToInt(cfg.StoredValue['contrast'],tstint) Then Form1.tbContrast.Position := tstint else Form1.tbContrast.Position := 0;
-     //spectrum.specContrast := Form1.tbContrast.Position;
-     //tstint := 0;
-     //If TryStrToInt(cfg.StoredValue['colormap'],tstint) Then Form1.cbSpecPal.ItemIndex := tstint else Form1.cbSpecPal.ItemIndex := 0;
-     //spectrum.specColorMap := Form1.cbSpecPal.ItemIndex;
-     //tstint := 0;
-     //If TryStrToInt(cfg.StoredValue['specspeed'],tstint) Then
-     //Begin
-     //     Form1.SpinEdit1.Value := tstint;
-     //     spectrum.specSpeed2 := tstint;
-     //End
-     //Else
-     //Begin
-     //     spectrum.specSpeed2 := 0;
-     //     Form1.SpinEdit1.Value := 0;
-     //End;
-     //tstint := 0;
-     //If TryStrToInt(cfg.StoredValue['specVGain'],tstint) Then
-     //Begin
-     //     Form1.SpinGain.Value := tstint;
-     //     spectrum.specVGain := tstint+7;
-     //End
-     //Else
-     //Begin
-     //     Form1.SpinGain.Value := 0;
-     //     spectrum.specVGain := 7;
-     //End;
-     //if cfg.StoredValue['saveCSV'] = '1' Then cfgvtwo.Form6.cbSaveCSV.Checked := True else cfgvtwo.Form6.cbSaveCSV.Checked := False;
-     //if Length(cfg.StoredValue['csvPath']) > 0 Then cfgvtwo.Form6.DirectoryEdit1.Directory := cfg.StoredValue['csvPath'] else cfgvtwo.Form6.DirectoryEdit1.Directory := globalData.logdir;
-     ////if Length(cfg.StoredValue['adiPath']) > 0 Then log.Form2.DirectoryEdit1.Directory := cfg.StoredValue['adiPath'] else log.Form2.DirectoryEdit1.Directory := globalData.logdir;
-     //if cfg.StoredValue['version'] <> verHolder.verReturn() Then verUpdate := True else verUpdate := False;
-     //if cfg.StoredValue['txWatchDog'] = '1' Then
-     //Begin
-     //     cfgvtwo.Form6.cbTXWatchDog.Checked := True
-     //End
-     //else
-     //Begin
-     //     cfgvtwo.Form6.cbTXWatchDog.Checked := False;
-     //End;
-     //If TryStrToInt(cfg.StoredValue['txWatchDogCount'],tstint) Then cfgvtwo.Form6.spinTXCounter.Value := tstint else cfgvtwo.Form6.spinTXCounter.Value := 15;
-     //if cfg.StoredValue['multiQSOToggle'] = '1' Then cfgvtwo.Form6.cbDisableMultiQSO.Checked := True else cfgvtwo.Form6.cbDisableMultiQSO.Checked := False;
-     //if cfg.StoredValue['multiQSOWatchDog'] = '1' Then cfgvtwo.Form6.cbMultiAutoEnable.Checked := True else cfgvtwo.Form6.cbMultiAutoEnable.Checked := False;
-     //tstint := 0;
-     //If TryStrToInt(cfg.StoredValue['cqColor'],tstint) Then cfgvtwo.Form6.ComboBox1.ItemIndex := tstint else cfgvtwo.Form6.ComboBox1.ItemIndex := 8;
-     //tstint := 0;
-     //If TryStrToInt(cfg.StoredValue['callColor'],tstint) Then cfgvtwo.Form6.ComboBox2.ItemIndex := tstint else cfgvtwo.Form6.ComboBox2.ItemIndex := 7;
-     //tstint := 0;
-     //If TryStrToInt(cfg.StoredValue['qsoColor'],tstint) Then cfgvtwo.Form6.ComboBox3.ItemIndex := tstint else cfgvtwo.Form6.ComboBox1.ItemIndex := 6;
-     //Case cfgvtwo.Form6.ComboBox1.ItemIndex of
-     //     0  : cfgvtwo.Form6.Edit1.Color := clGreen;
-     //     1  : cfgvtwo.Form6.Edit1.Color := clOlive;
-     //     2  : cfgvtwo.Form6.Edit1.Color := clSkyBlue;
-     //     3  : cfgvtwo.Form6.Edit1.Color := clPurple;
-     //     4  : cfgvtwo.Form6.Edit1.Color := clTeal;
-     //     5  : cfgvtwo.Form6.Edit1.Color := clGray;
-     //     6  : cfgvtwo.Form6.Edit1.Color := clSilver;
-     //     7  : cfgvtwo.Form6.Edit1.Color := clRed;
-     //     8  : cfgvtwo.Form6.Edit1.Color := clLime;
-     //     9  : cfgvtwo.Form6.Edit1.Color := clYellow;
-     //     10 : cfgvtwo.Form6.Edit1.Color := clMoneyGreen;
-     //     11 : cfgvtwo.Form6.Edit1.Color := clFuchsia;
-     //     12 : cfgvtwo.Form6.Edit1.Color := clAqua;
-     //     13 : cfgvtwo.Form6.Edit1.Color := clCream;
-     //     14 : cfgvtwo.Form6.Edit1.Color := clMedGray;
-     //     15 : cfgvtwo.Form6.Edit1.Color := clWhite;
-     //End;
-     //Case cfgvtwo.Form6.ComboBox1.ItemIndex of
-     //     0  : cfgvtwo.Form6.ComboBox1.Color := clGreen;
-     //     1  : cfgvtwo.Form6.ComboBox1.Color := clOlive;
-     //     2  : cfgvtwo.Form6.ComboBox1.Color := clSkyBlue;
-     //     3  : cfgvtwo.Form6.ComboBox1.Color := clPurple;
-     //     4  : cfgvtwo.Form6.ComboBox1.Color := clTeal;
-     //     5  : cfgvtwo.Form6.ComboBox1.Color := clGray;
-     //     6  : cfgvtwo.Form6.ComboBox1.Color := clSilver;
-     //     7  : cfgvtwo.Form6.ComboBox1.Color := clRed;
-     //     8  : cfgvtwo.Form6.ComboBox1.Color := clLime;
-     //     9  : cfgvtwo.Form6.ComboBox1.Color := clYellow;
-     //     10 : cfgvtwo.Form6.ComboBox1.Color := clMoneyGreen;
-     //     11 : cfgvtwo.Form6.ComboBox1.Color := clFuchsia;
-     //     12 : cfgvtwo.Form6.ComboBox1.Color := clAqua;
-     //     13 : cfgvtwo.Form6.ComboBox1.Color := clCream;
-     //     14 : cfgvtwo.Form6.ComboBox1.Color := clMedGray;
-     //     15 : cfgvtwo.Form6.ComboBox1.Color := clWhite;
-     //End;
-     //Case cfgvtwo.Form6.ComboBox1.ItemIndex of
-     //     0  : cfgvtwo.glcqColor := clGreen;
-     //     1  : cfgvtwo.glcqColor := clOlive;
-     //     2  : cfgvtwo.glcqColor := clSkyBlue;
-     //     3  : cfgvtwo.glcqColor := clPurple;
-     //     4  : cfgvtwo.glcqColor := clTeal;
-     //     5  : cfgvtwo.glcqColor := clGray;
-     //     6  : cfgvtwo.glcqColor := clSilver;
-     //     7  : cfgvtwo.glcqColor := clRed;
-     //     8  : cfgvtwo.glcqColor := clLime;
-     //     9  : cfgvtwo.glcqColor := clYellow;
-     //     10 : cfgvtwo.glcqColor := clMoneyGreen;
-     //     11 : cfgvtwo.glcqColor := clFuchsia;
-     //     12 : cfgvtwo.glcqColor := clAqua;
-     //     13 : cfgvtwo.glcqColor := clCream;
-     //     14 : cfgvtwo.glcqColor := clMedGray;
-     //     15 : cfgvtwo.glcqColor := clWhite;
-     //End;
-     //Case cfgvtwo.Form6.ComboBox2.ItemIndex of
-     //     0  : cfgvtwo.Form6.Edit2.Color := clGreen;
-     //     1  : cfgvtwo.Form6.Edit2.Color := clOlive;
-     //     2  : cfgvtwo.Form6.Edit2.Color := clSkyBlue;
-     //     3  : cfgvtwo.Form6.Edit2.Color := clPurple;
-     //     4  : cfgvtwo.Form6.Edit2.Color := clTeal;
-     //     5  : cfgvtwo.Form6.Edit2.Color := clGray;
-     //     6  : cfgvtwo.Form6.Edit2.Color := clSilver;
-     //     7  : cfgvtwo.Form6.Edit2.Color := clRed;
-     //     8  : cfgvtwo.Form6.Edit2.Color := clLime;
-     //     9  : cfgvtwo.Form6.Edit2.Color := clYellow;
-     //     10 : cfgvtwo.Form6.Edit2.Color := clMoneyGreen;
-     //     11 : cfgvtwo.Form6.Edit2.Color := clFuchsia;
-     //     12 : cfgvtwo.Form6.Edit2.Color := clAqua;
-     //     13 : cfgvtwo.Form6.Edit2.Color := clCream;
-     //     14 : cfgvtwo.Form6.Edit2.Color := clMedGray;
-     //     15 : cfgvtwo.Form6.Edit2.Color := clWhite;
-     //End;
-     //Case cfgvtwo.Form6.ComboBox2.ItemIndex of
-     //     0  : cfgvtwo.Form6.ComboBox2.Color := clGreen;
-     //     1  : cfgvtwo.Form6.ComboBox2.Color := clOlive;
-     //     2  : cfgvtwo.Form6.ComboBox2.Color := clSkyBlue;
-     //     3  : cfgvtwo.Form6.ComboBox2.Color := clPurple;
-     //     4  : cfgvtwo.Form6.ComboBox2.Color := clTeal;
-     //     5  : cfgvtwo.Form6.ComboBox2.Color := clGray;
-     //     6  : cfgvtwo.Form6.ComboBox2.Color := clSilver;
-     //     7  : cfgvtwo.Form6.ComboBox2.Color := clRed;
-     //     8  : cfgvtwo.Form6.ComboBox2.Color := clLime;
-     //     9  : cfgvtwo.Form6.ComboBox2.Color := clYellow;
-     //     10 : cfgvtwo.Form6.ComboBox2.Color := clMoneyGreen;
-     //     11 : cfgvtwo.Form6.ComboBox2.Color := clFuchsia;
-     //     12 : cfgvtwo.Form6.ComboBox2.Color := clAqua;
-     //     13 : cfgvtwo.Form6.ComboBox2.Color := clCream;
-     //     14 : cfgvtwo.Form6.ComboBox2.Color := clMedGray;
-     //     15 : cfgvtwo.Form6.ComboBox2.Color := clWhite;
-     //End;
-     //Case cfgvtwo.Form6.ComboBox2.ItemIndex of
-     //     0  : cfgvtwo.glcallColor := clGreen;
-     //     1  : cfgvtwo.glcallColor := clOlive;
-     //     2  : cfgvtwo.glcallColor := clSkyBlue;
-     //     3  : cfgvtwo.glcallColor := clPurple;
-     //     4  : cfgvtwo.glcallColor := clTeal;
-     //     5  : cfgvtwo.glcallColor := clGray;
-     //     6  : cfgvtwo.glcallColor := clSilver;
-     //     7  : cfgvtwo.glcallColor := clRed;
-     //     8  : cfgvtwo.glcallColor := clLime;
-     //     9  : cfgvtwo.glcallColor := clYellow;
-     //     10 : cfgvtwo.glcallColor := clMoneyGreen;
-     //     11 : cfgvtwo.glcallColor := clFuchsia;
-     //     12 : cfgvtwo.glcallColor := clAqua;
-     //     13 : cfgvtwo.glcallColor := clCream;
-     //     14 : cfgvtwo.glcallColor := clMedGray;
-     //     15 : cfgvtwo.glcallColor := clWhite;
-     //End;
-     //Case cfgvtwo.Form6.ComboBox3.ItemIndex of
-     //     0  : cfgvtwo.Form6.Edit3.Color := clGreen;
-     //     1  : cfgvtwo.Form6.Edit3.Color := clOlive;
-     //     2  : cfgvtwo.Form6.Edit3.Color := clSkyBlue;
-     //     3  : cfgvtwo.Form6.Edit3.Color := clPurple;
-     //     4  : cfgvtwo.Form6.Edit3.Color := clTeal;
-     //     5  : cfgvtwo.Form6.Edit3.Color := clGray;
-     //     6  : cfgvtwo.Form6.Edit3.Color := clSilver;
-     //     7  : cfgvtwo.Form6.Edit3.Color := clRed;
-     //     8  : cfgvtwo.Form6.Edit3.Color := clLime;
-     //     9  : cfgvtwo.Form6.Edit3.Color := clYellow;
-     //     10 : cfgvtwo.Form6.Edit3.Color := clMoneyGreen;
-     //     11 : cfgvtwo.Form6.Edit3.Color := clFuchsia;
-     //     12 : cfgvtwo.Form6.Edit3.Color := clAqua;
-     //     13 : cfgvtwo.Form6.Edit3.Color := clCream;
-     //     14 : cfgvtwo.Form6.Edit3.Color := clMedGray;
-     //     15 : cfgvtwo.Form6.Edit3.Color := clWhite;
-     //End;
-     //Case cfgvtwo.Form6.ComboBox3.ItemIndex of
-     //     0  : cfgvtwo.Form6.ComboBox3.Color := clGreen;
-     //     1  : cfgvtwo.Form6.ComboBox3.Color := clOlive;
-     //     2  : cfgvtwo.Form6.ComboBox3.Color := clSkyBlue;
-     //     3  : cfgvtwo.Form6.ComboBox3.Color := clPurple;
-     //     4  : cfgvtwo.Form6.ComboBox3.Color := clTeal;
-     //     5  : cfgvtwo.Form6.ComboBox3.Color := clGray;
-     //     6  : cfgvtwo.Form6.ComboBox3.Color := clSilver;
-     //     7  : cfgvtwo.Form6.ComboBox3.Color := clRed;
-     //     8  : cfgvtwo.Form6.ComboBox3.Color := clLime;
-     //     9  : cfgvtwo.Form6.ComboBox3.Color := clYellow;
-     //     10 : cfgvtwo.Form6.ComboBox3.Color := clMoneyGreen;
-     //     11 : cfgvtwo.Form6.ComboBox3.Color := clFuchsia;
-     //     12 : cfgvtwo.Form6.ComboBox3.Color := clAqua;
-     //     13 : cfgvtwo.Form6.ComboBox3.Color := clCream;
-     //     14 : cfgvtwo.Form6.ComboBox3.Color := clMedGray;
-     //     15 : cfgvtwo.Form6.ComboBox3.Color := clWhite;
-     //End;
-     //Case cfgvtwo.Form6.ComboBox3.ItemIndex of
-     //     0  : cfgvtwo.glqsoColor := clGreen;
-     //     1  : cfgvtwo.glqsoColor := clOlive;
-     //     2  : cfgvtwo.glqsoColor := clSkyBlue;
-     //     3  : cfgvtwo.glqsoColor := clPurple;
-     //     4  : cfgvtwo.glqsoColor := clTeal;
-     //     5  : cfgvtwo.glqsoColor := clGray;
-     //     6  : cfgvtwo.glqsoColor := clSilver;
-     //     7  : cfgvtwo.glqsoColor := clRed;
-     //     8  : cfgvtwo.glqsoColor := clLime;
-     //     9  : cfgvtwo.glqsoColor := clYellow;
-     //     10 : cfgvtwo.glqsoColor := clMoneyGreen;
-     //     11 : cfgvtwo.glqsoColor := clFuchsia;
-     //     12 : cfgvtwo.glqsoColor := clAqua;
-     //     13 : cfgvtwo.glqsoColor := clCream;
-     //     14 : cfgvtwo.glqsoColor := clMedGray;
-     //     15 : cfgvtwo.glqsoColor := clWhite;
-     //End;
-     //
-     //if cfg.StoredValue['catBy'] = 'none' Then
-     //Begin
-     //     cfgvtwo.Form6.chkUseCommander.Checked := False;
-     //     cfgvtwo.Form6.chkUseOmni.Checked := False;
-     //     cfgvtwo.Form6.chkUseHRD.Checked := False;
-     //     cfgvtwo.glcatBy := 'none';
-     //End;
-     //if cfg.StoredValue['catBy'] = 'omni' Then
-     //Begin
-     //     cfgvtwo.Form6.chkUseCommander.Checked := False;
-     //     cfgvtwo.Form6.chkUseOmni.Checked := True;
-     //     cfgvtwo.Form6.chkUseHRD.Checked := False;
-     //     cfgvtwo.glcatBy := 'omni';
-     //End;
-     //if cfg.StoredValue['catBy'] = 'hamlib' Then
-     //Begin
-     //     cfgvtwo.Form6.chkUseCommander.Checked := False;
-     //     cfgvtwo.Form6.chkUseOmni.Checked := False;
-     //     cfgvtwo.Form6.chkUseHRD.Checked := False;
-     //     cfgvtwo.glcatBy := 'none';
-     //End;
-     //if cfg.StoredValue['catBy'] = 'hrd' Then
-     //Begin
-     //     cfgvtwo.Form6.chkUseCommander.Checked := False;
-     //     cfgvtwo.Form6.chkUseOmni.Checked := False;
-     //     cfgvtwo.Form6.chkUseHRD.Checked := True;
-     //     cfgvtwo.glcatBy := 'hrd';
-     //End;
-     //if cfg.StoredValue['catBy'] = 'commander' Then
-     //Begin
-     //     cfgvtwo.Form6.chkUseCommander.Checked := True;
-     //     cfgvtwo.Form6.chkUseOmni.Checked := False;
-     //     cfgvtwo.Form6.chkUseHRD.Checked := False;
-     //     cfgvtwo.glcatBy := 'commander';
-     //End;
-     //if cfg.StoredValue['pskrCall'] = '' Then cfgvtwo.Form6.editPSKRCall.Text := cfgvtwo.Form6.edMyCall.Text else cfgvtwo.Form6.editPSKRCall.Text := cfg.StoredValue['pskrCall'];
-     //if cfg.StoredValue['usePSKR'] = 'yes' Then cfgvtwo.Form6.cbUsePSKReporter.Checked := True else cfgvtwo.Form6.cbUsePSKReporter.Checked := False;
-     //if cfg.StoredValue['useRB'] = 'yes' Then cfgvtwo.Form6.cbUseRB.Checked := True else cfgvtwo.Form6.cbUseRB.Checked := False;
-     //cfgvtwo.Form6.editPSKRAntenna.Text := cfg.StoredValue['pskrAntenna'];
-     //if cfg.StoredValue['optFFT'] = 'on' Then cfgvtwo.Form6.chkNoOptFFT.Checked := False else cfgvtwo.Form6.chkNoOptFFT.Checked := True;
-     //if cfg.StoredValue['useAltPTT'] = 'yes' Then cfgvtwo.Form6.cbUseAltPTT.Checked := True else cfgvtwo.Form6.cbUseAltPTT.Checked := False;
-     //if cfg.StoredValue['useHRDPTT'] = 'yes' Then cfgvtwo.Form6.chkHRDPTT.Checked := True else cfgvtwo.Form6.chkHRDPTT.Checked := False;
-     //if cfg.StoredValue['useCATTxDF'] = 'yes' Then cfgvtwo.Form6.chkTxDFVFO.Checked := True else cfgvtwo.Form6.chkTxDFVFO.Checked := False;
-     //
-     //cfgvtwo.Form6.edUserQRG1.Text := cfg.StoredValue['userQRG1'];
-     //cfgvtwo.Form6.edUserQRG2.Text := cfg.StoredValue['userQRG2'];
-     //cfgvtwo.Form6.edUserQRG3.Text := cfg.StoredValue['userQRG3'];
-     //cfgvtwo.Form6.edUserQRG4.Text := cfg.StoredValue['userQRG4'];
-     //cfgvtwo.Form6.edUserMsg4.Text := cfg.StoredValue['usrMsg1'];
-     //cfgvtwo.Form6.edUserMsg5.Text := cfg.StoredValue['usrMsg2'];
-     //cfgvtwo.Form6.edUserMsg6.Text := cfg.StoredValue['usrMsg3'];
-     //cfgvtwo.Form6.edUserMsg7.Text := cfg.StoredValue['usrMsg4'];
-     //cfgvtwo.Form6.edUserMsg8.Text := cfg.StoredValue['usrMsg5'];
-     //cfgvtwo.Form6.edUserMsg9.Text := cfg.StoredValue['usrMsg6'];
-     //cfgvtwo.Form6.edUserMsg10.Text := cfg.StoredValue['usrMsg7'];
-     //cfgvtwo.Form6.edUserMsg11.Text := cfg.StoredValue['usrMsg8'];
-     //cfgvtwo.Form6.edUserMsg12.Text := cfg.StoredValue['usrMsg9'];
-     //cfgvtwo.Form6.edUserMsg13.Text := cfg.StoredValue['usrMsg10'];
-     //
-     //Form1.MenuItem22.Caption := cfg.StoredValue['userQRG1'];
-     //Form1.MenuItem23.Caption := cfg.StoredValue['userQRG2'];
-     //Form1.MenuItem28.Caption := cfg.StoredValue['userQRG3'];
-     //Form1.MenuItem29.Caption := cfg.StoredValue['userQRG4'];
-     //Form1.MenuItem16.Caption := cfg.StoredValue['usrMsg1'];
-     //Form1.MenuItem17.Caption := cfg.StoredValue['usrMsg2'];
-     //Form1.MenuItem18.Caption := cfg.StoredValue['usrMsg3'];
-     //Form1.MenuItem19.Caption := cfg.StoredValue['usrMsg4'];
-     //Form1.MenuItem20.Caption := cfg.StoredValue['usrMsg5'];
-     //Form1.MenuItem21.Caption := cfg.StoredValue['usrMsg6'];
-     //Form1.MenuItem24.Caption := cfg.StoredValue['usrMsg7'];
-     //Form1.MenuItem25.Caption := cfg.StoredValue['usrMsg8'];
-     //Form1.MenuItem26.Caption := cfg.StoredValue['usrMsg9'];
-     //Form1.MenuItem27.Caption := cfg.StoredValue['usrMsg10'];
-     //tstint := 0;
-     //d65.glbinspace := 100;
-     //
-     //if cfg.StoredValue['smooth'] = 'on' Then Form1.cbSmooth.Checked := True else Form1.cbSmooth.Checked := False;
-     //if Form1.cbSmooth.Checked Then spectrum.specSmooth := True else spectrum.specSmooth := False;
-     //if cfg.StoredValue['restoreMulti'] = 'on' Then cfgvtwo.Form6.cbRestoreMulti.Checked := True else cfgvtwo.Form6.cbRestoreMulti.Checked := False;
-     //if cfg.StoredValue['si570mul'] = '1' Then cfgvtwo.Form6.radioSI570X1.Checked := True;
-     //if cfg.StoredValue['si570mul'] = '2' Then cfgvtwo.Form6.radioSI570X2.Checked := True;
-     //if cfg.StoredValue['si570mul'] = '4' Then cfgvtwo.Form6.radioSI570X4.Checked := True;
-     //cfgvtwo.Form6.editSI570FreqOffset.Text := cfg.StoredValue['si570cor'];
-     //cfgvtwo.Form6.editSI570Freq.Text := cfg.StoredValue['si570qrg'];
-     //if cfg.storedValue['si570ptt'] = 'y' then cfgvtwo.Form6.cbSi570PTT.Checked := True else cfgvtwo.Form6.cbSi570PTT.Checked := False;
-     //if cfg.storedValue['si570ptt'] = 'y' then globalData.si570ptt := True else globalData.si570ptt := False;
-     //if cfg.storedValue['useCWID'] = 'y' then cfgvtwo.Form6.cbCWID.Checked := True else cfgvtwo.Form6.cbCWID.Checked := False;
-     //if cfg.StoredValue['useCATTxDF'] = 'yes' then cfgvtwo.Form6.chkTxDFVFO.Checked := True else cfgvtwo.Form6.chkTxDFVFO.Checked := False;
-     //
-     //if cfg.StoredValue['enAutoQSY1'] = 'yes' then cfgvtwo.Form6.cbEnableQSY1.Checked := True else cfgvtwo.Form6.cbEnableQSY1.Checked := False;
-     //if cfg.StoredValue['enAutoQSY2'] = 'yes' then cfgvtwo.Form6.cbEnableQSY2.Checked := True else cfgvtwo.Form6.cbEnableQSY2.Checked := False;
-     //if cfg.StoredValue['enAutoQSY3'] = 'yes' then cfgvtwo.Form6.cbEnableQSY3.Checked := True else cfgvtwo.Form6.cbEnableQSY3.Checked := False;
-     //if cfg.StoredValue['enAutoQSY4'] = 'yes' then cfgvtwo.Form6.cbEnableQSY4.Checked := True else cfgvtwo.Form6.cbEnableQSY4.Checked := False;
-     //if cfg.StoredValue['enAutoQSY5'] = 'yes' then cfgvtwo.Form6.cbEnableQSY5.Checked := True else cfgvtwo.Form6.cbEnableQSY5.Checked := False;
-     //
-     //if cfg.StoredValue['autoQSYAT1'] = 'yes' then cfgvtwo.Form6.cbATQSY1.Checked := True else cfgvtwo.Form6.cbATQSY1.Checked := False;
-     //if cfg.StoredValue['autoQSYAT2'] = 'yes' then cfgvtwo.Form6.cbATQSY2.Checked := True else cfgvtwo.Form6.cbATQSY2.Checked := False;
-     //if cfg.StoredValue['autoQSYAT3'] = 'yes' then cfgvtwo.Form6.cbATQSY3.Checked := True else cfgvtwo.Form6.cbATQSY3.Checked := False;
-     //if cfg.StoredValue['autoQSYAT4'] = 'yes' then cfgvtwo.Form6.cbATQSY4.Checked := True else cfgvtwo.Form6.cbATQSY4.Checked := False;
-     //if cfg.StoredValue['autoQSYAT5'] = 'yes' then cfgvtwo.Form6.cbATQSY5.Checked := True else cfgvtwo.Form6.cbATQSY5.Checked := False;
-     //
-     //cfgvtwo.Form6.edQRGQSY1.Text := cfg.StoredValue['autoQSYQRG1'];
-     //cfgvtwo.Form6.edQRGQSY2.Text := cfg.StoredValue['autoQSYQRG2'];
-     //cfgvtwo.Form6.edQRGQSY3.Text := cfg.StoredValue['autoQSYQRG3'];
-     //cfgvtwo.Form6.edQRGQSY4.Text := cfg.StoredValue['autoQSYQRG4'];
-     //cfgvtwo.Form6.edQRGQSY5.Text := cfg.StoredValue['autoQSYQRG5'];
-     //
-     //foo := cfg.StoredValue['autoQSYUTC1'];
-     //if TryStrToInt(cfg.StoredValue['autoQSYUTC1'],ifoo) Then
-     //Begin
-     //     cfgvtwo.Form6.qsyHour1.Value := StrToInt(foo[1..2]);
-     //     cfgvtwo.Form6.qsyMinute1.Value := StrToInt(foo[3..4]);
-     //end
-     //else
-     //begin
-     //     cfgvtwo.Form6.qsyHour1.Value := 0;
-     //     cfgvtwo.Form6.qsyMinute1.Value := 0;
-     //end;
-     //
-     //foo := cfg.StoredValue['autoQSYUTC2'];
-     //if TryStrToInt(cfg.StoredValue['autoQSYUTC2'],ifoo) Then
-     //Begin
-     //     cfgvtwo.Form6.qsyHour2.Value := StrToInt(foo[1..2]);
-     //     cfgvtwo.Form6.qsyMinute2.Value := StrToInt(foo[3..4]);
-     //end
-     //else
-     //begin
-     //     cfgvtwo.Form6.qsyHour2.Value := 0;
-     //     cfgvtwo.Form6.qsyMinute2.Value := 0;
-     //end;
-     //
-     //foo := cfg.StoredValue['autoQSYUTC3'];
-     //if TryStrToInt(cfg.StoredValue['autoQSYUTC3'],ifoo) Then
-     //Begin
-     //     cfgvtwo.Form6.qsyHour3.Value := StrToInt(foo[1..2]);
-     //     cfgvtwo.Form6.qsyMinute3.Value := StrToInt(foo[3..4]);
-     //end
-     //else
-     //begin
-     //     cfgvtwo.Form6.qsyHour3.Value := 0;
-     //     cfgvtwo.Form6.qsyMinute3.Value := 0;
-     //end;
-     //
-     //foo := cfg.StoredValue['autoQSYUTC4'];
-     //if TryStrToInt(cfg.StoredValue['autoQSYUTC4'],ifoo) Then
-     //Begin
-     //     cfgvtwo.Form6.qsyHour4.Value := StrToInt(foo[1..2]);
-     //     cfgvtwo.Form6.qsyMinute4.Value := StrToInt(foo[3..4]);
-     //end
-     //else
-     //begin
-     //     cfgvtwo.Form6.qsyHour4.Value := 0;
-     //     cfgvtwo.Form6.qsyMinute4.Value := 0;
-     //end;
-     //
-     //foo := cfg.StoredValue['autoQSYUTC5'];
-     //if TryStrToInt(cfg.StoredValue['autoQSYUTC5'],ifoo) Then
-     //Begin
-     //     cfgvtwo.Form6.qsyHour5.Value := StrToInt(foo[1..2]);
-     //     cfgvtwo.Form6.qsyMinute5.Value := StrToInt(foo[3..4]);
-     //end
-     //else
-     //begin
-     //     cfgvtwo.Form6.qsyHour5.Value := 0;
-     //     cfgvtwo.Form6.qsyMinute5.Value := 0;
-     //end;
-     //
-     //cfgvtwo.Form6.hrdAddress.Text := cfg.StoredValue['hrdAddress'];
-     //globalData.hrdcatControlcurrentRig.hrdAddress := cfgvtwo.Form6.hrdAddress.Text;
-     //cfgvtwo.Form6.hrdPort.Text := cfg.StoredValue['hrdPort'];
-     //
-     //tstint := 0;
-     //If TryStrToInt(cfg.StoredValue['hrdPort'],tstint) Then
-     //Begin
-     //     cfgvtwo.Form6.hrdPort.Text := cfg.StoredValue['hrdPort'];
-     //     globalData.hrdcatControlcurrentRig.hrdPort := tstint;
-     //end
-     //else
-     //begin
-     //     cfgvtwo.Form6.hrdPort.Text := '7809';
-     //     globalData.hrdcatControlcurrentRig.hrdPort := 7809;
-     //end;
-     //
-     //if cfg.StoredValue['version'] <> verHolder.verReturn() Then verUpdate := True else verUpdate := False;
-     //
-     //if verUpdate Then
-     //Begin
-     //     cfgvtwo.glmustConfig := True;
-     //     cfgvtwo.Form6.Show;
-     //     cfgvtwo.Form6.BringToFront;
-     //     repeat
-     //           sleep(10);
-     //           Application.ProcessMessages
-     //     until not cfgvtwo.glmustConfig;
-     //     cfg.StoredValue['version'] := verHolder.verReturn();
-     //     cfg.Save;
-     //     dlog.fileDebug('Ran configuration update.');
-     //End;
+     halt;
 
      //With wisdom comes speed.
      //d65.glfftFWisdom := 0;
@@ -4377,62 +3348,6 @@ Begin
      //     dlog.fileDebug('Running without optimal FFT enabled by user request.');
      //End;
 
-     // Setup input device
-     //dlog.fileDebug('Setting up ADC.');
-     //foo := cfgvtwo.Form6.cbAudioIn.Items.Strings[cfgvtwo.Form6.cbAudioIn.ItemIndex];
-     //paInParams.device := StrToInt(foo[1..2]);
-     //paInParams.sampleFormat := paInt16;
-     //paInParams.suggestedLatency := 1;
-     //paInParams.hostApiSpecificStreamInfo := Nil;
-     //ppaInParams := @paInParams;
-     // Set rxBuffer index to start of array.
-     //adc.d65rxBufferIdx := 0;
-     //adc.adcT := 0;
-     // Set ptr to start of buffer.
-     //adc.d65rxBufferPtr := @adc.d65rxBuffer[0];
-     // Initialize rx stream.
-     //paInParams.channelCount := 2;
-     //paResult := portaudio.Pa_OpenStream(paInStream,ppaInParams,Nil,11025,2048,0,@adc.adcCallback,Pointer(Self));
-     //if paResult <> 0 Then
-     //Begin
-     //     ShowMessage('PA Error:  ' + StrPas(portaudio.Pa_GetErrorText(paResult)) + ' Could not setup for stereo input.  Please check your setup.');
-     //end
-     //else
-     //begin
-     //    paResult := portaudio.Pa_StartStream(paInStream);
-     //end;
-     // Start the stream.
-     //if paResult <> 0 Then
-     //Begin
-     //     ShowMessage('PA Error:  ' + StrPas(portaudio.Pa_GetErrorText(paResult)));
-     //End;
-     // Setup output device
-     //dlog.fileDebug('Setting up DAC.');
-     //foo := cfgvtwo.Form6.cbAudioOut.Items.Strings[cfgvtwo.Form6.cbAudioOut.ItemIndex];
-     //paOutParams.device := StrToInt(foo[1..2]);
-     //paOutParams.sampleFormat := paInt16;
-     //paOutParams.suggestedLatency := 1;
-     //paOutParams.hostApiSpecificStreamInfo := Nil;
-     //ppaOutParams := @paOutParams;
-     // Set txBuffer index to start of array.
-     //dac.d65txBufferIdx := 0;
-     //dac.dacT := 0;
-     // Set ptr to start of buffer.
-     //dac.d65txBufferPtr := @dac.d65txBuffer[0];
-     // Initialize tx stream.
-     //paOutParams.channelCount := 2;
-     //paResult := portaudio.Pa_OpenStream(paOutStream,Nil,ppaOutParams,11025,2048,0,@dac.dacCallback,Pointer(Self));
-     //if paResult <> 0 Then
-     //Begin
-     //     ShowMessage('PA Error:  ' + StrPas(portaudio.Pa_GetErrorText(paResult)));
-     //     //Need to exit this puppy, pa is dead.
-     //End;
-     //// Start the stream.
-     //paResult := portaudio.Pa_StartStream(paOutStream);
-     //if paResult <> 0 Then
-     //Begin
-     //     ShowMessage('PA Error:  ' + StrPas(portaudio.Pa_GetErrorText(paResult)));
-     //End;
      //if cfgvtwo.Form6.cbUsePSKReporter.Checked Then
      //Begin
      //     // Initialize PSK Reporter DLL
@@ -4485,6 +3400,17 @@ Begin
      //end;
      //rbc.glrbsSentCount := 0;
      //rbc.glrbCallsign := TrimLeft(TrimRight(cfgvtwo.Form6.editPSKRCall.Text));
+     // Create the decoder thread with param False so it starts.
+     //d65.glinProg := False;
+     //decoderThread := decodeThread.Create(False);
+     // Create the CAT control thread with param True so it starts.
+     //rigThread := catThread.Create(False);
+     // Create RB thread with param False so it starts.
+     //cfgvtwo.glrbcLogin := False;
+     //cfgvtwo.glrbcLogout := False;
+     //rbcPing := False;
+     //dorbReport := False;
+     //rbThread := rbcThread.Create(False);
 End;
 
 procedure TForm1.updateSR();
