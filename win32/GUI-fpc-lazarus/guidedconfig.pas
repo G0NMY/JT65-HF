@@ -1843,10 +1843,10 @@ begin
                aerb  := listBoxSoundDiag.Items.Add(' Long Term Averaged SR Error [RX]:  Calculating...');
                erbt  := listBoxSoundDiag.Items.Add('Short Term Averaged SR Error [TX]:  Calculating...');
                aerbt := listBoxSoundDiag.Items.Add(' Long Term Averaged SR Error [TX]:  Calculating...');
-               srgraph.Form8.series1.AddXY(0,dsp.adcErate);
-               srgraph.Form8.series2.AddXY(0,1.0000);
-               srgraph.Form8.series3.AddXY(0,dsp.dacErate);
-               srgraph.Form8.series4.AddXY(0,1.0000);
+               //srgraph.Form8.series1.AddXY(0,dsp.adcErate);
+               //srgraph.Form8.series2.AddXY(0,1.0000);
+               //srgraph.Form8.series3.AddXY(0,dsp.dacErate);
+               //srgraph.Form8.series4.AddXY(0,1.0000);
                // Start the long term SR evaluation loop.  Running for 1615 2048 sample blocks (about 5 minutes)
                while (dsp.adcCount < 1615) and not fail do
                begin
@@ -1864,14 +1864,14 @@ begin
                          if adctime > 120 then er := er + dsp.adcErate;
                          if adctime > 120 then ert := ert + dsp.dacErate;
                          if adctime > 120 then inc(i);
-                         srgraph.Form8.series1.AddXY(adctime,dsp.adcErate);
-                         srgraph.Form8.series3.AddXY(adctime,dsp.dacErate);
-                         listBoxSoundDiag.Items.Strings[erb]  := 'Short Term Averaged SR Error [RX]:  ' + floatToStrF(dsp.adcErate,ffFixed,0,4) + ' : 1.0000';
-                         listBoxSoundDiag.Items.Strings[erbt] := 'Short Term Averaged SR Error [TX]:  ' + floatToStrF(dsp.dacErate,ffFixed,0,4) + ' : 1.0000';
+                         if adctime > 30 then srgraph.Form8.series1.AddXY(adctime,dsp.adcErate);
+                         if adctime > 30 then srgraph.Form8.series3.AddXY(adctime,dsp.dacErate);
+                         if adctime > 30 then listBoxSoundDiag.Items.Strings[erb]  := 'Short Term Averaged SR Error [RX]:  ' + floatToStrF(dsp.adcErate,ffFixed,0,4) + ' : 1.0000' else listBoxSoundDiag.Items.Strings[erb]  := 'Short Term Averaged SR Error [RX]:  Calculating';
+                         if adctime > 30 then listBoxSoundDiag.Items.Strings[erbt] := 'Short Term Averaged SR Error [TX]:  ' + floatToStrF(dsp.dacErate,ffFixed,0,4) + ' : 1.0000' else listBoxSoundDiag.Items.Strings[erbt] := 'Short Term Averaged SR Error [TX]:  Calculating';
                          if adctime > 120 then srgraph.Form8.series2.AddXY(adctime,er/i);
                          if adctime > 120 then srgraph.Form8.series4.AddXY(adctime,ert/i);
-                         if adctime > 120 then listBoxSoundDiag.Items.Strings[aerb]  := ' Long Term Averaged SR Error [RX]:  ' + floatToStrF(er/i,ffFixed,0,4) + ' : 1.0000';
-                         if adctime > 120 then listBoxSoundDiag.Items.Strings[aerbt] := ' Long Term Averaged SR Error [TX]:  ' + floatToStrF(ert/i,ffFixed,0,4) + ' : 1.0000';
+                         if adctime > 120 then listBoxSoundDiag.Items.Strings[aerb]  := ' Long Term Averaged SR Error [RX]:  ' + floatToStrF(er/i,ffFixed,0,4) + ' : 1.0000' else listBoxSoundDiag.Items.Strings[aerb]  := ' Long Term Averaged SR Error [RX]:  Calculating';
+                         if adctime > 120 then listBoxSoundDiag.Items.Strings[aerbt] := ' Long Term Averaged SR Error [TX]:  ' + floatToStrF(ert/i,ffFixed,0,4) + ' : 1.0000' else listBoxSoundDiag.Items.Strings[aerbt] := ' Long Term Averaged SR Error [TX]:  Calculating';
                     end;
                     listBoxSoundDiag.Items.Strings[lb] :='Processing sample block ' + intToStr(dsp.adcCount) + ' of 1615  [ Time Index:  ' + floatToStrF(adctime,ffFixed,0,0) + ' ]';
                     application.ProcessMessages;

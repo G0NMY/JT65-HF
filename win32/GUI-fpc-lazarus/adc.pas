@@ -200,7 +200,6 @@ Begin
         adcErate := 0;
      end;
      // Move paAudio Buffer to d65rxBuffer (d65rxBufferIdx ranges 0..661503)
-     //inptr := input;
      If d65rxBufferIdx > 661503 Then d65rxBufferIdx := 0;
      localIdx := d65rxBufferIdx;
      // Now I need to copy the frames to real rx buffer
@@ -208,7 +207,6 @@ Begin
      Begin
           For i := 1 to frameCount do
           Begin
-               //tempInt1 := inptr^;  // inptr is a pointer ^ indicates read value at pointer address NOT the pointer's value. :)
                tempInt1 := input^;  // inptr is a pointer ^ indicates read value at pointer address NOT the pointer's value. :)
                if adcLDgain <> 0 Then
                begin
@@ -226,9 +224,7 @@ Begin
                begin
                     specDataBuffer1[i-1] := min(32766,max(-32766,tempInt1));
                end;
-               //inc(inptr);
                inc(input);
-               //tempInt2 := inptr^;
                tempInt2 := input^;
                if adcRDGain <> 0 Then
                Begin
@@ -246,7 +242,6 @@ Begin
                Begin
                     specDataBuffer2[i-1] := min(32766,max(-32766,tempInt2));
                End;
-               //inc(inptr);
                inc(input);
                if localIdx < 661504 Then
                Begin
@@ -265,31 +260,29 @@ Begin
                localIdx := d65rxBufferIdx;
           End;
           // Compute audio levels
-          //If not globalData.audioComputing and not globalData.spectrumComputing65 Then specLevel1 := spectrum.computeAudio(specDataBuffer1);  // Chan 1 (Left)
-          //If not globalData.audioComputing and not globalData.spectrumComputing65 Then specLevel2 := spectrum.computeAudio(specDataBuffer2);  // Chan 2 (Right)
           specLevel1 := computeAudio(specDataBuffer1);  // Chan 1 (Left)
           specLevel2 := computeAudio(specDataBuffer2);  // Chan 2 (Right)
           // Spectrum generation handler.
-          //If adcSpecCount = 0 Then
-          //Begin
-          //     // Copy proper 2K buffer to first half of 4K spectrum buffer
-          //     inc(adcSpecCount);
-          //     for i := 0 to 2047 do
-          //     Begin
-          //          if adcChan = 1 Then specDataBuffer[i] := specDataBuffer1[i] else specDataBuffer[i] := specDataBuffer2[i];
-          //     End;
-          //End
-          //Else
-          //Begin
-          //     // Copy proper 2K buffer to second half of 4K spectrum buffer
-          //     adcSpecCount := 0;
-          //     for i := 0 to 2047 do
-          //     Begin
-          //          if adcChan = 1 Then specDataBuffer[i+2048] := specDataBuffer1[i] else specDataBuffer[i+2048] := specDataBuffer2[i];
-          //     End;
-          //     // Also need to generate the spectrum
-          //     if not globalData.spectrumComputing65 then spectrum.computeSpectrum(specDataBuffer);
-          //End;
+          If adcSpecCount = 0 Then
+          Begin
+               // Copy proper 2K buffer to first half of 4K spectrum buffer
+               inc(adcSpecCount);
+               for i := 0 to 2047 do
+               Begin
+                    if adcChan = 1 Then specDataBuffer[i] := specDataBuffer1[i] else specDataBuffer[i] := specDataBuffer2[i];
+               End;
+          End
+          Else
+          Begin
+               // Copy proper 2K buffer to second half of 4K spectrum buffer
+               adcSpecCount := 0;
+               for i := 0 to 2047 do
+               Begin
+                    if adcChan = 1 Then specDataBuffer[i+2048] := specDataBuffer1[i] else specDataBuffer[i+2048] := specDataBuffer2[i];
+               End;
+               // Also need to generate the spectrum
+               if not globalData.spectrumComputing65 then spectrum.computeSpectrum(specDataBuffer);
+          End;
      End;
      result := paContinue;
      adcRunning := False;
@@ -402,32 +395,29 @@ Begin
                localIdx := d65rxBufferIdx;
           End;
           // Compute audio levels
-          //If not globalData.audioComputing and not globalData.spectrumComputing65 Then specLevel1 := spectrum.computeAudio(specDataBuffer1);  // Chan 1 (Left)
-          //If not globalData.audioComputing and not globalData.spectrumComputing65 Then specLevel2 := spectrum.computeAudio(specDataBuffer2);  // Chan 2 (Right)
           specLevel1 := computeAudio(specDataBuffer1);  // Chan 1 (Left)
-          //specLevel2 := computeAudio(specDataBuffer2);  // Chan 2 (Right)
-          specLevel2 := 50;
+          specLevel2 := 0;
           // Spectrum generation handler.
-          //If adcSpecCount = 0 Then
-          //Begin
-          //     // Copy proper 2K buffer to first half of 4K spectrum buffer
-          //     inc(adcSpecCount);
-          //     for i := 0 to 2047 do
-          //     Begin
-          //          if adcChan = 1 Then specDataBuffer[i] := specDataBuffer1[i] else specDataBuffer[i] := specDataBuffer2[i];
-          //     End;
-          //End
-          //Else
-          //Begin
-          //     // Copy proper 2K buffer to second half of 4K spectrum buffer
-          //     adcSpecCount := 0;
-          //     for i := 0 to 2047 do
-          //     Begin
-          //          if adcChan = 1 Then specDataBuffer[i+2048] := specDataBuffer1[i] else specDataBuffer[i+2048] := specDataBuffer2[i];
-          //     End;
-          //     // Also need to generate the spectrum
-          //     if not globalData.spectrumComputing65 then spectrum.computeSpectrum(specDataBuffer);
-          //End;
+          If adcSpecCount = 0 Then
+          Begin
+               // Copy proper 2K buffer to first half of 4K spectrum buffer
+               inc(adcSpecCount);
+               for i := 0 to 2047 do
+               Begin
+                    specDataBuffer[i] := specDataBuffer1[i];
+               End;
+          End
+          Else
+          Begin
+               // Copy proper 2K buffer to second half of 4K spectrum buffer
+               adcSpecCount := 0;
+               for i := 0 to 2047 do
+               Begin
+                    specDataBuffer[i+2048] := specDataBuffer1[i];
+               End;
+               // Also need to generate the spectrum
+               if not globalData.spectrumComputing65 then spectrum.computeSpectrum(specDataBuffer);
+          End;
      End;
      result := paContinue;
      adcRunning := False;

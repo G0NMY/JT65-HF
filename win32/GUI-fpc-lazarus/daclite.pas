@@ -100,27 +100,12 @@ Begin
      inc(dacT);
      if dacT > 100000 Then dacT := 0;
      optr := output;
-     if dacEnTX Then
+     for i := 0 to frameCount-1 do
      Begin
-          for i := 0 to frameCount-1 do
-          Begin
-               optr^ := d65txBuffer[d65txBufferIdx+i];
-               inc(optr);
-               optr^ := d65txBuffer[d65txBufferIdx+i];
-               inc(optr);
-          End;
-          d65txBufferPtr := d65txBufferPtr+frameCount;
-          d65txBufferIdx := d65txBufferIdx+frameCount;
-     End
-     Else
-     Begin
-          for i := 0 to frameCount-1 do
-          Begin
-               optr^ := 0;
-               inc(optr);
-               optr^ := 0;
-               inc(optr);
-          End;
+          optr^ := 0;
+          inc(optr);
+          optr^ := 0;
+          inc(optr);
      End;
      result := paContinue;
 End;
@@ -164,23 +149,10 @@ Begin
      inc(dacT);
      if dacT > 100000 Then dacT := 0;
      optr := output;
-     if dacEnTX Then
+     for i := 0 to frameCount-1 do
      Begin
-          for i := 0 to frameCount-1 do
-          Begin
-               optr^ := d65txBuffer[d65txBufferIdx+i];
-               inc(optr);
-          End;
-          d65txBufferPtr := d65txBufferPtr+frameCount;
-          d65txBufferIdx := d65txBufferIdx+frameCount;
-     End
-     Else
-     Begin
-          for i := 0 to frameCount-1 do
-          Begin
-               optr^ := 0;
-               inc(optr);
-          End;
+          optr^ := 0;
+          inc(optr);
      End;
      result := paContinue;
 End;

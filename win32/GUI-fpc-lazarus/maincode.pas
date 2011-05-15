@@ -83,6 +83,7 @@ type
     Label17: TLabel;
     Label18 : TLabel ;
     Label19: TLabel;
+    Label2 : TLabel ;
     Label20: TLabel;
     Label22: TLabel;
     Label23: TLabel;
@@ -3109,7 +3110,7 @@ Begin
      end;
      soundvalid := True;
      audiodiag.Form6.Label5.Caption := 'Input/Output sample streams running';
-     while (adc.adcCount < 100) and (dac.dacCount < 100) do
+     while (adc.adcCount < 50) and (dac.dacCount < 50) do
      begin
           audiodiag.Form6.Label5.Caption := 'This window will close shortly, testing streams...' + sLineBreak + sLineBreak +
                                             'ADC Calls:  ' + IntToStr(adc.adcCount) + sLineBreak + sLineBreak +
@@ -3232,6 +3233,7 @@ Begin
      end;
      rbc.glrbsSentCount := 0;
      rbc.glrbCallsign := guidedconfig.cfg.rbcallsign;
+     if soundvalid then label2.Caption := 'In: ' + guidedconfig.cfg.soundInS + ' Out: ' + guidedconfig.cfg.soundOutS else Label2.Caption := 'Sound I/O INVALID';
 End;
 
 procedure TForm1.updateSR();
@@ -4485,7 +4487,7 @@ begin
           runOnce := False;
           Form1.Timer1.Enabled := True;
           // Go ahead and mark the stream as active.  It won't run a decode, but it will paint the spectrum during init.
-          // rxInProgress := True;
+          rxInProgress := True;
           // End of run once code.
 
           rxInProgress := False;

@@ -1177,6 +1177,14 @@ object Form1: TForm1
     Caption = 'Label18'
     ParentColor = False
   end
+  object Label2: TLabel
+    Left = 256
+    Height = 17
+    Top = 648
+    Width = 39
+    Caption = 'Label2'
+    ParentColor = False
+  end
   object Timer1: TTimer
     Interval = 220
     OnTimer = Timer1Timer

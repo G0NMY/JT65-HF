@@ -22,15 +22,14 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="maincode"/>
-        <IsVisibleTab Value="True"/>
         <EditorIndex Value="1"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="4497"/>
-        <CursorPos X="13" Y="4484"/>
+        <TopLine Value="3105"/>
+        <CursorPos X="54" Y="3113"/>
         <UsageCount Value="215"/>
         <Bookmarks Count="2">
-          <Item0 X="1" Y="1565" ID="1"/>
-          <Item1 X="6" Y="2961" ID="0"/>
+          <Item0 X="1" Y="1566" ID="1"/>
+          <Item1 X="6" Y="2962" ID="0"/>
         </Bookmarks>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
@@ -93,8 +92,8 @@
         <UnitName Value="adc"/>
         <EditorIndex Value="11"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="22"/>
-        <CursorPos X="1" Y="1"/>
+        <TopLine Value="1"/>
+        <CursorPos X="11" Y="1"/>
         <UsageCount Value="215"/>
         <Loaded Value="True"/>
       </Unit7>
@@ -112,8 +111,8 @@
         <UnitName Value="dac"/>
         <EditorIndex Value="13"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="159"/>
-        <CursorPos X="1" Y="186"/>
+        <TopLine Value="90"/>
+        <CursorPos X="1" Y="90"/>
         <UsageCount Value="201"/>
         <Loaded Value="True"/>
       </Unit9>
@@ -325,10 +324,11 @@
         <ComponentName Value="Form7"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="guidedconfig"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="5"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="539"/>
-        <CursorPos X="1" Y="555"/>
+        <TopLine Value="1889"/>
+        <CursorPos X="18" Y="1849"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
@@ -365,7 +365,7 @@
         <WindowIndex Value="0"/>
         <TopLine Value="13"/>
         <CursorPos X="1" Y="28"/>
-        <UsageCount Value="190"/>
+        <UsageCount Value="193"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
       </Unit32>
@@ -377,7 +377,7 @@
         <WindowIndex Value="0"/>
         <TopLine Value="1"/>
         <CursorPos X="15" Y="12"/>
-        <UsageCount Value="121"/>
+        <UsageCount Value="124"/>
         <Loaded Value="True"/>
       </Unit33>
       <Unit34>
@@ -388,7 +388,7 @@
         <WindowIndex Value="0"/>
         <TopLine Value="488"/>
         <CursorPos X="1" Y="508"/>
-        <UsageCount Value="121"/>
+        <UsageCount Value="124"/>
         <Loaded Value="True"/>
       </Unit34>
       <Unit35>
@@ -399,7 +399,7 @@
         <WindowIndex Value="0"/>
         <TopLine Value="39"/>
         <CursorPos X="30" Y="66"/>
-        <UsageCount Value="116"/>
+        <UsageCount Value="119"/>
         <Loaded Value="True"/>
       </Unit35>
       <Unit36>
@@ -408,9 +408,9 @@
         <UnitName Value="adclite"/>
         <EditorIndex Value="12"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="58"/>
-        <CursorPos X="1" Y="73"/>
-        <UsageCount Value="26"/>
+        <TopLine Value="49"/>
+        <CursorPos X="1" Y="78"/>
+        <UsageCount Value="29"/>
         <Loaded Value="True"/>
       </Unit36>
       <Unit37>
@@ -419,9 +419,9 @@
         <UnitName Value="daclite"/>
         <EditorIndex Value="14"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="40"/>
-        <CursorPos X="1" Y="64"/>
-        <UsageCount Value="26"/>
+        <TopLine Value="133"/>
+        <CursorPos X="1" Y="156"/>
+        <UsageCount Value="29"/>
         <Loaded Value="True"/>
       </Unit37>
       <Unit38>
@@ -434,7 +434,7 @@
         <WindowIndex Value="0"/>
         <TopLine Value="6"/>
         <CursorPos X="88" Y="33"/>
-        <UsageCount Value="25"/>
+        <UsageCount Value="28"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
       </Unit38>
