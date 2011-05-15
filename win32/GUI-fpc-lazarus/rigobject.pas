@@ -464,20 +464,21 @@ implementation
              begin
                   // In strict mode QRG must be in the following ranges
                   resolved := false;
-                  if (i3 >   1799999) and (i3 <   2000001) then resolved := true;  // 160M
-                  if (i3 >   3499999) and (i3 <   4000001) then resolved := true;  //  80M
-                  if (i3 >   6999999) and (i3 <   7300001) then resolved := true;  //  40M
-                  if (i3 >  10099999) and (i3 <  10150001) then resolved := true;  //  30M
-                  if (i3 >  13999999) and (i3 <  14350001) then resolved := true;  //  20M
-                  if (i3 >  18067999) and (i3 <  18168001) then resolved := true;  //  17M
-                  if (i3 >  20999999) and (i3 <  21450001) then resolved := true;  //  15M
-                  if (i3 >  24889999) and (i3 <  24990001) then resolved := true;  //  12M
-                  if (i3 >  27999999) and (i3 <  29700001) then resolved := true;  //  10M
-                  if (i3 >  49999999) and (i3 <  54000001) then resolved := true;  //   6M
-                  if (i3 > 143999999) and (i3 < 148000001) then resolved := true;  //   2M
-                  if (i3 > 221999999) and (i3 < 225000001) then resolved := true;  //   1.25M
-                  if (i3 > 419999999) and (i3 < 450000001) then resolved := true;  //   70cm
-                  if (i3 > 901999999) and (i3 < 928000001) then resolved := true;  //   33cm
+                  if (i3 >    1799999) and (i3 <    2000001) then resolved := true;  // 160M
+                  if (i3 >    3499999) and (i3 <    4000001) then resolved := true;  //  80M
+                  if (i3 >    6999999) and (i3 <    7300001) then resolved := true;  //  40M
+                  if (i3 >   10099999) and (i3 <   10150001) then resolved := true;  //  30M
+                  if (i3 >   13999999) and (i3 <   14350001) then resolved := true;  //  20M
+                  if (i3 >   18067999) and (i3 <   18168001) then resolved := true;  //  17M
+                  if (i3 >   20999999) and (i3 <   21450001) then resolved := true;  //  15M
+                  if (i3 >   24889999) and (i3 <   24990001) then resolved := true;  //  12M
+                  if (i3 >   27999999) and (i3 <   29700001) then resolved := true;  //  10M
+                  if (i3 >   49999999) and (i3 <   54000001) then resolved := true;  //   6M
+                  if (i3 >  143999999) and (i3 <  148000001) then resolved := true;  //   2M
+                  if (i3 >  221999999) and (i3 <  225000001) then resolved := true;  //   1.25M
+                  if (i3 >  419999999) and (i3 <  450000001) then resolved := true;  //   70cm
+                  if (i3 >  901999999) and (i3 <  928000001) then resolved := true;  //   33cm
+                  if (i3 > 1269999999) and (i3 < 1300000001) then resolved := true;  //   23cm
                   if resolved then result := i3;
              end;
 

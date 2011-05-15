@@ -2704,20 +2704,21 @@ begin
      if val.testQRG(editManQRG.Text, qrgk, qrghz) then
      begin
           valid := false;
-          if (qrghz >   1799999) and (qrghz <   2000001) then valid := true;  // 160M
-          if (qrghz >   3499999) and (qrghz <   4000001) then valid := true;  //  80M
-          if (qrghz >   6999999) and (qrghz <   7300001) then valid := true;  //  40M
-          if (qrghz >  10099999) and (qrghz <  10150001) then valid := true;  //  30M
-          if (qrghz >  13999999) and (qrghz <  14350001) then valid := true;  //  20M
-          if (qrghz >  18067999) and (qrghz <  18168001) then valid := true;  //  17M
-          if (qrghz >  20999999) and (qrghz <  21450001) then valid := true;  //  15M
-          if (qrghz >  24889999) and (qrghz <  24990001) then valid := true;  //  12M
-          if (qrghz >  27999999) and (qrghz <  29700001) then valid := true;  //  10M
-          if (qrghz >  49999999) and (qrghz <  54000001) then valid := true;  //   6M
-          if (qrghz > 143999999) and (qrghz < 148000001) then valid := true;  //   2M
-          if (qrghz > 221999999) and (qrghz < 225000001) then valid := true;  //   1.25M
-          if (qrghz > 419999999) and (qrghz < 450000001) then valid := true;  //   70cm
-          if (qrghz > 901999999) and (qrghz < 928000001) then valid := true;  //   33cm
+          if (qrghz >    1799999) and (qrghz <    2000001) then valid := true;  // 160M
+          if (qrghz >    3499999) and (qrghz <    4000001) then valid := true;  //  80M
+          if (qrghz >    6999999) and (qrghz <    7300001) then valid := true;  //  40M
+          if (qrghz >   10099999) and (qrghz <   10150001) then valid := true;  //  30M
+          if (qrghz >   13999999) and (qrghz <   14350001) then valid := true;  //  20M
+          if (qrghz >   18067999) and (qrghz <   18168001) then valid := true;  //  17M
+          if (qrghz >   20999999) and (qrghz <   21450001) then valid := true;  //  15M
+          if (qrghz >   24889999) and (qrghz <   24990001) then valid := true;  //  12M
+          if (qrghz >   27999999) and (qrghz <   29700001) then valid := true;  //  10M
+          if (qrghz >   49999999) and (qrghz <   54000001) then valid := true;  //   6M
+          if (qrghz >  143999999) and (qrghz <  148000001) then valid := true;  //   2M
+          if (qrghz >  221999999) and (qrghz <  225000001) then valid := true;  //   1.25M
+          if (qrghz >  419999999) and (qrghz <  450000001) then valid := true;  //   70cm
+          if (qrghz >  901999999) and (qrghz <  928000001) then valid := true;  //   33cm
+          if (qrghz > 1269999999) and (qrghz < 1300000001) then valid := true;  //   23cm
      end;
      if not valid then editManQRG.Text := '0.0';
      if valid then guidedconfig.cfg.guiQRG := qrghz;
