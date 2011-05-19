@@ -28,11 +28,11 @@ uses
   {$ENDIF}{$ENDIF}
   Interfaces, // this includes the LCL widgetset
   Forms , tachartlazaruspkg , maincode , portaudio , encode65 , globalData ,
-  spectrum , cmaps , fftw_jl , adc , samplerate , dac , dlog , rawdec ,
+  spectrum , cmaps , fftw_jl , adc , samplerate , dac , rawdec ,
   guiConfig , verHolder , PSKReporter , synaser , rbc , adif , log , diagout ,
-  waterfall , d65 , about , rigobject , ddeobject , omnirigobject ,
-  civobject , ddehrdobject , guidedconfig , valobject , paobject , srgraph ,
-  hrdinterface5 , hrdobject , serialobject , adclite , daclite , audiodiag;
+  waterfall , d65 , about , rigobject , ddeobject , omnirigobject , civobject ,
+  ddehrdobject , guidedconfig , valobject , paobject , srgraph , hrdinterface5 ,
+  hrdobject , serialobject , adclite , daclite , audiodiag , dispatchobject;
 
 {$R *.res}
 

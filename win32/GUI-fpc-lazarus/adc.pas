@@ -45,9 +45,9 @@ Type
 Var
    d65rxBuffer     : Packed Array[0..661503] of CTypes.cint16;   // This is slightly more than 60*11025 to make it evenly divided by 2048
    d65rxBufferPtr  : ^CTypes.cint16;
-   d65rxBufferIdx  : Integer;
-   adcChan         : Integer;  // 1 = Left, 2 = Right
-   adcSpecCount    : Integer;
+   d65rxBufferIdx  : CTypes.cuint32;
+   adcChan         : CTypes.cuint32;  // 1 = Left, 2 = Right
+   adcSpecCount    : CTypes.cuint32;
    adcErr          : CTypes.cdouble;
    adcRunning      : Boolean;
    adcLDgain       : Integer;
@@ -59,12 +59,12 @@ Var
    adcE, adcT      : LongInt;
    specLevel1      : Integer;
    specLevel2      : Integer;
-   adcECount       : Integer;
-   adcCount        : Integer;
+   adcECount       : CTypes.cuint64;
+   adcCount        : CTypes.cuint64;
+   adcOverrun      : CTypes.cuint64;
    specDataBuffer  : Packed Array[0..4095] Of CTypes.cint16;
    specDataBuffer1 : Packed Array[0..2047] Of smallint;
    specDataBuffer2 : Packed Array[0..2047] Of smallint;
-   adcOverrun      : Integer;
 
 implementation
 

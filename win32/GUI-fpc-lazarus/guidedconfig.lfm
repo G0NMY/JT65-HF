@@ -16,8 +16,8 @@ object Form7: TForm7
     Height = 545
     Top = 8
     Width = 767
-    ActivePage = CallsignGrid
-    TabIndex = 0
+    ActivePage = PrefixSuffix
+    TabIndex = 1
     TabOrder = 0
     object CallsignGrid: TTabSheet
       Caption = 'Callsign/Grid'
@@ -747,7 +747,6 @@ object Form7: TForm7
         Font.Name = 'Arial'
         Font.Style = [fsBold]
         ItemHeight = 19
-        ItemIndex = 0
         Items.Strings = (
           ''
           '/0'

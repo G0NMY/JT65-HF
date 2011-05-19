@@ -26,7 +26,7 @@ unit rigobject ;
 interface
 
 uses
-  Classes , SysUtils, StrUtils, omnirigobject, civobject, hrdobject;
+  Classes , SysUtils, StrUtils, omnirigobject, civobject, hrdobject, serialobject;
 
 type
   // This class encapsulates all the things related to rig control be it manual
@@ -48,6 +48,13 @@ type
         stControl     : String;  // Rig's controller
         stQRG         : Integer; // Current frequency in Hz
         stPTT         : Boolean; // Rig's PTT State
+        stSerial      : Boolean; // PTT Uses serial (regardless of CAT method) used primarilly for CAT method = none
+        stCATPTT      : Boolean; // PTT Uses CAT controller
+        stVOXPTT      : Boolean; // PTT Uses VOX
+        stNOTX        : Boolean; // No PTT no matter what.
+        stSPort       : String;  // Serial Port designator
+        stSLines      : String;  // Serial port lines designator
+        stAltPTT      : Boolean;  // Use alternate PTT method
 
      public
         Constructor create();
@@ -75,12 +82,34 @@ type
         property pttstate : Boolean
            read  stPTT
            write stPTT;
+        property useSerialPTT : Boolean
+           read  stSerial
+           write stSerial;
+        property pttport : String
+           read  stSPort
+           write stSPort;
+        property pttlines : String
+           read  stSLines
+           write stSLines;
+        property useAltPTT : Boolean
+           read  stAltPTT
+           write stALtPTT;
+        property useCATPTT : Boolean
+           read  stCATPTT
+           write stCATPTT;
+        property useVOXPTT : Boolean
+           read  stVOXPTT
+           write stVOXPTT;
+        property noTX : Boolean
+           read  stNOTX
+           write stNOTX;
   end;
 
 var
    civ1   : civobject.TCIVCommander;
    omni1  : omnirigobject.TOmniRig;
    hrd1   : hrdobject.THrdRig;
+   ser    : serialobject.TSerial;
 
 implementation
    constructor TRadio.Create();
@@ -90,10 +119,17 @@ implementation
         stControl     := 'none';
         stQRG         := 0;
         stPTT         := False;
+        stSerial      := False;
+        stSPort       := '';
+        stSLines      := '';
+        stAltPTT      := False;
+        stCATPTT      := False;
+        stVOXPTT      := False;
+        stNOTX        := False;
         civ1          := civobject.TCIVCommander.create();
         omni1         := omnirigobject.TOmniRig.create();
         hrd1          := hrdobject.THrdRig.create();
-
+        ser           := serialobject.TSerial.create();
    end;
 
    procedure TRadio.setRigController(msg : String);
@@ -107,7 +143,7 @@ implementation
         if msg = 'HRD' then valid := True;
         if msg = 'COMMANDER' then valid := True;
         if msg = 'OMNI' then valid := True;
-        if valid then stControl := msg else stControl := 'none';
+        if valid then stControl := msg else stControl := 'NONE';
    end;
 
    function TRadio.setQRG(qrg : Integer) : Boolean;
@@ -527,7 +563,6 @@ implementation
         if stControl = 'NONE' Then
         begin
              // Do nothing
-             stQRG         := 0;
              stRig         := 'None';
              stPTT         := false;
         end;
@@ -536,7 +571,7 @@ implementation
    procedure TRadio.togglePTT();
    Begin
         // Toggles PTT State
-        if stControl = 'COMMANDER' Then
+        if (stControl = 'COMMANDER') and stCATPTT Then
         begin
              if stPTT then
              begin
@@ -550,7 +585,7 @@ implementation
              end;
         end;
 
-        if stControl = 'HRD' Then
+        if (stControl = 'HRD') and stCATPTT Then
         begin
              if stPTT then
              begin
@@ -564,18 +599,31 @@ implementation
              end;
         end;
 
-        if stControl = 'OMNI' Then
+        if (stControl = 'OMNI') and stCATPTT Then
         begin
         end;
 
-        if stControl = 'HAMLIB' Then
+        if (stControl = 'HAMLIB') and stCATPTT Then
         begin
              // Not implemented (yet) do nothing
         end;
 
-        if stControl = 'NONE' Then
+        if (stControl = 'NONE') and stSerial Then
         begin
-             // Do nothing
+             if stPTT then
+             begin
+                  // Call serial ptt on
+                  ser.ptt := false;
+                  ser.togglePTT();
+                  stPTT := false;
+             end
+             else
+             begin
+                  // Call serial ptt off
+                  ser.ptt := true;
+                  ser.togglePTT();
+                  stPTT := true;
+             end;
         end;
    end;
 

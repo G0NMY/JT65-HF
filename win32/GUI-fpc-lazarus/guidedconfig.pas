@@ -13,6 +13,8 @@ uses
 type
   tmacrolist = array of String;
   tqrglist   = array of integer;
+  tsuffixlist = array of String;
+  tprefixlist = array of String;
 
   { TForm7 }
 
@@ -292,6 +294,8 @@ type
       // Tab 1 Values Callsign Suffix/Prefix
       prPrefix        : Integer;  // Index of selected prefix
       prSuffix        : Integer;  // Index of selected suffix
+      prPrefixList    : tsuffixlist;  // Array of prefix values
+      prSuffixList    : tsuffixlist;  // Array of suffix values
       // Tab 2 Values Sound Device
       prSoundInN      : Integer;  // Sound input device index (pa device id)
       prSoundOutN     : Integer;  // Sound output device index (pa device id)
@@ -403,6 +407,8 @@ type
     public
       Constructor create();
       function  validateSound() : Boolean;
+      function  getPrefix() : String;
+      function  getSuffix() : String;
 
       property callsign : String
         read  prCallsign
@@ -552,6 +558,28 @@ type
       property noSpotting : Boolean
         read  prNoSpot
         write prNoSpot;
+      property macroList : tmacrolist
+        read  prMacros
+        write prMacros;
+      property qrgList : tqrglist
+        read  prQRGs
+        write prQRGs;
+      property multiRestore : Boolean
+        read  prMultiRestore
+        write prMultiRestore;
+      property defMultiOn : Boolean
+        read  prMultiDefMulti
+        write prMultiDefMulti;
+      property cwIDall : Boolean
+        read  prCWIDall
+        write prCWIDall;
+      property cwIDfree : Boolean
+        read  prCWIDfree
+        write prCWIDfree;
+      property prefixString : String
+        read  getPrefix;
+      property suffixString : String
+        read  getSuffix;
   end;
 
 var
@@ -581,6 +609,368 @@ begin
       // Tab 1 Values Callsign Suffix/Prefix
       prPrefix        := 0;
       prSuffix        := 0;
+      setLength(prPrefixList,340);
+      setLength(prSuffixList,13);
+      for i := 0 to 339 do
+      begin
+           prPrefixList[i] := '';
+           if i < 14 then prPrefixList[i]   := '';
+      end;
+      // Stuff the prefix list
+      prPrefixList[0]   := '';
+      prPrefixList[1]   := '1A/';
+      prPrefixList[2]   := '1S/';
+      prPrefixList[3]   := '3A/';
+      prPrefixList[4]   := '3B6/';
+      prPrefixList[5]   := '3B8/';
+      prPrefixList[6]   := '3B9/';
+      prPrefixList[7]   := '3C/';
+      prPrefixList[8]   := '3C0/';
+      prPrefixList[9]   := '3D2/';
+      prPrefixList[10]  := '3D2C/';
+      prPrefixList[11]  := '3D2R/';
+      prPrefixList[12]  := '3DA/';
+      prPrefixList[13]  := '3V/';
+      prPrefixList[14]  := '3W/';
+      prPrefixList[15]  := '3X/';
+      prPrefixList[16]  := '3Y/';
+      prPrefixList[17]  := '3YB/';
+      prPrefixList[18]  := '3YP/';
+      prPrefixList[19]  := '4J/';
+      prPrefixList[20]  := '4L/';
+      prPrefixList[21]  := '4S/';
+      prPrefixList[22]  := '4U1I/';
+      prPrefixList[23]  := '4U1U/';
+      prPrefixList[24]  := '4W/';
+      prPrefixList[25]  := '4X/';
+      prPrefixList[26]  := '5A/';
+      prPrefixList[27]  := '5B/';
+      prPrefixList[28]  := '5H/';
+      prPrefixList[29]  := '5N/';
+      prPrefixList[30]  := '5R/';
+      prPrefixList[31]  := '5T/';
+      prPrefixList[32]  := '5U/';
+      prPrefixList[33]  := '5V/';
+      prPrefixList[34]  := '5W/';
+      prPrefixList[35]  := '5X/';
+      prPrefixList[36]  := '5Z/';
+      prPrefixList[37]  := '6W/';
+      prPrefixList[38]  := '6Y/';
+      prPrefixList[39]  := '7O/';
+      prPrefixList[40]  := '7P/';
+      prPrefixList[41]  := '7Q/';
+      prPrefixList[42]  := '7X/';
+      prPrefixList[43]  := '8P/';
+      prPrefixList[44]  := '8Q/';
+      prPrefixList[45]  := '8R/';
+      prPrefixList[46]  := '9A/';
+      prPrefixList[47]  := '9G/';
+      prPrefixList[48]  := '9H/';
+      prPrefixList[49]  := '9J/';
+      prPrefixList[50]  := '9K/';
+      prPrefixList[51]  := '9L/';
+      prPrefixList[52]  := '9M2/';
+      prPrefixList[53]  := '9M6/';
+      prPrefixList[54]  := '9N/';
+      prPrefixList[55]  := '9Q/';
+      prPrefixList[56]  := '9U/';
+      prPrefixList[57]  := '9V/';
+      prPrefixList[58]  := '9X/';
+      prPrefixList[59]  := '9Y/';
+      prPrefixList[60]  := 'A2/';
+      prPrefixList[61]  := 'A3/';
+      prPrefixList[62]  := 'A4/';
+      prPrefixList[63]  := 'A5/';
+      prPrefixList[64]  := 'A6/';
+      prPrefixList[65]  := 'A7/';
+      prPrefixList[66]  := 'A9/';
+      prPrefixList[67]  := 'AP/';
+      prPrefixList[68]  := 'BS7/';
+      prPrefixList[69]  := 'BV/';
+      prPrefixList[70]  := 'BV9/';
+      prPrefixList[71]  := 'BY/';
+      prPrefixList[72]  := 'C2/';
+      prPrefixList[73]  := 'C3/';
+      prPrefixList[74]  := 'C5/';
+      prPrefixList[75]  := 'C6/';
+      prPrefixList[76]  := 'C9/';
+      prPrefixList[77]  := 'CE/';
+      prPrefixList[78]  := 'CE0X/';
+      prPrefixList[79]  := 'CE0Y/';
+      prPrefixList[80]  := 'CE0Z/';
+      prPrefixList[81]  := 'CE9/';
+      prPrefixList[82]  := 'CM/';
+      prPrefixList[83]  := 'CN/';
+      prPrefixList[84]  := 'CP/';
+      prPrefixList[85]  := 'CT/';
+      prPrefixList[86]  := 'CT3/';
+      prPrefixList[87]  := 'CU/';
+      prPrefixList[88]  := 'CX/';
+      prPrefixList[89]  := 'CY0/';
+      prPrefixList[90]  := 'CY9/';
+      prPrefixList[91]  := 'D2/';
+      prPrefixList[92]  := 'D4/';
+      prPrefixList[93]  := 'D6/';
+      prPrefixList[94]  := 'DL/';
+      prPrefixList[95]  := 'DU/';
+      prPrefixList[96]  := 'E3/';
+      prPrefixList[97]  := 'E4/';
+      prPrefixList[98]  := 'E5/';
+      prPrefixList[99]  := 'EA/';
+      prPrefixList[100] := 'EA6/';
+      prPrefixList[101] := 'EA8/';
+      prPrefixList[102] := 'EA9/';
+      prPrefixList[103] := 'EI/';
+      prPrefixList[104] := 'EK/';
+      prPrefixList[105] := 'EL/';
+      prPrefixList[106] := 'EP/';
+      prPrefixList[107] := 'ER/';
+      prPrefixList[108] := 'ES/';
+      prPrefixList[109] := 'ET/';
+      prPrefixList[110] := 'EU/';
+      prPrefixList[111] := 'EX/';
+      prPrefixList[112] := 'EY/';
+      prPrefixList[113] := 'EZ/';
+      prPrefixList[114] := 'F/';
+      prPrefixList[115] := 'FG/';
+      prPrefixList[116] := 'FH/';
+      prPrefixList[117] := 'FJ/';
+      prPrefixList[118] := 'FK/';
+      prPrefixList[119] := 'FKC/';
+      prPrefixList[120] := 'FM/';
+      prPrefixList[121] := 'FO/';
+      prPrefixList[122] := 'FOA/';
+      prPrefixList[123] := 'FOC/';
+      prPrefixList[124] := 'FOM/';
+      prPrefixList[125] := 'FP/';
+      prPrefixList[126] := 'FR/';
+      prPrefixList[127] := 'FRG/';
+      prPrefixList[128] := 'FRJ/';
+      prPrefixList[129] := 'FRT/';
+      prPrefixList[130] := 'FT5W/';
+      prPrefixList[131] := 'FT5X/';
+      prPrefixList[132] := 'FT5Z/';
+      prPrefixList[133] := 'FW/';
+      prPrefixList[134] := 'FY/';
+      prPrefixList[135] := 'H4/';
+      prPrefixList[136] := 'H40/';
+      prPrefixList[137] := 'HA/';
+      prPrefixList[138] := 'HB/';
+      prPrefixList[139] := 'HB0/';
+      prPrefixList[140] := 'HC/';
+      prPrefixList[141] := 'HC8/';
+      prPrefixList[142] := 'HH/';
+      prPrefixList[143] := 'HI/';
+      prPrefixList[144] := 'HK/';
+      prPrefixList[145] := 'HK0A/';
+      prPrefixList[146] := 'HK0M/';
+      prPrefixList[147] := 'HL/';
+      prPrefixList[148] := 'HM/';
+      prPrefixList[149] := 'HP/';
+      prPrefixList[150] := 'HR/';
+      prPrefixList[151] := 'HS/';
+      prPrefixList[152] := 'HV/';
+      prPrefixList[153] := 'HZ/';
+      prPrefixList[154] := 'I/';
+      prPrefixList[155] := 'IS/';
+      prPrefixList[156] := 'IS0/';
+      prPrefixList[157] := 'J2/';
+      prPrefixList[158] := 'J3/';
+      prPrefixList[159] := 'J5/';
+      prPrefixList[160] := 'J6/';
+      prPrefixList[161] := 'J7/';
+      prPrefixList[162] := 'J8/';
+      prPrefixList[163] := 'JA/';
+      prPrefixList[164] := 'JDM/';
+      prPrefixList[165] := 'JDO/';
+      prPrefixList[166] := 'JT/';
+      prPrefixList[167] := 'JW/';
+      prPrefixList[168] := 'JX/';
+      prPrefixList[169] := 'JY/';
+      prPrefixList[170] := 'K/';
+      prPrefixList[171] := 'KC4/';
+      prPrefixList[172] := 'KG4/';
+      prPrefixList[173] := 'KH0/';
+      prPrefixList[174] := 'KH1/';
+      prPrefixList[175] := 'KH2/';
+      prPrefixList[176] := 'KH3/';
+      prPrefixList[177] := 'KH4/';
+      prPrefixList[178] := 'KH5/';
+      prPrefixList[179] := 'KH5K/';
+      prPrefixList[180] := 'KH6/';
+      prPrefixList[181] := 'KH7/';
+      prPrefixList[182] := 'KH8/';
+      prPrefixList[183] := 'KH9/';
+      prPrefixList[184] := 'KL/';
+      prPrefixList[185] := 'KP1/';
+      prPrefixList[186] := 'KP2/';
+      prPrefixList[187] := 'KP4/';
+      prPrefixList[188] := 'KP5/';
+      prPrefixList[189] := 'LA/';
+      prPrefixList[190] := 'LU/';
+      prPrefixList[191] := 'LX/';
+      prPrefixList[192] := 'LY/';
+      prPrefixList[193] := 'LZ/';
+      prPrefixList[194] := 'M/';
+      prPrefixList[195] := 'MD/';
+      prPrefixList[196] := 'MI/';
+      prPrefixList[197] := 'MJ/';
+      prPrefixList[198] := 'MM/';
+      prPrefixList[199] := 'MU/';
+      prPrefixList[200] := 'MW/';
+      prPrefixList[201] := 'OA/';
+      prPrefixList[202] := 'OD/';
+      prPrefixList[203] := 'OE/';
+      prPrefixList[204] := 'OH/';
+      prPrefixList[205] := 'OH0/';
+      prPrefixList[206] := 'OJ0/';
+      prPrefixList[207] := 'OK/';
+      prPrefixList[208] := 'OM/';
+      prPrefixList[209] := 'ON/';
+      prPrefixList[210] := 'OX/';
+      prPrefixList[211] := 'OY/';
+      prPrefixList[212] := 'OZ/';
+      prPrefixList[213] := 'P2/';
+      prPrefixList[214] := 'P4/';
+      prPrefixList[215] := 'PA/';
+      prPrefixList[216] := 'PJ2/';
+      prPrefixList[217] := 'PJ7/';
+      prPrefixList[218] := 'PT0S/';
+      prPrefixList[219] := 'PY/';
+      prPrefixList[220] := 'PY0F/';
+      prPrefixList[221] := 'PY0T/';
+      prPrefixList[222] := 'PZ/';
+      prPrefixList[223] := 'R1F/';
+      prPrefixList[224] := 'R1M/';
+      prPrefixList[225] := 'S0/';
+      prPrefixList[226] := 'S2/';
+      prPrefixList[227] := 'S5/';
+      prPrefixList[228] := 'S7/';
+      prPrefixList[229] := 'S9/';
+      prPrefixList[230] := 'SM/';
+      prPrefixList[231] := 'SP/';
+      prPrefixList[232] := 'ST/';
+      prPrefixList[233] := 'SU/';
+      prPrefixList[234] := 'SV/';
+      prPrefixList[235] := 'SV5/';
+      prPrefixList[236] := 'SV9/';
+      prPrefixList[237] := 'SVA/';
+      prPrefixList[238] := 'T2/';
+      prPrefixList[239] := 'T30/';
+      prPrefixList[240] := 'T31/';
+      prPrefixList[241] := 'T32/';
+      prPrefixList[242] := 'T33/';
+      prPrefixList[243] := 'T5/';
+      prPrefixList[244] := 'T7/';
+      prPrefixList[245] := 'T8/';
+      prPrefixList[246] := 'T9/';
+      prPrefixList[247] := 'TA/';
+      prPrefixList[248] := 'TF/';
+      prPrefixList[249] := 'TG/';
+      prPrefixList[250] := 'TI/';
+      prPrefixList[251] := 'TI9/';
+      prPrefixList[252] := 'TJ/';
+      prPrefixList[253] := 'TK/';
+      prPrefixList[254] := 'TL/';
+      prPrefixList[255] := 'TN/';
+      prPrefixList[256] := 'TR/';
+      prPrefixList[257] := 'TT/';
+      prPrefixList[258] := 'TU/';
+      prPrefixList[259] := 'TY/';
+      prPrefixList[260] := 'TZ/';
+      prPrefixList[261] := 'UA/';
+      prPrefixList[262] := 'UA2/';
+      prPrefixList[263] := 'UA9/';
+      prPrefixList[264] := 'UK/';
+      prPrefixList[265] := 'UN/';
+      prPrefixList[266] := 'UR/';
+      prPrefixList[267] := 'V2/';
+      prPrefixList[268] := 'V3/';
+      prPrefixList[269] := 'V4/';
+      prPrefixList[270] := 'V5/';
+      prPrefixList[271] := 'V6/';
+      prPrefixList[272] := 'V7/';
+      prPrefixList[273] := 'V8/';
+      prPrefixList[274] := 'VE/';
+      prPrefixList[275] := 'VK/';
+      prPrefixList[276] := 'VK0H/';
+      prPrefixList[277] := 'VK0M/';
+      prPrefixList[278] := 'VK9C/';
+      prPrefixList[279] := 'VK9L/';
+      prPrefixList[280] := 'VK9M/';
+      prPrefixList[281] := 'VK9N/';
+      prPrefixList[282] := 'VK9W/';
+      prPrefixList[283] := 'VK9X/';
+      prPrefixList[284] := 'VP2E/';
+      prPrefixList[285] := 'VP2M/';
+      prPrefixList[286] := 'VP2V/';
+      prPrefixList[287] := 'VP5/';
+      prPrefixList[288] := 'VP6/';
+      prPrefixList[289] := 'VP6D/';
+      prPrefixList[290] := 'VP8/';
+      prPrefixList[291] := 'VP8G/';
+      prPrefixList[292] := 'VP8H/';
+      prPrefixList[293] := 'VP8O/';
+      prPrefixList[294] := 'VP8S/';
+      prPrefixList[295] := 'VP9/';
+      prPrefixList[296] := 'VQ9/';
+      prPrefixList[297] := 'VR/';
+      prPrefixList[298] := 'VU/';
+      prPrefixList[299] := 'VU4/';
+      prPrefixList[300] := 'VU7/';
+      prPrefixList[301] := 'XE/';
+      prPrefixList[302] := 'XF4/';
+      prPrefixList[303] := 'XT/';
+      prPrefixList[304] := 'XU/';
+      prPrefixList[305] := 'XW/';
+      prPrefixList[306] := 'XX9/';
+      prPrefixList[307] := 'XZ/';
+      prPrefixList[308] := 'YA/';
+      prPrefixList[309] := 'YB/';
+      prPrefixList[310] := 'YI/';
+      prPrefixList[311] := 'YJ/';
+      prPrefixList[312] := 'YK/';
+      prPrefixList[313] := 'YL/';
+      prPrefixList[314] := 'YN/';
+      prPrefixList[315] := 'YO/';
+      prPrefixList[316] := 'YS/';
+      prPrefixList[317] := 'YU/';
+      prPrefixList[318] := 'YV/';
+      prPrefixList[319] := 'YV0/';
+      prPrefixList[320] := 'Z2/';
+      prPrefixList[321] := 'Z3/';
+      prPrefixList[322] := 'ZA/';
+      prPrefixList[323] := 'ZB/';
+      prPrefixList[324] := 'ZC4/';
+      prPrefixList[325] := 'ZD7/';
+      prPrefixList[326] := 'ZD8/';
+      prPrefixList[327] := 'ZD9/';
+      prPrefixList[328] := 'ZF/';
+      prPrefixList[329] := 'ZK1N/';
+      prPrefixList[330] := 'ZK1S/';
+      prPrefixList[331] := 'ZK2/';
+      prPrefixList[332] := 'ZK3/';
+      prPrefixList[333] := 'ZL/';
+      prPrefixList[334] := 'ZL7/';
+      prPrefixList[335] := 'ZL8/';
+      prPrefixList[336] := 'ZL9/';
+      prPrefixList[337] := 'ZP/';
+      prPrefixList[338] := 'ZS/';
+      prPrefixList[339] := 'ZS8/';
+      // Stuff the suffix list
+      prSuffixList[0]   := '';
+      prSuffixList[1]   := '/0';
+      prSuffixList[2]   := '/1';
+      prSuffixList[3]   := '/2';
+      prSuffixList[4]   := '/3';
+      prSuffixList[5]   := '/4';
+      prSuffixList[6]   := '/5';
+      prSuffixList[7]   := '/6';
+      prSuffixList[8]   := '/7';
+      prSuffixList[9]   := '/8';
+      prSuffixList[10]  := '/9';
+      prSuffixList[11]  := '/A';
+      prSuffixList[12]  := '/P';
       // Tab 2 Values Sound Device
       prSoundInN      := -1;
       prSoundOutN     := -1;
@@ -661,6 +1051,16 @@ begin
       prDecoderBW     := 0;
       prMultiBW       := 0;
       prQRG           := 0;
+end;
+
+function  TSettings.getPrefix() : String;
+Begin
+     result := prPrefixList[prPrefix];
+end;
+
+function  TSettings.getSuffix() : String;
+begin
+      result := prSuffixList[prSuffix];
 end;
 
 function  TSettings.validateSound() : Boolean;

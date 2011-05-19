@@ -40,23 +40,23 @@ implementation
 
 procedure TForm8.FormCreate(Sender : TObject);
 begin
-  series1 := TLineSeries.Create(srChart);
-  series1.ShowLines := true;
-  series1.ShowPoints := false;
-  series1.Pointer.Style := psCross;
-  series1.Pointer.Brush.Color := clLime;
-  series1.SeriesColor := clLime;
-  series1.Title := 'Short Avg';
-  srchart.AddSeries(series1);
+     series1 := TLineSeries.Create(srChart);
+     series1.ShowLines := true;
+     series1.ShowPoints := false;
+     series1.Pointer.Style := psCross;
+     series1.Pointer.Brush.Color := clLime;
+     series1.SeriesColor := clLime;
+     series1.Title := 'Short Avg';
+     srchart.AddSeries(series1);
 
-  series2 := TLineSeries.Create(srChart);
-  series2.ShowLines := true;
-  series2.ShowPoints := false;
-  series2.Pointer.Style := psDiagCross;
-  series2.Pointer.Brush.Color := clBlue;
-  series2.SeriesColor := clBlue;
-  series2.Title := 'Long Avg';
-  srchart.AddSeries(series2);
+     series2 := TLineSeries.Create(srChart);
+     series2.ShowLines := true;
+     series2.ShowPoints := false;
+     series2.Pointer.Style := psDiagCross;
+     series2.Pointer.Brush.Color := clBlue;
+     series2.SeriesColor := clBlue;
+     series2.Title := 'Long Avg';
+     srchart.AddSeries(series2);
 
   series3 := TLineSeries.Create(srChart);
   series3.ShowLines := true;

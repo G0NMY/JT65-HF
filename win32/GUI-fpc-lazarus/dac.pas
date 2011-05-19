@@ -45,7 +45,7 @@ function mdacCallback(input: inptr; output: outptr; frameCount: Longword;
 Var
    d65txBuffer    : Packed Array[0..661503] of CTypes.cint16;
    d65txBufferPtr : ^CTypes.cint16;
-   d65txBufferIdx : Integer;
+   d65txBufferIdx : CTypes.cuint32;
    dacE, dacT     : LongInt;
    dacErate       : Double;
    dacEavg        : Double;
@@ -53,8 +53,8 @@ Var
    dacTimeStamp   : Integer;
    dacLTimeStamp  : Integer;
    dacSTimeStamp  : TTimeStamp;
-   dacUnderrun    : Integer;
-   dacCount       : Integer;
+   dacUnderrun    : CTypes.cuint64;
+   dacCount       : CTypes.cuint64;
    dacEnTX        : Boolean;
 
 implementation
