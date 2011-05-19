@@ -580,6 +580,15 @@ type
         read  getPrefix;
       property suffixString : String
         read  getSuffix;
+      property txWatchDog : Boolean
+        read  prTXWatchDog
+        write prTXWatchDog;
+      property txWatchDogInt : Integer
+        read  prTXWatchDogInt
+        write prTXWatchDogInt;
+      property saveCSV : Boolean
+        read  prSaveCSV
+        write prSaveCSV;
   end;
 
 var

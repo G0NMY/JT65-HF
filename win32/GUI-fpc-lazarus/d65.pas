@@ -310,8 +310,6 @@ begin
          glmyline := StrAlloc(43);
          glkvs := StrAlloc(22);
 { TODO : FIX THIS }
-         //glwisfile := StrAlloc(Length(globalData.cfgdir+'\wisdom2.dat')+1);
-         //glkvfname := StrAlloc(Length(glkvfname+'\KVASD.DAT')+1);
          gldecOut := TStringList.Create;
          glrawOut := TStringList.Create;
          gldecOut.CaseSensitive := False;
@@ -357,9 +355,6 @@ begin
     diagout.Form3.ListBox1.Clear;
     diagout.Form3.ListBox2.Clear;
     diagout.Form3.ListBox3.Clear;
-    { TODO : FIX THIS }
-    //strPcopy(glkvfname,glkvfname+'\KVASD.DAT');
-    //strPcopy(glwisfile,globalData.cfgdir+'\wisdom2.dat');
     glmline := '                                                                        ';
     glmcall := '            ';
     glmyline := '                                           ';

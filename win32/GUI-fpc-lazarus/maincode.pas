@@ -31,8 +31,7 @@ uses
   DateUtils , encode65 , globalData , ClipBrd , rawdec , guiConfig , verHolder ,
   dispatchobject , PSKReporter , Menus , rbc , log , diagout , synautil ,
   waterfall , d65 , spectrum , about , fileutil , TAGraph , guidedconfig ,
-  valobject , rigobject , portaudio , adc , dac , audiodiag, TASeries, TATypes,
-  TATools, TATransformations;
+  valobject , rigobject , portaudio , adc , dac , audiodiag;
 
 //Const
 //  JT_DLL = 'jt65.dll';
@@ -59,8 +58,6 @@ type
     cbEnRB: TCheckBox;
     cbSpecPal: TComboBox;
     cbSmooth: TCheckBox;
-    Chart1 : TChart ;
-    Chart2 : TChart ;
     chkAFC: TCheckBox;
     chkAutoTxDF: TCheckBox;
     chkEnTX: TCheckBox;
@@ -200,8 +197,6 @@ type
     Waterfall : TWaterfallControl;
     tbBright: TTrackBar;
     tbContrast: TTrackBar;
-    series1 : TLineSeries;
-    series2 : TLineSeries;
     procedure btnDefaultsClick(Sender: TObject);
     procedure btnEngageTxClick(Sender: TObject);
     procedure btnHaltTxClick(Sender: TObject);
@@ -716,6 +711,7 @@ Begin
           sr := 1.0;
           { TODO : Code sample rate factor setting }
           //if tryStrToFloat(cfgvtwo.Form6.edRXSRCor.Text,sr) Then globalData.d65samfacin := StrToFloat(cfgvtwo.Form6.edRXSRCor.Text) else globalData.d65samfacin := 1.0;
+          globalData.d65samfacin := 1.0;
           d65samfacout := 1.0;
           d65.glMouseDF := Form1.spinDecoderCF.Value;
           if d65.glMouseDF > 1000 then d65.glMouseDF := 1000;
@@ -1052,6 +1048,7 @@ procedure TForm1.cbSpecPalChange(Sender: TObject);
 begin
      spectrum.specColorMap := cbSpecPal.ItemIndex;
      guidedconfig.cfg.specColor := cbSpecPal.ItemIndex;
+
 end;
 
 procedure TForm1.WaterFallMouseDown(Sender: TObject; Button: TMouseButton;
@@ -1223,7 +1220,7 @@ begin
      //          PSKReporter.ReporterUninitialize;
      //     end;
      //     diagout.Form3.ListBox1.Items.Add('Releasing waterfall');
-     //     Waterfall.Free;
+          Waterfall.Free;
      //     diagout.Form3.ListBox1.Items.Add('Released waterfall');
      //     diagout.Form3.ListBox1.Items.Add('JT65-HF Shutdown complete.  Exiting.');
      //     For i := 0 to 9 do
@@ -1786,14 +1783,14 @@ begin
      //               form1.edMsg.Text := msgToSend;
      //               if doQSO Then
      //               Begin
-     //                    watchMulti := False;
+     //                    ctrl.watchMulti := False;
      //                    //if cfgvtwo.Form6.cbDisableMultiQSO.Checked And Form1.chkMultiDecode.Checked Then
      //                    //Begin
      //                    //     preTXCF := entTXCF;
      //                    //     preRXCF := entRXCF;
      //                    //     if Form1.chkMultiDecode.Checked Then Form1.chkMultiDecode.Checked := False;
      //                    //     rxCount := 0;
-     //                    //     if cfgvtwo.Form6.cbMultiAutoEnable.Checked Then watchMulti := True else watchMulti := False;
+     //                    //     if cfgvtwo.Form6.cbMultiAutoEnable.Checked Then ctrl.watchMulti := True else ctrl.watchMulti := False;
      //                    //End;
      //                    Form1.chkEnTX.Checked := True;
      //                    Form1.rbGenMsg.Checked := True;
@@ -1872,6 +1869,8 @@ procedure TForm1.rbUseMixChange(Sender: TObject);
 begin
      If rbUseLeft.Checked Then guidedconfig.cfg.useAudioLeft  := True else guidedconfig.cfg.useAudioLeft := False;
      If rbUseRight.Checked Then guidedconfig.cfg.useAudioRight := True else guidedconfig.cfg.useAudioRight := False;
+     if rbUseLeft.Checked Then adc.adcChan := 1;
+     if rbUseRight.Checked Then adc.adcChan:= 2;
 end;
 
 
@@ -1980,6 +1979,8 @@ begin
                if ost.Minute < 10 Then d65.gld65timestamp := d65.gld65timestamp + '0' + IntToStr(ost.Minute) else d65.gld65timestamp := d65.gld65timestamp + IntToStr(ost.Minute);
                d65.gld65timestamp := d65.gld65timestamp + '00';
                sr := 1.0;
+{ TODO : FIX Sample Rate adjuster! }
+               globalData.d65samfacin := 1.0;
                //if tryStrToFloat(cfgvtwo.Form6.edRXSRCor.Text,sr) Then globalData.d65samfacin := StrToFloat(cfgvtwo.Form6.edRXSRCor.Text) else globalData.d65samfacin := 1.0;
                d65samfacout := 1.0;
                d65.glMouseDF := Form1.spinDecoderCF.Value;
@@ -2314,6 +2315,7 @@ begin
      end;
      if not valid then editManQRG.Text := '0.0';
      if valid then guidedconfig.cfg.guiQRG := qrghz;
+     if valid then editManQRG.Text := floatToStr(qrghz/1000);
 end;
 
 procedure TForm1.updateAudio();
@@ -2535,8 +2537,8 @@ Begin
                End;
           End;
      End;
-     //if audioAve1 > 0 Then audioAve1 := (audioAve1+adc.specLevel1) DIV 2 else audioAve1 := adc.specLevel1;
-     //if audioAve2 > 0 Then audioAve2 := (audioAve1+adc.specLevel2) DIV 2 else audioAve2 := adc.specLevel2;
+     if audioAve1 > 0 Then audioAve1 := (audioAve1+adc.specLevel1) DIV 2 else audioAve1 := adc.specLevel1;
+     if audioAve2 > 0 Then audioAve2 := (audioAve1+adc.specLevel2) DIV 2 else audioAve2 := adc.specLevel2;
 End;
 
 procedure TForm1.displayAudio(audioAveL : Integer; audioAveR : Integer);
@@ -2551,10 +2553,10 @@ Begin
      //cfgvtwo.Form6.pbAULeft.Position := audioAveL;
      //cfgvtwo.Form6.pbAURight.Position := audioAveR;
      // Convert S Level to dB for text display
-     //if adc.specLevel1 > 0 Then Form1.rbUseLeft.Caption := 'L ' + IntToStr(Round((audioAveL*0.4)-20)) Else Form1.rbUseLeft.Caption := 'L -20';
-     //if adc.specLevel2 > 0 Then Form1.rbUseRight.Caption := 'R ' + IntToStr(Round((audioAveR*0.4)-20)) Else Form1.rbUseRight.Caption := 'R -20';
-     //if (adc.specLevel1 < 40) Or (adc.specLevel1 > 60) Then rbUseLeft.Font.Color := clRed else rbUseLeft.Font.Color := clBlack;
-     //if (adc.specLevel2 < 40) Or (adc.specLevel2 > 60) Then rbUseRight.Font.Color := clRed else rbUseRight.Font.Color := clBlack;
+     if adc.specLevel1 > 0 Then Form1.rbUseLeft.Caption := 'L ' + IntToStr(Round((audioAveL*0.4)-20)) Else Form1.rbUseLeft.Caption := 'L -20';
+     if adc.specLevel2 > 0 Then Form1.rbUseRight.Caption := 'R ' + IntToStr(Round((audioAveR*0.4)-20)) Else Form1.rbUseRight.Caption := 'R -20';
+     if (adc.specLevel1 < 40) Or (adc.specLevel1 > 60) Then rbUseLeft.Font.Color := clRed else rbUseLeft.Font.Color := clBlack;
+     if (adc.specLevel2 < 40) Or (adc.specLevel2 > 60) Then rbUseRight.Font.Color := clRed else rbUseRight.Font.Color := clBlack;
      //if adc.specLevel1 > 0 Then cfgvtwo.Form6.Label25.Caption := 'L ' + IntToStr(Round((audioAveL*0.4)-20)) Else cfgvtwo.Form6.Label25.Caption := 'L -20';
      //if adc.specLevel2 > 0 Then cfgvtwo.Form6.Label31.Caption := 'R ' + IntToStr(Round((audioAveR*0.4)-20)) Else cfgvtwo.Form6.Label31.Caption := 'R -20';
      //if (adc.specLevel1 < 40) Or (adc.specLevel1 > 60) Then cfgvtwo.Form6.Label25.Font.Color := clRed else cfgvtwo.Form6.Label25.Font.Color := clBlack;
@@ -2820,23 +2822,6 @@ Begin
      if guidedconfig.cfg.PTTMethod = 'OFF' then rig1.noTX := true else rig1.noTX := false;
      rig1.pttlines := guidedconfig.cfg.pttLines;
      rig1.pttport := guidedconfig.cfg.PTTPort;
-     // Setup SR Error monitors
-     series1 := TLineSeries.Create(Chart1);
-     series1.ShowLines := true;
-     series1.ShowPoints := false;
-     series1.Pointer.Style := psCross;
-     series1.Pointer.Brush.Color := clLime;
-     series1.SeriesColor := clLime;
-     //series1.Title := 'Short Avg';
-     Chart1.AddSeries(series1);
-     series2 := TLineSeries.Create(Chart2);
-     series2.ShowLines := true;
-     series2.ShowPoints := false;
-     series2.Pointer.Style := psDiagCross;
-     series2.Pointer.Brush.Color := clBlue;
-     series2.SeriesColor := clBlue;
-     //series2.Title := 'Long Avg';
-     Chart2.AddSeries(series2);
      // Init PA.  If this doesn't work there's no reason to continue.
      audiodiag.Form6.Label5.Visible := True;
      audiodiag.Form6.Show;
@@ -2990,16 +2975,19 @@ Begin
      audiodiag.Form6.Label5.Caption := 'Input/Output sample streams running';
      while (adc.adcCount < 50) and (dac.dacCount < 50) do
      begin
-          audiodiag.Form6.Label5.Caption := 'This window will close shortly, testing streams...';
-          audiodiag.Form6.Label6.Caption := 'ADC Calls:  ' + IntToStr(adc.adcCount) + sLineBreak + sLineBreak +
-                                            'ADC SR:  ' + FloatToStrF(adc.adcErate,ffFixed,0,4) + sLineBreak + sLineBreak +
-                                            'CPU Load ADC:  ' + FloatToStrF(portaudio.Pa_GetStreamCpuLoad(paInStream)*100,ffFixed,0,2) + ' %' + '  DAC:  ' + FloatToStrF(portaudio.Pa_GetStreamCpuLoad(paOutStream)*100,ffFixed,0,2) + ' %' + sLineBreak + sLineBreak +
-                                            'ADC Last Block Time:  ' + FloatToStrF(adc.adcErr,ffFixed,0,2) + ' ms' + sLineBreak + sLineBreak +
-                                            'DAC Calls:  ' + IntToStr(dac.dacCount) + sLineBreak + sLineBreak +
-                                            'DAC SR:  ' + FloatToStrF(dac.dacErate,ffFixed,0,4) + sLineBreak + sLineBreak +
-                                            'DAC Last Block Time:  ' + FloatToStrF(dac.dacErr,ffFixed,0,2) + ' ms' + sLineBreak + sLineBreak +
-                                            'TIME ADC:  ' + FloatToStrF((adc.adcCount*adc.adcErr)/1000,ffFixed,0,2) + '  DAC:  ' + FloatToStrF((dac.dacCount*dac.dacErr)/1000,ffFixed,0,2) + ' Seconds';
-
+          try
+             audiodiag.Form6.Label5.Caption := 'This window will close shortly, testing streams...';
+             audiodiag.Form6.Label6.Caption := 'ADC Calls:  ' + IntToStr(adc.adcCount) + sLineBreak + sLineBreak +
+                                               'ADC SR:  ' + FloatToStrF(adc.adcErate,ffFixed,0,4) + sLineBreak + sLineBreak +
+                                               'CPU Load ADC:  ' + FloatToStrF(portaudio.Pa_GetStreamCpuLoad(paInStream)*100,ffFixed,0,2) + ' %' + '  DAC:  ' + FloatToStrF(portaudio.Pa_GetStreamCpuLoad(paOutStream)*100,ffFixed,0,2) + ' %' + sLineBreak + sLineBreak +
+                                               'ADC Last Block Time:  ' + FloatToStrF(adc.adcErr,ffFixed,0,2) + ' ms' + sLineBreak + sLineBreak +
+                                               'DAC Calls:  ' + IntToStr(dac.dacCount) + sLineBreak + sLineBreak +
+                                               'DAC SR:  ' + FloatToStrF(dac.dacErate,ffFixed,0,4) + sLineBreak + sLineBreak +
+                                               'DAC Last Block Time:  ' + FloatToStrF(dac.dacErr,ffFixed,0,2) + ' ms' + sLineBreak + sLineBreak +
+                                               'TIME ADC:  ' + FloatToStrF((adc.adcCount*adc.adcErr)/1000,ffFixed,0,2) + '  DAC:  ' + FloatToStrF((dac.dacCount*dac.dacErr)/1000,ffFixed,0,2) + ' Seconds';
+          except
+             // Lets do nothing for now...
+          end;
           application.ProcessMessages;
           sleep(200);
      end;
@@ -3033,6 +3021,11 @@ Begin
           showMessage('Running without optimal FFT enabled by user request.');
           ctrl.fftvalid := false;
      End;
+     // Setup pchar strings for wisdom and kv data files
+     d65.glwisfile := StrAlloc(Length(guidedconfig.cfg.cfgdir+'\wisdom2.dat')+1);
+     d65.glkvfname := StrAlloc(Length(guidedconfig.cfg.kvdir+'\KVASD.DAT')+1);
+     strPcopy(d65.glkvfname,guidedconfig.cfg.kvdir+'\KVASD.DAT');
+     strPcopy(d65.glwisfile,guidedconfig.cfg.cfgdir+'\wisdom2.dat');
 
      // Create and initialize TWaterfallControl
      Waterfall := TWaterfallControl.Create(Self);
@@ -3226,7 +3219,7 @@ Begin
      //if tryStrToFloat(cfgvtwo.Form6.edRXSRCor.Text,sr) Then
         //globalData.d65samfacin := StrToFloat(cfgvtwo.Form6.edRXSRCor.Text)
      //else
-        //globalData.d65samfacin := 1.0;
+        globalData.d65samfacin := 1.0;
 End;
 
 procedure TForm1.genTX1();
@@ -3718,41 +3711,39 @@ Begin
                Form1.ProgressBar3.Max := 533504;
                globalData.txInProgress := False;
                ctrl.rxInProgress := True;
-               //adc.d65rxBufferIdx := 0;
+               adc.d65rxBufferIdx := 0;
 
                ctrl.nextAction := 2; // As always, RX assumed to be next.
                inc(rxCount);
-               //if watchMulti and cfgvtwo.Form6.cbMultiAutoEnable.Checked and (rxCount > 2) Then
-               //Begin
-               //     rxCount := 0;
-               //     watchMulti := False;
-               //     Form1.spinDecoderCF.Value := preRXCF;
-               //     Form1.spinTXCF.Value := preTXCF;
-               //     if form1.chkAutoTxDF.Checked Then
-               //     Begin
-               //          form1.spinTXCF.Value := form1.spinDecoderCF.Value;
-               //     End;
-               //     Form1.chkMultiDecode.Checked := True;
-               //End;
+               if ctrl.watchMulti and guidedconfig.cfg.multiRestore and (rxCount > 2) Then
+               Begin
+                    rxCount := 0;
+                    ctrl.watchMulti := False;
+                    Form1.spinDecoderCF.Value := preRXCF;
+                    Form1.spinTXCF.Value := preTXCF;
+                    if form1.chkAutoTxDF.Checked Then
+                    Begin
+                         form1.spinTXCF.Value := form1.spinDecoderCF.Value;
+                    End;
+                    Form1.chkMultiDecode.Checked := True;
+               End;
                if rxCount > 5 then rxCount := 0;
           End
           Else
           Begin
                // Code that only executes while in an active RX cycle.
-               //Form1.ProgressBar3.Position := adc.d65rxBufferIdx;
-
+               Form1.ProgressBar3.Position := adc.d65rxBufferIdx;
                ctrl.rxInProgress := True;
                globalData.txInProgress := False;
-
-               //If adc.d65rxBufferIdx >= 533504 Then
-               //Begin
-               //     // Get End of Period QRG
+               If adc.d65rxBufferIdx >= 533504 Then
+               Begin
+                    // Get End of Period QRG
                //     eopQRG := globalData.gqrg;
-               //     // Switch to decoder action
-               //     thisAction := 4;
-               //     rxInProgress := False;
-               //     globalData.txInProgress := False;
-               //End;
+                    // Switch to decoder action
+                    ctrl.thisAction := 4;
+                    ctrl.rxInProgress := False;
+                    globalData.txInProgress := False;
+               End;
           End;
      End;
      //
@@ -3771,89 +3762,81 @@ Begin
                ctrl.TxDirty := True;
                // generate the txBuffer
                genTX1();
-               //if not cfgvtwo.Form6.cbTXWatchDog.Checked Then txCount := 0;
-               //if txCount < cfgvtwo.Form6.spinTXCounter.Value Then
-               //Begin
-               //     // Flag TX Buffer as valid.
-               //     lastMsg := curMsg;
-               //     // Fire up TX
-               //     if not TxDirty and TxValid Then
-               //     Begin
-               //          // For TX I need to scale progress bar for TX display
-               //          Form1.ProgressBar3.Max := d65nwave;
-               //          rxInProgress := False;
-               //          nextAction := 2;
-               //          //dac.d65txBufferIdx := 0;
-               //
-               //          //dac.d65txBufferPtr := @dac.d65txBuffer[0];
-               //
-               //          rxCount := 0;
-               //          if getPTTMethod() = 'SI5' Then si570Raiseptt();
-               //          if getPTTMethod() = 'HRD' Then hrdRaisePTT();
-               //          if getPTTMethod() = 'ALT' Then altRaisePTT();
-               //          if getPTTMethod() = 'PTT' Then raisePTT();
-               //          globalData.txInProgress := True;
-               //          foo := '';
-               //          if gst.Hour < 10 then foo := '0' + IntToStr(gst.Hour) + ':' else foo := IntToStr(gst.Hour) + ':';
-               //          if gst.Minute < 10 then foo := foo + '0' + IntToStr(gst.Minute) else foo := foo + IntToStr(gst.Minute);
-               //          Form1.addToDisplayTX(lastMsg);
-               //          // Add TX to log if enabled.
-               //          if cfgvtwo.Form6.cbSaveCSV.Checked Then
-               //          Begin
-               //               foo := '"';
-               //               foo := foo + IntToStr(gst.Year) + '-';
-               //               if gst.Month < 10 Then foo := foo + '0' + IntToStr(gst.Month) + '-' else foo := foo + IntToStr(gst.Month) + '-';
-               //               if gst.Day < 10 Then foo := foo + '0' + IntToStr(gst.Day) else foo := foo + IntToStr(gst.Day);
-               //               foo := foo + '"' + ',';
-               //               if gst.Hour < 10 Then foo := foo + '"' + '0' + IntToStr(gst.Hour) + ':' else foo := foo + '"' + IntToStr(gst.Hour) + ':';
-               //               if gst.Minute < 10 Then foo := foo +'0' + IntToStr(gst.Minute) + '"' + ',' else foo := foo + IntToStr(gst.Minute) + '"' +',';
-               //               foo := foo + '"-","-","-","-","T","' + lastMsg + '"';
-               //               for i := 0 to 99 do
-               //               begin
-               //                    if csvEntries[i] = '' Then
-               //                    Begin
-               //                         csvEntries[i] := foo;
-               //                         break;
-               //                    end;
-               //               end;
-               //               form1.saveCSV();
-               //          End;
-               //     End
-               //     Else
-               //     Begin
-               //          form1.chkEnTX.Checked := False;
-               //          thisAction := 2;
-               //          nextAction := 2;
-               //          globalData.txInProgress := False;
-               //          rxInProgress := False;
-               //     End;
-               //End
-               //Else
-               //Begin
-               //     txCount := 0;
-               //     lastTX := '';
-               //     Form1.chkEnTX.Checked := False;
-               //     diagout.Form3.ListBox1.Items.Insert(0,'TX Halted.  Same message sent 15 times.');
-               //     diagout.Form3.Show;
-               //     diagout.Form3.BringToFront;
-               //End;
+               if not guidedconfig.cfg.txWatchDog Then ctrl.txCount := 0;
+               if ctrl.txCount < guidedconfig.cfg.txWatchDogInt Then
+               Begin
+                    // Flag TX Buffer as valid.
+                    lastMsg := curMsg;
+                    // Fire up TX
+                    if not ctrl.TxDirty and ctrl.TxValid Then
+                    Begin
+                         // For TX I need to scale progress bar for TX display
+                         Form1.ProgressBar3.Max := d65nwave;
+                         ctrl.rxInProgress := False;
+                         ctrl.nextAction := 2;
+                         dac.d65txBufferIdx := 0;
+                         dac.d65txBufferPtr := @dac.d65txBuffer[0];
+                         rxCount := 0;
+                         rig1.togglePTT();
+                         globalData.txInProgress := True;
+                         foo := '';
+                         if gst.Hour < 10 then foo := '0' + IntToStr(gst.Hour) + ':' else foo := IntToStr(gst.Hour) + ':';
+                         if gst.Minute < 10 then foo := foo + '0' + IntToStr(gst.Minute) else foo := foo + IntToStr(gst.Minute);
+                         Form1.addToDisplayTX(lastMsg);
+                         // Add TX to log if enabled.
+                         if guidedconfig.cfg.saveCSV Then
+                         Begin
+                              foo := '"';
+                              foo := foo + IntToStr(gst.Year) + '-';
+                              if gst.Month < 10 Then foo := foo + '0' + IntToStr(gst.Month) + '-' else foo := foo + IntToStr(gst.Month) + '-';
+                              if gst.Day < 10 Then foo := foo + '0' + IntToStr(gst.Day) else foo := foo + IntToStr(gst.Day);
+                              foo := foo + '"' + ',';
+                              if gst.Hour < 10 Then foo := foo + '"' + '0' + IntToStr(gst.Hour) + ':' else foo := foo + '"' + IntToStr(gst.Hour) + ':';
+                              if gst.Minute < 10 Then foo := foo +'0' + IntToStr(gst.Minute) + '"' + ',' else foo := foo + IntToStr(gst.Minute) + '"' +',';
+                              foo := foo + '"-","-","-","-","T","' + lastMsg + '"';
+                              for i := 0 to 99 do
+                              begin
+                                   if csvEntries[i] = '' Then
+                                   Begin
+                                        csvEntries[i] := foo;
+                                        break;
+                                   end;
+                              end;
+                              form1.saveCSV();
+                         End;
+                    End
+                    Else
+                    Begin
+                         form1.chkEnTX.Checked := False;
+                         ctrl.thisAction := 2;
+                         ctrl.nextAction := 2;
+                         globalData.txInProgress := False;
+                         ctrl.rxInProgress := False;
+                    End;
+               End
+               Else
+               Begin
+                    ctrl.txCount := 0;
+                    ctrl.lastTX := '';
+                    Form1.chkEnTX.Checked := False;
+                    diagout.Form3.ListBox1.Items.Insert(0,'TX Halted.  Same message sent 15 times.');
+                    diagout.Form3.Show;
+                    diagout.Form3.BringToFront;
+               End;
           End
           Else
           Begin
                globalData.txInProgress := True;
                ctrl.rxInProgress := False;
-               //if (dac.d65txBufferIdx >= d65nwave+11025) Or (dac.d65txBufferIdx >= 661503-(11025 DIV 2)) Then
-               //Begin
-               //     globalData.txInProgress := False;
-               //     if getPTTMethod() = 'SI5' Then si570Lowerptt();
-               //     if getPTTMethod() = 'HRD' Then hrdLowerPTT();
-               //     if getPTTMethod() = 'ALT' Then altLowerPTT();
-               //     if getPTTMethod() = 'PTT' Then lowerPTT();
-               //     thisAction := 5;
-               //     actionSet := False;
-               //     curMsg := '';
-               //End;
-               //Form1.ProgressBar3.Position := dac.d65txBufferIdx;
+               if (dac.d65txBufferIdx >= d65nwave+11025) Or (dac.d65txBufferIdx >= 661503-(11025 DIV 2)) Then
+               Begin
+                    globalData.txInProgress := False;
+                    rig1.togglePTT();
+                    ctrl.thisAction := 5;
+                    ctrl.actionSet := False;
+                    curMsg := '';
+               End;
+               Form1.ProgressBar3.Position := dac.d65txBufferIdx;
           End;
      End;
      //
@@ -3884,91 +3867,85 @@ Begin
                // Generate TX Samples
                ctrl.TxDirty := True;
                genTX2();
-               //if not cfgvtwo.Form6.cbTXWatchDog.Checked Then txCount := 0;
-               //if txCount < cfgvtwo.Form6.spinTXCounter.Value Then
-               //Begin
-               //     // Flag TX Buffer as valid.
-               //     lastMsg := curMsg;
-               //     // Fire up TX
-               //     if not TxDirty and TxValid Then
-               //     Begin
-               //          // For TX I need to scale progress bar for TX display
-               //          Form1.ProgressBar3.Max := 538624;
-               //          rxInProgress := False;
-               //          nextAction := 2;
-               //          //dac.d65txBufferIdx := 0;
-               //
-               //          //dac.d65txBufferPtr := @dac.d65txBuffer[0];
-               //
-               //          rxCount := 0;
-               //          if getPTTMethod() = 'SI5' Then si570Raiseptt();
-               //          if getPTTMethod() = 'HRD' Then hrdRaisePTT();
-               //          if getPTTMethod() = 'ALT' Then altRaisePTT();
-               //          if getPTTMethod() = 'PTT' Then raisePTT();
-               //          globalData.txInProgress := True;
-               //          foo := '';
-               //          if gst.Hour < 10 then foo := '0' + IntToStr(gst.Hour) + ':' else foo := IntToStr(gst.Hour) + ':';
-               //          if gst.Minute < 10 then foo := foo + '0' + IntToStr(gst.Minute) else foo := foo + IntToStr(gst.Minute);
-               //          form1.addToDisplayTX(lastMsg);
-               //          // Add TX to log if enabled.
-               //          if cfgvtwo.Form6.cbSaveCSV.Checked Then
-               //          Begin
-               //               foo := '"';
-               //               foo := foo + IntToStr(gst.Year) + '-';
-               //               if gst.Month < 10 Then foo := foo + '0' + IntToStr(gst.Month) + '-' else foo := foo + IntToStr(gst.Month) + '-';
-               //               if gst.Day < 10 Then foo := foo + '0' + IntToStr(gst.Day) else foo := foo + IntToStr(gst.Day);
-               //               foo := foo + '"' + ',';
-               //               if gst.Hour < 10 Then foo := foo + '"' + '0' + IntToStr(gst.Hour) + ':' else foo := foo + '"' + IntToStr(gst.Hour) + ':';
-               //               if gst.Minute < 10 Then foo := foo +'0' + IntToStr(gst.Minute) + '"' + ',' else foo := foo + IntToStr(gst.Minute) + '"' +',';
-               //               foo := foo + '"-","-","-","-","T","' + lastMsg + '"';
-               //               for i := 0 to 99 do
-               //               begin
-               //                    if csvEntries[i] = '' Then
-               //                    Begin
-               //                         csvEntries[i] := foo;
-               //                         break;
-               //                    end;
-               //               end;
-               //               form1.saveCSV();
-               //          End;
-               //     End
-               //     Else
-               //     Begin
-               //          form1.chkEnTX.Checked := False;
-               //          thisAction := 2;
-               //          nextAction := 2;
-               //          globalData.txInProgress := False;
-               //          rxInProgress := False;
-               //     End;
-               //End
-               //Else
-               //Begin
-               //     txCount := 0;
-               //     lastTX := '';
-               //     Form1.chkEnTX.Checked := False;
-               //     diagout.Form3.ListBox1.Items.Insert(0,'TX Halted.  Same message sent 15 times.');
-               //     diagout.Form3.Show;
-               //     diagout.Form3.BringToFront;
-               //End;
+               if not guidedconfig.cfg.txWatchDog Then ctrl.txCount := 0;
+               if ctrl.txCount < guidedconfig.cfg.txWatchDogInt Then
+               Begin
+                    // Flag TX Buffer as valid.
+                    lastMsg := curMsg;
+                    // Fire up TX
+                    if not ctrl.TxDirty and ctrl.TxValid Then
+                    Begin
+                         // For TX I need to scale progress bar for TX display
+                         Form1.ProgressBar3.Max := 538624;
+                         ctrl.rxInProgress := False;
+                         ctrl.nextAction := 2;
+                         dac.d65txBufferIdx := 0;
+
+                         dac.d65txBufferPtr := @dac.d65txBuffer[0];
+
+                         rxCount := 0;
+                         rig1.togglePTT();
+                         globalData.txInProgress := True;
+                         foo := '';
+                         if gst.Hour < 10 then foo := '0' + IntToStr(gst.Hour) + ':' else foo := IntToStr(gst.Hour) + ':';
+                         if gst.Minute < 10 then foo := foo + '0' + IntToStr(gst.Minute) else foo := foo + IntToStr(gst.Minute);
+                         form1.addToDisplayTX(lastMsg);
+                         // Add TX to log if enabled.
+                         if guidedconfig.cfg.saveCSV Then
+                         Begin
+                              foo := '"';
+                              foo := foo + IntToStr(gst.Year) + '-';
+                              if gst.Month < 10 Then foo := foo + '0' + IntToStr(gst.Month) + '-' else foo := foo + IntToStr(gst.Month) + '-';
+                              if gst.Day < 10 Then foo := foo + '0' + IntToStr(gst.Day) else foo := foo + IntToStr(gst.Day);
+                              foo := foo + '"' + ',';
+                              if gst.Hour < 10 Then foo := foo + '"' + '0' + IntToStr(gst.Hour) + ':' else foo := foo + '"' + IntToStr(gst.Hour) + ':';
+                              if gst.Minute < 10 Then foo := foo +'0' + IntToStr(gst.Minute) + '"' + ',' else foo := foo + IntToStr(gst.Minute) + '"' +',';
+                              foo := foo + '"-","-","-","-","T","' + lastMsg + '"';
+                              for i := 0 to 99 do
+                              begin
+                                   if csvEntries[i] = '' Then
+                                   Begin
+                                        csvEntries[i] := foo;
+                                        break;
+                                   end;
+                              end;
+                              form1.saveCSV();
+                         End;
+                    End
+                    Else
+                    Begin
+                         form1.chkEnTX.Checked := False;
+                         ctrl.thisAction := 2;
+                         ctrl.nextAction := 2;
+                         globalData.txInProgress := False;
+                         ctrl.rxInProgress := False;
+                    End;
+               End
+               Else
+               Begin
+                    ctrl.txCount := 0;
+                    ctrl.lastTX := '';
+                    Form1.chkEnTX.Checked := False;
+                    diagout.Form3.ListBox1.Items.Insert(0,'TX Halted.  Same message sent 15 times.');
+                    diagout.Form3.Show;
+                    diagout.Form3.BringToFront;
+               End;
           End
           Else
           Begin
                // Continuing a late sequence TX
                globalData.txInProgress := True;
                ctrl.rxInProgress := False;
-               //if (dac.d65txBufferIdx >= d65nwave+11025) Or (dac.d65txBufferIdx >= 661503-(11025 DIV 2)) Or (thisSecond > 48) Then
-               //Begin
-               //     // I have a full TX cycle when d65txBufferIdx >= 538624 or thisSecond > 48
-               //     if getPTTMethod() = 'SI5' Then si570Lowerptt();
-               //     if getPTTMethod() = 'HRD' Then hrdLowerPTT();
-               //     if getPTTMethod() = 'ALT' Then altLowerPTT();
-               //     if getPTTMethod() = 'PTT' Then lowerPTT();
-               //     actionSet := False;
-               //     thisAction := 5;
-               //     globalData.txInProgress := False;
-               //     curMsg := '';
-               //End;
-               //Form1.ProgressBar3.Position := dac.d65txBufferIdx;
+               if (dac.d65txBufferIdx >= d65nwave+11025) Or (dac.d65txBufferIdx >= 661503-(11025 DIV 2)) Or (ctrl.thisSecond > 48) Then
+               Begin
+                    // I have a full TX cycle when d65txBufferIdx >= 538624 or thisSecond > 48
+                    rig1.togglePTT();
+                    ctrl.actionSet := False;
+                    ctrl.thisAction := 5;
+                    globalData.txInProgress := False;
+                    curMsg := '';
+               End;
+               Form1.ProgressBar3.Position := dac.d65txBufferIdx;
           End;
      End;
 End;
@@ -4348,13 +4325,13 @@ Var
    i    : Integer;
 Begin
      myCallCheck();
-     // Refresh audio level display
-     if not ctrl.primed then updateAudio();
      // Update spectrum display.
      if not globalData.txInProgress and not ctrl.primed and not globalData.spectrumComputing65 and not d65.glinProg Then
      Begin
           If globalData.specNewSpec65 Then Waterfall.Repaint;
      End;
+     // Refresh audio level display
+     if not ctrl.primed then updateAudio();
      // Update RX/TX SR Display
      if not ctrl.primed Then updateSR();
      // Determine TX Buffer to use
@@ -4590,10 +4567,7 @@ initialization
   sLevel2 := 0;
   sLevelM := 0;
   smeterIdx := 0;
-  //adc.adcSpecCount := 0;
-
-  //adc.adcChan := 1;
-
+  adc.adcSpecCount := 0;
   globalData.specNewSpec65 := False;
   ctrl.primed       := False; // This is part of the time sync code.
   ctrl.txPeriod     := 0;     // 0 is even and 1 is odd minutes

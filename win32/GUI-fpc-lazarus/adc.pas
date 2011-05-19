@@ -137,12 +137,12 @@ function sadcCallback(input: inptr; output: outptr; frameCount: Longword;
                        statusFlags: TPaStreamCallbackFlags;
                        inputDevice: Pointer): Integer; cdecl;
 Var
-   i               : Integer;
-   tempInt1        : smallint;
-   tempInt2        : smallint;
-   tmpFloat        : single;
-   dLGain, dRGain  : single;
-   localIdx        : Integer;
+   i              : Integer;
+   tempInt1       : smallint;
+   tempInt2       : smallint;
+   tmpFloat       : single;
+   dLGain, dRGain : single;
+   localIdx       : Integer;
 Begin
      dlGain := 1.0;
      drGain := 1.0;

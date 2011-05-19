@@ -747,6 +747,7 @@ object Form7: TForm7
         Font.Name = 'Arial'
         Font.Style = [fsBold]
         ItemHeight = 19
+        ItemIndex = 0
         Items.Strings = (
           ''
           '/0'
