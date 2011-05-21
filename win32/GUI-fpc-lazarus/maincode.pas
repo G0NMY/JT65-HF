@@ -673,7 +673,7 @@ Var
 Begin
      if not d65.glinprog Then
      Begin
-          //if FileExists(d65.gld65kvfname) Then DeleteFileUTF8(d65.gld65kvfname);
+          if FileExists(d65.gld65kvfname) Then DeleteFileUTF8(d65.gld65kvfname);
           if not guidedconfig.cfg.useOptFFT Then
           Begin
                d65.glfftFWisdom := 0;
@@ -2651,7 +2651,7 @@ Begin
      d65.gld65kvfname  := guidedconfig.cfg.kvdir + '\KVASD.DAT';
      d65.gld65kvpath   := guidedconfig.cfg.kvdir;
      d65.gld65wisfname := guidedconfig.cfg.cfgdir + '\wisdom2.dat';
-     //if FileExists(d65.gld65kvfname) Then DeleteFileUTF8(d65.gld65kvfname);
+     if FileExists(d65.gld65kvfname) Then DeleteFileUTF8(d65.gld65kvfname);
      if not directoryExists(guidedconfig.cfg.srcDir) Then createDir(guidedconfig.cfg.srcDir);
      if not directoryExists(guidedconfig.cfg.logdir) Then createDir(guidedconfig.cfg.logdir);
      if not directoryExists(guidedconfig.cfg.cfgdir) Then createDir(guidedconfig.cfg.cfgdir);

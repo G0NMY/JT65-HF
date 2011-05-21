@@ -344,6 +344,7 @@ Var
    bins                          : Array[0..100] Of CTypes.cint;
    //filtLow, filtHi               : CTypes.cfloat;
    passcount, passtest, binspace : CTypes.cint;
+   kverror                       : Integer;
 begin
      glinprog := True;
      gld65HaveDecodes := False;
@@ -1099,6 +1100,16 @@ begin
                                                  end;
                                                  if FileExists(gld65kvfname) Then DeleteFile(gld65kvfname);
                                             end;
+                                            kverror := 0;
+                                            while fileExists(gld65kvfname) do
+                                            begin
+                                                 inc(kverror);
+                                                 deleteFile(gld65kvfname);
+                                                 if kverror > 1000 then
+                                                 begin
+                                                      break;
+                                                 end;
+                                            end;
                                        end;
                                   end;
                              end;
@@ -1427,6 +1438,18 @@ begin
     glsort1.Clear;
     glinprog := False;
     glnd65FirstRun := False;
+    kverror := 0;
+    while FileExists(gld65kvfname) do
+    Begin
+         // ERROR ERROR ERROR
+         deleteFile(gld65kvfname);
+         inc(kverror);
+         sleep(10);
+         if kverror > 25 then
+         begin
+              foo := 'error!';
+         end;
+    end;
 End;
 end.
 
