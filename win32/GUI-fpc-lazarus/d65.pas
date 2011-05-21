@@ -343,7 +343,6 @@ Var
    dtxa                          : Array[0..254] Of CTypes.cfloat;
    bins                          : Array[0..100] Of CTypes.cint;
    //filtLow, filtHi               : CTypes.cfloat;
-   kverr                         : CTypes.cuint;
    passcount, passtest, binspace : CTypes.cint;
 begin
      glinprog := True;
@@ -1098,7 +1097,6 @@ begin
                                                            end;
                                                       end;
                                                  end;
-                                                 kverr := 0;
                                                  if FileExists(gld65kvfname) Then DeleteFile(gld65kvfname);
                                             end;
                                        end;
