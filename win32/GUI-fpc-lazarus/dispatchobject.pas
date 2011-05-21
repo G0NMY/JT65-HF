@@ -64,6 +64,7 @@ type
         prthisTX          : String;
         prlastTX          : String;
         prMyCall          : String;
+        prMyGrid          : String;
 
      public
         Constructor create();
@@ -224,6 +225,9 @@ type
      property myCall : String
         read  prMyCall
         write prMyCall;
+     property myGrid : String
+        read  prMyGrid
+        write prMyGrid;
   end;
 
 implementation
@@ -281,6 +285,7 @@ begin
      prLastTX          := '';
      prThisTX          := '';
      prMyCall          := '';
+     prMyGrid          := '';
 end;
 
 end.

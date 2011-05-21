@@ -409,6 +409,7 @@ type
       function  validateSound() : Boolean;
       function  getPrefix() : String;
       function  getSuffix() : String;
+      function  txAllowed() : Boolean;
 
       property callsign : String
         read  prCallsign
@@ -589,6 +590,19 @@ type
       property saveCSV : Boolean
         read  prSaveCSV
         write prSaveCSV;
+      property cqColor : TColor
+        read  prCQColor
+        write prCQColor;
+      property QSOColor : TColor
+        read  prQSOColor
+        write prQSOColor;
+      property myColor : TColor
+        read  prMyColor
+        write prMyColor;
+      property noColor : Boolean
+        read  prNoColor;
+      property noMultiQSO : Boolean
+        read  prNoMultiQSO;
   end;
 
 var
@@ -1082,6 +1096,16 @@ begin
       result := valid;
 end;
 
+function  TSettings.txAllowed() : Boolean;
+Begin
+      result := false;
+      // PTT Methods VOX COM CAT OFF
+      if prPTTMethod = 'VOX' then result := true;
+      if prPTTMethod = 'COM' then result := true;
+      if prPTTMethod = 'CAT' then result := true;
+      if prPTTMethod = 'OFF' then result := false;
+end;
+
 procedure TForm7.buttonContinue0Click(Sender : TObject);
 var
      svalid, cvalid, rvalid, gvalid : Boolean;
@@ -1217,11 +1241,11 @@ begin
      comboSoundOut.Clear;
      j := length(dsp.adcList);
      k := length(dsp.dacList);
-     for i := 0 to j do
+     for i := 0 to j-1 do
      begin
           if dsp.adcList[i] <> 'NILL' then comboSoundIn.Items.Insert(0,dsp.adcList[i]);
      end;
-     for i := 0 to k do
+     for i := 0 to k-1 do
      begin
           if dsp.dacList[i] <> 'NILL' then comboSoundOut.Items.Insert(0,dsp.dacList[i]);
      end;
@@ -1430,9 +1454,9 @@ begin
      if cbDisableColorCoding.Checked then
      begin
           cfg.prNoColor := true;
-          cfg.prCQColor  := clWhite;
-          cfg.prQSOColor := clWhite;
-          cfg.prMyColor  := clWhite;
+          cfg.prCQColor  := clSilver;
+          cfg.prQSOColor := clSilver;
+          cfg.prMyColor  := clSilver;
      end
      else
      begin

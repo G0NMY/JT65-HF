@@ -22,14 +22,15 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="maincode"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="1"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="2284"/>
-        <CursorPos X="55" Y="2297"/>
+        <TopLine Value="1774"/>
+        <CursorPos X="1" Y="1796"/>
         <UsageCount Value="215"/>
         <Bookmarks Count="2">
           <Item0 X="1" Y="1427" ID="1"/>
-          <Item1 X="105" Y="4188" ID="0"/>
+          <Item1 X="5" Y="1545" ID="0"/>
         </Bookmarks>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
@@ -92,8 +93,8 @@
         <UnitName Value="adc"/>
         <EditorIndex Value="12"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="135"/>
-        <CursorPos X="18" Y="140"/>
+        <TopLine Value="232"/>
+        <CursorPos X="1" Y="256"/>
         <UsageCount Value="215"/>
         <Loaded Value="True"/>
       </Unit7>
@@ -225,7 +226,7 @@
         <Filename Value="waterfall.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="waterfall"/>
-        <EditorIndex Value="29"/>
+        <EditorIndex Value="28"/>
         <WindowIndex Value="0"/>
         <TopLine Value="46"/>
         <CursorPos X="1" Y="74"/>
@@ -315,8 +316,8 @@
         <UnitName Value="guidedconfig"/>
         <EditorIndex Value="7"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="253"/>
-        <CursorPos X="25" Y="269"/>
+        <TopLine Value="584"/>
+        <CursorPos X="28" Y="605"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
@@ -325,11 +326,10 @@
         <Filename Value="valobject.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="valobject"/>
-        <IsVisibleTab Value="True"/>
         <EditorIndex Value="6"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="34"/>
-        <CursorPos X="140" Y="48"/>
+        <TopLine Value="837"/>
+        <CursorPos X="1" Y="857"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
       </Unit29>
@@ -339,8 +339,8 @@
         <UnitName Value="paobject"/>
         <EditorIndex Value="10"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="64"/>
-        <CursorPos X="1" Y="78"/>
+        <TopLine Value="222"/>
+        <CursorPos X="1" Y="236"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
       </Unit30>
@@ -366,7 +366,7 @@
         <WindowIndex Value="0"/>
         <TopLine Value="1"/>
         <CursorPos X="15" Y="12"/>
-        <UsageCount Value="161"/>
+        <UsageCount Value="165"/>
         <Loaded Value="True"/>
       </Unit32>
       <Unit33>
@@ -377,7 +377,7 @@
         <WindowIndex Value="0"/>
         <TopLine Value="488"/>
         <CursorPos X="1" Y="508"/>
-        <UsageCount Value="161"/>
+        <UsageCount Value="165"/>
         <Loaded Value="True"/>
       </Unit33>
       <Unit34>
@@ -388,7 +388,7 @@
         <WindowIndex Value="0"/>
         <TopLine Value="135"/>
         <CursorPos X="30" Y="78"/>
-        <UsageCount Value="156"/>
+        <UsageCount Value="160"/>
         <Loaded Value="True"/>
       </Unit34>
       <Unit35>
@@ -399,7 +399,7 @@
         <WindowIndex Value="0"/>
         <TopLine Value="188"/>
         <CursorPos X="1" Y="211"/>
-        <UsageCount Value="66"/>
+        <UsageCount Value="70"/>
         <Loaded Value="True"/>
       </Unit35>
       <Unit36>
@@ -410,7 +410,7 @@
         <WindowIndex Value="0"/>
         <TopLine Value="133"/>
         <CursorPos X="1" Y="156"/>
-        <UsageCount Value="66"/>
+        <UsageCount Value="70"/>
         <Loaded Value="True"/>
       </Unit36>
       <Unit37>
@@ -423,7 +423,7 @@
         <WindowIndex Value="0"/>
         <TopLine Value="7"/>
         <CursorPos X="88" Y="34"/>
-        <UsageCount Value="65"/>
+        <UsageCount Value="69"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
       </Unit37>
@@ -433,9 +433,9 @@
         <UnitName Value="dispatchobject"/>
         <EditorIndex Value="3"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="110"/>
-        <CursorPos X="25" Y="134"/>
-        <UsageCount Value="47"/>
+        <TopLine Value="263"/>
+        <CursorPos X="30" Y="288"/>
+        <UsageCount Value="51"/>
         <Loaded Value="True"/>
       </Unit38>
     </Units>

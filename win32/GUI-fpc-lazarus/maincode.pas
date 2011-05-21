@@ -1457,359 +1457,360 @@ Var
    entTXCF, entRXCF    : Integer;
    isiglevel           : Integer;
 begin
-     //if itemsIn and config1.canTX Then
-     //Begin
-     //     If Form1.chkMultiDecode.Checked Then
-     //     Begin
-     //          entTXCF := Form1.spinTXCF.Value;
-     //          entRXCF := Form1.spinDecoderCF.Value;
-     //     End;
-     //
-     //     idx := Form1.ListBox1.ItemIndex;
-     //     if idx > -1 Then
-     //     Begin
-     //          // On a double click I need to figure out the form of the message text..
-     //          // CQ CALL GRID, SOMECALL MYCALL SOMEGRID, SOMECALL MYCALL SOMEREPORT,
-     //          // SOMECALL SOMECALL SOMETEXT, SOMETEXT.  Dependingn upon the form I will
-     //          // setup a specific exchange.
-     //          //
-     //          // Need to determine which line clicked and generate appropriate TX msg for it
-     //          // First thing to do is try to determine what message to generate... in general
-     //          // this would be an answer to a CQ or a reply to a station answering my CQ.
-     //          // I can look to see if the double clicked exchange is a CQ CALLSIGN GRID as
-     //          // a hint, then suggest the proper response.  No matter what I think the proper
-     //          // response is I need to at least fill in the Remote callsign and grid fields
-     //          // or just a callsign if no grid available.  I'll start with that.
-     //
-     //          resolved := False;
-     //          doQSO    := False;
-     //          wcount   := 0;
-     //          itxhz    := 0;
-     //
-     //          exchange := Form1.ListBox1.Items[idx];
-     //          txMode := 65;
-     //
-     //          exchange := exchange[28..Length(exchange)];
-     //          exchange := TrimLeft(TrimRight(exchange));
-     //          exchange := DelSpace1(exchange);
-     //
-     //          siglevel := Form1.ListBox1.Items[idx];
-     //          siglevel := siglevel[10..12];
-     //          siglevel := TrimLeft(TrimRight(siglevel));
-     //
-     //          isiglevel := -30;
-     //          if not tryStrToInt(siglevel,isiglevel) Then
-     //          Begin
-     //               isiglevel := -25;
-     //               siglevel := '-25';
-     //          End
-     //          Else
-     //          Begin
-     //               if isiglevel > -1 Then
-     //               Begin
-     //                    isiglevel := -1;
-     //                    siglevel := '-1';
-     //               End;
-     //          End;
-     //          if (isiglevel > -10) and (isiglevel < 0) Then
-     //          Begin
-     //               foo := '-0';
-     //               siglevel := IntToStr(isiglevel);
-     //               foo := foo + siglevel[2];
-     //               siglevel := foo;
-     //          end;
-     //          txhz := Form1.ListBox1.Items[idx];
-     //          txhz := txhz[19..23];
-     //          txhz := TrimLeft(TrimRight(txhz));
-     //          txhz := DelSpace1(txhz);
-     //
-     //          //wcount := WordCount(exchange,parseCallSign.WordDelimiter);
-     //          if wcount = 3 Then
-     //          Begin
-     //               // Since I have three words I can potentially work with this...
-     //               //word1 := ExtractWord(1,exchange,parseCallSign.WordDelimiter);
-     //               //word2 := ExtractWord(2,exchange,parseCallSign.WordDelimiter);
-     //               //word3 := ExtractWord(3,exchange,parseCallSign.WordDelimiter);
-     //               If (word1 = 'CQ') Or (word1 = 'QRZ') Or (word1 = 'CQDX') Then
-     //               Begin
-     //                    If word2 = 'DX' Then
-     //                    Begin
-     //                         If length(word3)> 2 Then
-     //                         begin
-     //                              //if parseCallSign.validateCallsign(word3) Then Form1.edHisCall.Text := word3 Else Form1.edHisCall.Text := '';
-     //                              Form1.edHisGrid.Text := '';
-     //                              resolved := True;
-     //                              answeringCQ := True;
-     //                              doQSO := True;
-     //                              //msgToSend := word3 + ' ' + globalData.fullcall + ' ' + cfgvtwo.Form6.edMyGrid.Text[1..4];
-     //                              ctrl.doCWID := False;
-     //                         end;
-     //                    end
-     //                    else
-     //                    begin
-     //                         if length(word2)>2 Then
-     //                         Begin
-     //                              //If parseCallSign.validateCallsign(word2) Then Form1.edHisCall.Text := word2 Else Form1.edHisCall.Text := '';
-     //                         end
-     //                         else
-     //                         begin
-     //                              Form1.edHisCall.Text := '';
-     //                         end;
-     //                         if length(word3)>3 Then
-     //                         Begin
-     //                              //If parseCallSign.isGrid(word3) Then Form1.edHisGrid.Text := word3 Else Form1.edHisGrid.Text := '';
-     //                         end
-     //                         else
-     //                         begin
-     //                              Form1.edHisGrid.Text := '';
-     //                         end;
-     //                         resolved    := True;
-     //                         answeringCQ := True;
-     //                         doQSO       := True;
-     //                         //msgToSend   := word2 + ' ' + globalData.fullcall + ' ' + cfgvtwo.Form6.edMyGrid.Text[1..4];
-     //                         ctrl.doCWID := False;
-     //                    end;
-     //               End
-     //               Else
-     //               Begin
-     //                    If word1 = globalData.fullcall Then
-     //                    Begin
-     //                         // Seems to be a call to me.
-     //                         // word3 could/should be as follows...
-     //                         // Grid, signal report, R signal report, an RRR or a 73
-     //                         resolved := False;
-     //                         //if parseCallSign.isGrid(word3) And not resolved Then
-     //                         //Begin
-     //                         //     // This seems to be a callsign calling me with a grid
-     //                         //     // The usual response would be a signal report back
-     //                         //     If parseCallSign.validateCallsign(word2) Then Form1.edHisCall.Text := word2 Else Form1.edHisCall.Text := '';
-     //                         //     If parseCallSign.isGrid(word3) Then Form1.edHisGrid.Text := word3 Else Form1.edHisGrid.Text := '';
-     //                         //     resolved    := True;
-     //                         //     answeringCQ := False;
-     //                         //     doQSO       := True;
-     //                         //     msgToSend := word2 + ' ' + globalData.fullcall + ' ' + siglevel;
-     //                         //     ctrl.doCWID := False;
-     //                         //End;
-     //                         if (word3[1] = '-') And not resolved Then
-     //                         Begin
-     //                              // This seems an -## signal report
-     //                              // The usual response would be an R-##
-     //                              //If parseCallSign.validateCallsign(word2) Then Form1.edHisCall.Text := word2 Else Form1.edHisCall.Text := '';
-     //                              resolved    := True;
-     //                              answeringCQ := False;
-     //                              doQSO       := True;
-     //                              msgToSend := word2 + ' ' + globalData.fullcall + ' R' + siglevel;
-     //                              ctrl.doCWID := False;
-     //                         End;
-     //                         if (word3[1..2] = 'R-') And not resolved Then
-     //                         Begin
-     //                              // This seems an R-## response to my report
-     //                              // The usual response would be an RRR
-     //                              //If parseCallSign.validateCallsign(word2) Then Form1.edHisCall.Text := word2 Else Form1.edHisCall.Text := '';
-     //                              resolved    := True;
-     //                              answeringCQ := False;
-     //                              doQSO       := True;
-     //                              msgToSend := word2 + ' ' + globalData.fullcall + ' RRR';
-     //                              ctrl.doCWID := False;
-     //                         End;
-     //                         if (word3 = 'RRR') And not resolved Then
-     //                         Begin
-     //                              // This is an ack.  The usual response would be 73
-     //                              //If parseCallSign.validateCallsign(word2) Then Form1.edHisCall.Text := word2 Else Form1.edHisCall.Text := '';
-     //                              resolved    := True;
-     //                              answeringCQ := False;
-     //                              doQSO       := True;
-     //                              msgToSend := word2 + ' ' + globalData.fullcall + ' 73';
-     //                              if guidedconfig.cfg.cwIDall or guidedconfig.cfg.cwIDfree Then ctrl.doCWID := True else ctrl.doCWID := False;
-     //                         End;
-     //                         if (word3 = '73') And not resolved Then
-     //                         Begin
-     //                              // The usual response to a 73 is a 73
-     //                              //If parseCallSign.validateCallsign(word2) Then Form1.edHisCall.Text := word2 Else Form1.edHisCall.Text := '';
-     //                              resolved    := True;
-     //                              answeringCQ := False;
-     //                              doQSO       := True;
-     //                              msgToSend := word2 + ' ' + globalData.fullcall + ' 73';
-     //                              if guidedconfig.cfg.cwIDall or guidedconfig.cfg.cwIDfree Then ctrl.doCWID := True else ctrl.doCWID := False;
-     //                         End;
-     //                    End
-     //                    Else
-     //                    Begin
-     //                         // A call to someone else, lets not break into that, but prep to tail in once the existing QSO is complete.
-     //                         //If parseCallSign.validateCallsign(word2) Then Form1.edHisCall.Text := word2 Else Form1.edHisCall.Text := '';
-     //                         //If parseCallSign.isGrid(word3) Then Form1.edHisGrid.Text := word3 Else Form1.edHisGrid.Text := '';
-     //                         If Length(Form1.edHisCall.Text)>1 Then
-     //                         Begin
-     //                              resolved    := True;
-     //                              answeringCQ := False;
-     //                              doQSO       := False;
-     //                              //msgToSend   := word2 + ' ' + globalData.fullcall + ' ' + cfgvtwo.Form6.edMyGrid.Text[1..4];
-     //                              ctrl.doCWID := False;
-     //                         End;
-     //                    End;
-     //               End;
-     //          End;
-     //
-     //          if wcount = 2 Then
-     //          Begin
-     //               // CQ W6CQZ/4, QRZ W6CQZ/4, SOMECALL W6CQZ/4, W6CQZ/4 -22, W6CQZ/4 R-22, W6CQZ/4 73
-     //               // OK... The first three forms are of use.  SOMECALL/SOMESUFFIX Calling CQ, QRZ or
-     //               // another call.  The last 3 are not of use at all... those don't show the callsign
-     //               // of the TX station.
-     //               //word1 := ExtractWord(1,exchange,parseCallSign.WordDelimiter);
-     //               //word2 := ExtractWord(2,exchange,parseCallSign.WordDelimiter);
-     //               If (word1='QRZ') or (word1='CQ') Then
-     //               Begin
-     //                    //If parseCallSign.validateCallsign(word2) Then
-     //                    //Begin
-     //                    //     Form1.edHisCall.Text := word2;
-     //                    //     Form1.edHisGrid.Text := '';
-     //                    //     msgToSend := word2 + ' ' + globalData.fullcall;
-     //                    //     resolved := True;
-     //                    //     doQSO       := True;
-     //                    //     answeringCQ := True;
-     //                    //     ctrl.doCWID := False;
-     //                    //end
-     //                    //else
-     //                    //begin
-     //                    //     resolved := False;
-     //                    //     exchange := '';
-     //                    //end;
-     //               End
-     //               Else
-     //               Begin
-     //                    exchange := '';
-     //                    resolved := False;
-     //               End;
-     //               // Now looking for my callsign with -##, R-##, RRR or 73
-     //               if not resolved then
-     //               Begin
-     //                    If word1=globalData.fullCall Then
-     //                    Begin
-     //                         //If parseCallSign.validateCallsign(word2) Then
-     //                         //Begin
-     //                         //     Form1.edHisCall.Text := word2;
-     //                         //     msgToSend := word2 + ' ' + siglevel;
-     //                         //     resolved := True;
-     //                         //     ctrl.doCWID := False;
-     //                         //End
-     //                         //Else
-     //                         //Begin
-     //                         //     resolved := False;
-     //                         //End;
-     //                         if not resolved then
-     //                         Begin
-     //                              if word2 = 'RRR'Then
-     //                              Begin
-     //                                   msgToSend := edHisCall.Text + ' 73';
-     //                                   Resolved := True;
-     //                                   doQSO       := True;
-     //                                   if guidedconfig.cfg.cwIDall or guidedconfig.cfg.cwIDfree Then ctrl.doCWID := True else ctrl.doCWID := False;
-     //                              End
-     //                              Else
-     //                              Begin
-     //                                   resolved := False;
-     //                              End;
-     //                         End;
-     //                         if not resolved Then
-     //                         Begin
-     //                              if word2[1] = '-' Then
-     //                              Begin
-     //                                   msgToSend := edHisCall.Text + ' R' + siglevel;
-     //                                   resolved := True;
-     //                                   doQSO       := True;
-     //                                   ctrl.doCWID := False;
-     //                              End
-     //                              Else
-     //                              Begin
-     //                                   resolved := False;
-     //                              End;
-     //                         End;
-     //                         If not resolved Then
-     //                         Begin
-     //                              if word2[1..2] = 'R-' Then
-     //                              Begin
-     //                                   msgToSend := edHisCall.Text + ' RRR';
-     //                                   resolved := True;
-     //                                   doQSO       := True;
-     //                                   ctrl.doCWID := False;
-     //                              End
-     //                              Else
-     //                              Begin
-     //                                   resolved := False;
-     //                              End;
-     //                         End;
-     //                    End
-     //                    Else
-     //                    Begin
-     //                         resolved := False;
-     //                    End;
-     //               End;
-     //          End;
-     //
-     //          If (wcount < 2) Or (wcount > 3) Then
-     //          Begin
-     //               exchange := '';
-     //               resolved := False;
-     //          End;
-     //
-     //          If resolved Then
-     //          Begin
-     //               form1.edSigRep.Text := siglevel;
-     //               if TryStrToInt(txhz, itxhz) Then
-     //               Begin
-     //                    itxhz := StrToInt(txhz);
-     //                    if form1.chkAutoTxDF.Checked then form1.spinTXCF.Value := itxhz;
-     //                    form1.spinDecoderCF.value := itxhz;
-     //               End;
-     //               srxp := Form1.ListBox1.Items[idx];
-     //               srxp := srxp[1..5];
-     //               srxp := TrimLeft(TrimRight(srxp));
-     //               srxp := DelSpace1(srxp);
-     //               srxp := srxp[4..5];
-     //               irxp := StrToInt(srxp);
-     //               itxp := irxp+1;
-     //               if itxp = 60 Then itxp := 0;
-     //               if Odd(itxp) Then
-     //               Begin
-     //                    Form1.rbTX1.Checked := False;
-     //                    Form1.rbTX2.Checked := True;
-     //               End
-     //               Else
-     //               Begin
-     //                    Form1.rbTX2.Checked := False;
-     //                    Form1.rbTX1.Checked := True;
-     //               End;
-     //               form1.edMsg.Text := msgToSend;
-     //               if doQSO Then
-     //               Begin
-     //                    ctrl.watchMulti := False;
-     //                    //if cfgvtwo.Form6.cbDisableMultiQSO.Checked And Form1.chkMultiDecode.Checked Then
-     //                    //Begin
-     //                    //     preTXCF := entTXCF;
-     //                    //     preRXCF := entRXCF;
-     //                    //     if Form1.chkMultiDecode.Checked Then Form1.chkMultiDecode.Checked := False;
-     //                    //     rxCount := 0;
-     //                    //     if cfgvtwo.Form6.cbMultiAutoEnable.Checked Then ctrl.watchMulti := True else ctrl.watchMulti := False;
-     //                    //End;
-     //                    Form1.chkEnTX.Checked := True;
-     //                    Form1.rbGenMsg.Checked := True;
-     //                    Form1.rbGenMsg.Font.Color := clRed;
-     //                    Form1.rbFreeMsg.Font.Color  := clBlack;
-     //                    useBuffer := 0;
-     //                    ss := '';
-     //                    if gst.Hour < 10 Then ss := '0' + IntToStr(gst.Hour) else ss := ss + IntToStr(gst.Hour);
-     //                    if gst.Minute < 10 Then ss := ss + '0' + IntToStr(gst.Minute) else ss := ss + IntToStr(gst.Minute);
-     //                    qsoSTime := ss;
-     //                    ss := '';
-     //                    ss := IntToStr(gst.Year);
-     //                    if gst.Month < 10 Then ss := ss + '0' + IntToStr(gst.Month) else ss := ss + IntToStr(gst.Month);
-     //                    if gst.Day < 10 Then ss := ss + '0' + IntToStr(gst.Day) else ss := ss + IntToStr(gst.Day);
-     //                    qsoSDate := ss;
-     //               End;
-     //          End;
-     //     End;
-     //end;
+     //if itemsIn and guidedconfig.cfg.txAllowed() Then
+     if ctrl.itemsIn Then
+     Begin
+          If Form1.chkMultiDecode.Checked Then
+          Begin
+               entTXCF := Form1.spinTXCF.Value;
+               entRXCF := Form1.spinDecoderCF.Value;
+          End;
+
+          idx := Form1.ListBox1.ItemIndex;
+          if idx > -1 Then
+          Begin
+               // On a double click I need to figure out the form of the message text..
+               // CQ CALL GRID, SOMECALL MYCALL SOMEGRID, SOMECALL MYCALL SOMEREPORT,
+               // SOMECALL SOMECALL SOMETEXT, SOMETEXT.  Dependingn upon the form I will
+               // setup a specific exchange.
+               //
+               // Need to determine which line clicked and generate appropriate TX msg for it
+               // First thing to do is try to determine what message to generate... in general
+               // this would be an answer to a CQ or a reply to a station answering my CQ.
+               // I can look to see if the double clicked exchange is a CQ CALLSIGN GRID as
+               // a hint, then suggest the proper response.  No matter what I think the proper
+               // response is I need to at least fill in the Remote callsign and grid fields
+               // or just a callsign if no grid available.  I'll start with that.
+
+               resolved := False;
+               doQSO    := False;
+               wcount   := 0;
+               itxhz    := 0;
+
+               exchange := Form1.ListBox1.Items[idx];
+               ctrl.txMode := 65;
+
+               exchange := exchange[28..Length(exchange)];
+               exchange := TrimLeft(TrimRight(exchange));
+               exchange := DelSpace1(exchange);
+
+               siglevel := Form1.ListBox1.Items[idx];
+               siglevel := siglevel[10..12];
+               siglevel := TrimLeft(TrimRight(siglevel));
+
+               isiglevel := -30;
+               if not tryStrToInt(siglevel,isiglevel) Then
+               Begin
+                    isiglevel := -25;
+                    siglevel := '-25';
+               End
+               Else
+               Begin
+                    if isiglevel > -1 Then
+                    Begin
+                         isiglevel := -1;
+                         siglevel := '-1';
+                    End;
+               End;
+               if (isiglevel > -10) and (isiglevel < 0) Then
+               Begin
+                    foo := '-0';
+                    siglevel := IntToStr(isiglevel);
+                    foo := foo + siglevel[2];
+                    siglevel := foo;
+               end;
+               txhz := Form1.ListBox1.Items[idx];
+               txhz := txhz[19..23];
+               txhz := TrimLeft(TrimRight(txhz));
+               txhz := DelSpace1(txhz);
+
+               wcount := WordCount(exchange,[' ']);
+               if wcount = 3 Then
+               Begin
+                    // Since I have three words I can potentially work with this...
+                    word1 := ExtractWord(1,exchange,[' ']);
+                    word2 := ExtractWord(2,exchange,[' ']);
+                    word3 := ExtractWord(3,exchange,[' ']);
+                    If (word1 = 'CQ') Or (word1 = 'QRZ') Or (word1 = 'CQDX') Then
+                    Begin
+                         If word2 = 'DX' Then
+                         Begin
+                              If length(word3)> 2 Then
+                              begin
+                                   if val1.evalCSign(word3) then Form1.edHisCall.Text := word3 Else Form1.edHisCall.Text := '';
+                                   Form1.edHisGrid.Text := '';
+                                   resolved := True;
+                                   ctrl.answeringCQ := True;
+                                   doQSO := True;
+                                   msgToSend := word3 + ' ' + ctrl.myCall + ' ' + ctrl.myGrid;
+                                   ctrl.doCWID := False;
+                              end;
+                         end
+                         else
+                         begin
+                              if length(word2)>2 Then
+                              Begin
+                                   if val1.evalCSign(word2) then Form1.edHisCall.Text := word2 Else Form1.edHisCall.Text := '';
+                              end
+                              else
+                              begin
+                                   Form1.edHisCall.Text := '';
+                              end;
+                              if length(word3)>3 Then
+                              Begin
+                                   if val1.evalGrid(word3) then edHisGrid.Text := word3 else edHisGrid.text := '';
+                              end
+                              else
+                              begin
+                                   Form1.edHisGrid.Text := '';
+                              end;
+                              resolved    := True;
+                              ctrl.answeringCQ := True;
+                              doQSO       := True;
+                              msgToSend   := word2 + ' ' + ctrl.myCall + ' ' + ctrl.myGrid[1..4];
+                              ctrl.doCWID := False;
+                         end;
+                    End
+                    Else
+                    Begin
+                         If word1 = ctrl.myCall Then
+                         Begin
+                              // Seems to be a call to me.
+                              // word3 could/should be as follows...
+                              // Grid, signal report, R signal report, an RRR or a 73
+                              resolved := False;
+                              if val1.evalGrid(word3) And Not resolved Then
+                              Begin
+                                   // This seems to be a callsign calling me with a grid
+                                   // The usual response would be a signal report back
+                                   If val1.evalCSign(word2) Then Form1.edHisCall.Text := word2 Else Form1.edHisCall.Text := '';
+                                   If val1.evalGrid(word3) Then Form1.edHisGrid.Text := word3 Else Form1.edHisGrid.Text := '';
+                                   resolved    := True;
+                                   ctrl.answeringCQ := False;
+                                   doQSO       := True;
+                                   msgToSend := word2 + ' ' + ctrl.myCall + ' ' + siglevel;
+                                   ctrl.doCWID := False;
+                              End;
+                              if (word3[1] = '-') And not resolved Then
+                              Begin
+                                   // This seems an -## signal report
+                                   // The usual response would be an R-##
+                                   If val1.evalCSign(word2) Then Form1.edHisCall.Text := word2 Else Form1.edHisCall.Text := '';
+                                   resolved    := True;
+                                   ctrl.answeringCQ := False;
+                                   doQSO       := True;
+                                   msgToSend := word2 + ' ' + ctrl.myCall + ' R' + siglevel;
+                                   ctrl.doCWID := False;
+                              End;
+                              if (word3[1..2] = 'R-') And not resolved Then
+                              Begin
+                                   // This seems an R-## response to my report
+                                   // The usual response would be an RRR
+                                   If val1.evalCSign(word2) Then Form1.edHisCall.Text := word2 Else Form1.edHisCall.Text := '';
+                                   resolved    := True;
+                                   ctrl.answeringCQ := False;
+                                   doQSO       := True;
+                                   msgToSend := word2 + ' ' + ctrl.myCall + ' RRR';
+                                   ctrl.doCWID := False;
+                              End;
+                              if (word3 = 'RRR') And not resolved Then
+                              Begin
+                                   // This is an ack.  The usual response would be 73
+                                   If val1.evalCSign(word2) Then Form1.edHisCall.Text := word2 Else Form1.edHisCall.Text := '';
+                                   resolved    := True;
+                                   ctrl.answeringCQ := False;
+                                   doQSO       := True;
+                                   msgToSend := word2 + ' ' + ctrl.myCall + ' 73';
+                                   if guidedconfig.cfg.cwIDall or guidedconfig.cfg.cwIDfree Then ctrl.doCWID := True else ctrl.doCWID := False;
+                              End;
+                              if (word3 = '73') And not resolved Then
+                              Begin
+                                   // The usual response to a 73 is a 73
+                                   If val1.evalCSign(word2) Then Form1.edHisCall.Text := word2 Else Form1.edHisCall.Text := '';
+                                   resolved    := True;
+                                   ctrl.answeringCQ := False;
+                                   doQSO       := True;
+                                   msgToSend := word2 + ' ' + ctrl.myCall + ' 73';
+                                   if guidedconfig.cfg.cwIDall or guidedconfig.cfg.cwIDfree Then ctrl.doCWID := True else ctrl.doCWID := False;
+                              End;
+                         End
+                         Else
+                         Begin
+                              // A call to someone else, lets not break into that, but prep to tail in once the existing QSO is complete.
+                              If val1.evalCSign(word2) Then Form1.edHisCall.Text := word2 Else Form1.edHisCall.Text := '';
+                              If val1.evalGrid(word3) Then Form1.edHisGrid.Text := word3 Else Form1.edHisGrid.Text := '';
+                              If Length(Form1.edHisCall.Text)>1 Then
+                              Begin
+                                   resolved    := True;
+                                   ctrl.answeringCQ := False;
+                                   doQSO       := False;
+                                   msgToSend   := word2 + ' ' + ctrl.myCall + ' ' + ctrl.myGrid[1..4];
+                                   ctrl.doCWID := False;
+                              End;
+                         End;
+                    End;
+               End;
+
+               if wcount = 2 Then
+               Begin
+                    // CQ W6CQZ/4, QRZ W6CQZ/4, SOMECALL W6CQZ/4, W6CQZ/4 -22, W6CQZ/4 R-22, W6CQZ/4 73
+                    // OK... The first three forms are of use.  SOMECALL/SOMESUFFIX Calling CQ, QRZ or
+                    // another call.  The last 3 are not of use at all... those don't show the callsign
+                    // of the TX station.
+                    //word1 := ExtractWord(1,exchange,parseCallSign.WordDelimiter);
+                    //word2 := ExtractWord(2,exchange,parseCallSign.WordDelimiter);
+                    If (word1='QRZ') or (word1='CQ') Then
+                    Begin
+                         If val1.evalCSign(word2) Then
+                         Begin
+                              Form1.edHisCall.Text := word2;
+                              Form1.edHisGrid.Text := '';
+                              msgToSend := word2 + ' ' + ctrl.myCall;
+                              resolved := True;
+                              doQSO       := True;
+                              ctrl.answeringCQ := True;
+                              ctrl.doCWID := False;
+                         end
+                         else
+                         begin
+                              resolved := False;
+                              exchange := '';
+                         end;
+                    End
+                    Else
+                    Begin
+                         exchange := '';
+                         resolved := False;
+                    End;
+                    // Now looking for my callsign with -##, R-##, RRR or 73
+                    if not resolved then
+                    Begin
+                         If word1=ctrl.myCall Then
+                         Begin
+                              If val1.evalCSign(word2) Then
+                              Begin
+                                   Form1.edHisCall.Text := word2;
+                                   msgToSend := word2 + ' ' + siglevel;
+                                   resolved := True;
+                                   ctrl.doCWID := False;
+                              End
+                              Else
+                              Begin
+                                   resolved := False;
+                              End;
+                              if not resolved then
+                              Begin
+                                   if word2 = 'RRR'Then
+                                   Begin
+                                        msgToSend := edHisCall.Text + ' 73';
+                                        Resolved := True;
+                                        doQSO       := True;
+                                        if guidedconfig.cfg.cwIDall or guidedconfig.cfg.cwIDfree Then ctrl.doCWID := True else ctrl.doCWID := False;
+                                   End
+                                   Else
+                                   Begin
+                                        resolved := False;
+                                   End;
+                              End;
+                              if not resolved Then
+                              Begin
+                                   if word2[1] = '-' Then
+                                   Begin
+                                        msgToSend := edHisCall.Text + ' R' + siglevel;
+                                        resolved := True;
+                                        doQSO       := True;
+                                        ctrl.doCWID := False;
+                                   End
+                                   Else
+                                   Begin
+                                        resolved := False;
+                                   End;
+                              End;
+                              If not resolved Then
+                              Begin
+                                   if word2[1..2] = 'R-' Then
+                                   Begin
+                                        msgToSend := edHisCall.Text + ' RRR';
+                                        resolved := True;
+                                        doQSO       := True;
+                                        ctrl.doCWID := False;
+                                   End
+                                   Else
+                                   Begin
+                                        resolved := False;
+                                   End;
+                              End;
+                         End
+                         Else
+                         Begin
+                              resolved := False;
+                         End;
+                    End;
+               End;
+
+               If (wcount < 2) Or (wcount > 3) Then
+               Begin
+                    exchange := '';
+                    resolved := False;
+               End;
+
+               If resolved Then
+               Begin
+                    form1.edSigRep.Text := siglevel;
+                    if TryStrToInt(txhz, itxhz) Then
+                    Begin
+                         itxhz := StrToInt(txhz);
+                         if form1.chkAutoTxDF.Checked then form1.spinTXCF.Value := itxhz;
+                         form1.spinDecoderCF.value := itxhz;
+                    End;
+                    srxp := Form1.ListBox1.Items[idx];
+                    srxp := srxp[1..5];
+                    srxp := TrimLeft(TrimRight(srxp));
+                    srxp := DelSpace1(srxp);
+                    srxp := srxp[4..5];
+                    irxp := StrToInt(srxp);
+                    itxp := irxp+1;
+                    if itxp = 60 Then itxp := 0;
+                    if Odd(itxp) Then
+                    Begin
+                         Form1.rbTX1.Checked := False;
+                         Form1.rbTX2.Checked := True;
+                    End
+                    Else
+                    Begin
+                         Form1.rbTX2.Checked := False;
+                         Form1.rbTX1.Checked := True;
+                    End;
+                    form1.edMsg.Text := msgToSend;
+                    if doQSO Then
+                    Begin
+                         ctrl.watchMulti := False;
+                         if guidedconfig.cfg.noMultiQSO And Form1.chkMultiDecode.Checked Then
+                         Begin
+                              preTXCF := entTXCF;
+                              preRXCF := entRXCF;
+                              if Form1.chkMultiDecode.Checked Then Form1.chkMultiDecode.Checked := False;
+                              rxCount := 0;
+                              if guidedconfig.cfg.multiRestore Then ctrl.watchMulti := True else ctrl.watchMulti := False;
+                         End;
+                         Form1.chkEnTX.Checked := True;
+                         Form1.rbGenMsg.Checked := True;
+                         Form1.rbGenMsg.Font.Color := clRed;
+                         Form1.rbFreeMsg.Font.Color  := clBlack;
+                         ctrl.useBuffer := 0;
+                         ss := '';
+                         if gst.Hour < 10 Then ss := '0' + IntToStr(gst.Hour) else ss := ss + IntToStr(gst.Hour);
+                         if gst.Minute < 10 Then ss := ss + '0' + IntToStr(gst.Minute) else ss := ss + IntToStr(gst.Minute);
+                         qsoSTime := ss;
+                         ss := '';
+                         ss := IntToStr(gst.Year);
+                         if gst.Month < 10 Then ss := ss + '0' + IntToStr(gst.Month) else ss := ss + IntToStr(gst.Month);
+                         if gst.Day < 10 Then ss := ss + '0' + IntToStr(gst.Day) else ss := ss + IntToStr(gst.Day);
+                         qsoSDate := ss;
+                    End;
+               End;
+          End;
+     end;
 end;
 
 procedure TForm1.ListBox1DrawItem(Control: TWinControl; Index: Integer;
@@ -1827,17 +1828,18 @@ begin
      if Index > -1 Then
      Begin
           foo := Form1.ListBox1.Items[Index];
-          //if IsWordPresent('ERROR:', foo, parseCallsign.WordDelimiter) Then lineErr := True;
-          //if IsWordPresent('CQ', foo, parseCallSign.WordDelimiter) Then lineCQ := True;
-          //if IsWordPresent('QRZ', foo, parseCallSign.WordDelimiter) Then lineCQ := True;
-          //if IsWordPresent(globalData.fullcall, foo, parseCallsign.WordDelimiter) Then lineMyCall := True;
+          if IsWordPresent('ERROR:', foo, [' ']) Then lineErr := True;
+          if IsWordPresent('CQ', foo, [' ']) Then lineCQ := True;
+          if IsWordPresent('QRZ', foo,  [' ']) Then lineCQ := True;
+          if IsWordPresent(ctrl.myCall, foo,  [' ']) Then lineMyCall := True;
           myBrush := TBrush.Create;
           with (Control as TListBox).Canvas do
           begin
-               //myColor := cfgvtwo.glqsoColor;
-               //if lineCQ Then myColor := cfgvtwo.glcqColor;
-               //if lineMyCall Then myColor := cfgvtwo.glcallColor;
-               if lineErr Then myColor := clRed;
+               myColor := guidedconfig.cfg.QSOColor;
+               if lineCQ Then myColor := guidedconfig.cfg.cqColor;
+               if lineMyCall Then myColor := guidedconfig.cfg.myColor;
+               if lineErr Then myColor := guidedconfig.cfg.cqColor;
+               if guidedconfig.cfg.noColor then myColor := clSilver;
                myBrush.Style := bsSolid;
                myBrush.Color := myColor;
                Windows.FillRect(handle, ARect, myBrush.Reference.Handle);
@@ -2660,6 +2662,8 @@ Begin
      // This procedure is only executed once at program start
      // Initialize the decoder output listbox, need this here now in case
      // I need to display an error message later in the initializer.
+     timer1.Enabled := false;
+     timer2.Enabled := false;
      Form1.ListBox1.Clear;
      ctrl.firstReport := True;
      ctrl.itemsIn := False;
@@ -2810,6 +2814,7 @@ Begin
      guidedconfig.Form7.saveConfig(fname);
      // This sets the full station callsign prefix callsign suffix (Will be either just callsign or prefix/callsign or callsign/suffix)
      ctrl.myCall := guidedconfig.cfg.getPrefix() + guidedconfig.cfg.callsign + guidedconfig.cfg.getSuffix();
+     ctrl.myGrid := guidedconfig.cfg.grid;
      rig1.rigcontroller := guidedconfig.cfg.CATMethod;
      rig1.pollRig();  // Go ahead and attempt to read the rig and update the main gui
      sleep(100);
