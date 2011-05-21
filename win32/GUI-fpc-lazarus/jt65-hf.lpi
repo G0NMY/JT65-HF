@@ -305,7 +305,7 @@
     </Other>
   </CompilerOptions>
   <Debugging>
-    <Exceptions Count="2">
+    <Exceptions Count="3">
       <Item1>
         <Name Value="EOleSysError"/>
         <Enabled Value="False"/>
@@ -314,6 +314,9 @@
         <Name Value="EConvertError"/>
         <Enabled Value="False"/>
       </Item2>
+      <Item3>
+        <Name Value="EInOutError"/>
+      </Item3>
     </Exceptions>
   </Debugging>
 </CONFIG>

@@ -30,7 +30,7 @@ uses
   StdCtrls , CTypes , StrUtils , Math , ExtCtrls , ComCtrls , Spin , Windows ,
   DateUtils , encode65 , globalData , ClipBrd , rawdec , guiConfig , verHolder ,
   dispatchobject , PSKReporter , Menus , rbc , log , diagout , synautil ,
-  waterfall , d65 , spectrum , about , fileutil , TAGraph , guidedconfig ,
+  waterfall , d65 , spectrum , about , FileUtil , TAGraph , guidedconfig ,
   valobject , rigobject , portaudio , adc , dac , audiodiag;
 
 //Const
@@ -273,7 +273,6 @@ type
     procedure processOncePerSecond(st : TSystemTime);
     procedure oncePerTick();
     procedure displayAudio(audioAveL : Integer; audioAveR : Integer);
-    function getPTTMethod() : String;
     function BuildRemoteString (call, mode, freq, date, time : String) : WideString;
     function BuildRemoteStringGrid (call, mode, freq, grid, date, time : String) : WideString;
     function BuildLocalString (station_callsign, my_gridsquare, programid, programversion, my_antenna : String) : WideString;
@@ -315,42 +314,53 @@ type
   var
      Form1                      : TForm1;
      auOddBuffer, auEvenBuffer  : Packed Array[0..661503] of CTypes.cint16;
-     paInParams, paOutParams    : TPaStreamParameters;
-     ppaInParams, ppaOutParams  : PPaStreamParameters;
-     paResult                   : TPaError;
-     paInStream, paOutStream    : PPaStream;
-     mnlooper, ij               : Integer;
+     paInParams, paOutParams    : TPaStreamParameters;  // Portaudio I/O params
+     ppaInParams, ppaOutParams  : PPaStreamParameters;  // Pointer to I/O params
+     paResult                   : TPaError;             // Result of last PA Call
+     paInStream, paOutStream    : PPaStream;            // Portaudio I/O Streams
+
      decoderThread              : decodeThread;
      rbThread                   : rbcThread;
+
+     pskrStats                  : PSKReporter.REPORTER_STATISTICS;
+     pskrstat                   : Integer;
+
+     mnlooper, ij               : Integer;
      sLevel1, sLevel2, sLevelM  : Integer;
      smeterIdx                  : Integer;
      bStart, bEnd, rxCount      : Integer;
      exchange                   : String;
      msgToSend                  : String;
      siglevel                   : String;
-     dErrLErate, dErrAErate     : Double;
-     dErrError, adError         : Double;
-     adLErate, adAErate         : Double;
-     dErrCount, adCount         : Integer;
+     //dErrLErate, dErrAErate     : Double;
+     //dErrError, adError         : Double;
+     //adLErate, adAErate         : Double;
+     //dErrCount, adCount         : Integer;
      lastMsg, curMsg            : String;
      gst, ost                   : TSYSTEMTIME;
-     rxsrs, txsrs, lastSRerr    : String;
+     //rxsrs, txsrs, lastSRerr    : String;
+
      preTXCF, preRXCF           : Integer;
-     pskrStats                  : PSKReporter.REPORTER_STATISTICS;
+
      audioAve1, audioAve2       : Integer;
-     sopQRG, eopQRG             : Single;
+
+     sopQRG, eopQRG             : Integer;  // Start of period QRG/End of period QRG in Hertz
+
      rbsHeardList               : Array[0..499] Of rbHeard;
      csvEntries                 : Array[0..99] of String;
+
      qsoSTime, qsoETime         : String;
      qsoSDate                   : String;
-     pskrstat                   : Integer;
      rbRunOnce                  : Boolean;
+
      d65samfacout               : CTypes.cdouble;
      d65nwave, d65nmsg          : CTypes.cint;
      d65sendingsh               : CTypes.cint;
+
      d65txmsg                   : PChar;
      cwidMsg                    : PChar;
      d65sending                 : PChar;
+
      rig                        : rigobject.TRadio;
      val                        : valobject.TValidator;
      ctrl                       : dispatchobject.TDispatcher;
@@ -472,14 +482,6 @@ Begin
      GetSystemTime(st);
      result := st;
 End;
-
-function TForm1.getPTTMethod() : String;
-Begin
-     result := '';
-     //if cfgvtwo.Form6.cbUseAltPTT.Checked Then result := 'ALT' else result := 'PTT';
-     //if cfgvtwo.Form6.cbSi570PTT.Checked Then result := 'SI5';
-     //if cfgvtwo.Form6.chkHRDPTT.Checked And cfgvtwo.Form6.chkUseHRD.Checked Then result := 'HRD';
-end;
 
 function TForm1.BuildRemoteString (call, mode, freq, date, time : String) : WideString;
 begin
@@ -671,6 +673,7 @@ Var
 Begin
      if not d65.glinprog Then
      Begin
+          if FileExists(d65.gld65kvfname) Then DeleteFileUTF8(d65.gld65kvfname);
           if not guidedconfig.cfg.useOptFFT Then
           Begin
                d65.glfftFWisdom := 0;
@@ -1153,82 +1156,48 @@ begin
      // GUI elements that are maintained in configuration file have now been updated for saving.
      guidedconfig.Form7.saveConfig(guidedconfig.cfg.cfgdir+'\jt65hf.ini');
      if rig1.pttstate then rig1.togglePTT();
-     //     if globalData.rbLoggedIn Then
-     //     Begin
-     //          diagout.Form3.ListBox1.Items.Add('Closing RB');
-     //          cfgvtwo.glrbcLogout := True;
-     //          sleep(1000);
-     //     end;
-     //     termcount := 0;
-     //     While rbc.glrbActive Do
-     //     Begin
-     //          application.ProcessMessages;
-     //          sleep(1000);
-     //          inc(termcount);
-     //          if termcount > 9 then break;
-     //     end;
-     //     diagout.Form3.ListBox1.Items.Add('Closed RB');
-     //     diagout.Form3.ListBox1.Items.Add('Terminating RB Thread');
-     //     rbThread.Suspend;
-     //     diagout.Form3.ListBox1.Items.Add('Terminated RB Thread');
-     //
-     //     diagout.Form3.ListBox1.Items.Add('Terminating Decoder Thread');
-     //     termcount := 0;
-     //     while d65.glinProg Do
-     //     Begin
-     //          application.ProcessMessages;
-     //          sleep(1000);
-     //          inc(termcount);
-     //          if termcount > 9 then break;
-     //     end;
-          decoderThread.Suspend;
-     //     diagout.Form3.ListBox1.Items.Add('Terminated Decoder Thread');
-     //
-     //     diagout.Form3.ListBox1.Items.Add('Freeing Threads');
-     //     rbThread.Terminate;
-          decoderThread.Terminate;
-     //     if not rbThread.FreeOnTerminate Then rbThread.Free;
-          if not decoderThread.FreeOnTerminate Then decoderThread.Free;
-     //     diagout.Form3.ListBox1.Items.Add('Done');
-
-          //diagout.Form3.ListBox1.Items.Add('Cleaning up Audio Streams');
-          //portAudio.Pa_StopStream(paInStream);
-          //portAudio.Pa_StopStream(paOutStream);
-          //termcount := 0;
-          //while (portAudio.Pa_IsStreamActive(paInStream) > 0) or (portAudio.Pa_IsStreamActive(paOutStream) > 0) Do
-          //Begin
-          //     application.ProcessMessages;
-          //     if portAudio.Pa_IsStreamActive(paInStream) > 0 Then portAudio.Pa_StopStream(paInStream);
-          //     if portAudio.Pa_IsStreamActive(paOutStream) > 0 Then portAudio.Pa_StopStream(paOutStream);
-          //     sleep(1000);
-          //     inc(termcount);
-          //     if termcount > 9 then break;
-          //end;
-          //diagout.Form3.ListBox1.Items.Add('Stopped Audio Streams');
-          //diagout.Form3.ListBox1.Items.Add('Terminating PortAudio');
-          //portaudio.Pa_Terminate();
-          //diagout.Form3.ListBox1.Items.Add('Terminated PortAudio');
-
-     //     if cfgvtwo.Form6.cbUsePSKReporter.Checked Then
-     //     Begin
-     //          diagout.Form3.ListBox1.Items.Add('Cleaning up PSK Reporter Interface');
-     //          PSKReporter.ReporterUninitialize;
-     //          diagout.Form3.ListBox1.Items.Add('Cleaned up PSK Reporter Interface');
-     //     end
-     //     else
-     //     begin
-     //          PSKReporter.ReporterUninitialize;
-     //     end;
-     //     diagout.Form3.ListBox1.Items.Add('Releasing waterfall');
-          Waterfall.Free;
-     //     diagout.Form3.ListBox1.Items.Add('Released waterfall');
-     //     diagout.Form3.ListBox1.Items.Add('JT65-HF Shutdown complete.  Exiting.');
-     //     For i := 0 to 9 do
-     //     begin
-     //          application.ProcessMessages;
-     //          sleep(100);
-     //     end;
-     //End;
+     //if globalData.rbLoggedIn Then
+     //Begin
+     //     cfgvtwo.glrbcLogout := True;
+     //     sleep(100);
+     //end;
+     //termcount := 0;
+     //While rbc.glrbActive Do
+     //Begin
+     //     application.ProcessMessages;
+     //     sleep(100);
+     //     inc(termcount);
+     //     if termcount > 9 then break;
+     //end;
+     //rbThread.Suspend;
+     termcount := 0;
+     while d65.glinProg Do
+     Begin
+          application.ProcessMessages;
+          sleep(100);
+          inc(termcount);
+          if termcount > 9 then break;
+     end;
+     decoderThread.Suspend;
+     //rbThread.Terminate;
+     decoderThread.Terminate;
+     //if not rbThread.FreeOnTerminate Then rbThread.Free;
+     if not decoderThread.FreeOnTerminate Then decoderThread.Free;
+     portAudio.Pa_StopStream(paInStream);
+     portAudio.Pa_StopStream(paOutStream);
+     termcount := 0;
+     while (portAudio.Pa_IsStreamActive(paInStream) > 0) or (portAudio.Pa_IsStreamActive(paOutStream) > 0) Do
+     Begin
+          application.ProcessMessages;
+          if portAudio.Pa_IsStreamActive(paInStream) > 0 Then portAudio.Pa_AbortStream(paInStream);
+          if portAudio.Pa_IsStreamActive(paOutStream) > 0 Then portAudio.Pa_AbortStream(paOutStream);
+          sleep(100);
+          inc(termcount);
+          if termcount > 9 then break;
+     end;
+     portaudio.Pa_Terminate();
+     //if cfgvtwo.Form6.cbUsePSKReporter.Checked Then PSKReporter.ReporterUninitialize;
+     Waterfall.Free;
 end;
 
 procedure Tform1.addToRBC(i , m : Integer);
@@ -1276,7 +1245,7 @@ begin
      //                         rbc.glrbReports[ii].rbCharSync  := d65.gld65decodes[i].dtCharSync;
      //                         rbc.glrbReports[ii].rbDecoded   := d65.gld65decodes[i].dtDecoded;
      //                         rbc.glrbReports[ii].rbDecoder   := d65.gld65decodes[i].dtType;
-     //                         rbc.glrbReports[ii].rbFrequency := FloatToStr(eopQRG/1000);
+     //                         rbc.glrbReports[ii].rbFrequency := IntToStr(eopQRG);
      //                         rbc.glrbReports[ii].rbMode      := m;
      //                         rbc.glrbReports[ii].rbProcessed := False;
      //                         rbc.glrbReports[ii].rbCached    := False;
@@ -1657,8 +1626,8 @@ begin
                     // OK... The first three forms are of use.  SOMECALL/SOMESUFFIX Calling CQ, QRZ or
                     // another call.  The last 3 are not of use at all... those don't show the callsign
                     // of the TX station.
-                    //word1 := ExtractWord(1,exchange,parseCallSign.WordDelimiter);
-                    //word2 := ExtractWord(2,exchange,parseCallSign.WordDelimiter);
+                    word1 := ExtractWord(1,exchange,[' ']);
+                    word2 := ExtractWord(2,exchange,[' ']);
                     If (word1='QRZ') or (word1='CQ') Then
                     Begin
                          If val1.evalCSign(word2) Then
@@ -1875,7 +1844,6 @@ begin
      if rbUseRight.Checked Then adc.adcChan:= 2;
 end;
 
-
 procedure TForm1.spinDecoderCFChange(Sender: TObject);
 begin
      If spinDecoderCF.Value < -1000 then spinDecoderCF.Value := -1000;
@@ -1937,7 +1905,7 @@ begin
      sqrg := FloatToStr(fqrg);
      log.Form2.edLogFrequency.Text := sqrg;
      log.logmycall := ctrl.myCall;
-     //log.logmygrid := cfgvtwo.Form6.edMyGrid.Text;
+     log.logmygrid := ctrl.myGrid;
      log.Form2.Visible := True;
      log.Form2.Show;
      log.Form2.BringToFront;
@@ -2094,8 +2062,7 @@ Begin
           csvstr := csvstr + '"' + foo[1..4] + '-' + foo[5..6] + '-' + foo[7..8] + '"' + ',';
           csvstr := csvstr + '"' + foo[9..10] + ':' + foo[11..12] + '"' + ',';
           // QRG
-{ TODO : FIX THIS }
-          //csvstr := csvstr + '"' + FloatToStr(globalData.gqrg) + '"' + ',';
+          csvstr := csvstr + '"' + IntToStr(guidedconfig.cfg.guiQRG) + '"' + ',';
           // Sync
           if Length(TrimLeft(TrimRight(d65.gld65decodes[i].dtNumSync))) = 1 Then rpt := rpt + ' ' + d65.gld65decodes[i].dtNumSync + ' ';
           if Length(TrimLeft(TrimRight(d65.gld65decodes[i].dtNumSync))) = 2 Then rpt := rpt + d65.gld65decodes[i].dtNumSync + ' ';
@@ -2145,26 +2112,26 @@ Begin
           d65.gld65decodes[i].dtDisplayed := True;
           d65.gld65decodes[i].dtProcessed := True;
           // Save to RX/TX log if user has selected such.
-          //if cfgvtwo.Form6.cbSaveCSV.Checked Then
-          //Begin
-          //     for ii := 0 to 99 do
-          //     begin
-          //          if csvEntries[ii] = '' Then
-          //          begin
-          //               csvEntries[ii] := csvstr;
-          //               break;
-          //          end;
-          //     end;
-          //     form1.saveCSV();
-          //end;
+          if guidedconfig.cfg.saveCSV Then
+          Begin
+               for ii := 0 to 99 do
+               begin
+                    if csvEntries[ii] = '' Then
+                    begin
+                         csvEntries[ii] := csvstr;
+                         break;
+                    end;
+               end;
+               form1.saveCSV();
+          end;
           // Trying to find a signal report value
           wcount := 0;
-          //wcount := WordCount(d65.gld65decodes[i].dtDecoded,parseCallSign.WordDelimiter);
+          wcount := WordCount(d65.gld65decodes[i].dtDecoded,[' ']);
           if wcount = 3 Then
           Begin
-               //word1 := ExtractWord(1,d65.gld65decodes[i].dtDecoded,parseCallSign.WordDelimiter); // CQ or a call sign
-               //word2 := ExtractWord(2,d65.gld65decodes[i].dtDecoded,parseCallSign.WordDelimiter); // call sign
-               //word3 := ExtractWord(3,d65.gld65decodes[i].dtDecoded,parseCallSign.WordDelimiter); // could be grid or report.
+               word1 := ExtractWord(1,d65.gld65decodes[i].dtDecoded,[' ']); // CQ or a call sign
+               word2 := ExtractWord(2,d65.gld65decodes[i].dtDecoded,[' ']); // call sign
+               word3 := ExtractWord(3,d65.gld65decodes[i].dtDecoded,[' ']); // could be grid or report.
           End
           Else
           Begin
@@ -2191,7 +2158,7 @@ Begin
  //              Begin
  //                   tmpDouble1 := -1.0;
  //                   tmpDouble2 := 0;
- //                   if sopQRG > 0.0 Then
+ //                   if sopQRG > 0 Then
  //                   Begin
  //                        tmpDouble1 := sopQRG;
  //                        if tryStrToFloat(TrimLeft(TrimRight(d65.gld65decodes[i].dtDeltaFreq)),tmpDouble2) Then tmpDouble1 := tmpDouble1 + tmpDouble2;
@@ -2552,17 +2519,11 @@ Begin
      // No warning range -10 .. +10 dB or 25 .. 75 sLevel
      Form1.pbAu1.Position := audioAveL;
      Form1.pbAu2.Position := audioAveR;
-     //cfgvtwo.Form6.pbAULeft.Position := audioAveL;
-     //cfgvtwo.Form6.pbAURight.Position := audioAveR;
      // Convert S Level to dB for text display
      if adc.specLevel1 > 0 Then Form1.rbUseLeft.Caption := 'L ' + IntToStr(Round((audioAveL*0.4)-20)) Else Form1.rbUseLeft.Caption := 'L -20';
      if adc.specLevel2 > 0 Then Form1.rbUseRight.Caption := 'R ' + IntToStr(Round((audioAveR*0.4)-20)) Else Form1.rbUseRight.Caption := 'R -20';
      if (adc.specLevel1 < 40) Or (adc.specLevel1 > 60) Then rbUseLeft.Font.Color := clRed else rbUseLeft.Font.Color := clBlack;
      if (adc.specLevel2 < 40) Or (adc.specLevel2 > 60) Then rbUseRight.Font.Color := clRed else rbUseRight.Font.Color := clBlack;
-     //if adc.specLevel1 > 0 Then cfgvtwo.Form6.Label25.Caption := 'L ' + IntToStr(Round((audioAveL*0.4)-20)) Else cfgvtwo.Form6.Label25.Caption := 'L -20';
-     //if adc.specLevel2 > 0 Then cfgvtwo.Form6.Label31.Caption := 'R ' + IntToStr(Round((audioAveR*0.4)-20)) Else cfgvtwo.Form6.Label31.Caption := 'R -20';
-     //if (adc.specLevel1 < 40) Or (adc.specLevel1 > 60) Then cfgvtwo.Form6.Label25.Font.Color := clRed else cfgvtwo.Form6.Label25.Font.Color := clBlack;
-     //if (adc.specLevel2 < 40) Or (adc.specLevel2 > 60) Then cfgvtwo.Form6.Label31.Font.Color := clRed else cfgvtwo.Form6.Label31.Font.Color := clBlack;
 End;
 
 procedure TForm1.updateStatus(i : Integer);
@@ -2617,27 +2578,27 @@ begin
           //If parseCallSign.valQRG(intvar) Then rbc.glrbQRG := Form1.editManQRG.Text else rbc.glrbQRG := '0';
      End;
      // Update form title with rb info.
-     //If cfgvtwo.Form6.cbUseRB.Checked Then
-     //Begin
-     //     foo := 'JT65-HF Version ' + verHolder.verReturn() + '  [RB Enabled, ';
-     //     If cfgvtwo.Form6.cbNoInet.Checked Then foo := foo + ' offline mode.  ' Else foo := foo + ' online mode.  ';
-     //     If cfgvtwo.Form6.cbNoInet.Checked Then
-     //     Begin
-     //          foo := foo + 'QRG = ' + Form1.editManQRG.Text + ' KHz]';
-     //     End
-     //     Else
-     //     Begin
-     //          If globalData.rbLoggedIn Then
-     //             foo := foo + 'Logged In.  QRG = ' + Form1.editManQRG.Text + ' KHz]'
-     //          Else
-     //             foo := foo + 'Not Logged In.  QRG = ' + Form1.editManQRG.Text + ' KHz]';
-     //     End;
-     //     foo := foo + ' [de ' + globalData.fullcall + ']';
-     //End
-     //Else
-     //Begin
-     //     foo := 'JT65-HF Version ' + verHolder.verReturn() + '  [de ' + globalData.fullcall + ']';
-     //End;
+     If guidedconfig.cfg.useRB and not guidedconfig.cfg.noSpotting Then
+     Begin
+          foo := 'JT65-HF Version ' + verHolder.verReturn() + '  [RB Enabled, ';
+          //If cfgvtwo.Form6.cbNoInet.Checked Then foo := foo + ' offline mode.  ' Else foo := foo + ' online mode.  ';
+          //If cfgvtwo.Form6.cbNoInet.Checked Then
+          //Begin
+               //foo := foo + 'QRG = ' + Form1.editManQRG.Text + ' KHz]';
+          //End
+          //Else
+          //Begin
+               If globalData.rbLoggedIn Then
+                  foo := foo + 'Logged In.  QRG = ' + Form1.editManQRG.Text + ' KHz]'
+               Else
+                  foo := foo + 'Not Logged In.  QRG = ' + Form1.editManQRG.Text + ' KHz]';
+          //End;
+          foo := foo + ' [de ' + ctrl.myCall + ']';
+     End
+     Else
+     Begin
+          foo := 'JT65-HF Version ' + verHolder.verReturn() + '  [de ' + ctrl.myCall + ']';
+     End;
      if Form1.Caption <> foo Then Form1.Caption := foo;
      // Try to login the RB if it's marked online but not logged in.
      //If (cfgvtwo.Form6.cbUseRB.Checked) And (not cfgvtwo.Form6.cbNoInet.Checked) And (not globalData.rbLoggedIn) Then cfgvtwo.glrbcLogin := True;
@@ -2658,6 +2619,7 @@ var
    PIDL               : PItemIDList;
    Folder             : array[0..MAX_PATH] of Char;
    lfile              : TextFile;
+   tbol               : Boolean;
 Begin
      // This procedure is only executed once at program start
      // Initialize the decoder output listbox, need this here now in case
@@ -2685,6 +2647,11 @@ Begin
      guidedconfig.cfg.logdir := guidedconfig.cfg.baseDir + '\JT65HF\log';
      guidedconfig.cfg.cfgdir := guidedconfig.cfg.baseDir + '\JT65HF\data';
      guidedconfig.cfg.kvdir  := guidedconfig.cfg.baseDir + '\JT65HF\kvdt';
+     log.adifName := guidedconfig.cfg.logdir + '\JT65HF_ADIFLOG.adi';
+     d65.gld65kvfname  := guidedconfig.cfg.kvdir + '\KVASD.DAT';
+     d65.gld65kvpath   := guidedconfig.cfg.kvdir;
+     d65.gld65wisfname := guidedconfig.cfg.cfgdir + '\wisdom2.dat';
+     if FileExists(d65.gld65kvfname) Then DeleteFileUTF8(d65.gld65kvfname);
      if not directoryExists(guidedconfig.cfg.srcDir) Then createDir(guidedconfig.cfg.srcDir);
      if not directoryExists(guidedconfig.cfg.logdir) Then createDir(guidedconfig.cfg.logdir);
      if not directoryExists(guidedconfig.cfg.cfgdir) Then createDir(guidedconfig.cfg.cfgdir);
@@ -2775,6 +2742,7 @@ Begin
      // At this point configuration has been read (or created and read if needed)
      // All configurable variables now exist in the guidedconfig.cfg object
      // Now set GUI elements to pre-configured values or sane defaults
+     d65.gld65dokv     := guidedconfig.cfg.useKV;
      rbUseLeft.Checked := guidedconfig.cfg.useAudioLeft;
      rbUseMixChange(rbUseLeft);
      rbUseRight.Checked := guidedconfig.cfg.useAudioRight;
@@ -2818,6 +2786,7 @@ Begin
      rig1.rigcontroller := guidedconfig.cfg.CATMethod;
      rig1.pollRig();  // Go ahead and attempt to read the rig and update the main gui
      sleep(100);
+{ TODO : Change this to use QRG validator code! }
      if not (upcase(rig1.rigcontroller) = 'NONE') then editManQRG.Text := floatToStr(rig1.qrg/1000);
      // Setup PTT controller
      rig1.useAltPTT := guidedconfig.cfg.AltPTT;
@@ -2980,21 +2949,17 @@ Begin
      audiodiag.Form6.Label5.Caption := 'Input/Output sample streams running';
      while (adc.adcCount < 50) and (dac.dacCount < 50) do
      begin
-          try
-             audiodiag.Form6.Label5.Caption := 'This window will close shortly, testing streams...';
-             audiodiag.Form6.Label6.Caption := 'ADC Calls:  ' + IntToStr(adc.adcCount) + sLineBreak + sLineBreak +
-                                               'ADC SR:  ' + FloatToStrF(adc.adcErate,ffFixed,0,4) + sLineBreak + sLineBreak +
-                                               'CPU Load ADC:  ' + FloatToStrF(portaudio.Pa_GetStreamCpuLoad(paInStream)*100,ffFixed,0,2) + ' %' + '  DAC:  ' + FloatToStrF(portaudio.Pa_GetStreamCpuLoad(paOutStream)*100,ffFixed,0,2) + ' %' + sLineBreak + sLineBreak +
-                                               'ADC Last Block Time:  ' + FloatToStrF(adc.adcErr,ffFixed,0,2) + ' ms' + sLineBreak + sLineBreak +
-                                               'DAC Calls:  ' + IntToStr(dac.dacCount) + sLineBreak + sLineBreak +
-                                               'DAC SR:  ' + FloatToStrF(dac.dacErate,ffFixed,0,4) + sLineBreak + sLineBreak +
-                                               'DAC Last Block Time:  ' + FloatToStrF(dac.dacErr,ffFixed,0,2) + ' ms' + sLineBreak + sLineBreak +
-                                               'TIME ADC:  ' + FloatToStrF((adc.adcCount*adc.adcErr)/1000,ffFixed,0,2) + '  DAC:  ' + FloatToStrF((dac.dacCount*dac.dacErr)/1000,ffFixed,0,2) + ' Seconds';
-          except
-             // Lets do nothing for now...
-          end;
+          audiodiag.Form6.Label5.Caption := 'This window will close shortly, testing streams...';
+          audiodiag.Form6.Label6.Caption := 'ADC Calls:  ' + IntToStr(adc.adcCount) + sLineBreak + sLineBreak +
+                                            'ADC SR:  ' + FloatToStrF(adc.adcErate,ffFixed,0,4) + sLineBreak + sLineBreak +
+                                            'CPU Load ADC:  ' + FloatToStrF(portaudio.Pa_GetStreamCpuLoad(paInStream)*100,ffFixed,0,2) + ' %' + '  DAC:  ' + FloatToStrF(portaudio.Pa_GetStreamCpuLoad(paOutStream)*100,ffFixed,0,2) + ' %' + sLineBreak + sLineBreak +
+                                            'ADC Last Block Time:  ' + FloatToStrF(adc.adcErr,ffFixed,0,2) + ' ms' + sLineBreak + sLineBreak +
+                                            'DAC Calls:  ' + IntToStr(dac.dacCount) + sLineBreak + sLineBreak +
+                                            'DAC SR:  ' + FloatToStrF(dac.dacErate,ffFixed,0,4) + sLineBreak + sLineBreak +
+                                            'DAC Last Block Time:  ' + FloatToStrF(dac.dacErr,ffFixed,0,2) + ' ms' + sLineBreak + sLineBreak +
+                                            'TIME ADC:  ' + FloatToStrF((adc.adcCount*adc.adcErr)/1000,ffFixed,0,2) + '  DAC:  ' + FloatToStrF((dac.dacCount*dac.dacErr)/1000,ffFixed,0,2) + ' Seconds';
           application.ProcessMessages;
-          sleep(200);
+          sleep(10);
      end;
      audiodiag.Form6.Label5.Visible := false;
      audiodiag.Form6.Hide;
@@ -3482,8 +3447,6 @@ Begin
      //ppaOutParams := @paOutParams;
      //dac.d65txBufferIdx := 0;
 
-     dErrCount := 0;
-     adCount := 0;
      //dac.dacT := 0;
 
      //paOutParams.channelCount := 2;
@@ -3743,7 +3706,7 @@ Begin
                If adc.d65rxBufferIdx >= 533504 Then
                Begin
                     // Get End of Period QRG
-               //     eopQRG := globalData.gqrg;
+                    eopQRG := guidedconfig.cfg.guiQRG;
                     // Switch to decoder action
                     ctrl.thisAction := 4;
                     ctrl.rxInProgress := False;
@@ -3961,8 +3924,7 @@ Var
 Begin
      // Get Start of Period QRG
      ctrl.actionSet := False;
-{ TODO : FIX THIS }
-     //sopQRG := globalData.gqrg;
+     sopQRG := guidedconfig.cfg.guiQRG;
      ctrl.rxInProgress := False;
      globalData.txInProgress := False;
      // Paint a start of new period line in the spectrum display.
@@ -4191,8 +4153,9 @@ Begin
 
      // Force Rig control read cycle.
      if (st.Second = 0) or (st.Second = 15) or (st.Second = 30) or (st.Second = 45) Then rig1.pollRig();
+{ TODO : Fix this to use validator! }
      if not (upcase(rig1.rigcontroller) = 'NONE') then editManQRG.Text := floatToStr(rig1.qrg/1000);
-
+{ TODO : Add code to allow setting QRG via CAT control if it is enabled. }
      // Set manual entry ability.
      //if (cfgvtwo.glcatBy = 'none') and not cfgvtwo.glsi57Set Then Form1.editManQRG.Enabled := True else Form1.editManQRG.Enabled := False;
      //if (cfgvtwo.glcatBy = 'none') and not cfgvtwo.glsi57Set Then Form1.Label23.Visible := True else Form1.Label23.Visible := False;
@@ -4587,15 +4550,6 @@ initialization
   ctrl.TxDirty      := True;
   ctrl.TxValid      := False;
   ctrl.itemsIn      := False;
-  // Setup error accumulators
-  dErrLErate   := 0;
-  dErrCount    := 0;
-  dErrAErate   := 0;
-  dErrError    := 0;
-  adCount      := 0;
-  adLErate     := 0;
-  adAErate     := 0;
-  adError      := 0;
   //
   // Actions 1=Init, 2=RX, 3=TX, 4=Decode, 5=Idle
   //
@@ -4622,14 +4576,11 @@ initialization
   ctrl.watchMulti := False;
   ctrl.haveTXSRerr := False;
   ctrl.haveRXSRerr := False;
-  rxsrs := '';
-  txsrs := '';
-  lastSRerr := '';
   audioAve1 := 0;
   audioAve2 := 0;
   ctrl.doCAT := False;
-  sopQRG := 0.0;
-  eopQRG := 0.0;
+  sopQRG := 0;
+  eopQRG := 0;
   //cfgvtwo.glcatBy := 'none';
   ctrl.doRB := False;
   spectrum.specfftCount := 0;

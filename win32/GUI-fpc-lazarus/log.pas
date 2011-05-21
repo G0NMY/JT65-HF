@@ -69,6 +69,7 @@ type
 var
   Form2: TForm2;
   logmycall, logmygrid, logadifpath : String;
+  adifName : String;
 
 implementation
 
@@ -79,29 +80,28 @@ Var
    foo, fname   : String;
    lfile        : TextFile;
 begin
-     { TODO : FIX THIS }
      // Need to build the log entry and add it to log file.
-     //foo := '';
-     //foo := adif.adifString(edLogCall.Text,edLogFrequency.Text,edLogGrid.Text,adif.JT65A,
-     //                       edLogRReport.Text,edLogSReport.Text,edLogSTime.Text,
-     //                       edLogETime.Text,edLogPower.Text,edLogDate.Text,edLogComment.Text,
-     //                       logmycall, logmygrid);
-     //fname := globalData.logdir+'\JT65HF_ADIFLOG.adi';
-     //AssignFile(lfile, fname);
-     //If FileExists(fname) Then
-     //Begin
-     //     append(lfile);
-     //end
-     //else
-     //Begin
-     //     rewrite(lfile);
-     //     writeln(lfile,'JT65-HF ADIF Export');
-     //     //writeln(lfile,'<adif_ver:4>2.26');
-     //     writeln(lfile,'<eoh>');
-     //end;
-     //writeln(lfile,foo);
-     //closeFile(lfile);
-     //Form2.visible := False;
+     foo := '';
+     foo := adif.adifString(edLogCall.Text,edLogFrequency.Text,edLogGrid.Text,adif.JT65A,
+                            edLogRReport.Text,edLogSReport.Text,edLogSTime.Text,
+                            edLogETime.Text,edLogPower.Text,edLogDate.Text,edLogComment.Text,
+                            logmycall, logmygrid);
+     fname := adifName;
+     AssignFile(lfile, fname);
+     If FileExists(fname) Then
+     Begin
+          append(lfile);
+     end
+     else
+     Begin
+          rewrite(lfile);
+          writeln(lfile,'JT65-HF ADIF Export');
+          //writeln(lfile,'<adif_ver:4>2.26');
+          writeln(lfile,'<eoh>');
+     end;
+     writeln(lfile,foo);
+     closeFile(lfile);
+     Form2.visible := False;
 end;
 
 procedure TForm2.Button1Click(Sender: TObject);

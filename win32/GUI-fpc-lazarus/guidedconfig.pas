@@ -603,6 +603,8 @@ type
         read  prNoColor;
       property noMultiQSO : Boolean
         read  prNoMultiQSO;
+      property useKV : Boolean
+        read  prUseKV;
   end;
 
 var
