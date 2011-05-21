@@ -65,6 +65,7 @@ type
     chkNB: TCheckBox;
     edFreeText: TEdit;
     Edit2: TEdit;
+    Edit3: TEdit;
     editManQRG: TEdit;
     edSigRep: TEdit;
     edMsg: TEdit;
@@ -95,6 +96,7 @@ type
     Label3: TLabel;
     Label30: TLabel;
     Label31: TLabel;
+    Label32: TLabel;
     Label33: TLabel;
     Label34: TLabel;
     Label35: TLabel;
@@ -103,6 +105,7 @@ type
     Label38: TLabel;
     Label39: TLabel;
     Label4: TLabel;
+    Label40: TLabel;
     Label5 : TLabel ;
     Label50: TLabel;
     Label6: TLabel;
@@ -186,6 +189,7 @@ type
     rbUseLeft: TRadioButton;
     rbUseRight: TRadioButton;
     spinDecoderBW: TSpinEdit;
+    spinDecoderMBW: TSpinEdit;
     spinDecoderCF: TSpinEdit;
     spinSpecSpeed: TSpinEdit;
     spinGain: TSpinEdit;
@@ -241,6 +245,7 @@ type
     procedure menuTXLogClick(Sender: TObject);
     procedure rbFreeMsgChange(Sender: TObject);
     procedure spinDecoderBWChange(Sender: TObject);
+    procedure spinDecoderMBWChange(Sender: TObject);
     procedure spinSpecSpeedChange(Sender: TObject);
     procedure spinGainChange(Sender: TObject);
     procedure spinTXCFChange(Sender: TObject);
@@ -985,6 +990,11 @@ begin
      if spinDecoderBW.Value = 3 Then edit2.Text := '100';
      if spinDecoderBW.Value = 4 Then edit2.Text := '200';
      guidedconfig.cfg.decoderBW := spinDecoderBW.Value;
+end;
+
+procedure TForm1.spinDecoderMBWChange(Sender: TObject);
+begin
+     // Multi decoder segment size selector
 end;
 
 procedure TForm1.spinSpecSpeedChange(Sender: TObject);
