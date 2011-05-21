@@ -724,11 +724,6 @@ Begin
           d65.glMouseDF := Form1.spinDecoderCF.Value;
           if d65.glMouseDF > 1000 then d65.glMouseDF := 1000;
           if d65.glMouseDF < -1000 then d65.glMouseDF := -1000;
-          if spinDecoderBW.Value = 1 Then d65.glDFTolerance := 20;
-          if spinDecoderBW.Value = 2 Then d65.glDFTolerance := 50;
-          if spinDecoderBW.Value = 3 Then d65.glDFTolerance := 100;
-          if spinDecoderBW.Value = 4 Then d65.glDFTolerance := 200;
-          d65.glbinspace := 100;
           if d65.glDFTolerance > 200 then d65.glDFTolerance := 200;
           if d65.glDFTolerance < 20 then d65.glDFTolerance := 20;
           If Form1.chkNB.Checked then d65.glNblank := 1 Else d65.glNblank := 0;
@@ -985,16 +980,30 @@ end;
 
 procedure TForm1.spinDecoderBWChange(Sender: TObject);
 begin
+     // Single decoder segment size selector
      if spinDecoderBW.Value = 1 Then edit2.Text := '20';
      if spinDecoderBW.Value = 2 Then edit2.Text := '50';
      if spinDecoderBW.Value = 3 Then edit2.Text := '100';
      if spinDecoderBW.Value = 4 Then edit2.Text := '200';
+     if spinDecoderBW.Value = 1 Then d65.glDFTolerance := 20;
+     if spinDecoderBW.Value = 2 Then d65.glDFTolerance := 50;
+     if spinDecoderBW.Value = 3 Then d65.glDFTolerance := 100;
+     if spinDecoderBW.Value = 4 Then d65.glDFTolerance := 200;
      guidedconfig.cfg.decoderBW := spinDecoderBW.Value;
 end;
 
 procedure TForm1.spinDecoderMBWChange(Sender: TObject);
 begin
      // Multi decoder segment size selector
+     if spinDecoderMBW.Value = 1 Then edit3.Text := '20';
+     if spinDecoderMBW.Value = 2 Then edit3.Text := '50';
+     if spinDecoderMBW.Value = 3 Then edit3.Text := '100';
+     if spinDecoderMBW.Value = 4 Then edit3.Text := '200';
+     if spinDecoderMBW.Value = 1 Then d65.glbinspace := 20;
+     if spinDecoderMBW.Value = 2 Then d65.glbinspace := 50;
+     if spinDecoderMBW.Value = 3 Then d65.glbinspace := 100;
+     if spinDecoderMBW.Value = 4 Then d65.glbinspace := 200;
+     guidedconfig.cfg.multiBW := spinDecoderMBW.Value;
 end;
 
 procedure TForm1.spinSpecSpeedChange(Sender: TObject);
@@ -1158,6 +1167,7 @@ begin
      if cbSmooth.Checked then guidedconfig.cfg.specSmooth := true else guidedconfig.cfg.specSmooth := false;
      if chkAutoTXDF.Checked then guidedconfig.cfg.useTXeqRXDF := true else guidedconfig.cfg.useTXeqRXDF := false;
      guidedconfig.cfg.decoderBW := spinDecoderBW.Value;
+     guidedconfig.cfg.multiBW := spinDecoderMBW.Value;
      if chkAFC.Checked then guidedconfig.cfg.afc := true else guidedconfig.cfg.afc := false;
      if chkNB.Checked then guidedconfig.cfg.noiseblank := true else guidedconfig.cfg.noiseblank := false;
      if chkMultiDecode.Checked then guidedconfig.cfg.multi := true else guidedconfig.cfg.multi := false;
@@ -1966,13 +1976,8 @@ begin
                d65.glMouseDF := Form1.spinDecoderCF.Value;
                if d65.glMouseDF > 1000 then d65.glMouseDF := 1000;
                if d65.glMouseDF < -1000 then d65.glMouseDF := -1000;
-               if spinDecoderBW.Value = 1 Then d65.glDFTolerance := 20;
-               if spinDecoderBW.Value = 2 Then d65.glDFTolerance := 50;
-               if spinDecoderBW.Value = 3 Then d65.glDFTolerance := 100;
-               if spinDecoderBW.Value = 4 Then d65.glDFTolerance := 200;
                if d65.glDFTolerance > 200 then d65.glDFTolerance := 200;
                if d65.glDFTolerance < 20 then d65.glDFTolerance := 20;
-               d65.glbinspace := 100;
                If Form1.chkNB.Checked then d65.glNblank := 1 Else d65.glNblank := 0;
                d65.glNshift := 0;
                if Form1.chkAFC.Checked then d65.glNafc := 1 Else d65.glNafc := 0;
@@ -2777,6 +2782,8 @@ Begin
      chkAutoTxDFChange(chkAutoTXDF);
      spinDecoderBW.Value := guidedconfig.cfg.decoderBW;
      spinDecoderBWChange(spinDecoderBW);
+     spinDecoderMBW.Value := guidedconfig.cfg.multiBW;
+     spinDecoderMBWChange(spinDecoderMBW);
      chkAFC.Checked := guidedconfig.cfg.afc;
      chkAFCChange(chkAFC);
      chkNB.Checked := guidedconfig.cfg.noiseblank;
@@ -4609,6 +4616,7 @@ initialization
 
   d65.glnd65firstrun := True;
   d65.glbinspace := 100;
+  d65.glDFTolerance := 100;
   globalData.debugOn := False;
   globalData.gmode := 65;
   ctrl.txmode := globalData.gmode;
