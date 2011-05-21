@@ -27,7 +27,7 @@ interface
 
 uses
   Classes, SysUtils, CTypes, globalData, samplerate, math, Process, diagout,
-  Types, StrUtils, rawDec, FileUtil;
+  Types, StrUtils, rawDec;
 
 Const
   JT_DLL = 'jt65.dll';
@@ -214,11 +214,11 @@ Begin
              // read kvasd.dat
              AssignFile(kvFile, gld65kvfname);
              Reset(kvFile);
-             itemp := FileSize(gld65kvfname);
-             If FileSize(gld65kvfname) > 268 Then
+             itemp := FileSize(kvFile);
+             If FileSize(kvFile) > 268 Then
              Begin
                   // Seek to nsec2 (256)
-                  //Seek(kvFile,256);
+                  Seek(kvFile,256);
                   //Read(kvFile, kvsec2);
                   Seek(kvFile,257);
                   Read(kvFile, kvcount);
@@ -255,7 +255,7 @@ Begin
           // No decode, error status returned from kvasd.exe
           Result := False;
           kdec := '';
-          if FileExists(gld65kvfname) Then DeleteFileUTF8(gld65kvfname);
+          if FileExists(gld65kvfname) Then DeleteFile(gld65kvfname);
      End;
      kvProc.Destroy;
      kdec := TrimLeft(TrimRight(StrPas(glkvs)));
@@ -269,7 +269,7 @@ Begin
           Result := False;
           kdec := '';
      End;
-     if FileExists(gld65kvfname) Then DeleteFileUTF8(gld65kvfname);
+     if FileExists(gld65kvfname) Then DeleteFile(gld65kvfname);
 end;
 
 procedure doDecode(bStart, bEnd : Integer);
@@ -1033,7 +1033,7 @@ begin
                                                       break;
                                                  end;
                                             end;
-                                            if FileExists(gld65kvfname) Then DeleteFileUTF8(gld65kvfname);
+                                            if FileExists(gld65kvfname) Then DeleteFile(gld65kvfname);
                                        end
                                        else
                                        begin
@@ -1059,7 +1059,7 @@ begin
                                                  kverr := 0;
                                                  while FileExists(gld65kvfname) Do
                                                  Begin
-                                                      DeleteFileUTF8(gld65kvfname);
+                                                      DeleteFile(gld65kvfname);
                                                       sleep(10);
                                                       inc(kverr);
                                                       if kverr > 100 then
@@ -1067,7 +1067,7 @@ begin
                                                            break;
                                                       end;
                                                  end;
-                                                 if FileExists(gld65kvfname) Then DeleteFileUTF8(gld65kvfname);
+                                                 if FileExists(gld65kvfname) Then DeleteFile(gld65kvfname);
                                             end;
                                        end;
                                   end;

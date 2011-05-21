@@ -2797,10 +2797,10 @@ Begin
      rig1.pttlines := guidedconfig.cfg.pttLines;
      rig1.pttport := guidedconfig.cfg.PTTPort;
      // Init PA.  If this doesn't work there's no reason to continue.
-     audiodiag.Form6.Label5.Visible := True;
-     audiodiag.Form6.Show;
-     audiodiag.Form6.Visible := True;
-     audiodiag.Form6.BringToFront;
+     //audiodiag.Form6.Label5.Visible := True;
+     //audiodiag.Form6.Show;
+     //audiodiag.Form6.Visible := True;
+     //audiodiag.Form6.BringToFront;
      audiodiag.Form6.Label3.Caption := guidedconfig.cfg.soundInS;
      audiodiag.Form6.Label4.Caption := guidedconfig.cfg.soundOutS;
      audiodiag.Form6.Label5.Caption := 'Initializing PortAudio';
@@ -2863,11 +2863,11 @@ Begin
      Begin
           audiodiag.Form6.Label5.Caption := 'Input sample stream not running';
           audiodiag.Form6.Label1.Caption := 'Input device status:  FAIL';
-          for i := 0 to 1000 do
-          begin
-               application.ProcessMessages;
-               sleep(10);
-          end;
+          //for i := 0 to 1000 do
+          //begin
+               //application.ProcessMessages;
+               //sleep(10);
+          //end;
           ShowMessage('PA Error:  ' + StrPas(portaudio.Pa_GetErrorText(paResult)) + sLineBreak +
                       'Could not setup for input.  Please check your setup.' + sLineBreak +
                       'Attempted to open device:  ' + guidedconfig.cfg.soundInS);
@@ -2907,11 +2907,11 @@ Begin
           if guidedconfig.cfg.forceMono then audiodiag.Form6.Label5.Caption := 'Failed to open in mono mode';
           if not guidedconfig.cfg.forceMono then audiodiag.Form6.Label5.Caption := 'Failed to open in stereo mode';
           audiodiag.Form6.Label2.Caption := 'Output device status:  FAIL';
-          for i := 0 to 1000 do
-          begin
-               application.ProcessMessages;
-               sleep(10);
-          end;
+          //for i := 0 to 1000 do
+          //begin
+               //application.ProcessMessages;
+               //sleep(10);
+          //end;
           ShowMessage('PA Error:  ' + StrPas(portaudio.Pa_GetErrorText(paResult)) + sLineBreak +
                       'Could not setup for output.  Please check your setup.' + sLineBreak +
                       'Attempted to open device:  ' + guidedconfig.cfg.soundOutS);
@@ -2930,11 +2930,11 @@ Begin
      Begin
           audiodiag.Form6.Label5.Caption := 'Output sample stream not running';
           audiodiag.Form6.Label2.Caption := 'Output device status:  FAIL';
-          for i := 0 to 1000 do
-          begin
-               application.ProcessMessages;
-               sleep(10);
-          end;
+          //for i := 0 to 1000 do
+          //begin
+               //application.ProcessMessages;
+               //sleep(10);
+          //end;
           ShowMessage('PA Error:  ' + StrPas(portaudio.Pa_GetErrorText(paResult)) + sLineBreak +
                       'Could not setup for output.  Please check your setup.' + sLineBreak +
                       'Attempted to open device:  ' + guidedconfig.cfg.soundOutS);
@@ -2947,22 +2947,22 @@ Begin
      end;
      ctrl.soundvalid := True;
      audiodiag.Form6.Label5.Caption := 'Input/Output sample streams running';
-     while (adc.adcCount < 50) and (dac.dacCount < 50) do
-     begin
-          audiodiag.Form6.Label5.Caption := 'This window will close shortly, testing streams...';
-          audiodiag.Form6.Label6.Caption := 'ADC Calls:  ' + IntToStr(adc.adcCount) + sLineBreak + sLineBreak +
-                                            'ADC SR:  ' + FloatToStrF(adc.adcErate,ffFixed,0,4) + sLineBreak + sLineBreak +
-                                            'CPU Load ADC:  ' + FloatToStrF(portaudio.Pa_GetStreamCpuLoad(paInStream)*100,ffFixed,0,2) + ' %' + '  DAC:  ' + FloatToStrF(portaudio.Pa_GetStreamCpuLoad(paOutStream)*100,ffFixed,0,2) + ' %' + sLineBreak + sLineBreak +
-                                            'ADC Last Block Time:  ' + FloatToStrF(adc.adcErr,ffFixed,0,2) + ' ms' + sLineBreak + sLineBreak +
-                                            'DAC Calls:  ' + IntToStr(dac.dacCount) + sLineBreak + sLineBreak +
-                                            'DAC SR:  ' + FloatToStrF(dac.dacErate,ffFixed,0,4) + sLineBreak + sLineBreak +
-                                            'DAC Last Block Time:  ' + FloatToStrF(dac.dacErr,ffFixed,0,2) + ' ms' + sLineBreak + sLineBreak +
-                                            'TIME ADC:  ' + FloatToStrF((adc.adcCount*adc.adcErr)/1000,ffFixed,0,2) + '  DAC:  ' + FloatToStrF((dac.dacCount*dac.dacErr)/1000,ffFixed,0,2) + ' Seconds';
-          application.ProcessMessages;
-          sleep(10);
-     end;
-     audiodiag.Form6.Label5.Visible := false;
-     audiodiag.Form6.Hide;
+     //while (adc.adcCount < 50) and (dac.dacCount < 50) do
+     //begin
+     //     audiodiag.Form6.Label5.Caption := 'This window will close shortly, testing streams...';
+     //     audiodiag.Form6.Label6.Caption := 'ADC Calls:  ' + IntToStr(adc.adcCount) + sLineBreak + sLineBreak +
+     //                                       'ADC SR:  ' + FloatToStrF(adc.adcErate,ffFixed,0,4) + sLineBreak + sLineBreak +
+     //                                       'CPU Load ADC:  ' + FloatToStrF(portaudio.Pa_GetStreamCpuLoad(paInStream)*100,ffFixed,0,2) + ' %' + '  DAC:  ' + FloatToStrF(portaudio.Pa_GetStreamCpuLoad(paOutStream)*100,ffFixed,0,2) + ' %' + sLineBreak + sLineBreak +
+     //                                       'ADC Last Block Time:  ' + FloatToStrF(adc.adcErr,ffFixed,0,2) + ' ms' + sLineBreak + sLineBreak +
+     //                                       'DAC Calls:  ' + IntToStr(dac.dacCount) + sLineBreak + sLineBreak +
+     //                                       'DAC SR:  ' + FloatToStrF(dac.dacErate,ffFixed,0,4) + sLineBreak + sLineBreak +
+     //                                       'DAC Last Block Time:  ' + FloatToStrF(dac.dacErr,ffFixed,0,2) + ' ms' + sLineBreak + sLineBreak +
+     //                                       'TIME ADC:  ' + FloatToStrF((adc.adcCount*adc.adcErr)/1000,ffFixed,0,2) + '  DAC:  ' + FloatToStrF((dac.dacCount*dac.dacErr)/1000,ffFixed,0,2) + ' Seconds';
+     //     application.ProcessMessages;
+     //     sleep(10);
+     //end;
+     //audiodiag.Form6.Label5.Visible := false;
+     //audiodiag.Form6.Hide;
 
      //With wisdom comes speed.
      d65.glfftFWisdom := 0;
