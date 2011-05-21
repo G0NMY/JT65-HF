@@ -26,8 +26,20 @@ unit d65;
 interface
 
 uses
-  Classes, SysUtils, CTypes, globalData, samplerate, math, Process, diagout,
-  Types, StrUtils, rawDec;
+    //Classes, SysUtils, CTypes, globalData, samplerate, math, Process, diagout,
+    //Types, StrUtils, rawDec;
+
+    Classes,
+    Types,
+    SysUtils,
+    StrUtils,
+    CTypes,
+    globalData,
+    samplerate,
+    math,
+    Process,
+    diagout,
+    rawDec;
 
 Const
   JT_DLL = 'jt65.dll';
@@ -46,6 +58,21 @@ Type
       kDecoded  : String;
       sDecoded  : String;
       timeStamp : String;
+   end;
+
+   kvBinData = Record
+      nsec1     : Integer;
+      xlambda   : Integer;
+      maxe      : Integer;
+      naddsynd  : Integer;
+      mrsym     : Array[1..63] of Integer;
+      mrprob    : Array[1..63] of Integer;
+      mr2sym    : Array[1..63] of Integer;
+      mr2prob   : Array[1..63] of Integer;
+      nsec2     : Integer;
+      ncount    : Integer;
+      dat4      : Array[1..12] of Integer;
+      undef     : Array[1..252] of Integer;
    end;
 
     d65Result = Record
@@ -85,6 +112,7 @@ Var
    gld65dokv                     : Boolean;
 
 procedure doDecode(bStart, bEnd : Integer);
+Function  evalKV(Var kdec : String) : Boolean;
 
 implementation
 // This unit provides decoding of JT65 signals in a thread.  The thread is
@@ -179,35 +207,46 @@ end;
 
 Function evalKV(Var kdec : String) : Boolean;
 Var
-   //kvSec2, kvCount, ierr, i : CTypes.cint;
    kvCount, ierr, i : CTypes.cint;
    kvProc           : TProcess;
-   kvDat            : Array[0..11] of CTypes.cint;
+   kvDat            : Array[0..511] of CTypes.cint;
+   kvSyms           : Array[0..11] of CTypes.cint;
    kvFile           : File Of CTypes.cint;
    itemp            : Integer;
+   havedata         : Boolean;
 Begin
      // Looking for a KV decode
      Result := false;
+     havedata := false;
      kdec := '';
      glkvs := '                      ';
-     for i := 0 to 11 do
+     kvcount := -999;
+     itemp := -999;
+     // Clear data arrays
+     for i := 0 to 511 do
      Begin
           kvDat[i] := 0;
+          if i < 11 then kvSyms[i] := 0;
      End;
      ierr := 0;
      if FileExists(gld65kvfname) Then
      Begin
+          // Process KVASD.DAT with KV Decoder
           kvProc := TProcess.Create(nil);
           kvProc.CommandLine := gld65kvpath + '\kvasd_g95.exe -q';
           kvProc.Options := kvProc.Options + [poWaitOnExit];
           kvProc.Options := kvProc.Options + [poNoConsole];
+          kvProc.CurrentDirectory := gld65kvpath;
           kvProc.Execute;
           ierr := kvProc.ExitStatus;
+          kvProc.Destroy;
      End
      Else
      Begin
+          // No KVASD.DAT file so we're done
           ierr := -1;
      end;
+     // Attempt to process the KV output data
      if ierr = 0 Then
      Begin
           Try
@@ -215,39 +254,41 @@ Begin
              AssignFile(kvFile, gld65kvfname);
              Reset(kvFile);
              itemp := FileSize(kvFile);
-             If FileSize(kvFile) > 268 Then
-             Begin
-                  // Seek to nsec2 (256)
-                  Seek(kvFile,256);
-                  //Read(kvFile, kvsec2);
-                  Seek(kvFile,257);
-                  Read(kvFile, kvcount);
-                  For i := 258 to 269 do
-                  Begin
-                       Seek(kvFile, i);
-                       Read(kvFile, kvDat[i-258]);
-                  End;
-                  CloseFile(kvFile);
-                  if kvCount > -1 Then
-                  Begin
-                       unpack(@kvDat[0],glkvs);
-                  End
-                  Else
-                  Begin
-                       // No decode, kvasd failed to reconstruct message.
-                       Result := False;
-                       kdec := '';
-                  End;
-             End
-             Else
-             Begin
-                  CloseFile(kvFile);
-                  Result := False;
-                  kdec := '';
-             End;
-          except
-             Result := False;
-             kdec := '';
+             if itemp = 512 then
+             begin
+                  havedata := true;
+                  For i := 0 to 511 do
+                  begin
+                       seek(kvFile,i);
+                       read(kvFile, kvDat[i]);
+                  end;
+             end;
+             CloseFile(kvFile);
+             deleteFile(gld65kvfname);
+          Except
+             haveData := false;
+          End;
+          // Seem to have proper data... lets see if it has something of use
+          if havedata then
+          begin
+               kvcount := kvDat[257];  // NCount
+          end
+          else
+          begin
+               result := false;
+          end;
+          // Check to see if kvcount > -1 to indicate KV thinks it got something
+          if kvcount > -1 then havedata := true else havedata := false;
+          if havedata then
+          begin
+               // Move symbols to array and process
+               for i := 0 to 11 do begin kvSyms[i] := kvDat[i+258]; end;
+               unpack(@kvSyms[0],glkvs);
+               result := true;
+          end
+          else
+          begin
+               result := false;
           end;
      End
      Else
@@ -257,17 +298,19 @@ Begin
           kdec := '';
           if FileExists(gld65kvfname) Then DeleteFile(gld65kvfname);
      End;
-     kvProc.Destroy;
+     // Last check.. looking at the decode output
      kdec := TrimLeft(TrimRight(StrPas(glkvs)));
      if (Length(kdec) > 0) And (kvCount > -1) Then
      Begin
           Result := True;
+          if FileExists(gld65kvfname) Then DeleteFile(gld65kvfname);
      End
      Else
      Begin
           // No decode, kvasd messge too short or SNR too low.
           Result := False;
           kdec := '';
+          if FileExists(gld65kvfname) Then DeleteFile(gld65kvfname);
      End;
      if FileExists(gld65kvfname) Then DeleteFile(gld65kvfname);
 end;
@@ -1033,7 +1076,6 @@ begin
                                                       break;
                                                  end;
                                             end;
-                                            if FileExists(gld65kvfname) Then DeleteFile(gld65kvfname);
                                        end
                                        else
                                        begin
@@ -1057,16 +1099,6 @@ begin
                                                       end;
                                                  end;
                                                  kverr := 0;
-                                                 while FileExists(gld65kvfname) Do
-                                                 Begin
-                                                      DeleteFile(gld65kvfname);
-                                                      sleep(10);
-                                                      inc(kverr);
-                                                      if kverr > 100 then
-                                                      begin
-                                                           break;
-                                                      end;
-                                                 end;
                                                  if FileExists(gld65kvfname) Then DeleteFile(gld65kvfname);
                                             end;
                                        end;
