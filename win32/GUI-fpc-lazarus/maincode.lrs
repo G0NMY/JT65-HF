@@ -155,11 +155,11 @@ LazarusResources.Add('TForm1','FORMDATA',[
   +#2'Z'#7'Caption'#6#18'Audio Input Levels'#11'ParentColor'#8#0#0#12'TProgress'
   +'Bar'#5'pbAu2'#4'Left'#2#1#6'Height'#2#18#3'Top'#2'-'#5'Width'#2'd'#6'Smooth'
   +#9#4'Step'#2#1#8'TabOrder'#2#0#11'BarShowText'#9#0#0#12'TRadioButton'#9'rbUs'
-  +'eLeft'#4'Left'#2'j'#6'Height'#2#19#3'Top'#2#16#5'Width'#2'$'#7'Caption'#6#3
+  +'eLeft'#4'Left'#2'j'#6'Height'#2#18#3'Top'#2#16#5'Width'#2'"'#7'Caption'#6#3
   +'-21'#7'Checked'#9#11'Font.Height'#2#245#9'Font.Name'#6#5'Arial'#10'Font.Sty'
   +'le'#11#6'fsBold'#0#8'OnChange'#7#14'rbUseMixChange'#10'ParentFont'#8#8'TabO'
   +'rder'#2#1#7'TabStop'#9#0#0#12'TRadioButton'#10'rbUseRight'#4'Left'#2'j'#6'H'
-  +'eight'#2#19#3'Top'#2'-'#5'Width'#2'$'#7'Caption'#6#3'-21'#11'Font.Height'#2
+  +'eight'#2#18#3'Top'#2'-'#5'Width'#2'"'#7'Caption'#6#3'-21'#11'Font.Height'#2
   +#245#9'Font.Name'#6#5'Arial'#10'Font.Style'#11#6'fsBold'#0#8'OnChange'#7#14
   +'rbUseMixChange'#10'ParentFont'#8#8'TabOrder'#2#2#0#0#9'TTrackBar'#8'tbDgain'
   +'L'#4'Left'#2'%'#6'Height'#2#20#3'Top'#2'|'#5'Width'#2'x'#3'Max'#2#6#3'Min'#2
@@ -202,7 +202,7 @@ LazarusResources.Add('TForm1','FORMDATA',[
   +'TabOrder'#2#2#0#0#9'TSpinEdit'#13'spinSpecSpeed'#4'Left'#3#207#0#6'Height'#2
   +#22#3'Top'#2#13#5'Width'#2'&'#8'MaxValue'#2#5#8'OnChange'#7#19'spinSpecSpeed'
   +'Change'#8'TabOrder'#2#3#5'Value'#2#5#0#0#9'TCheckBox'#8'cbSmooth'#4'Left'#3
-  +'('#1#6'Height'#2#20#3'Top'#2#13#5'Width'#2'E'#7'Caption'#6#6'Smooth'#11'Fon'
+  +'('#1#6'Height'#2#20#3'Top'#2#13#5'Width'#2'C'#7'Caption'#6#6'Smooth'#11'Fon'
   +'t.Height'#2#243#9'Font.Name'#6#5'Arial'#10'Font.Style'#11#6'fsBold'#0#8'OnC'
   +'hange'#7#14'cbSmoothChange'#10'ParentFont'#8#8'TabOrder'#2#4#0#0#9'TSpinEdi'
   +'t'#8'spinGain'#4'Left'#3#253#0#6'Height'#2#22#3'Top'#2#13#5'Width'#2'$'#8'M'
@@ -219,12 +219,12 @@ LazarusResources.Add('TForm1','FORMDATA',[
   +'r'#2#17#0#0#5'TEdit'#8'edSigRep'#4'Left'#3't'#3#6'Height'#2#24#3'Top'#3#219
   +#1#5'Width'#2'-'#11'Font.Height'#2#243#9'Font.Name'#6#5'Arial'#10'Font.Style'
   +#11#6'fsBold'#0#10'OnDblClick'#7#16'edSigRepDblClick'#10'ParentFont'#8#8'Tab'
-  +'Order'#2#18#0#0#9'TCheckBox'#7'chkEnTX'#4'Left'#3' '#1#6'Height'#2#19#3'Top'
-  +#2'H'#5'Width'#2'0'#7'Caption'#6#4'EATX'#7'Enabled'#8#11'Font.Height'#2#245#9
+  +'Order'#2#18#0#0#9'TCheckBox'#7'chkEnTX'#4'Left'#3' '#1#6'Height'#2#18#3'Top'
+  +#2'H'#5'Width'#2'.'#7'Caption'#6#4'EATX'#7'Enabled'#8#11'Font.Height'#2#245#9
   +'Font.Name'#6#5'Arial'#10'Font.Style'#11#6'fsBold'#0#10'ParentFont'#8#8'TabO'
-  +'rder'#2#19#0#0#9'TCheckBox'#11'chkAutoTxDF'#4'Left'#3#172#2#6'Height'#2#19#4
+  +'rder'#2#19#0#0#9'TCheckBox'#11'chkAutoTxDF'#4'Left'#3#172#2#6'Height'#2#17#4
   +'Hint'#6',If Checked TX and RX DF will always be same.'#3'Top'#3#222#1#5'Wid'
-  +'th'#2#20#7'Checked'#9#11'Font.Height'#2#244#9'Font.Name'#6#5'Arial'#10'Font'
+  +'th'#2#18#7'Checked'#9#11'Font.Height'#2#244#9'Font.Name'#6#5'Arial'#10'Font'
   +'.Style'#11#6'fsBold'#0#8'OnChange'#7#17'chkAutoTxDFChange'#10'ParentFont'#8
   +#5'State'#7#9'cbChecked'#8'TabOrder'#2#20#0#0#9'TSpinEdit'#13'spinDecoderCF'
   +#4'Left'#3'o'#2#6'Height'#2#22#3'Top'#3#219#1#5'Width'#2'7'#11'Font.Height'#2
@@ -243,14 +243,14 @@ LazarusResources.Add('TForm1','FORMDATA',[
   +'inDecoderBW'#4'Left'#3'S'#2#6'Height'#2#24#3'Top'#3#26#2#5'Width'#2#18#11'F'
   +'ont.Height'#2#243#9'Font.Name'#6#5'Arial'#8'MaxValue'#2#4#8'MinValue'#2#1#8
   +'OnChange'#7#19'spinDecoderBWChange'#10'ParentFont'#8#8'TabOrder'#2#25#5'Val'
-  +'ue'#2#4#0#0#9'TCheckBox'#5'chkNB'#4'Left'#3#172#2#6'Height'#2#19#3'Top'#3#16
-  +#2#5'Width'#2'T'#7'Caption'#6#11'Noise Blank'#11'Font.Height'#2#245#9'Font.N'
+  +'ue'#2#4#0#0#9'TCheckBox'#5'chkNB'#4'Left'#3#172#2#6'Height'#2#18#3'Top'#3#16
+  +#2#5'Width'#2'R'#7'Caption'#6#11'Noise Blank'#11'Font.Height'#2#245#9'Font.N'
   +'ame'#6#5'Arial'#10'Font.Style'#11#6'fsBold'#0#8'OnChange'#7#11'chkNBChange'
   +#10'ParentFont'#8#8'TabOrder'#2#26#0#0#9'TCheckBox'#6'chkAFC'#4'Left'#3#172#2
-  +#6'Height'#2#19#3'Top'#3#248#1#5'Width'#2'*'#7'Caption'#6#3'AFC'#11'Font.Hei'
+  +#6'Height'#2#18#3'Top'#3#248#1#5'Width'#2'('#7'Caption'#6#3'AFC'#11'Font.Hei'
   +'ght'#2#245#9'Font.Name'#6#5'Arial'#10'Font.Style'#11#6'fsBold'#0#8'OnChange'
   +#7#12'chkAFCChange'#10'ParentFont'#8#8'TabOrder'#2#27#0#0#9'TCheckBox'#14'ch'
-  +'kMultiDecode'#4'Left'#3#172#2#6'Height'#2#19#3'Top'#3'('#2#5'Width'#2'a'#7
+  +'kMultiDecode'#4'Left'#3#172#2#6'Height'#2#18#3'Top'#3'('#2#5'Width'#2'_'#7
   +'Caption'#6#13'Multi-decoder'#7'Checked'#9#11'Font.Height'#2#245#9'Font.Name'
   +#6#5'Arial'#10'Font.Style'#11#6'fsBold'#0#8'OnChange'#7#20'chkMultiDecodeCha'
   +'nge'#10'ParentFont'#8#5'State'#7#9'cbChecked'#8'TabOrder'#2#28#0#0#11'TRadi'
@@ -270,10 +270,10 @@ LazarusResources.Add('TForm1','FORMDATA',[
   +' Odd'#11'Font.Height'#2#243#9'Font.Name'#6#5'Arial'#10'Font.Style'#11#6'fsB'
   +'old'#0#8'OnChange'#7#13'rbFirstChange'#10'ParentFont'#8#8'TabOrder'#2#1#0#0
   +#0#12'TRadioButton'#9'rbFreeMsg'#4'Left'#3','#2#6'Height'#2#20#3'Top'#3#251#0
-  +#5'Width'#3#167#0#7'Caption'#6#23'TX Text (13 Characters)'#11'Font.Height'#2
+  +#5'Width'#3#165#0#7'Caption'#6#23'TX Text (13 Characters)'#11'Font.Height'#2
   +#243#9'Font.Name'#6#5'Arial'#10'Font.Style'#11#6'fsBold'#0#8'OnChange'#7#15
   +'rbFreeMsgChange'#10'ParentFont'#8#8'TabOrder'#2#30#0#0#12'TRadioButton'#8'r'
-  +'bGenMsg'#4'Left'#3','#2#6'Height'#2#20#3'Top'#3'/'#1#5'Width'#2'l'#7'Captio'
+  +'bGenMsg'#4'Left'#3','#2#6'Height'#2#20#3'Top'#3'/'#1#5'Width'#2'j'#7'Captio'
   +'n'#6#12'TX Generated'#7'Checked'#9#10'Font.Color'#7#5'clRed'#11'Font.Height'
   +#2#243#9'Font.Name'#6#5'Arial'#10'Font.Style'#11#6'fsBold'#0#8'OnChange'#7#15
   +'rbFreeMsgChange'#10'ParentFont'#8#8'TabOrder'#2#31#7'TabStop'#9#0#0#7'TButt'
@@ -288,10 +288,10 @@ LazarusResources.Add('TForm1','FORMDATA',[
   +'Height'#2' '#3'Top'#3#248#1#5'Width'#3#137#0#7'Caption'#6#7'Log QSO'#11'Fon'
   +'t.Height'#2#243#9'Font.Name'#6#5'Arial'#10'Font.Style'#11#6'fsBold'#0#7'OnC'
   +'lick'#7#14'btnLogQSOClick'#10'ParentFont'#8#8'TabOrder'#2'"'#0#0#9'TCheckBo'
-  +'x'#6'cbEnRB'#4'Left'#3','#2#6'Height'#2#20#3'Top'#3'L'#2#5'Width'#2'R'#7'Ca'
+  +'x'#6'cbEnRB'#4'Left'#3','#2#6'Height'#2#20#3'Top'#3'L'#2#5'Width'#2'P'#7'Ca'
   +'ption'#6#9'Enable RB'#8'OnChange'#7#12'cbEnRBChange'#8'TabOrder'#2'#'#0#0#9
   +'TCheckBox'#8'cbEnPSKR'#4'Left'#3','#2#6'Height'#2#20#3'Top'#3'c'#2#5'Width'
-  +#2'd'#7'Caption'#6#11'Enable PSKR'#8'OnChange'#7#12'cbEnRBChange'#8'TabOrder'
+  +#2'b'#7'Caption'#6#11'Enable PSKR'#8'OnChange'#7#12'cbEnRBChange'#8'TabOrder'
   +#2'$'#0#0#5'TEdit'#5'Edit2'#4'Left'#3','#2#6'Height'#2#24#3'Top'#3#26#2#5'Wi'
   +'dth'#2'('#11'Font.Height'#2#243#9'Font.Name'#6#5'Arial'#10'Font.Style'#11#6
   +'fsBold'#0#9'MaxLength'#2#3#10'ParentFont'#8#8'ReadOnly'#9#7'TabStop'#8#8'Ta'

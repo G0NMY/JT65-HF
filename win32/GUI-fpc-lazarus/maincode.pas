@@ -766,7 +766,7 @@ begin
        // Unkey the TX, terminate the PA output stream and set op state to idle.
        globalData.txInProgress := False;
        sleep(100);
-       rig1.togglePTT();
+       rig1.PTT(false);
        sleep(100);
        ctrl.nextAction := 2;
        ctrl.txNextPeriod := False;
@@ -1175,7 +1175,7 @@ begin
      if cbEnPSKR.Checked then guidedconfig.cfg.usePSKR := true else guidedconfig.cfg.usePSKR := false;
      // GUI elements that are maintained in configuration file have now been updated for saving.
      guidedconfig.Form7.saveConfig(guidedconfig.cfg.cfgdir+'\jt65hf.ini');
-     if rig1.pttstate then rig1.togglePTT();
+     rig1.PTT(false);
      //if globalData.rbLoggedIn Then
      //Begin
      //     cfgvtwo.glrbcLogout := True;
@@ -2814,6 +2814,7 @@ Begin
      if guidedconfig.cfg.PTTMethod = 'OFF' then rig1.noTX := true else rig1.noTX := false;
      rig1.pttlines := guidedconfig.cfg.pttLines;
      rig1.pttport := guidedconfig.cfg.PTTPort;
+     rig1.ptt(false);
      // Init PA.  If this doesn't work there's no reason to continue.
      //audiodiag.Form6.Label5.Visible := True;
      //audiodiag.Form6.Show;
@@ -3763,7 +3764,7 @@ Begin
                          dac.d65txBufferIdx := 0;
                          dac.d65txBufferPtr := @dac.d65txBuffer[0];
                          rxCount := 0;
-                         rig1.togglePTT();
+                         rig1.PTT(true);
                          globalData.txInProgress := True;
                          foo := '';
                          if gst.Hour < 10 then foo := '0' + IntToStr(gst.Hour) + ':' else foo := IntToStr(gst.Hour) + ':';
@@ -3817,7 +3818,7 @@ Begin
                if (dac.d65txBufferIdx >= d65nwave+11025) Or (dac.d65txBufferIdx >= 661503-(11025 DIV 2)) Then
                Begin
                     globalData.txInProgress := False;
-                    rig1.togglePTT();
+                    rig1.PTT(false);
                     ctrl.thisAction := 5;
                     ctrl.actionSet := False;
                     curMsg := '';
@@ -3870,7 +3871,7 @@ Begin
                          dac.d65txBufferPtr := @dac.d65txBuffer[0];
 
                          rxCount := 0;
-                         rig1.togglePTT();
+                         rig1.PTT(true);
                          globalData.txInProgress := True;
                          foo := '';
                          if gst.Hour < 10 then foo := '0' + IntToStr(gst.Hour) + ':' else foo := IntToStr(gst.Hour) + ':';
@@ -3925,7 +3926,7 @@ Begin
                if (dac.d65txBufferIdx >= d65nwave+11025) Or (dac.d65txBufferIdx >= 661503-(11025 DIV 2)) Or (ctrl.thisSecond > 48) Then
                Begin
                     // I have a full TX cycle when d65txBufferIdx >= 538624 or thisSecond > 48
-                    rig1.togglePTT();
+                    rig1.PTT(false);
                     ctrl.actionSet := False;
                     ctrl.thisAction := 5;
                     globalData.txInProgress := False;

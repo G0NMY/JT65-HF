@@ -1570,11 +1570,11 @@ end;
 
 procedure TForm7.buttonTestSerialPTTClick(Sender : TObject);
 begin
+     if cbPTTAltCode.Checked then ser.useAltPTT := true else ser.useAltPTT := false;
      ser.port := trimleft(trimright(upcase(edPTTPort.Text)));
-     ser.ptt  := false;
-     ser.togglePTT();
+     ser.PTT(true);
      sleep(1000);
-     ser.togglePTT();
+     ser.PTT(false);
      cfg.pttTested := true;
 end;
 
@@ -2479,9 +2479,9 @@ begin
           foo := foo + sLineBreak + 'Rig = ' + rig1.rig;
           if cbCatPtt.Checked then
           begin
-               rig1.togglePTT();
+               rig1.PTT(true);
                sleep(1000);
-               rig1.togglePTT();
+               rig1.PTT(false);
           end;
           Memo1.Text := foo;
      end;

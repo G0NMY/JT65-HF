@@ -90,7 +90,7 @@ Type
       // Call this to write properties to rig
       procedure setRig();
       // Toggle PTT State
-      procedure togglePTT();
+      procedure PTT(state : Boolean);
       // Set QRG
       procedure setQRG(qrg : Integer);
 
@@ -507,9 +507,9 @@ begin
      end;
 end;
 
-procedure THrdRig.togglePTT();
+procedure THrdRig.PTT(state : Boolean);
 begin
-     if prPTT then hrdLowerPTT() else hrdRaisePTT();
+     if state then hrdRaisePTT() else hrdLowerPTT();
 end;
 
 end.

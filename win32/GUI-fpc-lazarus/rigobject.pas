@@ -69,8 +69,8 @@ type
         function  setQRG(qrg : Integer) : Boolean;
         // Once all is setup use pollRig to populate the properties.
         procedure pollRig();
-        // Toggle PTT
-        procedure togglePTT();
+        // Set PTT
+        procedure PTT(state : Boolean);
 
         property rig : String
            read  stRig;
@@ -568,34 +568,34 @@ implementation
         end;
    end;
 
-   procedure TRadio.togglePTT();
+   procedure TRadio.PTT(state : Boolean);
    Begin
         // Toggles PTT State
         if (stControl = 'COMMANDER') and stCATPTT Then
         begin
-             if stPTT then
-             begin
-                  civ1.setRig('000receive');
-                  stPTT := false;
-             end
-             else
+             if state then
              begin
                   civ1.setRig('000transmit');
                   stPTT := true;
+             end
+             else
+             begin
+                  civ1.setRig('000receive');
+                  stPTT := false;
              end;
         end;
 
         if (stControl = 'HRD') and stCATPTT Then
         begin
-             if stPTT then
+             if state then
              begin
-                  hrd1.togglePTT();
-                  stPTT := false;
+                  hrd1.PTT(true);
+                  stPTT := true;
              end
              else
              begin
-                  hrd1.togglePTT();
-                  stPTT := true;
+                  hrd1.PTT(false);
+                  stPTT := false;
              end;
         end;
 
@@ -610,19 +610,17 @@ implementation
 
         if (stControl = 'NONE') and stSerial Then
         begin
-             if stPTT then
+             if state then
              begin
                   // Call serial ptt on
-                  ser.ptt := false;
-                  ser.togglePTT();
-                  stPTT := false;
+                  ser.PTT(true);
+                  stPTT := true;
              end
              else
              begin
                   // Call serial ptt off
-                  ser.ptt := true;
-                  ser.togglePTT();
-                  stPTT := true;
+                  ser.PTT(false);
+                  stPTT := false;
              end;
         end;
    end;

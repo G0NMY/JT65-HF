@@ -36,27 +36,26 @@ Type
 
        public
              Constructor create();
-             procedure togglePTT();
-
-             property port : String
+             procedure PTT(state : boolean);
+             property port       : String
                 read  prPort
                 write prPort;
-             property lines : String
+             property lines      : String
                 read  prLines
                 write prLines;
-             property useAltPTT : Boolean
+             property useAltPTT  : Boolean
                 read  prAlternate
                 write prAlternate;
-             property ptt : Boolean
+             property pttState   : Boolean
                 read  prPTT
                 write prPTT;
              property serialList : String
                 read  portList;
        end;
 
-       function  jtptt(nport : Pointer; msg : Pointer; ntx : Pointer; iptt : Pointer) : CTypes.cint; cdecl; external JT_DLL name 'ptt_';
-
 implementation
+
+function  jtptt(nport : Pointer; msg : Pointer; ntx : Pointer; iptt : Pointer) : CTypes.cint; cdecl; external JT_DLL name 'ptt_';
 
 constructor TSerial.Create();
 Begin
@@ -206,17 +205,19 @@ Begin
       end;
 end;
 
-procedure TSerial.togglePTT();
+procedure TSerial.PTT(state : Boolean);
 begin
       if portValid then
       begin
            if prAlternate then
            begin
-                if prPTT then altPTT(false) else altPTT(true);
+                if state then altPTT(true) else altPTT(false);
+                //if state then prPTT := true else prPTT := false;
            end
            else
            begin
-                if prPTT then regPTT(false) else regPTT(true);
+                if state then regPTT(true) else regPTT(false);
+                //if state then prPTT := true else prPTT := false;
            end;
       end;
 end;
@@ -235,18 +236,23 @@ begin
                   prpttSerial.Connect(prPortString);
                   prpttSerial.Config(9600,8,'N',0,false,true);
                   prpttOpened := True;
+                  prPTT := True;
                except
-                  //dlog.fileDebug('PTT Port [' + mnnport + '] failed to key up.');
+                  halt;
                end;
-               prPTT := True;
           end;
      end
      else
      begin
           if prpttOpened Then
           Begin
-               prpttOpened := False;
-               prpttSerial.Free;
+               Try
+                  prpttOpened := False;
+                  prpttSerial.Free;
+               Except
+                  prPTT := True;
+                  halt;
+               end;
           End;
           prPTT := False;
      end;
@@ -255,6 +261,7 @@ end;
 procedure TSerial.regPTT(stat : Boolean);
 var
    ntx, iptt, ioresult : CTypes.cint;
+   sport               : CTypes.cint;
    msg                 : CTypes.cschar;
 begin
      if stat then
@@ -262,24 +269,42 @@ begin
           ioresult := 0;
           msg      := 0;
           ntx      := 1;
-          iptt     := 0;
+          iptt     := -1;
           prPTT    := False;
+          sport    := prPortNumeral;
           // prPortNumeral already holds a valid integer (>0 <256)
-          if prPortNumeral > 0 Then ioresult := jtptt(@prPortNumeral, @msg, @ntx, @iptt);
-          //if ioresult = 1 Then dlog.fileDebug('PTT Port [' + mnnport + '] failed to key up.');
-          if ioresult = 0 Then prPTT := True else prPTT := False;
+          if sport > 0 Then ioresult := jtptt(@sport, @msg, @ntx, @iptt);
+          if ioresult = 1 Then
+          begin
+               prPTT := false;
+               halt;
+          end;
+          if (ioresult = 0) and (iptt = 1) Then prPTT := True;
+          if (ioresult = 0) and (iptt = 0) Then prPTT := False;
+          if not prPTT then
+          begin
+               halt;
+          end;
      end
      else
      begin
           ioresult := 0;
           msg      := 0;
-          ntx      := 1;
-          iptt     := 0;
+          ntx      := 0;
+          iptt     := -1;
           prPTT    := True;
-          // prPortNumeral already holds a valid integer (>0 <256)
-          if prPortNumeral > 0 Then ioresult := jtptt(@prPortNumeral, @msg, @ntx, @iptt);
-          //if ioresult = 1 Then dlog.fileDebug('PTT Port [' + mnnport + '] failed to key down.');
-          if ioresult = 0 Then prPTT := False;
+          sport    := prPortNumeral;
+          if sport > 0 Then ioresult := jtptt(@sport, @msg, @ntx, @iptt);
+          if ioresult = 1 Then
+          begin
+               halt;
+          end;
+          if (ioresult = 0) and (iptt = 0) Then prPTT := False;
+          if (ioresult = 0) and (iptt = 1) Then prPTT := True;
+          if prPTT then
+          begin
+               halt;
+          end;
      end;
 end;
 end.
