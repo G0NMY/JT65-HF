@@ -46,6 +46,7 @@ type
         function asciiValidate(msg : Char; mode : String) : Boolean;
         function testQRG(const qrg : String; var qrgk : single; var qrghz : Integer) : Boolean;
         function evalQRG(const qrg : String; const mode : string; var qrgk : Double; var qrghz : Integer; var asciiqrg : String) : Boolean;
+        function evalIQRG(const qrg : Integer; const mode : String; var band : String) : Boolean;
         function evalCSign(const call : String) : Boolean;
         function evalGrid(const grid : String) : Boolean;
 
@@ -1448,6 +1449,76 @@ implementation
         begin
              result := false;
         end;
+   end;
+
+   function TValidator.evalIQRG(const qrg : Integer; const mode : String; var band : String) : Boolean;
+   var
+        valid : Boolean;
+   begin
+        // Validates an integer value (qrg) for being within a valid amateur band
+        // from 160M to 23cm (excluding 60M).  If mode = lax then the qrg must be
+        // within an amateur band.  If mode = draconian then qrg must be within +/-
+        // 2 KHz of a designated JT65 QRG.
+        band := '';
+        valid := false;
+        if (qrg >    1799999) and (qrg <    2000001) then valid := true;
+        if (qrg >    3499999) and (qrg <    4000001) then valid := true;
+        if (qrg >    6999999) and (qrg <    7300001) then valid := true;
+        if (qrg >   10099999) and (qrg <   10150001) then valid := true;
+        if (qrg >   13999999) and (qrg <   14350001) then valid := true;
+        if (qrg >   18067999) and (qrg <   18168001) then valid := true;
+        if (qrg >   20999999) and (qrg <   21450001) then valid := true;
+        if (qrg >   24889999) and (qrg <   24990001) then valid := true;
+        if (qrg >   27999999) and (qrg <   29700001) then valid := true;
+        if (qrg >   49999999) and (qrg <   54000001) then valid := true;
+        if (qrg >  143999999) and (qrg <  148000001) then valid := true;
+        if (qrg >  221999999) and (qrg <  225000001) then valid := true;
+        if (qrg >  419999999) and (qrg <  450000001) then valid := true;
+        if (qrg >  901999999) and (qrg <  928000001) then valid := true;
+        if (qrg > 1269999999) and (qrg < 1295000001) then valid := true;
+        if (qrg > 1239999999) and (qrg < 1300000001) then valid := true;
+        if valid then
+        begin
+             if (qrg >    1799999) and (qrg <    2000001) then band := '160M';
+             if (qrg >    3499999) and (qrg <    4000001) then band :=  '80M';
+             if (qrg >    6999999) and (qrg <    7300001) then band :=  '40M';
+             if (qrg >   10099999) and (qrg <   10150001) then band :=  '30M';
+             if (qrg >   13999999) and (qrg <   14350001) then band :=  '20M';
+             if (qrg >   18067999) and (qrg <   18168001) then band :=  '17M';
+             if (qrg >   20999999) and (qrg <   21450001) then band :=  '15M';
+             if (qrg >   24889999) and (qrg <   24990001) then band :=  '12M';
+             if (qrg >   27999999) and (qrg <   29700001) then band :=  '10M';
+             if (qrg >   49999999) and (qrg <   54000001) then band :=   '6M';
+             if (qrg >  143999999) and (qrg <  148000001) then band :=   '2M';
+             if (qrg >  221999999) and (qrg <  225000001) then band := '1.25M';
+             if (qrg >  419999999) and (qrg <  450000001) then band :=  '70CM';
+             if (qrg >  901999999) and (qrg <  928000001) then band :=  '33CM';
+             if (qrg > 1269999999) and (qrg < 1295000001) then band :=  '23CM';
+             if (qrg > 1239999999) and (qrg < 1300000001) then band :=  '23CM';
+             // Now to 'draconian' validation mode
+             if mode = 'draconian' then
+             begin
+                  valid := false;
+                  if (qrg >    1799999) and (qrg <    2000001) then valid := true; // For 160M I'm not setting to any particular QRG range for draconian mode
+                  if (qrg >    3499999) and (qrg <    4000001) then valid := true; // For  80M I'm not setting to any particular QRG range for draconian mode
+                  if (qrg >    7036999) and (qrg <    7041001) then valid := true; // For  40M I have 2 QRG Values 7039 and 7076
+                  if (qrg >    7073999) and (qrg <    7078001) then valid := true; // For  40M I have 2 QRG Values 7039 and 7076
+                  if (qrg >   10099999) and (qrg <   10150001) then valid := true; // For  30M I'm not setting to any particular QRG range for draconian mode
+                  if (qrg >   14073999) and (qrg <   14078001) then valid := true; // For  20M I'm at 14076
+                  if (qrg >   18067999) and (qrg <   18168001) then valid := true; // For  17M I'm not setting to any particular QRG range for draconian mode
+                  if (qrg >   21073999) and (qrg <   21078001) then valid := true; // For  15M I'm at 21076
+                  if (qrg >   24889999) and (qrg <   24990001) then valid := true; // For  12M I'm not setting to any particular QRG range for draconian mode
+                  if (qrg >   28073999) and (qrg <   28078001) then valid := true; // For  10M I'm at 28076
+                  if (qrg >   49999999) and (qrg <   54000001) then valid := true; // For all bands above 10M I'm not setting to any particular QRG range for draconian mode
+                  if (qrg >  143999999) and (qrg <  148000001) then valid := true;
+                  if (qrg >  221999999) and (qrg <  225000001) then valid := true;
+                  if (qrg >  419999999) and (qrg <  450000001) then valid := true;
+                  if (qrg >  901999999) and (qrg <  928000001) then valid := true;
+                  if (qrg > 1269999999) and (qrg < 1295000001) then valid := true;
+                  if (qrg > 1239999999) and (qrg < 1300000001) then valid := true;
+             end;
+        end;
+        result := valid;
    end;
 
    function TValidator.testQRG(const qrg : String; var qrgk : Single; var qrghz : Integer) : Boolean;
