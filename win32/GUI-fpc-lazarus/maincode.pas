@@ -514,65 +514,65 @@ end;
 
 procedure rbcThread.Execute;
 begin
-     //while not Terminated and not Suspended and not rbc.glrbActive do
-     //begin
-     //     Try
-     //        if globalData.rbCacheOnly Then
-     //        Begin
-     //             // rbCacheOnly is set, but, should it be?
-     //             //if not cfgvtwo.Form6.cbNoInet.Checked And cfgvtwo.Form6.cbUseRB.Checked Then globalData.rbCacheOnly := False;
-     //             //if cfgvtwo.Form6.cbNoInet.Checked And cfgvtwo.Form6.cbUseRB.Checked Then globalData.rbCacheOnly := True;
-     //        End;
-          //   if Length(TrimLeft(TrimRight(cfgvtwo.Form6.editPSKRCall.Text)))>0 Then
-          //   Begin
-          //        If (dorbReport) And (not rbc.glrbActive) Then
-          //        Begin
-          //             rbc.glrbCallsign := TrimLeft(TrimRight(cfgvtwo.Form6.editPSKRCall.Text));
-          //             rbc.glrbGrid := TrimLeft(TrimRight(cfgvtwo.Form6.edMyGrid.Text));
-          //             rbc.glrbQRG := Form1.editManQRG.Text;
-          //             rbc.glrbActive := True;
-          //             rbc.processRB();
-          //             dorbReport := False;
-          //        end;
-          //        if (cfgvtwo.glrbcLogin) And (not rbc.glrbActive) Then
-          //        Begin
-          //             rbc.glrbCallsign := TrimLeft(TrimRight(cfgvtwo.Form6.editPSKRCall.Text));
-          //             rbc.glrbQRG := Form1.editManQRG.Text;
-          //             rbc.glrbGrid := TrimLeft(TrimRight(cfgvtwo.Form6.edMyGrid.Text));
-          //             rbc.glrbActive := True;
-          //             rbc.doLogin();
-          //             cfgvtwo.glrbcLogin := False;
-          //        End;
-          //        if (cfgvtwo.glrbcLogout) And (not rbc.glrbActive) Then
-          //        Begin
-          //             rbc.glrbCallsign := TrimLeft(TrimRight(cfgvtwo.Form6.editPSKRCall.Text));
-          //             rbc.glrbQRG := Form1.editManQRG.Text;
-          //             rbc.glrbGrid := TrimLeft(TrimRight(cfgvtwo.Form6.edMyGrid.Text));
-          //             rbc.glrbActive := True;
-          //             rbc.doLogout();
-          //             cfgvtwo.glrbcLogout := False;
-          //        End;
-          //        if (rbcPing) And (not rbc.glrbActive) Then
-          //        Begin
-          //             rbc.glrbCallsign := TrimLeft(TrimRight(cfgvtwo.Form6.editPSKRCall.Text));
-          //             rbc.glrbQRG := Form1.editManQRG.Text;
-          //             rbc.glrbGrid := TrimLeft(TrimRight(cfgvtwo.Form6.edMyGrid.Text));
-          //             rbc.glrbActive := True;
-          //             rbc.doLogin();
-          //             rbcPing := False;
-          //        End;
-          //        if (rbcCache) And (not rbc.glrbActive) Then
-          //        Begin
-          //             // TODO Reinstate following once cache uploader is verified.
-          //             //rbc.sendCached();
-          //             rbcCache := False;
-          //        End;
-          //   End;
-          //Except
-          //   dlog.fileDebug('Notice:  Exception in rbc thread');
-          //end;
+     while not Terminated and not Suspended and not rbc.glrbActive do
+     begin
+          Try
+             //if globalData.rbCacheOnly Then
+             //Begin
+                  // rbCacheOnly is set, but, should it be?
+                  //if not cfgvtwo.Form6.cbNoInet.Checked And cfgvtwo.Form6.cbUseRB.Checked Then globalData.rbCacheOnly := False;
+                  //if cfgvtwo.Form6.cbNoInet.Checked And cfgvtwo.Form6.cbUseRB.Checked Then globalData.rbCacheOnly := True;
+             //End;
+             if Length(TrimLeft(TrimRight(guidedconfig.cfg.rbcallsign)))>0 Then
+             Begin
+                  If (ctrl.dorbReport) And (not rbc.glrbActive) Then
+                  Begin
+                       rbc.glrbCallsign := TrimLeft(TrimRight(guidedconfig.cfg.rbcallsign));
+                       rbc.glrbGrid := TrimLeft(TrimRight(guidedconfig.cfg.grid));
+                       rbc.glrbQRG := IntToStr(guidedconfig.cfg.guiQRG);  // (Was) Form1.editManQRG.Text;
+                       rbc.glrbActive := True;
+                       rbc.processRB();
+                       ctrl.dorbReport := False;
+                  end;
+                  //if (cfgvtwo.glrbcLogin) And (not rbc.glrbActive) Then
+                  //Begin
+                       //rbc.glrbCallsign := TrimLeft(TrimRight(guidedconfig.cfg.rbcallsign));
+                       //rbc.glrbQRG := IntToStr(guidedconfig.cfg.guiQRG);  // (Was) Form1.editManQRG.Text;
+                       //rbc.glrbGrid := TrimLeft(TrimRight(guidedconfig.cfg.grid));
+                       //rbc.glrbActive := True;
+                       //rbc.doLogin();
+                       //cfgvtwo.glrbcLogin := False;
+                  //End;
+                  //if (cfgvtwo.glrbcLogout) And (not rbc.glrbActive) Then
+                  //Begin
+                       //rbc.glrbCallsign := TrimLeft(TrimRight(guidedconfig.cfg.rbcallsign));
+                       //rbc.glrbQRG := IntToStr(guidedconfig.cfg.guiQRG);  // (Was) Form1.editManQRG.Text;
+                       //rbc.glrbGrid := TrimLeft(TrimRight(cguidedconfig.cfg.grid));
+                       //rbc.glrbActive := True;
+                       //rbc.doLogout();
+                       //cfgvtwo.glrbcLogout := False;
+                  //End;
+                  if (ctrl.rbcPing) And (not rbc.glrbActive) Then
+                  Begin
+                       rbc.glrbCallsign := TrimLeft(TrimRight(guidedconfig.cfg.rbcallsign));
+                       rbc.glrbQRG := IntToStr(guidedconfig.cfg.guiQRG);  // (Was) Form1.editManQRG.Text;
+                       rbc.glrbGrid := TrimLeft(TrimRight(guidedconfig.cfg.grid));
+                       rbc.glrbActive := True;
+                       rbc.doLogin();
+                       ctrl.rbcPing := False;
+                  End;
+                  if (ctrl.rbcCache) And (not rbc.glrbActive) Then
+                  Begin
+                       // TODO Reinstate following once cache uploader is verified.
+                       //rbc.sendCached();
+                       ctrl.rbcCache := False;
+                  End;
+             End;
+          Except
+             //dlog.fileDebug('Notice:  Exception in rbc thread');
+          end;
           Sleep(500);
-     //end;
+     end;
 end;
 
 procedure decodeThread.Execute;
@@ -2590,7 +2590,7 @@ begin
      If TryStrToFloat(Form1.editManQRG.Text, floatvar) Then
      Begin
           intvar := trunc(floatvar);
-          //If parseCallSign.valQRG(intvar) Then rbc.glrbQRG := Form1.editManQRG.Text else rbc.glrbQRG := '0';
+          //rbc.glrbQRG := IntToStr(guidedconfig.cfg.guiQRG);  // (Was) If parseCallSign.valQRG(intvar) Then rbc.glrbQRG := Form1.editManQRG.Text else rbc.glrbQRG := '0';
      End;
      // Update form title with rb info.
      If guidedconfig.cfg.useRB and not guidedconfig.cfg.noSpotting Then
@@ -2663,6 +2663,7 @@ Begin
      guidedconfig.cfg.cfgdir := guidedconfig.cfg.baseDir + '\JT65HF\data';
      guidedconfig.cfg.kvdir  := guidedconfig.cfg.baseDir + '\JT65HF\kvdt';
      log.adifName := guidedconfig.cfg.logdir + '\JT65HF_ADIFLOG.adi';
+{ TODO : Change this (or at least attempt to) to use KVASD in installed directory but use KVASD.DAT in kv directory. }
      d65.gld65kvfname  := guidedconfig.cfg.kvdir + '\KVASD.DAT';
      d65.gld65kvpath   := guidedconfig.cfg.kvdir;
      d65.gld65wisfname := guidedconfig.cfg.cfgdir + '\wisdom2.dat';

@@ -51,7 +51,7 @@
         <PackageName Value="LCL"/>
       </Item3>
     </RequiredPackages>
-    <Units Count="39">
+    <Units Count="40">
       <Unit0>
         <Filename Value="jt65-hf.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -263,6 +263,11 @@
         <IsPartOfProject Value="True"/>
         <UnitName Value="dispatchobject"/>
       </Unit38>
+      <Unit39>
+        <Filename Value="spot.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="spot"/>
+      </Unit39>
     </Units>
   </ProjectOptions>
   <CompilerOptions>
