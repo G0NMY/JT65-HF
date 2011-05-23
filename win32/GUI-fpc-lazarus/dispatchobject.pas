@@ -31,13 +31,14 @@ type
         prrbcPing         : Boolean;
         prdorbReport      : Boolean;
         prrbcCache        : Boolean;
+        prrbLogout        : Boolean;
+        prdoRB            : Boolean;
         prprimed          : Boolean;
         prfirstReport     : Boolean;
         prwatchMulti      : Boolean;
         prdoCAT           : Boolean;
         prhaveRXSRerr     : Boolean;
         prhaveTXSRerr     : Boolean;
-        prdoRB            : Boolean;
         prresyncLoop      : Boolean;
         prhaveOddBuffer   : Boolean;
         prd65doDecodePass : Boolean;
@@ -147,6 +148,9 @@ type
      property doRB : Boolean
         read  prdoRB
         write prdoRB;
+     property doRBLogout : Boolean
+        read  prRBLogout
+        write prRBLogout;
      property resyncLoop : Boolean
         read  prResyncLoop
         write prResyncLoop;
@@ -249,6 +253,7 @@ begin
      prstatusChange    := False;
      prrunOnce         := False;
      prtxPeriod        := 0;
+     prrbLogout        := False;
      prrbcPing         := False;
      prdorbReport      := False;
      prrbcCache        := False;

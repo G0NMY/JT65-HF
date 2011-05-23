@@ -26,7 +26,7 @@ unit spot;
 interface
 
 uses
-  Classes, SysUtils, httpsend, valobject, StrUtils;
+  Classes, SysUtils, httpsend, valobject, StrUtils, CTypes;
 
 Type
     spotRecord = record
@@ -64,6 +64,8 @@ Type
               prVersion : String;
               prSpots   : spotsArray;
               prVal     : valobject.TValidator;
+              prRBCount : CTypes.cuint64;
+              prPRCount : CTypes.cuint64;
        public
              Constructor create();
              function  addSpot(const spot : spotRecord) : Boolean;
@@ -73,36 +75,42 @@ Type
              function  logoutPSKR : Boolean;
              function  pushSpots  : Boolean;
              function  parseExchange(const exchange : String; var callheard : String; var gridheard : String) : Boolean;
+             function  RBcountS   : String;
+             function  PRcountS   : String;
 
-             property myCall  : String
+             property myCall    : String
                 read  prMyCall
                 write prMyCall;
-             property myGrid  : String
+             property myGrid    : String
                 read  prMyGrid
                 write prMyGrid;
-             property myQRG   : Integer
+             property myQRG     : Integer
                 read  prMyQRG
                 write prMyQRG;
-             property useOn   : Boolean
+             property useRB     : Boolean
                 read  prUseRB
                 write prUseRB;
-             property usePSKR : Boolean
+             property usePSKR   : Boolean
                 read  prUsePSKR
                 write prUsePSKR;
-             property useDBF  : Boolean
+             property useDBF    : Boolean
                 read  prUseDBF
                 write prUseDBF;
-             property rbOn    : Boolean
+             property rbOn      : Boolean
                 read  prRBOn;
-             property pskrOn  : Boolean
+             property pskrOn    : Boolean
                 read  prPSKROn;
-             property busy    : Boolean
+             property busy      : Boolean
                 read  prBusy;
-             property rbError : String
+             property rbError   : String
                 read  prRBError;
-             property version : String
+             property version   : String
                 read  prVersion
                 write prVersion;
+             property rbCount   : String
+                read  RBCountS;
+             property pskrCount : String
+                read  PRCountS;
        end;
 
 implementation
@@ -121,6 +129,8 @@ implementation
          prRBError := '';
          prPSKROn  := False;
          prVersion := '';
+         prRBCount := 0;
+         prPRCount  := 0;
          setlength(prSpots,4096);
          for i := 0 to 4095 do
          begin
@@ -138,6 +148,16 @@ implementation
               prspots[i].pskrsent := true;
          end;
     End;
+
+    function  TSpot.RBcountS : String;
+    begin
+         result := IntToStr(prRBCount);
+    end;
+
+    function  TSpot.PRcountS : String;
+    begin
+         result := IntToStr(prPRCount);
+    end;
 
     function  TSpot.addSpot(const spot : spotRecord) : Boolean;
     var
@@ -302,7 +322,6 @@ implementation
          prBusy    := True;
          // This function handles sending spots to RB Network, PSK Reporter or Internal Database
          if prUseRB then
-
          begin
               // Do RB work
               http         := THTTPSend.Create;
@@ -320,26 +339,30 @@ implementation
                              url := 'http://jt65.w6cqz.org/rb.php?func=RR&callsign=' + prMyCall + '&grid=' + prMyGrid + '&qrg=' + IntToStr(prSpots[i].qrg) + '&rxtime=' + prSpots[i].time + '&rxdate=' + prSpots[i].date + '&callheard=' + callheard + '&gridheard=' + gridheard + '&siglevel=' + IntToStr(prSpots[i].db) + '&deltaf=' + IntToStr(prSpots[i].df) + '&deltat=' + floatToStrF(prSpots[i].dt,ffFixed,0,1) + '&decoder=' + prSpots[i].decoder + '&mode=' + prSpots[i].mode + '&exchange=' + prSpots[i].exchange + '&rbversion=' + prVersion;
                              Try
                                 // This logs in to the RB System using parameters set in the object class
-                                if not HTTP.HTTPMethod('GET', url) Then
-                                begin
-                                     resolved := False;
-                                     result   := False;
-                                end
-                                else
-                                begin
-                                     rbResult := TStringList.Create;
-                                     rbResult.Clear;
-                                     rbResult.LoadFromStream(HTTP.Document);
-                                     // Messages RB login can return:
-                                     // QSL - All good, spot saved.
-                                     // NO - Indicates spot failed and safe to retry. (Probably RB Server busy)
-                                     // ERR - Indicates RB Server has an issue with the data and not allowed to retry.
-                                     If TrimLeft(TrimRight(rbResult.Text)) = 'QSL' Then resolved := true;
-                                     If TrimLeft(TrimRight(rbResult.Text)) = 'NO'  Then resolved := false;
-                                     If TrimLeft(TrimRight(rbResult.Text)) = 'ERR' Then resolved := false;
-                                     foo := TrimLeft(TrimRight(rbresult.Text));
-                                     rbResult.Free;
-                                end;
+{ TODO : REMOVE DEBUG CODE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! }
+                                //if not HTTP.HTTPMethod('GET', url) Then
+                                //begin
+                                //     resolved := False;
+                                //     result   := False;
+                                //end
+                                //else
+                                //begin
+                                //     rbResult := TStringList.Create;
+                                //     rbResult.Clear;
+                                //     rbResult.LoadFromStream(HTTP.Document);
+                                //     // Messages RB login can return:
+                                //     // QSL - All good, spot saved.
+                                //     // NO - Indicates spot failed and safe to retry. (Probably RB Server busy)
+                                //     // ERR - Indicates RB Server has an issue with the data and not allowed to retry.
+                                //     If TrimLeft(TrimRight(rbResult.Text)) = 'QSL' Then resolved := true;
+                                //     If TrimLeft(TrimRight(rbResult.Text)) = 'QSL' Then inc(prRBCount);
+                                //     If TrimLeft(TrimRight(rbResult.Text)) = 'NO'  Then resolved := false;
+                                //     If TrimLeft(TrimRight(rbResult.Text)) = 'ERR' Then resolved := false;
+                                //     foo := TrimLeft(TrimRight(rbresult.Text));
+                                //     rbResult.Free;
+                                //end;
+                                resolved := True;  // DEBUG DEBUG DEBUG REMOVE REMOVE REMOVE
+                                foo      := 'QSL'; // DEBUG DEBUG DEBUG REMOVE REMOVE REMOVE
                                 HTTP.Free;
                              Except
                                 HTTP.Free;
@@ -350,6 +373,7 @@ implementation
                              begin
                                   result := true;
                                   prSpots[i].rbsent := true;
+                                  inc(prRBCount);
                              end
                              else
                              begin
@@ -606,7 +630,17 @@ implementation
          begin
               resolved := false;
          end;
-         result := resolved;
+
+         if not resolved then
+         begin
+              result := false;
+         end
+         else
+         begin
+              result := true;
+         end;
+
+         //result := resolved;
     end;
 
 end.

@@ -64,22 +64,9 @@ Var
    spectrumComputing65     : Boolean;
    audioComputing          : Boolean;
    specNewSpec65           : Boolean;
-   //gqrg                    : Double;
-   //strqrg                  : String;
-   rbLoggedIn              : Boolean;
-   rbCacheOnly             : Boolean;
-   rbecode                 : String;
    txInProgress            : Boolean;
    debugOn                 : Boolean;
-   //fullcall                : String;
    gmode                   : Integer; // 65 or 4
-   //si570ptt                : Boolean;
-   //hrdcatControlcurrentRig : hrdrigCAP;
-   //hrdVersion              : Integer;
-   //basedir, cfgdir, kvdir  : String;
-   //logdir, srcdir          : String;
-   //validgrid               : Boolean;
-   //chkconfig               : Boolean;
 
    // The variable list above comprises those variables used in more than two
    // units (inclusive of maincode).  Addition of variables to this list should
