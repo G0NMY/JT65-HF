@@ -1,0 +1,50 @@
+Change log
+
+For 2.0.0
+
+Converted configuration data structure to class (object) implementation.
+
+Added DDE Class to facilitate DDE communication.  This will be of use to rig control
+and logging programs.
+
+Added Rig Controller class to act as a common interface to various physical rig
+controller methods.  This allows the main program to interface with all supported
+rig controllers using the same code.
+
+Added class encapsulating physical rig control methods used by DX Lab CI-V Commander.
+Commander is now read from rig and write to rig versus read only.
+
+Added class encapsulating physical rig control methods used by Ham Radio Deluxe (DDE Interface).
+
+Added class encapsulating physical rig control methods used by OmniRig.
+So far, OmniRig is still read only.
+
+Added validator class.  Validator class has methods to validate various items used by JT65-HF
+such as callsigns, grids, frequencies and free text messages.
+
+New configuration system (guided configuration).  This takes user through all items of
+importance in a step by step process with full validation of input values.  No more bad
+callsigns or grids is the goal.
+
+
+
+More on the class (or object) structures.
+
+Rig Control:
+
+The common class is rigobject.  Class rigobject provides all the data structures related
+to rig control in a common interface.  The class uses the following rig control method
+specific classes:  civobject for CI-V Commander (DX Labs), ddehrdobject for HRD,
+omnirig object for OmniRig and si570 object for DG8SAQ Si570 USB controller.  Now the
+main code only has to communicate with rigobject using the same methods/variables
+regardless of actual rig control method used.
+
+Configuration:
+
+The common class is cfgobject.  Class cfgobject holds all user configurable variables
+during the program's run and all data contained in the structure is validated for full
+conformance with JT65 protocol requirements.  No more bad calls/grids/QRGs.  Beyond
+that the class is, at program start, assinged twice with the second acting as a
+'shadow' copy allowing for an undo of changes to configuration.
+
+

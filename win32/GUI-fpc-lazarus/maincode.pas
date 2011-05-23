@@ -29,7 +29,7 @@ uses
   Classes , SysUtils , LResources , Forms , Controls , Graphics , Dialogs ,
   StdCtrls , CTypes , StrUtils , Math , ExtCtrls , ComCtrls , Spin , Windows ,
   DateUtils , encode65 , globalData , ClipBrd , rawdec , guiConfig , verHolder ,
-  dispatchobject , PSKReporter , Menus , log , diagout , synautil ,
+  dispatchobject , Menus , log , diagout , synautil ,
   waterfall , d65 , spectrum , about , FileUtil , TAGraph , guidedconfig ,
   valobject , rigobject , portaudio , adc , dac , audiodiag, spot;
 
@@ -325,9 +325,6 @@ type
 
      decoderThread              : decodeThread;
      rbThread                   : rbcThread;
-
-     pskrStats                  : PSKReporter.REPORTER_STATISTICS;
-     pskrstat                   : Integer;
 
      mnlooper, ij               : Integer;
      sLevel1, sLevel2, sLevelM  : Integer;
@@ -1247,8 +1244,8 @@ begin
           if termcount > 9 then break;
      end;
      portaudio.Pa_Terminate();
-     //if cfgvtwo.Form6.cbUsePSKReporter.Checked Then PSKReporter.ReporterUninitialize;
      Waterfall.Free;
+     rb.endspots;
 end;
 
 procedure Tform1.addToRBC(i , m : Integer);
@@ -2992,26 +2989,9 @@ Begin
      //
      if not guidedconfig.cfg.noSpotting Then
      Begin
-          cbEnRB.Checked   := True;
-          cbEnRB.Enabled   := True;
-          if guidedconfig.cfg.usePSKR then
-          begin
-               // Initialize PSK Reporter DLL
-               If PSKReporter.ReporterInitialize('report.pskreporter.info','4739') = 0 Then pskrstat := 1 else pskrstat := 0;
-               cbEnPSKR.Checked := True;
-          end
-          else
-          begin
-               cbEnPSKR.Checked := False;
-          end;
-          if guidedconfig.cfg.useRB then
-          begin
-               cbEnRB.Checked := True;
-          end
-          else
-          begin
-               cbEnRB.Checked := False;
-          end;
+          if guidedconfig.cfg.useRB then cbEnRB.Checked := True else cbEnRB.Checked := False;
+          if guidedconfig.cfg.usePSKR then cbEnPSKR.Checked := True else cbEnPSKR.Checked := False;
+
      End
      Else
      Begin
@@ -4090,22 +4070,6 @@ Begin
      Form1.MenuItem42.Caption := guidedconfig.cfg.macroList[22];
      Form1.MenuItem43.Caption := guidedconfig.cfg.macroList[23];
 
-     // PSKR Check
-     //if cfgvtwo.Form6.cbUsePSKReporter.Checked Then
-     //Begin
-     //     if pskrstat = 0 Then
-     //     Begin
-     //          Form1.Timer1.Enabled := False;
-     //          If PSKReporter.ReporterInitialize('report.pskreporter.info','4739') = 0 Then pskrstat := 1 else pskrstat := 0;
-     //          Form1.Timer1.Enabled := True;
-     //     End;
-     //End;
-     //if cfgvtwo.Form6.cbUsePSKReporter.Checked and not primed Then PSKReporter.ReporterTickle;
-     //If cfgvtwo.Form6.cbUsePSKReporter.Checked and not primed Then
-     //Begin
-     //     If PSKReporter.ReporterGetStatistics(pskrStats,SizeOf(pskrStats)) = 0 Then Label19.Caption := IntToStr(pskrStats.callsigns_sent);
-     //End;
-     //if cfgvtwo.Form6.cbUsePSKReporter.Checked Then Form1.Label19.Visible := True else Form1.Label19.Visible := False;
 
      // RB Check
      Label30.Caption := rb.rbCount;

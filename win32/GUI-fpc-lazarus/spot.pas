@@ -26,7 +26,7 @@ unit spot;
 interface
 
 uses
-  Classes, SysUtils, httpsend, valobject, StrUtils, CTypes;
+  Classes, SysUtils, httpsend, valobject, StrUtils, CTypes, PSKReporter;
 
 Type
     spotRecord = record
@@ -66,8 +66,11 @@ Type
               prVal     : valobject.TValidator;
               prRBCount : CTypes.cuint64;
               prPRCount : CTypes.cuint64;
+              pskrStats : PSKReporter.REPORTER_STATISTICS;
+              pskrstat  : Integer;
        public
-             Constructor create();
+             Constructor create;
+             Destructor  endspots;
              function  addSpot(const spot : spotRecord) : Boolean;
              function  loginRB    : Boolean;
              function  loginPSKR  : Boolean;
@@ -114,7 +117,7 @@ Type
        end;
 
 implementation
-    constructor TSpot.Create();
+    constructor TSpot.Create;
     var
        i : Integer;
     Begin
@@ -147,7 +150,31 @@ implementation
               prspots[i].rbsent   := true;
               prspots[i].pskrsent := true;
          end;
+         // Initialize PSK Reporter DLL
+         //If PSKReporter.ReporterInitialize('report.pskreporter.info','4739') = 0 Then pskrstat := 1 else pskrstat := 0;
+         //if cfgvtwo.Form6.cbUsePSKReporter.Checked and not primed Then PSKReporter.ReporterTickle;
+         //If cfgvtwo.Form6.cbUsePSKReporter.Checked and not primed Then
+         //Begin
+         //     If PSKReporter.ReporterGetStatistics(pskrStats,SizeOf(pskrStats)) = 0 Then Label19.Caption := IntToStr(pskrStats.callsigns_sent);
+         //End;
+         // PSKR Check
+         //if cfgvtwo.Form6.cbUsePSKReporter.Checked Then
+         //Begin
+         //     if pskrstat = 0 Then
+         //     Begin
+         //          Form1.Timer1.Enabled := False;
+         //          If PSKReporter.ReporterInitialize('report.pskreporter.info','4739') = 0 Then pskrstat := 1 else pskrstat := 0;
+         //          Form1.Timer1.Enabled := True;
+         //     End;
+         //End;
+         //if cfgvtwo.Form6.cbUsePSKReporter.Checked Then Form1.Label19.Visible := True else Form1.Label19.Visible := False;
     End;
+
+    Destructor TSpot.endspots;
+    Begin
+         //if cfgvtwo.Form6.cbUsePSKReporter.Checked Then PSKReporter.ReporterUninitialize;
+         setlength(prSpots,0);
+    end;
 
     function  TSpot.RBcountS : String;
     begin
@@ -407,240 +434,221 @@ implementation
     var
        wc        : Integer;
        w1,w2,w3  : String;
-       w4,w5     : String;
+       w4,w5,w6  : String;
+       w7        : String;
        resolved  : Boolean;
+       haveslash : Boolean;
     Begin
-         // Found an entry that hasn't been sent
-         // First thing is to parse the exchange field
-         // Now... exchanges.  The following forms are the only ones I'm interested in.
-         // CQ CALL GRID
-         // QRZ CALL GRID
-         // CQ PFX/CALL
-         // CQ CALL/SFX
-         // CQ DX CALL
-         // CQDX CALL
-         // TEST CALL
-         // CALL TEST
-         // CALL CALL
-         // CALL GRID
-         // CALL CALL GRID
-         // CALL CALL -##
-         // CALL CALL R-##
-         // CALL CALL RRR
-         // CALL CALL 73
-         // And that's it.  If it doesn't fit one of those it doesn't exist.
-         // The methodology for this is to break the exchange into a set of 2 or 3 words
-         // using space character as boundary.  It's clear that to resolve the first word
-         // must be CQ, QRZ, CQDZ, TEST or a valid (by JT65 encoding rules) callsign.
-         // The second word depends upon the first and the third depends upon the first and second.
-         // First get a word count
-         w1 := '';
-         w2 := '';
-         w3 := '';
-         wc := 0;
-         wc := wordCount(exchange,[' ']);
-         if (wc<2) or (wc>3) then wc := 0;
+         // I'm probably going to annoy some, but, as of 2.0.0 the RB/PSK Reporter
+         // spots will only spot callsigns using JT65 frames that are strictly valid
+         // in the sense of JT65 structured messages.
+         // Those being:
+         //
+         // 2 Word frames
+         //
+         // CQ           PFX/CALLSIGN
+         // CQ           CALLSIGN/SFX
+         // QRZ          PFX/CALLSIGN
+         // QRZ          CALLSIGN/SFX
+         // CALLSIGN     PFX/CALLSIGN
+         // CALLSIGN     CALLSIGN/SFX
+         // PFX/CALLSIGN CALLSIGN
+         // CALLSIGN/SFX CALLSIGN
+         //
+         // And I will allow the following messages that are not structured,
+         // but, are safe enough to deal with in free text mode and not, in
+         // general, abused.
+         //
+         // Non-structured 2 word frames
+         //
+         // TEST         CALLSIGN
+         // CALLSIGN     TEST
+         // CALLSIGN     GRID6
+         // CALLSIGN     GRID4
+         //
+         // 3 Word frames
+         //
+         // CQ           CALLSIGN GRID
+         // QRZ          CALLSIGN GRID
+         // CALLSIGN     CALLSIGN GRID
+         // CALLSIGN     CALLSIGN -##
+         // CALLSIGN     CALLSIGN R-##
+         // CALLSIGN     CALLSIGN RRR
+         // CALLSIGN     CALLSIGN 73
+         //
+         // OK.  Those are what I'll allow.  This means stations using something
+         // like CQ DX CALLSIGN or CQDX CALLSIGN or whatever of the endless things
+         // people think to try will not be spotted.  Since the RB system is mine
+         // I get to make the rules.  :)
+         //
+         //
+         // If the word count is < 2 or > 3 then I'm not interested in trying
+         // to extract anything from it.
+         //
          resolved := false;
-         if wc>0 then
+         if (wordcount(exchange,[' ']) = 2) or (wordcount(exchange,[' ']) = 3) then resolved := true else resolved := false;
+         if resolved then
          begin
-              // Ok... I have 2 or 3 words.  Let the fun begin
-              resolved := false;
-              if wc = 2 then
+              if(wordcount(exchange,[' ']) = 2) then
               begin
-                   resolved := false;
-                   callheard := '';
-                   gridheard := '';
-                   // For wc=2 It must be...
-                   // CQ PFX/CALL      x
-                   // CQ CALL/SFX      x
-                   // CQDX CALL        x
-                   // TEST CALL        x
-                   // CALL TEST        x
-                   // CALL CALL        x
-                   // CALL GRID        x
                    w1 := ExtractWord(1,exchange,[' ']);
                    w2 := ExtractWord(2,exchange,[' ']);
-                   if prVal.evalCSign(w1) Then
-                   begin
-                        // w1 is a callsign
-                        if w2 = 'TEST' then
-                        begin
-                             // CALL TEST
-                             callheard := w1;
-                             gridheard := 'NILL';
-                             resolved  := true;
-                        end;
-                        if prVal.evalGrid(w2) then
-                        begin
-                             // CALL GRID
-                             callheard := w1;
-                             gridheard := w2;
-                             resolved  := true;
-                        end;
-                        if prVal.evalCSign(w2) then
-                        begin
-                             // CALL CALL
-                             callheard := w2;
-                             gridheard := 'NILL';
-                             resolved  := true;
-                        end;
-                   end;
-                   if w1 = 'CQ' then
-                   begin
-                        // w1 is CQ
-                        // Now this is a special case in that
-                        // I 'SHOULD' have something like CQ PFX/CALL or CQ CALL/SFX
-                        // but, I could have a CQ CALL if someone uses an improper
-                        // message configuration.
-                        // Check for /
-                        if AnsiContainsText(w2,'/') then
-                        begin
-                             // w2 is a string with /
-                             w4 := '';
-                             w5 := '';
-                             w4 := ExtractWord(1,w2,['/']);
-                             w5 := ExtractWord(2,w2,['/']);
-                             // I'm going to assume the longer of the 2 (w4,w5) will
-                             // be the callsign with the shorter being prefix/suffix.
-                             // Will this always be right?  No, but, it'll do as I'm
-                             // not a big fan of using prefix/suffix with JT65 in the
-                             // first place.  :)
-                             if length(w4) > length(w5) then
-                             begin
-                                  // w4 should be the call
-                                  if prVal.evalCSign(w4) then
-                                  begin
-                                       callheard := w2;  // Yes, w2.  :)  I want to spot the callsign with suffix/prefix
-                                       gridheard := 'NILL';
-                                       resolved  := true;
-                                  end;
-                             end;
-                             if length(w5) > length(w4) then
-                             begin
-                                  // w5 should be the call
-                                  // CQ PFX/CALL
-                                  callheard := w2;  // Yes, w2.  :)  I want to spot the callsign with suffix/prefix
-                                  gridheard := 'NILL';
-                                  resolved  := true;
-                             end;
-
-                        end
-                        else
-                        begin
-                             if prVal.evalCSign(w2) then
-                             begin
-                                  // CQ CALL/SFX
-                                  callheard := w2;
-                                  gridheard := 'NILL';
-                                  resolved  := true;
-                             end;
-                        end;
-                   end;
-                   if w1 = 'CQDX' then
-                   begin
-                        // w1 is CQDX
-                        if prVal.evalCSign(w2) then
-                        begin
-                             // CQDX CALL
-                             callheard := w2;
-                             gridheard := 'NILL';
-                             resolved  := true;
-                        end;
-                   end;
-                   if w1 = 'TEST' then
-                   begin
-                        // w1 is TEST
-                        if prVal.evalCSign(w2) then
-                        begin
-                             // TEST CALL
-                             callheard := w2;
-                             gridheard := 'NILL';
-                             resolved  := true;
-                        end;
-                   end;
+                   w3 := '   ';
               end;
-
-              if wc = 3 then
+              if(wordcount(exchange,[' ']) = 3) then
               begin
-                   callheard := '';
-                   gridheard := '';
-                   resolved  := false;
-                   // For wc=3 It must be...
-                   // CQ CALL GRID          x
-                   // QRZ CALL GRID         x
-                   // CQ DX CALL            x
-                   // CALL CALL GRID        x
-                   // CALL CALL -##         x
-                   // CALL CALL R-##        x
-                   // CALL CALL RRR         x
-                   // CALL CALL 73          x
                    w1 := ExtractWord(1,exchange,[' ']);
                    w2 := ExtractWord(2,exchange,[' ']);
                    w3 := ExtractWord(3,exchange,[' ']);
-                   if w1 = 'CQ' Then
+              end;
+         end;
+         if resolved then
+         begin
+              // Have an exchange with 2 or 3 words so it is safe to proceed.
+              // Evaluate excahnge for slashed callsign in a 3 word frame
+              if (wordcount(exchange,[' '])=3) and (ansiContainsText(exchange,'/')) then resolved := false else resolved := true;
+              if resolved then
+              begin
+                   // Passed the check for no slash in 3 word frame
+                   // Doing the 3 word frame types first
+                   resolved := false;
+                   if not resolved and (w1='CQ') and prVal.evalCSign(w2) and prVal.evalGrid(w3) then
                    begin
-                        // This will be CQ CALL GRID or CQ DX CALL
-                        if prVal.evalCSign(w2) and prVal.evalGrid(w3) then
-                        begin
-                             // A nice standard CQ message
-                             callheard := w2;
-                             gridheard := w3;
-                             resolved  := true;
-                        end;
-                        if not prVal.evalCSign(w2) and prVal.evalCSign(w3) then
-                        begin
-                             // A CQ some crap CALLSIGN
-                             callheard := w3;
-                             gridheard := 'NILL';
-                             resolved  := true;
-                        end;
-                   end;
-                   if w1 = 'QRZ' then
-                   begin
-                        // This should be QRZ CALL GRID
-                        if prVal.evalCSign(w2) and prVal.evalGrid(w3) then
-                        begin
-                             callheard := w2;
-                             gridheard := w3;
-                             resolved  := true;
-                        end;
-                        if prVal.evalCSign(w2) and not prVal.evalGrid(w3) then
-                        begin
-                             callheard := w2;
-                             gridheard := 'NILL';
-                             resolved  := true;
-                        end;
-                   end;
-                   // Now handling the various CALL CALL SOMETHING forms
-                   if prVal.evalCSign(w1) and prVal.evalCSign(w2) and prVal.evalGrid(w3) Then
-                   Begin
-                        callheard := w2;  // Yes, w2.  w1 is not the transmitting callsign.
-                        gridheard := w3;
+                        // w1           w2       w3
+                        // CQ           CALLSIGN GRID
                         resolved  := true;
+                        callheard := w2;
+                        gridheard := w3;
                    end;
-                   if prVal.evalCSign(w1) and prVal.evalCSign(w3) and not prVal.evalGrid(w3) Then
+                   if not resolved and (w1='QRZ') and prVal.evalCSign(w2) and prVal.evalGrid(w3) then
                    begin
+                        // w1           w2       w3
+                        // QRZ          CALLSIGN GRID
+                        resolved  := true;
+                        callheard := w2;
+                        gridheard := w3;
+                   end;
+                   if not resolved and prVal.evalCSign(w1) and prVal.evalCSign(w2) and prVal.evalGrid(w3) then
+                   begin
+                        // w1           w2       w3
+                        // CALLSIGN     CALLSIGN GRID
+                        resolved  := true;
+                        callheard := w2;
+                        gridheard := w3;
+                   end;
+                   if not resolved and prVal.evalCSign(w1) and prVal.evalCSign(w2) and (w3[1]='-') then
+                   begin
+                        // w1           w2       w3
+                        // CALLSIGN     CALLSIGN -##
+                        resolved  := true;
                         callheard := w2;
                         gridheard := 'NILL';
+                   end;
+                   if not resolved and prVal.evalCSign(w1) and prVal.evalCSign(w2) and (w3[1]='R') then
+                   begin
+                        // w1           w2       w3
+                        // CALLSIGN     CALLSIGN R-##
+                        // CALLSIGN     CALLSIGN RRR
                         resolved  := true;
+                        callheard := w2;
+                        gridheard := 'NILL';
+                   end;
+                   if not resolved and prVal.evalCSign(w1) and prVal.evalCSign(w2) and (w3[1]='7') then
+                   begin
+                        // w1           w2       w3
+                        // CALLSIGN     CALLSIGN 73
+                        resolved  := true;
+                        callheard := w2;
+                        gridheard := 'NILL';
                    end;
               end;
-         end
-         else
-         begin
-              resolved := false;
+              //
+              // 3 word frames handled now on to 2 word frames
+              //
+              if not resolved then
+              begin
+                   if not resolved and (w1='TEST') and prVal.evalCSign(w2) and (w3 = '   ') then
+                   begin
+                        // w1           w2
+                        // TEST         CALLSIGN
+                        resolved  := true;
+                        callheard := w2;
+                        gridheard := 'NILL';
+                   end;
+                   if not resolved and prVal.evalCSign(w1) and (w1='TEST') and (w3 = '   ') then
+                   begin
+                        // w1           w2
+                        // CALLSIGN     TEST
+                        resolved  := true;
+                        callheard := w1;
+                        gridheard := 'NILL';
+                   end;
+                   if not resolved and prVal.evalCSign(w1) and prVal.evalGrid(w2) and (w3 = '   ') then
+                   begin
+                        // w1           w2
+                        // CALLSIGN     GRID6
+                        // CALLSIGN     GRID4
+                        resolved  := true;
+                        callheard := w1;
+                        gridheard := w2;
+                   end;
+                   if not resolved and (ansiContainsText(w1,'/') or ansiContainsText(w2,'/')) then
+                   begin
+                        if not resolved and ((w1='CQ') or (w1='QRZ')) then
+                        Begin
+                             // The slash has to be in the second word...
+                             if ansiContainsText(w2,'/') then
+                             begin
+                                  w4 := ExtractWord(1,w2,['/']);
+                                  w5 := ExtractWord(2,w2,['/']);
+                                  if length(w4) > length(w5) then w6 := w4;
+                                  if length(w5) > length(w4) then w6 := w5;
+                                  if prVal.evalCSign(w6) then
+                                  begin
+                                       // w1           w2
+                                       // CQ           PFX/CALLSIGN
+                                       // CQ           CALLSIGN/SFX
+                                       // QRZ          PFX/CALLSIGN
+                                       // QRZ          CALLSIGN/SFX
+                                       resolved  := True;
+                                       callheard := w2;  // Remember, w2 contains the full callsign where w6 only contains the base call
+                                       gridheard := 'NILL';
+                                  end;
+                             end;
+                        end;
+                        if not resolved and prVal.evalCSign(w1) then
+                        begin
+                             // w2 must be the slashed callsign
+                             if ansiContainsText(w2,'/') then
+                             begin
+                                  w4 := ExtractWord(1,w2,['/']);
+                                  w5 := ExtractWord(2,w2,['/']);
+                                  if length(w4) > length(w5) then w6 := w4;
+                                  if length(w5) > length(w4) then w6 := w5;
+                                  if prVal.evalCSign(w6) then
+                                  begin
+                                       // w1           w2
+                                       // CALLSIGN     PFX/CALLSIGN
+                                       // CALLSIGN     CALLSIGN/SFX
+                                       resolved  := True;
+                                       callheard := w2;  // Remember, w2 contains the full callsign where w6 only contains the base call
+                                       gridheard := 'NILL';
+                                  end;
+                             end;
+                        end;
+                        if not resolved and prVal.evalCSign(w2) then
+                        begin
+                             // w1 must be the slashed callsign and it doesn't matter so this is easy
+                             // w1           w2
+                             // PFX/CALLSIGN CALLSIGN
+                             // CALLSIGN/SFX CALLSIGN
+                             resolved  := True;
+                             callheard := w2;
+                             gridheard := 'NILL';
+                        end;
+                   end;
+              end;
          end;
-
-         if not resolved then
-         begin
-              result := false;
-         end
-         else
-         begin
-              result := true;
-         end;
-
-         //result := resolved;
     end;
 
 end.
