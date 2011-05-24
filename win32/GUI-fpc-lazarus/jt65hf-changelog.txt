@@ -59,6 +59,8 @@ operation.
 Confirmed correction to callsign parser now allows working callsigns having format A##A where A is
 leter A...Z and # is numeral 0..9.  This format of callsign is also now correctly spotted.
 
+Confirmed new RB/PSKR code is properly handling suffix/prefix callsigns.
+
 New interface to PSK Reporter is confirmed as working.  Corrected error in field name for reported
 grid.  I had looked at an old (very) ADIF definiton and was, much as in the ADIF logging modulem, used
 grid rather than gridsquare.  Corrected issue with sending time as 4 digits HHMM rather than HHMMSS.

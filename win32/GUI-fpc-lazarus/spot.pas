@@ -495,6 +495,8 @@ implementation
                                   pskrloc := BuildLocalString(prMyCall,prMyGrid,'JT65-HF','2000','Hamstick over metal building');
                                   If not (gridheard='NILL') then
                                   begin
+{ TODO : CONFIRM that PSK Reporter wants time as HHMMSS or HH:MM:SS
+I'm not sure if it's accepting HHMMSS form }
                                        pskrrep := BuildRemoteStringGrid(callheard,'JT65',IntToStr(prSpots[i].qrg),gridHeard,prSpots[i].date[1..8],prSpots[i].date[9..12]+'00');
                                        pskrstat := PSKReporter.ReporterSeenCallsign(pskrrep,pskrloc,PSKReporter.REPORTER_SOURCE_AUTOMATIC);
                                        psknum := pskrstat;
@@ -530,6 +532,7 @@ implementation
        w4,w5,w6  : String;
        resolved  : Boolean;
     Begin
+{ TODO : Case of exchange = QRZ CALLSIGN (with no grid) is being rejected.  Fix. }
          // I'm probably going to annoy some, but, as of 2.0.0 the RB/PSK Reporter
          // spots will only spot callsigns using JT65 frames that are strictly valid
          // in the sense of JT65 structured messages.
