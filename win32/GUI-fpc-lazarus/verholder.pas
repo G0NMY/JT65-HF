@@ -28,21 +28,25 @@ interface
 uses
   Classes, SysUtils; 
 
-  function verReturn()  : String;
-  function iverReturn() : Integer;
-  function dllReturn()  : Integer;
+  function verReturn  : String;
+  function iverReturn : Integer;
+  function dllReturn  : Integer;
+  function rbVersion  : String;
 
 implementation
-  function verReturn() : String;
+  function verReturn : String;
   Begin
        Result := '2.0.0';
   End;
-  function iverReturn() : Integer;
+  function rbVersion : String;
+  Begin
+       Result := '200';
+  end;
+  function iverReturn : Integer;
   Begin
        result := 200;
   end;
-
-  function dllReturn() : Integer;
+  function dllReturn : Integer;
   Begin
        Result := 3001;
   end;

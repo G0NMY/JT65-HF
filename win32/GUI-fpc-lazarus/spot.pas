@@ -68,6 +68,8 @@ Type
               prPRCount : CTypes.cuint64;
               pskrStats : PSKReporter.REPORTER_STATISTICS;
               pskrstat  : DWORD;
+              prInfo    : String;
+              prhttp    : THTTPSend;
               // Private functions to format data for PSK Reporter
               function BuildRemoteString (call, mode, freq, date, time : String) : WideString;
               function BuildRemoteStringGrid (call, mode, freq, grid, date, time : String) : WideString;
@@ -120,6 +122,12 @@ Type
                 read  RBCountS;
              property pskrCount : String
                 read  PRCountS;
+             property rbInfo    : String
+                read  prInfo
+                write prInfo;
+             property rbVersion : String
+                read  prVersion
+                write prVersion;
              property pskrCallsSent : Word
                 read  pskrStats.callsigns_sent;
              property pskrCallsBuff : Word
@@ -135,7 +143,13 @@ implementation
     var
        i : Integer;
     Begin
+         // Setup validation utility object
          prVal     := valobject.TValidator.create();
+         // Setup http object for RB use
+         prhttp         := THTTPSend.Create;
+         prhttp.Timeout := 10000;  // 10K ms = 10 s
+         prhttp.Headers.Add('Accept: text/html');
+
          prMyCall  := '';
          prMyGrid  := '';
          prMyQRG   := 0;
@@ -147,7 +161,8 @@ implementation
          prPSKROn  := False;
          prVersion := '';
          prRBCount := 0;
-         prPRCount  := 0;
+         prPRCount := 0;
+         prInfo    := '';
          setlength(prSpots,4096);
          for i := 0 to 4095 do
          begin
@@ -196,8 +211,9 @@ implementation
 
     Destructor TSpot.endspots;
     Begin
-         PSKReporter.ReporterUninitialize;
-         setlength(prSpots,0);
+         prHTTP.Free;                       // Release HTTP object
+         PSKReporter.ReporterUninitialize;  // Release PSK Reporter
+         setlength(prSpots,0);              // Free spots array
     end;
 
     function  TSpot.pskrTickle : DWORD;
@@ -366,9 +382,8 @@ implementation
     function TSpot.pushSpots : Boolean;
     var
        url, foo  : String;
-       http      : THTTPSend;
        rbResult  : TStringList;
-       i, e      : Integer;
+       i         : Integer;
        resolved  : Boolean;
        callheard : String;
        gridheard : String;
@@ -378,7 +393,6 @@ implementation
        pskrerr   : WideString;
        pskrrep   : WideString;
        pskrloc   : WideString;
-       psknum    : DWORD;
     Begin
          prRBError := '';
          band      := '';
@@ -387,9 +401,6 @@ implementation
          if prUseRB then
          begin
               // Do RB work
-              http         := THTTPSend.Create;
-              http.Timeout := 10000;  // 10K ms = 10 s
-              http.Headers.Add('Accept: text/html');
               for i := 0 to 4095 do
               begin
                    if not prSpots[i].rbsent then
@@ -400,42 +411,32 @@ implementation
                         gridheard := '';
                         if parseExchange(prSpots[i].exchange, callheard, gridheard) and prVal.evalIQRG(prSpots[i].qrg,'LAX',band) then
                         begin
+{ TODO : Server code is not live... at this point it will always return QSL when called. }
                              url := 'http://jt65.w6cqz.org/rb.php?func=RR&callsign=' + prMyCall + '&grid=' + prMyGrid + '&qrg=' + IntToStr(prSpots[i].qrg) + '&rxtime=' + prSpots[i].time + '&rxdate=' + prSpots[i].date + '&callheard=' + callheard + '&gridheard=' + gridheard + '&siglevel=' + IntToStr(prSpots[i].db) + '&deltaf=' + IntToStr(prSpots[i].df) + '&deltat=' + floatToStrF(prSpots[i].dt,ffFixed,0,1) + '&decoder=' + prSpots[i].decoder + '&mode=' + prSpots[i].mode + '&exchange=' + prSpots[i].exchange + '&rbversion=' + prVersion;
                              Try
-                                //fname := 'C:\spotdebug.txt';
-                                //AssignFile(debugf, fname);
-                                //If FileExists(fname) Then Append(debugf) Else Rewrite(debugf);
-                                //writeln(debugf,'Passed exchange:  ' + prSpots[i].exchange);
-                                //writeln(debugf,'URL: ' + url);
-                                //CloseFile(debugf);
-                                // This logs in to the RB System using parameters set in the object class
-{ TODO : REMOVE DEBUG CODE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! }
-                                //if not HTTP.HTTPMethod('GET', url) Then
-                                //begin
-                                //     resolved := False;
-                                //     result   := False;
-                                //end
-                                //else
-                                //begin
-                                //     rbResult := TStringList.Create;
-                                //     rbResult.Clear;
-                                //     rbResult.LoadFromStream(HTTP.Document);
-                                //     // Messages RB login can return:
-                                //     // QSL - All good, spot saved.
-                                //     // NO - Indicates spot failed and safe to retry. (Probably RB Server busy)
-                                //     // ERR - Indicates RB Server has an issue with the data and not allowed to retry.
-                                //     If TrimLeft(TrimRight(rbResult.Text)) = 'QSL' Then resolved := true;
-                                //     If TrimLeft(TrimRight(rbResult.Text)) = 'QSL' Then inc(prRBCount);
-                                //     If TrimLeft(TrimRight(rbResult.Text)) = 'NO'  Then resolved := false;
-                                //     If TrimLeft(TrimRight(rbResult.Text)) = 'ERR' Then resolved := false;
-                                //     foo := TrimLeft(TrimRight(rbresult.Text));
-                                //     rbResult.Free;
-                                //end;
-                                resolved := True;  // DEBUG DEBUG DEBUG REMOVE REMOVE REMOVE
-                                foo      := 'QSL'; // DEBUG DEBUG DEBUG REMOVE REMOVE REMOVE
-                                //HTTP.Free;
+                                if prHTTP.HTTPMethod('GET', url) Then
+                                begin
+                                     rbResult := TStringList.Create;
+                                     rbResult.Clear;
+                                     rbResult.LoadFromStream(prHTTP.Document);
+                                     // Messages RB login can return:
+                                     // QSL - All good, spot saved.
+                                     // NO - Indicates spot failed and safe to retry. (Probably RB Server busy)
+                                     // ERR - Indicates RB Server has an issue with the data and not allowed to retry.
+                                     If TrimLeft(TrimRight(rbResult.Text)) = 'QSL' Then resolved := true;
+                                     If TrimLeft(TrimRight(rbResult.Text)) = 'QSL' Then inc(prRBCount);
+                                     If TrimLeft(TrimRight(rbResult.Text)) = 'NO'  Then resolved := false;
+                                     If TrimLeft(TrimRight(rbResult.Text)) = 'ERR' Then resolved := false;
+                                     foo := TrimLeft(TrimRight(rbresult.Text));
+                                     rbResult.Free;
+                                end
+                                else
+                                begin
+                                     foo := 'EXCEPTION';
+                                     resolved := False;
+                                     result   := False;
+                                end;
                              Except
-                                //HTTP.Free;
                                 foo := 'EXCEPTION';
                                 resolved := false;
                              End;
@@ -476,7 +477,6 @@ implementation
                    begin
                         if not prSpots[i].pskrsent then
                         begin
-                             psknum := 2323;
                              // OK.  Found an entry not marked as sent.  Is it something to send or not?
                              setlength(pskrerr,1025);
                              resolved  := false;
@@ -492,14 +492,11 @@ implementation
                                   // BuildRemoteStringGrid constructs the string for reporting to PSKR when a grid was detected
                                   // BuildLocalString      constructs the string holding local information for station reporting to PSKR
 { TODO : Tie this to vairable rather than hard coded to my data! }
-                                  pskrloc := BuildLocalString(prMyCall,prMyGrid,'JT65-HF','2000','Hamstick over metal building');
+                                  pskrloc := BuildLocalString(prMyCall,prMyGrid,'JT65-HF','2000',prInfo);
                                   If not (gridheard='NILL') then
                                   begin
-{ TODO : CONFIRM that PSK Reporter wants time as HHMMSS or HH:MM:SS
-I'm not sure if it's accepting HHMMSS form }
                                        pskrrep := BuildRemoteStringGrid(callheard,'JT65',IntToStr(prSpots[i].qrg),gridHeard,prSpots[i].date[1..8],prSpots[i].date[9..12]+'00');
                                        pskrstat := PSKReporter.ReporterSeenCallsign(pskrrep,pskrloc,PSKReporter.REPORTER_SOURCE_AUTOMATIC);
-                                       psknum := pskrstat;
                                        resolved := true;
                                        foo := 'QSL';
                                   end
@@ -532,7 +529,6 @@ I'm not sure if it's accepting HHMMSS form }
        w4,w5,w6  : String;
        resolved  : Boolean;
     Begin
-{ TODO : Case of exchange = QRZ CALLSIGN (with no grid) is being rejected.  Fix. }
          // I'm probably going to annoy some, but, as of 2.0.0 the RB/PSK Reporter
          // spots will only spot callsigns using JT65 frames that are strictly valid
          // in the sense of JT65 structured messages.
@@ -695,6 +691,18 @@ I'm not sure if it's accepting HHMMSS form }
                         result    := true;
                         callheard := w1;
                         gridheard := w2;
+                   end;
+                   if not resolved and ((w1='CQ') or (w1='QRZ')) and prVal.evalCSign(w2) and (w3 = '   ') then
+                   begin
+                        { TODO : Case of exchange = QRZ CALLSIGN (with no grid) is being rejected.  Fix. }
+                        { FIXED, I Think }
+                        // w1           w2
+                        // CQ           CALLSIGN
+                        // QRZ          CALLSIGN
+                        resolved  := true;
+                        result    := true;
+                        callheard := w2;
+                        gridheard := 'NILL';
                    end;
                    if not resolved and (ansiContainsText(w1,'/') or ansiContainsText(w2,'/')) then
                    begin

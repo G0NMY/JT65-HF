@@ -2987,7 +2987,9 @@ Begin
           rbsHeardList[i].count := 0;
           inc(i);
      end;
-     rb.myCall := guidedconfig.cfg.rbcallsign;
+     rb.myCall    := guidedconfig.cfg.rbcallsign;
+     rb.rbInfo    := guidedconfig.cfg.rbInfo;
+     rb.rbVersion := verHolder.rbVersion;
      //if ctrl.soundvalid then label2.Caption := 'In: ' + guidedconfig.cfg.soundInS + ' Out: ' + guidedconfig.cfg.soundOutS else Label2.Caption := 'Sound I/O INVALID';
 End;
 

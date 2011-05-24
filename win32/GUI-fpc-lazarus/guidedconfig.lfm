@@ -16,8 +16,8 @@ object Form7: TForm7
     Height = 545
     Top = 8
     Width = 767
-    ActivePage = PTTRigControl
-    TabIndex = 3
+    ActivePage = Spotting
+    TabIndex = 5
     TabOrder = 0
     object CallsignGrid: TTabSheet
       Caption = 'Callsign/Grid'
@@ -1124,7 +1124,7 @@ object Form7: TForm7
           Left = 123
           Height = 23
           Top = 48
-          Width = 223
+          Width = 225
           Caption = 'PTT Toggles DTR and RTS'
           Checked = True
           TabOrder = 1
@@ -1134,7 +1134,7 @@ object Form7: TForm7
           Left = 123
           Height = 23
           Top = 73
-          Width = 304
+          Width = 306
           Caption = 'PTT Toggles RTS and DTR always on'
           TabOrder = 2
         end
@@ -1142,7 +1142,7 @@ object Form7: TForm7
           Left = 123
           Height = 23
           Top = 97
-          Width = 304
+          Width = 306
           Caption = 'PTT Toggles DTR and RTS always on'
           TabOrder = 3
         end
@@ -1150,7 +1150,7 @@ object Form7: TForm7
           Left = 462
           Height = 23
           Top = 48
-          Width = 261
+          Width = 263
           Caption = 'Use Alternate PTT Method Code'
           TabOrder = 4
         end
@@ -1206,7 +1206,7 @@ object Form7: TForm7
           Left = 6
           Height = 23
           Top = 8
-          Width = 159
+          Width = 161
           Caption = 'Ham Radio Deluxe'
           TabOrder = 0
         end
@@ -1214,7 +1214,7 @@ object Form7: TForm7
           Left = 190
           Height = 23
           Top = 8
-          Width = 172
+          Width = 174
           Caption = 'DX Lab Commander'
           TabOrder = 1
         end
@@ -1222,7 +1222,7 @@ object Form7: TForm7
           Left = 390
           Height = 23
           Top = 8
-          Width = 84
+          Width = 86
           Caption = 'OmniRig'
           TabOrder = 2
         end
@@ -1230,7 +1230,7 @@ object Form7: TForm7
           Left = 503
           Height = 23
           Top = 8
-          Width = 190
+          Width = 192
           Caption = 'No Rig Control/Manual'
           Checked = True
           TabOrder = 3
@@ -1249,7 +1249,7 @@ object Form7: TForm7
           Left = 175
           Height = 23
           Top = 136
-          Width = 203
+          Width = 205
           Caption = 'Test PTT via Rig Control'
           Enabled = False
           TabOrder = 4

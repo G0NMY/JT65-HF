@@ -605,6 +605,8 @@ type
         read  prNoMultiQSO;
       property useKV : Boolean
         read  prUseKV;
+      property rbInfo : String
+        read  prRBInfo;
   end;
 
 var

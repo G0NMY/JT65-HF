@@ -1,50 +1,52 @@
+{ This is an automatically generated lazarus resource file }
+
 LazarusResources.Add('TForm7','FORMDATA',[
   'TPF0'#6'TForm7'#5'Form7'#4'Left'#2#4#6'Height'#3'0'#2#3'Top'#2#4#5'Width'#3
   +#17#3#7'Caption'#6#13'Configuration'#12'ClientHeight'#3'0'#2#11'ClientWidth'
   +#3#17#3#11'Font.Height'#2#240#9'Font.Name'#6#5'Arial'#6'OnShow'#7#8'FormShow'
   +#10'LCLVersion'#6#6'0.9.30'#7'Visible'#9#0#12'TPageControl'#12'PageControl1'
-  +#4'Left'#2#8#6'Height'#3'!'#2#3'Top'#2#8#5'Width'#3#255#2#10'ActivePage'#7#13
-  +'PTTRigControl'#8'TabIndex'#2#3#8'TabOrder'#2#0#0#9'TTabSheet'#12'CallsignGr'
-  +'id'#7'Caption'#6#13'Callsign/Grid'#12'ClientHeight'#3#2#2#11'ClientWidth'#3
-  +#247#2#0#6'TLabel'#6'Label2'#4'Left'#2#16#6'Height'#2#20#3'Top'#2#8#5'Width'
-  +#2'y'#7'Caption'#6#16'Station Callsign'#11'Font.Height'#2#240#9'Font.Name'#6
-  +#5'Arial'#10'Font.Style'#11#6'fsBold'#0#11'ParentColor'#8#10'ParentFont'#8#0
-  +#0#5'TEdit'#17'edStationCallsign'#4'Left'#3#144#0#6'Height'#2#26#3'Top'#2#5#5
-  +'Width'#2'p'#9'Alignment'#7#8'taCenter'#8'CharCase'#7#11'ecUppercase'#9'MaxL'
-  +'ength'#2#6#8'OnChange'#7#23'edStationCallsignChange'#8'TabOrder'#2#0#0#0#6
-  +'TLabel'#6'Label4'#4'Left'#3#8#1#6'Height'#2#20#3'Top'#2#8#5'Width'#3#184#0#7
-  +'Caption'#6#24'<<<   Bad Callsign Value'#10'Font.Color'#7#5'clRed'#11'Font.H'
-  +'eight'#2#240#9'Font.Name'#6#5'Arial'#10'Font.Style'#11#6'fsBold'#0#11'Paren'
-  +'tColor'#8#10'ParentFont'#8#7'Visible'#8#0#0#6'TLabel'#7'Label11'#4'Left'#2
-  +'-'#6'Height'#2'A'#3'Top'#2'$'#5'Width'#3#211#0#7'Caption'#6#159'If you need'
-  +' to use a suffix or prefix'#13#10'this will be set later.  Use only basic'
-  +#13#10'call here. If you want a different call'#13#10'for spotting you may e'
-  +'nter this later.'#11'Font.Height'#2#243#9'Font.Name'#6#5'Arial'#11'ParentCo'
-  +'lor'#8#10'ParentFont'#8#0#0#6'TLabel'#7'Label13'#4'Left'#3#12#1#6'Height'#2
-  +'!'#3'Top'#2'"'#5'Width'#3#181#1#7'Caption'#6'{If you are an SWL please ente'
-  +'r SWL as your callsign and you will be'#13#10'able to enter your SWL ID lat'
-  +'er for spotting networks.'#11'Font.Height'#2#243#9'Font.Name'#6#5'Arial'#10
-  +'Font.Style'#11#6'fsBold'#0#11'ParentColor'#8#10'ParentFont'#8#0#0#6'TLabel'
-  +#6'Label3'#4'Left'#2'-'#6'Height'#2#20#3'Top'#2'p'#5'Width'#2'\'#7'Caption'#6
-  +#11'Grid Square'#11'Font.Height'#2#240#9'Font.Name'#6#5'Arial'#10'Font.Style'
-  +#11#6'fsBold'#0#11'ParentColor'#8#10'ParentFont'#8#0#0#5'TEdit'#13'edStation'
-  +'Grid'#4'Left'#3#144#0#6'Height'#2#26#3'Top'#2'm'#5'Width'#2'p'#9'Alignment'
-  +#7#8'taCenter'#9'MaxLength'#2#6#8'OnChange'#7#23'edStationCallsignChange'#8
-  +'TabOrder'#2#1#0#0#6'TLabel'#6'Label5'#4'Left'#3#8#1#6'Height'#2#20#3'Top'#2
-  +'p'#5'Width'#3#209#0#7'Caption'#6#26'<<<  Bad Grid Square Value'#10'Font.Col'
-  +'or'#7#5'clRed'#11'Font.Height'#2#240#9'Font.Name'#6#5'Arial'#10'Font.Style'
-  +#11#6'fsBold'#0#11'ParentColor'#8#10'ParentFont'#8#7'Visible'#8#0#0#6'TLabel'
-  +#7'Label12'#4'Left'#2#16#6'Height'#2'1'#3'Top'#3#141#0#5'Width'#3#240#0#7'Ca'
-  +'ption'#6'aGrid square value is required to enable TX'#13#10'and spotting vi'
-  +'a the RB Network and/or'#13#10'PSK Reporter.'#11'Font.Height'#2#243#9'Font.'
-  +'Name'#6#5'Arial'#11'ParentColor'#8#10'ParentFont'#8#0#0#6'TLabel'#7'Label14'
-  +#4'Left'#3#12#1#6'Height'#2'A'#3'Top'#3#139#0#5'Width'#3#142#1#7'Caption'#6
-  +#176'If you do not know your Grid value it may be computed online.'#13#10'f6'
-  +'fvy.free.fr/qthLocator/fullScreen.php'#13#10'www.levinecentral.com/ham/grid'
-  +'_square.php'#13#10'http://no.nonsense.ee/qthmap/'#11'Font.Height'#2#243#9'F'
-  +'ont.Name'#6#5'Arial'#10'Font.Style'#11#6'fsBold'#0#11'ParentColor'#8#10'Par'
-  +'entFont'#8#0#0#6'TLabel'#6'Label7'#4'Left'#2#5#6'Height'#2#20#3'Top'#3#133#1
-  +#5'Width'#3#178#0#7'Caption'#6#23'Callsign Error Detected'#10'Font.Color'#7#5
+  +#4'Left'#2#8#6'Height'#3'!'#2#3'Top'#2#8#5'Width'#3#255#2#10'ActivePage'#7#8
+  +'Spotting'#8'TabIndex'#2#5#8'TabOrder'#2#0#0#9'TTabSheet'#12'CallsignGrid'#7
+  +'Caption'#6#13'Callsign/Grid'#12'ClientHeight'#3#2#2#11'ClientWidth'#3#247#2
+  +#0#6'TLabel'#6'Label2'#4'Left'#2#16#6'Height'#2#20#3'Top'#2#8#5'Width'#2'y'#7
+  +'Caption'#6#16'Station Callsign'#11'Font.Height'#2#240#9'Font.Name'#6#5'Aria'
+  +'l'#10'Font.Style'#11#6'fsBold'#0#11'ParentColor'#8#10'ParentFont'#8#0#0#5'T'
+  +'Edit'#17'edStationCallsign'#4'Left'#3#144#0#6'Height'#2#26#3'Top'#2#5#5'Wid'
+  +'th'#2'p'#9'Alignment'#7#8'taCenter'#8'CharCase'#7#11'ecUppercase'#9'MaxLeng'
+  +'th'#2#6#8'OnChange'#7#23'edStationCallsignChange'#8'TabOrder'#2#0#0#0#6'TLa'
+  +'bel'#6'Label4'#4'Left'#3#8#1#6'Height'#2#20#3'Top'#2#8#5'Width'#3#184#0#7'C'
+  +'aption'#6#24'<<<   Bad Callsign Value'#10'Font.Color'#7#5'clRed'#11'Font.He'
+  +'ight'#2#240#9'Font.Name'#6#5'Arial'#10'Font.Style'#11#6'fsBold'#0#11'Parent'
+  +'Color'#8#10'ParentFont'#8#7'Visible'#8#0#0#6'TLabel'#7'Label11'#4'Left'#2'-'
+  +#6'Height'#2'A'#3'Top'#2'$'#5'Width'#3#211#0#7'Caption'#6#159'If you need to'
+  +' use a suffix or prefix'#13#10'this will be set later.  Use only basic'#13
+  +#10'call here. If you want a different call'#13#10'for spotting you may ente'
+  +'r this later.'#11'Font.Height'#2#243#9'Font.Name'#6#5'Arial'#11'ParentColor'
+  +#8#10'ParentFont'#8#0#0#6'TLabel'#7'Label13'#4'Left'#3#12#1#6'Height'#2'!'#3
+  +'Top'#2'"'#5'Width'#3#181#1#7'Caption'#6'{If you are an SWL please enter SWL'
+  +' as your callsign and you will be'#13#10'able to enter your SWL ID later fo'
+  +'r spotting networks.'#11'Font.Height'#2#243#9'Font.Name'#6#5'Arial'#10'Font'
+  +'.Style'#11#6'fsBold'#0#11'ParentColor'#8#10'ParentFont'#8#0#0#6'TLabel'#6'L'
+  +'abel3'#4'Left'#2'-'#6'Height'#2#20#3'Top'#2'p'#5'Width'#2'\'#7'Caption'#6#11
+  +'Grid Square'#11'Font.Height'#2#240#9'Font.Name'#6#5'Arial'#10'Font.Style'#11
+  +#6'fsBold'#0#11'ParentColor'#8#10'ParentFont'#8#0#0#5'TEdit'#13'edStationGri'
+  +'d'#4'Left'#3#144#0#6'Height'#2#26#3'Top'#2'm'#5'Width'#2'p'#9'Alignment'#7#8
+  +'taCenter'#9'MaxLength'#2#6#8'OnChange'#7#23'edStationCallsignChange'#8'TabO'
+  +'rder'#2#1#0#0#6'TLabel'#6'Label5'#4'Left'#3#8#1#6'Height'#2#20#3'Top'#2'p'#5
+  +'Width'#3#209#0#7'Caption'#6#26'<<<  Bad Grid Square Value'#10'Font.Color'#7
+  +#5'clRed'#11'Font.Height'#2#240#9'Font.Name'#6#5'Arial'#10'Font.Style'#11#6
+  +'fsBold'#0#11'ParentColor'#8#10'ParentFont'#8#7'Visible'#8#0#0#6'TLabel'#7'L'
+  +'abel12'#4'Left'#2#16#6'Height'#2'1'#3'Top'#3#141#0#5'Width'#3#240#0#7'Capti'
+  +'on'#6'aGrid square value is required to enable TX'#13#10'and spotting via t'
+  +'he RB Network and/or'#13#10'PSK Reporter.'#11'Font.Height'#2#243#9'Font.Nam'
+  +'e'#6#5'Arial'#11'ParentColor'#8#10'ParentFont'#8#0#0#6'TLabel'#7'Label14'#4
+  +'Left'#3#12#1#6'Height'#2'A'#3'Top'#3#139#0#5'Width'#3#142#1#7'Caption'#6#176
+  +'If you do not know your Grid value it may be computed online.'#13#10'f6fvy.'
+  +'free.fr/qthLocator/fullScreen.php'#13#10'www.levinecentral.com/ham/grid_squ'
+  +'are.php'#13#10'http://no.nonsense.ee/qthmap/'#11'Font.Height'#2#243#9'Font.'
+  +'Name'#6#5'Arial'#10'Font.Style'#11#6'fsBold'#0#11'ParentColor'#8#10'ParentF'
+  +'ont'#8#0#0#6'TLabel'#6'Label7'#4'Left'#2#5#6'Height'#2#20#3'Top'#3#133#1#5
+  +'Width'#3#178#0#7'Caption'#6#23'Callsign Error Detected'#10'Font.Color'#7#5
   +'clRed'#11'Font.Height'#2#240#9'Font.Name'#6#5'Arial'#10'Font.Style'#11#6'fs'
   +'Bold'#0#11'ParentColor'#8#10'ParentFont'#8#7'Visible'#8#0#0#6'TLabel'#6'Lab'
   +'el8'#4'Left'#2#5#6'Height'#2'7'#3'Top'#3#157#1#5'Width'#3#132#0#7'Caption'#6
@@ -280,13 +282,13 @@ LazarusResources.Add('TForm7','FORMDATA',[
   +'5.  You'#13#10'may also enter only the number as in 2 or 21 or 199.'#11'Fon'
   +'t.Height'#2#240#9'Font.Name'#6#5'Arial'#11'ParentColor'#8#10'ParentFont'#8#0
   +#0#12'TRadioButton'#8'rbDTRRTS'#4'Left'#2'{'#6'Height'#2#23#3'Top'#2'0'#5'Wi'
-  +'dth'#3#223#0#7'Caption'#6#23'PTT Toggles DTR and RTS'#7'Checked'#9#8'TabOrd'
+  +'dth'#3#225#0#7'Caption'#6#23'PTT Toggles DTR and RTS'#7'Checked'#9#8'TabOrd'
   +'er'#2#1#7'TabStop'#9#0#0#12'TRadioButton'#5'rbRTS'#4'Left'#2'{'#6'Height'#2
-  +#23#3'Top'#2'I'#5'Width'#3'0'#1#7'Caption'#6'!PTT Toggles RTS and DTR always'
+  +#23#3'Top'#2'I'#5'Width'#3'2'#1#7'Caption'#6'!PTT Toggles RTS and DTR always'
   +' on'#8'TabOrder'#2#2#0#0#12'TRadioButton'#5'rbDTR'#4'Left'#2'{'#6'Height'#2
-  +#23#3'Top'#2'a'#5'Width'#3'0'#1#7'Caption'#6'!PTT Toggles DTR and RTS always'
+  +#23#3'Top'#2'a'#5'Width'#3'2'#1#7'Caption'#6'!PTT Toggles DTR and RTS always'
   +' on'#8'TabOrder'#2#3#0#0#9'TCheckBox'#12'cbPTTAltCode'#4'Left'#3#206#1#6'He'
-  +'ight'#2#23#3'Top'#2'0'#5'Width'#3#5#1#7'Caption'#6#29'Use Alternate PTT Met'
+  +'ight'#2#23#3'Top'#2'0'#5'Width'#3#7#1#7'Caption'#6#29'Use Alternate PTT Met'
   +'hod Code'#8'TabOrder'#2#4#0#0#6'TLabel'#7'Label24'#4'Left'#3#206#1#6'Height'
   +#2'7'#3'Top'#2'H'#5'Width'#3#248#0#7'Caption'#6'nIn some cases the default P'
   +'TT code'#13#10'fails to work properly.  If you have'#13#10'PTT issues try e'
@@ -302,17 +304,17 @@ LazarusResources.Add('TForm7','FORMDATA',[
   +'l'#12'ClientHeight'#3#174#0#11'ClientWidth'#3#221#2#11'Font.Height'#2#240#9
   +'Font.Name'#6#5'Arial'#10'Font.Style'#11#6'fsBold'#0#10'ParentFont'#8#8'TabO'
   +'rder'#2#2#0#12'TRadioButton'#5'rbHRD'#4'Left'#2#6#6'Height'#2#23#3'Top'#2#8
-  +#5'Width'#3#159#0#7'Caption'#6#16'Ham Radio Deluxe'#8'TabOrder'#2#0#0#0#12'T'
+  +#5'Width'#3#161#0#7'Caption'#6#16'Ham Radio Deluxe'#8'TabOrder'#2#0#0#0#12'T'
   +'RadioButton'#11'rbCommander'#4'Left'#3#190#0#6'Height'#2#23#3'Top'#2#8#5'Wi'
-  +'dth'#3#172#0#7'Caption'#6#16'DX Lab Commander'#8'TabOrder'#2#1#0#0#12'TRadi'
-  +'oButton'#6'rbOmni'#4'Left'#3#134#1#6'Height'#2#23#3'Top'#2#8#5'Width'#2'T'#7
+  +'dth'#3#174#0#7'Caption'#6#16'DX Lab Commander'#8'TabOrder'#2#1#0#0#12'TRadi'
+  +'oButton'#6'rbOmni'#4'Left'#3#134#1#6'Height'#2#23#3'Top'#2#8#5'Width'#2'V'#7
   +'Caption'#6#7'OmniRig'#8'TabOrder'#2#2#0#0#12'TRadioButton'#7'rbNoCAT'#4'Lef'
-  +'t'#3#247#1#6'Height'#2#23#3'Top'#2#8#5'Width'#3#190#0#7'Caption'#6#21'No Ri'
+  +'t'#3#247#1#6'Height'#2#23#3'Top'#2#8#5'Width'#3#192#0#7'Caption'#6#21'No Ri'
   +'g Control/Manual'#7'Checked'#9#8'TabOrder'#2#3#7'TabStop'#9#0#0#7'TButton'
   +#13'buttonTestCAT'#4'Left'#2#6#6'Height'#2'!'#3'Top'#3#136#0#5'Width'#3#144#0
   +#7'Caption'#6#16'Test Rig Control'#7'OnClick'#7#18'buttonTestCATClick'#8'Tab'
   +'Order'#2#5#0#0#9'TCheckBox'#8'cbCATPTT'#4'Left'#3#175#0#6'Height'#2#23#3'To'
-  +'p'#3#136#0#5'Width'#3#203#0#7'Caption'#6#24'Test PTT via Rig Control'#7'Ena'
+  +'p'#3#136#0#5'Width'#3#205#0#7'Caption'#6#24'Test PTT via Rig Control'#7'Ena'
   +'bled'#8#8'TabOrder'#2#4#0#0#5'TMemo'#5'Memo1'#4'Left'#2#6#6'Height'#2'`'#3
   +'Top'#2'!'#5'Width'#3#208#2#11'Font.Height'#2#240#9'Font.Name'#6#5'Arial'#13
   +'Lines.Strings'#1#6#21'Overall Result:  PASS'#6#0#6'&Connect to Rig Control '
