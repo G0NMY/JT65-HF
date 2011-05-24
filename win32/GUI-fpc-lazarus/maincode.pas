@@ -29,12 +29,9 @@ uses
   Classes , SysUtils , LResources , Forms , Controls , Graphics , Dialogs ,
   StdCtrls , CTypes , StrUtils , Math , ExtCtrls , ComCtrls , Spin , Windows ,
   DateUtils , encode65 , globalData , ClipBrd , rawdec , guiConfig , verHolder ,
-  dispatchobject , Menus , log , diagout , synautil ,
-  waterfall , d65 , spectrum , about , FileUtil , TAGraph , guidedconfig ,
-  valobject , rigobject , portaudio , adc , dac , audiodiag, spot;
-
-//Const
-//  JT_DLL = 'jt65.dll';
+  dispatchobject , Menus , log , diagout , synautil , waterfall , d65 ,
+  spectrum , about , FileUtil , guidedconfig , valobject , rigobject ,
+  portaudio , adc , dac , spot; //audiodiag, ;
 
 type
   { TForm1 }
@@ -82,7 +79,6 @@ type
     Label15: TLabel;
     Label16: TLabel;
     Label17: TLabel;
-    Label18 : TLabel ;
     Label19: TLabel;
     Label20: TLabel;
     Label22: TLabel;
@@ -277,9 +273,6 @@ type
     procedure processOncePerSecond(st : TSystemTime);
     procedure oncePerTick();
     procedure displayAudio(audioAveL : Integer; audioAveR : Integer);
-    function BuildRemoteString (call, mode, freq, date, time : String) : WideString;
-    function BuildRemoteStringGrid (call, mode, freq, grid, date, time : String) : WideString;
-    function BuildLocalString (station_callsign, my_gridsquare, programid, programversion, my_antenna : String) : WideString;
     function isSigRep(rep : String) : Boolean;
     function utcTime() : TSYSTEMTIME;
     procedure addToRBC(i, m : Integer);
@@ -485,30 +478,6 @@ Begin
      result := st;
 End;
 
-function TForm1.BuildRemoteString (call, mode, freq, date, time : String) : WideString;
-begin
-     If freq='0' Then
-        result := 'call' + #0 + call + #0 + 'mode' + #0 + mode + #0 + 'QSO_DATE' + #0 + date + #0 + 'TIME_ON' + #0 + time + #0 + #0
-     else
-        result := 'call' + #0 + call + #0 + 'mode' + #0 + mode + #0 + 'freq' + #0 + freq + #0 + 'QSO_DATE' + #0 + date + #0 + 'TIME_ON' + #0 + time + #0 + #0;
-end;
-
-function TForm1.BuildRemoteStringGrid (call, mode, freq, grid, date, time : String) : WideString;
-begin
-     If freq='0' Then
-        result := 'call' + #0 + call + #0 + 'mode' + #0 + mode + #0 + 'grid' + #0 + grid + #0 + 'QSO_DATE' + #0 + date + #0 + 'TIME_ON' + #0 + time + #0 + #0
-     else
-        result := 'call' + #0 + call + #0 + 'mode' + #0 + mode + #0 + 'freq' + #0 + freq + #0 + 'grid' + #0 + 'QSO_DATE' + #0 + date + #0 + 'TIME_ON' + #0 + time + #0 + #0;
-end;
-
-function TForm1.BuildLocalString (station_callsign, my_gridsquare, programid, programversion, my_antenna : String) : WideString;
-begin
-     result := 'station_callsign' + #0 + station_callsign + #0 + 'my_gridsquare' + #0 + my_gridsquare + #0 +
-               'programid' + #0 + programid + #0 +
-               'programversion' + #0 + programversion + #0 +
-               'my_antenna' + #0 + my_antenna + #0 + #0;
-end;
-
 procedure rbcThread.Execute;
 begin
      if rb.busy then
@@ -532,7 +501,7 @@ begin
                   Begin
                        // DEBUG
                        rb.useRB   := True;
-                       rb.usePSKR := False;
+                       rb.usePSKR := True;
                        rb.useDBF  := False;
                        // REMOVE ABOVE
                        rb.myCall := TrimLeft(TrimRight(guidedconfig.cfg.rbcallsign));
@@ -2575,7 +2544,7 @@ Begin
      ctrl.firstReport := True;
      ctrl.itemsIn := False;
      guidedconfig.Form7.Hide;
-     audiodiag.Form6.Hide;
+     //audiodiag.Form6.Hide;
      // basedir holds path to current user's my documents space like:
      // C:\Users\Joe\Documents
      // I have confirmed this to work under Windows 7, Vista, XP and Wine
@@ -2732,10 +2701,16 @@ Begin
      ctrl.myCall := guidedconfig.cfg.getPrefix() + guidedconfig.cfg.callsign + guidedconfig.cfg.getSuffix();
      ctrl.myGrid := guidedconfig.cfg.grid;
      rig1.rigcontroller := guidedconfig.cfg.CATMethod;
-     rig1.pollRig();  // Go ahead and attempt to read the rig and update the main gui
+{ TODO : Handle exceptions generated when rig control software is not running! }
+     rig1.pollRig();  // Go ahead and attempt to read the rig and update the main gui [remember, even no rig control uses rig control :) ]
      sleep(100);
 { TODO : Change this to use QRG validator code! }
-     if not (upcase(rig1.rigcontroller) = 'NONE') then editManQRG.Text := floatToStr(rig1.qrg/1000);
+     if not (upcase(rig1.rigcontroller) = 'NONE') then
+     begin
+          //editManQRG.Text := floatToStr(rig1.qrg/1000);
+          //
+          //mval.evalQRG(IntToStr(rig1.qrg),'LAX', qrgk, qrghz, editManQRG.Text);
+     end;
      // Setup PTT controller
      rig1.useAltPTT := guidedconfig.cfg.AltPTT;
      if guidedconfig.cfg.PTTMethod = 'VOX' then rig1.useVOXPTT := true else rig1.useVOXPTT := false;
@@ -2750,13 +2725,15 @@ Begin
      //audiodiag.Form6.Show;
      //audiodiag.Form6.Visible := True;
      //audiodiag.Form6.BringToFront;
-     audiodiag.Form6.Label3.Caption := guidedconfig.cfg.soundInS;
-     audiodiag.Form6.Label4.Caption := guidedconfig.cfg.soundOutS;
-     audiodiag.Form6.Label5.Caption := 'Initializing PortAudio';
+     //audiodiag.Form6.Label3.Caption := guidedconfig.cfg.soundInS;
+     //audiodiag.Form6.Label4.Caption := guidedconfig.cfg.soundOutS;
+     if length(guidedconfig.cfg.soundInS)> 20 then Label5.Caption := 'Input:  ' + guidedconfig.cfg.soundInS[1..20] else Label5.caption := 'Input:  ' + guidedconfig.cfg.soundInS;
+     if length(guidedconfig.cfg.soundOutS)> 20 then Label5.Caption := Label5.Caption + '  Output:  ' + guidedconfig.cfg.soundOutS[1..20] else Label5.Caption:= Label5.Caption + '  Output:  ' + guidedconfig.cfg.soundOutS;
+     //audiodiag.Form6.Label5.Caption := 'Initializing PortAudio';
      PaResult := portaudio.Pa_Initialize();
      If PaResult <> 0 Then
      Begin
-          audiodiag.Form6.Label5.Caption := 'PortAudio open failed';
+          //audiodiag.Form6.Label5.Caption := 'PortAudio open failed';
           ShowMessage('Fatal Error.  Could not initialize portaudio.');
           halt;
      end;
@@ -2772,23 +2749,23 @@ Begin
      adc.adcT := 0;
      adc.d65rxBufferPtr := @adc.d65rxBuffer[0];
      // Initialize rx stream.
-     audiodiag.Form6.Label5.Caption := 'Opening input device';
+     //audiodiag.Form6.Label5.Caption := 'Opening input device';
      if guidedconfig.cfg.forceMono then
      begin
           // Dealing with a mono stream either by necessity or user choice.
-          audiodiag.Form6.Label5.Caption := 'Opening input device in mono mode';
+          //audiodiag.Form6.Label5.Caption := 'Opening input device in mono mode';
           paResult := portaudio.Pa_OpenStream(paInStream,ppaInParams,Nil,11025,2048,0,@adc.madcCallback,Pointer(Self));
      end
      else
      begin
-          audiodiag.Form6.Label5.Caption := 'Opening input device in stereo mode';
+          //audiodiag.Form6.Label5.Caption := 'Opening input device in stereo mode';
           paResult := portaudio.Pa_OpenStream(paInStream,ppaInParams,Nil,11025,2048,0,@adc.sadcCallback,Pointer(Self));
      end;
      if paResult <> 0 Then
      Begin
-          if guidedconfig.cfg.forceMono then audiodiag.Form6.Label5.Caption := 'Failed to open in mono mode';
-          if not guidedconfig.cfg.forceMono then audiodiag.Form6.Label5.Caption := 'Failed to open in stereo mode';
-          audiodiag.Form6.Label1.Caption := 'Input device status:  FAIL';
+          //if guidedconfig.cfg.forceMono then audiodiag.Form6.Label5.Caption := 'Failed to open in mono mode';
+          //if not guidedconfig.cfg.forceMono then audiodiag.Form6.Label5.Caption := 'Failed to open in stereo mode';
+          //audiodiag.Form6.Label1.Caption := 'Input device status:  FAIL';
           for i := 0 to 1000 do
           begin
                application.ProcessMessages;
@@ -2801,17 +2778,17 @@ Begin
      end
      else
      begin
-          if guidedconfig.cfg.forceMono then audiodiag.Form6.Label5.Caption := 'Opened input in mono mode';
-          if not guidedconfig.cfg.forceMono then audiodiag.Form6.Label5.Caption := 'Opened input in stereo mode';
-          audiodiag.Form6.Label1.Caption := 'Input device status:  OK';
+          //if guidedconfig.cfg.forceMono then audiodiag.Form6.Label5.Caption := 'Opened input in mono mode';
+          //if not guidedconfig.cfg.forceMono then audiodiag.Form6.Label5.Caption := 'Opened input in stereo mode';
+          //audiodiag.Form6.Label1.Caption := 'Input device status:  OK';
           // Start the stream.
-          audiodiag.Form6.Label5.Caption := 'Starting input sample stream';
+          //audiodiag.Form6.Label5.Caption := 'Starting input sample stream';
           paResult := portaudio.Pa_StartStream(paInStream);
      end;
      if paResult <> 0 Then
      Begin
-          audiodiag.Form6.Label5.Caption := 'Input sample stream not running';
-          audiodiag.Form6.Label1.Caption := 'Input device status:  FAIL';
+          //audiodiag.Form6.Label5.Caption := 'Input sample stream not running';
+          //audiodiag.Form6.Label1.Caption := 'Input device status:  FAIL';
           //for i := 0 to 1000 do
           //begin
                //application.ProcessMessages;
@@ -2824,11 +2801,11 @@ Begin
      End
      else
      begin
-          audiodiag.Form6.Label5.Caption := 'Input sample stream running';
-          audiodiag.Form6.Label1.Caption := 'Input device status:  OK';
+          //audiodiag.Form6.Label5.Caption := 'Input sample stream running';
+          //audiodiag.Form6.Label1.Caption := 'Input device status:  OK';
      end;
      // Setup output device
-     audiodiag.Form6.Label5.Caption := 'Opening output device';
+     //audiodiag.Form6.Label5.Caption := 'Opening output device';
      ppaOutParams := @paOutParams;
      paOutParams.device := guidedconfig.cfg.soundOut;
      paOutParams.sampleFormat := paInt16;
@@ -2843,19 +2820,19 @@ Begin
      if guidedconfig.cfg.forceMono then
      begin
           // Dealing with a mono stream either by necessity or user choice.
-          audiodiag.Form6.Label5.Caption := 'Opening output device in mono mode';
+          //audiodiag.Form6.Label5.Caption := 'Opening output device in mono mode';
           paResult := portaudio.Pa_OpenStream(paOutStream,Nil,ppaOutParams,11025,2048,0,@dac.mdacCallback,Pointer(Self));
      end
      else
      begin
-          audiodiag.Form6.Label5.Caption := 'Opening output device in stereo mode';
+          //audiodiag.Form6.Label5.Caption := 'Opening output device in stereo mode';
           paResult := portaudio.Pa_OpenStream(paOutStream,Nil,ppaOutParams,11025,2048,0,@dac.sdacCallback,Pointer(Self));
      end;
      if paResult <> 0 Then
      Begin
-          if guidedconfig.cfg.forceMono then audiodiag.Form6.Label5.Caption := 'Failed to open in mono mode';
-          if not guidedconfig.cfg.forceMono then audiodiag.Form6.Label5.Caption := 'Failed to open in stereo mode';
-          audiodiag.Form6.Label2.Caption := 'Output device status:  FAIL';
+          //if guidedconfig.cfg.forceMono then audiodiag.Form6.Label5.Caption := 'Failed to open in mono mode';
+          //if not guidedconfig.cfg.forceMono then audiodiag.Form6.Label5.Caption := 'Failed to open in stereo mode';
+          //audiodiag.Form6.Label2.Caption := 'Output device status:  FAIL';
           //for i := 0 to 1000 do
           //begin
                //application.ProcessMessages;
@@ -2868,17 +2845,17 @@ Begin
      End
      else
      begin
-          if guidedconfig.cfg.forceMono then audiodiag.Form6.Label5.Caption := 'Opened output in mono mode';
-          if not guidedconfig.cfg.forceMono then audiodiag.Form6.Label5.Caption := 'Opened output in stereo mode';
-          audiodiag.Form6.Label2.Caption := 'Output device status:  OK';
+          //if guidedconfig.cfg.forceMono then audiodiag.Form6.Label5.Caption := 'Opened output in mono mode';
+          //if not guidedconfig.cfg.forceMono then audiodiag.Form6.Label5.Caption := 'Opened output in stereo mode';
+          //audiodiag.Form6.Label2.Caption := 'Output device status:  OK';
      end;
      // Start the stream.
-     audiodiag.Form6.Label5.Caption := 'Starting output sample stream';
+     //audiodiag.Form6.Label5.Caption := 'Starting output sample stream';
      paResult := portaudio.Pa_StartStream(paOutStream);
      if paResult <> 0 Then
      Begin
-          audiodiag.Form6.Label5.Caption := 'Output sample stream not running';
-          audiodiag.Form6.Label2.Caption := 'Output device status:  FAIL';
+          //audiodiag.Form6.Label5.Caption := 'Output sample stream not running';
+          //audiodiag.Form6.Label2.Caption := 'Output device status:  FAIL';
           //for i := 0 to 1000 do
           //begin
                //application.ProcessMessages;
@@ -2891,11 +2868,11 @@ Begin
      End
      else
      begin
-          audiodiag.Form6.Label5.Caption := 'Output sample stream running';
-          audiodiag.Form6.Label2.Caption := 'Output device status:  OK';
+          //audiodiag.Form6.Label5.Caption := 'Output sample stream running';
+          //audiodiag.Form6.Label2.Caption := 'Output device status:  OK';
      end;
      ctrl.soundvalid := True;
-     audiodiag.Form6.Label5.Caption := 'Input/Output sample streams running';
+     //audiodiag.Form6.Label5.Caption := 'Input/Output sample streams running';
      //while (adc.adcCount < 50) and (dac.dacCount < 50) do
      //begin
      //     audiodiag.Form6.Label5.Caption := 'This window will close shortly, testing streams...';
@@ -4016,6 +3993,7 @@ Var
    i    : Integer;
    foo  : String;
    ffoo : Double;
+   pskr : DWORD;
 Begin
      if rbthread.Suspended then
      begin
@@ -4072,7 +4050,17 @@ Begin
 
 
      // RB Check
+     pskr := rb.pskrTickle;
+     if rb.pskrConnected then
+     Begin
+          Label5.caption := 'PSKR Connected.  Sent: ' + IntToStr(rb.pskrCallsSent) + ' Buffered: ' + IntToStr(rb.pskrCallsBuff) + ' Discarded: ' + IntToStr(rb.pskrCallsDisc);
+     end
+     else
+     begin
+          Label5.Caption := 'PSKR Disconnected';
+     end;
      Label30.Caption := rb.rbCount;
+     Label19.Caption := rb.pskrCount;
      //if cfgvtwo.Form6.cbUseRB.Checked Then Form1.Label30.Visible := True else Form1.Label30.Visible := False;
 
      // Force Rig control read cycle.

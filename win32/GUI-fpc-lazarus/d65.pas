@@ -1079,6 +1079,7 @@ begin
                                        end
                                        else
                                        begin
+{ TODO : Enable recognition that KV may be disabled }
                                             // Oh joy.  Time to try for kv.  Note that KV can now be disabled.
                                             kdec := '';
                                             if FileExists(gld65kvfname) and gld65dokv Then
@@ -1105,8 +1106,9 @@ begin
                                             begin
                                                  inc(kverror);
                                                  deleteFile(gld65kvfname);
-                                                 if kverror > 1000 then
+                                                 if kverror > 5000 then
                                                  begin
+{ TODO : Fix this to handle the issue rather than bail! }
                                                       break;
                                                  end;
                                             end;

@@ -1414,13 +1414,13 @@ implementation
                   resolved := true;
              end;
 
-             if (mode='lax') and resolved then
+             if (upcase(mode)='LAX') and resolved then
              begin
                   //result := i3;
                   result := true;
              end;
 
-             if (mode='strict') and resolved then
+             if (upcase(mode)='STRICT') and resolved then
              begin
                   // In strict mode QRG must be in the following ranges
                   resolved := false;
@@ -1520,7 +1520,7 @@ implementation
         end;
         result := valid;
    end;
-
+{ TODO : Remove multiple validators for items that have more than one.  Basically, settle on one :) }
    function TValidator.testQRG(const qrg : String; var qrgk : Single; var qrghz : Integer) : Boolean;
    var
         tstint   : Integer;

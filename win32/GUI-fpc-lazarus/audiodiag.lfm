@@ -13,7 +13,6 @@ object Form6: TForm6
   Constraints.MinWidth = 400
   Font.Name = 'Arial'
   LCLVersion = '0.9.30'
-  Visible = True
   object Label1: TLabel
     Left = 21
     Height = 19

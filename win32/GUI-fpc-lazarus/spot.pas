@@ -67,19 +67,25 @@ Type
               prRBCount : CTypes.cuint64;
               prPRCount : CTypes.cuint64;
               pskrStats : PSKReporter.REPORTER_STATISTICS;
-              pskrstat  : Integer;
+              pskrstat  : DWORD;
+              // Private functions to format data for PSK Reporter
+              function BuildRemoteString (call, mode, freq, date, time : String) : WideString;
+              function BuildRemoteStringGrid (call, mode, freq, grid, date, time : String) : WideString;
+              function BuildLocalString (station_callsign, my_gridsquare, programid, programversion, my_antenna : String) : WideString;
+              // Private function to parse exchange text for RB/PSKR
+              function  parseExchange(const exchange : String; var callheard : String; var gridheard : String) : Boolean;
        public
              Constructor create;
              Destructor  endspots;
-             function  addSpot(const spot : spotRecord) : Boolean;
-             function  loginRB    : Boolean;
-             function  loginPSKR  : Boolean;
-             function  logoutRB   : Boolean;
-             function  logoutPSKR : Boolean;
-             function  pushSpots  : Boolean;
-             function  parseExchange(const exchange : String; var callheard : String; var gridheard : String) : Boolean;
-             function  RBcountS   : String;
-             function  PRcountS   : String;
+             function    addSpot(const spot : spotRecord) : Boolean;
+             function    loginRB    : Boolean;
+             function    loginPSKR  : Boolean;
+             function    logoutRB   : Boolean;
+             function    logoutPSKR : Boolean;
+             function    pushSpots  : Boolean;
+             function    RBcountS   : String;
+             function    PRcountS   : String;
+             function    pskrTickle : DWORD;
 
              property myCall    : String
                 read  prMyCall
@@ -114,6 +120,14 @@ Type
                 read  RBCountS;
              property pskrCount : String
                 read  PRCountS;
+             property pskrCallsSent : Word
+                read  pskrStats.callsigns_sent;
+             property pskrCallsBuff : Word
+                read  pskrStats.callsigns_discarded;  // I know this looks WRONG but, so far, it's not.  See notes in constructor code.
+             property pskrCallsDisc : Word
+                read  pskrStats.next_send_time;
+             property pskrConnected : LongBool
+                read  pskrStats.connected;
        end;
 
 implementation
@@ -150,30 +164,46 @@ implementation
               prspots[i].rbsent   := true;
               prspots[i].pskrsent := true;
          end;
-         // Initialize PSK Reporter DLL
-         //If PSKReporter.ReporterInitialize('report.pskreporter.info','4739') = 0 Then pskrstat := 1 else pskrstat := 0;
-         //if cfgvtwo.Form6.cbUsePSKReporter.Checked and not primed Then PSKReporter.ReporterTickle;
-         //If cfgvtwo.Form6.cbUsePSKReporter.Checked and not primed Then
-         //Begin
-         //     If PSKReporter.ReporterGetStatistics(pskrStats,SizeOf(pskrStats)) = 0 Then Label19.Caption := IntToStr(pskrStats.callsigns_sent);
-         //End;
-         // PSKR Check
-         //if cfgvtwo.Form6.cbUsePSKReporter.Checked Then
-         //Begin
-         //     if pskrstat = 0 Then
-         //     Begin
-         //          Form1.Timer1.Enabled := False;
-         //          If PSKReporter.ReporterInitialize('report.pskreporter.info','4739') = 0 Then pskrstat := 1 else pskrstat := 0;
-         //          Form1.Timer1.Enabled := True;
-         //     End;
-         //End;
-         //if cfgvtwo.Form6.cbUsePSKReporter.Checked Then Form1.Label19.Visible := True else Form1.Label19.Visible := False;
+         // pskrStats variables
+         {
+         hostname: array[0..256-1] of WideChar;
+         port: array[0..32-1] of WideChar;
+         connected : Bool;
+         callsigns_sent : Word;
+         callsigns_buffered : Word;
+         callsigns_discarded : Word;
+         last_send_time : Word;
+         next_send_time : Word;
+         last_callsign_queued: array[0..24-1] of WideChar;
+         bytes_sent : Word;
+         bytes_sent_total : Word;
+         packets_sent : Word;
+         packets_sent_total : Word;
+         }
+         // I don't care what the above says.  It's screwed up!
+         // Sent is correct but
+         // Buffered is held in discarded
+         // Discarded is held in next_send_time
+         pskrstats.connected           := False;
+         pskrstats.callsigns_sent      := 0;
+         pskrstats.callsigns_buffered  := 0;
+         pskrstats.callsigns_discarded := 0;
+         pskrstats.last_send_time      := 0;
+         pskrstats.next_send_time      := 0;
+
+         pskrstat := PSKReporter.ReporterInitialize('report.pskreporter.info','4739');
     End;
 
     Destructor TSpot.endspots;
     Begin
-         //if cfgvtwo.Form6.cbUsePSKReporter.Checked Then PSKReporter.ReporterUninitialize;
+         PSKReporter.ReporterUninitialize;
          setlength(prSpots,0);
+    end;
+
+    function  TSpot.pskrTickle : DWORD;
+    begin
+         PSKReporter.ReporterGetStatistics(pskrStats,sizeof(pskrStats));
+         result := PSKReporter.ReporterTickle;
     end;
 
     function  TSpot.RBcountS : String;
@@ -338,11 +368,17 @@ implementation
        url, foo  : String;
        http      : THTTPSend;
        rbResult  : TStringList;
-       i         : Integer;
+       i, e      : Integer;
        resolved  : Boolean;
        callheard : String;
        gridheard : String;
        band      : String;
+       debugf    : TextFile;
+       fname     : String;
+       pskrerr   : WideString;
+       pskrrep   : WideString;
+       pskrloc   : WideString;
+       psknum    : DWORD;
     Begin
          prRBError := '';
          band      := '';
@@ -359,12 +395,19 @@ implementation
                    if not prSpots[i].rbsent then
                    begin
                         // OK.  Found an entry not marked as sent.  Is it something to send or not?
+                        resolved  := false;
                         callheard := '';
                         gridheard := '';
                         if parseExchange(prSpots[i].exchange, callheard, gridheard) and prVal.evalIQRG(prSpots[i].qrg,'LAX',band) then
                         begin
                              url := 'http://jt65.w6cqz.org/rb.php?func=RR&callsign=' + prMyCall + '&grid=' + prMyGrid + '&qrg=' + IntToStr(prSpots[i].qrg) + '&rxtime=' + prSpots[i].time + '&rxdate=' + prSpots[i].date + '&callheard=' + callheard + '&gridheard=' + gridheard + '&siglevel=' + IntToStr(prSpots[i].db) + '&deltaf=' + IntToStr(prSpots[i].df) + '&deltat=' + floatToStrF(prSpots[i].dt,ffFixed,0,1) + '&decoder=' + prSpots[i].decoder + '&mode=' + prSpots[i].mode + '&exchange=' + prSpots[i].exchange + '&rbversion=' + prVersion;
                              Try
+                                //fname := 'C:\spotdebug.txt';
+                                //AssignFile(debugf, fname);
+                                //If FileExists(fname) Then Append(debugf) Else Rewrite(debugf);
+                                //writeln(debugf,'Passed exchange:  ' + prSpots[i].exchange);
+                                //writeln(debugf,'URL: ' + url);
+                                //CloseFile(debugf);
                                 // This logs in to the RB System using parameters set in the object class
 { TODO : REMOVE DEBUG CODE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! }
                                 //if not HTTP.HTTPMethod('GET', url) Then
@@ -390,9 +433,9 @@ implementation
                                 //end;
                                 resolved := True;  // DEBUG DEBUG DEBUG REMOVE REMOVE REMOVE
                                 foo      := 'QSL'; // DEBUG DEBUG DEBUG REMOVE REMOVE REMOVE
-                                HTTP.Free;
+                                //HTTP.Free;
                              Except
-                                HTTP.Free;
+                                //HTTP.Free;
                                 foo := 'EXCEPTION';
                                 resolved := false;
                              End;
@@ -411,6 +454,11 @@ implementation
                         end
                         else
                         begin
+                             fname := 'C:\spotdebug.txt';
+                             AssignFile(debugf, fname);
+                             If FileExists(fname) Then Append(debugf) Else Rewrite(debugf);
+                             writeln(debugf,'Failed exchange:  ' + prSpots[i].exchange);
+                             CloseFile(debugf);
                              // Excahnge did not parse to something of use or qrg invalid.  Mark it sent so it can be cleared.
                              prSpots[i].rbsent   := true;
                              prSpots[i].pskrsent := true;
@@ -421,6 +469,52 @@ implementation
          if prUsePSKR then
          begin
               // Do PSKR work
+              pskrstat := 0;
+              if pskrstat = 0 then
+              begin
+                   for i := 0 to 4095 do
+                   begin
+                        if not prSpots[i].pskrsent then
+                        begin
+                             psknum := 2323;
+                             // OK.  Found an entry not marked as sent.  Is it something to send or not?
+                             setlength(pskrerr,1025);
+                             resolved  := false;
+                             callheard := '';
+                             gridheard := '';
+                             if parseExchange(prSpots[i].exchange, callheard, gridheard) and prVal.evalIQRG(prSpots[i].qrg,'LAX',band) then
+                             begin
+                                  // Init was good, lets do some work
+                                  //function TSpot.BuildRemoteString (call, mode, freq, date, time : String) : WideString;
+                                  //function TSpot.BuildRemoteStringGrid (call, mode, freq, grid, date, time : String) : WideString;
+                                  //function TSpot.BuildLocalString (station_callsign, my_gridsquare, programid, programversion, my_antenna : String) : WideString;
+                                  // BuildRemoteString     constructs the string for reporting to PSKR when a grid was not detected
+                                  // BuildRemoteStringGrid constructs the string for reporting to PSKR when a grid was detected
+                                  // BuildLocalString      constructs the string holding local information for station reporting to PSKR
+{ TODO : Tie this to vairable rather than hard coded to my data! }
+                                  pskrloc := BuildLocalString(prMyCall,prMyGrid,'JT65-HF','2000','Hamstick over metal building');
+                                  If not (gridheard='NILL') then
+                                  begin
+                                       pskrrep := BuildRemoteStringGrid(callheard,'JT65',IntToStr(prSpots[i].qrg),gridHeard,prSpots[i].date[1..8],prSpots[i].date[9..12]+'00');
+                                       pskrstat := PSKReporter.ReporterSeenCallsign(pskrrep,pskrloc,PSKReporter.REPORTER_SOURCE_AUTOMATIC);
+                                       psknum := pskrstat;
+                                       resolved := true;
+                                       foo := 'QSL';
+                                  end
+                                  else
+                                  begin
+                                       pskrrep := BuildRemoteString(callheard,'JT65',IntToStr(prSpots[i].qrg),prSpots[i].date[1..8],prSpots[i].date[9..12]+'00');
+                                       pskrstat := PSKReporter.ReporterSeenCallsign(pskrrep,pskrloc,PSKReporter.REPORTER_SOURCE_AUTOMATIC);
+                                       resolved := true;
+                                       foo := 'QSL';
+                                  end;
+                                  result := true;
+                                  prSpots[i].pskrsent := true;
+                                  inc(prPRCount);
+                             end;
+                        end;
+                   end;
+              end;
          end;
          if prUseDBF then
          begin
@@ -432,12 +526,9 @@ implementation
 
     function  TSpot.parseExchange(const exchange : String; var callheard : String; var gridheard : String) : Boolean;
     var
-       wc        : Integer;
        w1,w2,w3  : String;
        w4,w5,w6  : String;
-       w7        : String;
        resolved  : Boolean;
-       haveslash : Boolean;
     Begin
          // I'm probably going to annoy some, but, as of 2.0.0 the RB/PSK Reporter
          // spots will only spot callsigns using JT65 frames that are strictly valid
@@ -486,6 +577,7 @@ implementation
          // to extract anything from it.
          //
          resolved := false;
+         result    := false;
          if (wordcount(exchange,[' ']) = 2) or (wordcount(exchange,[' ']) = 3) then resolved := true else resolved := false;
          if resolved then
          begin
@@ -517,6 +609,7 @@ implementation
                         // w1           w2       w3
                         // CQ           CALLSIGN GRID
                         resolved  := true;
+                        result    := true;
                         callheard := w2;
                         gridheard := w3;
                    end;
@@ -525,6 +618,7 @@ implementation
                         // w1           w2       w3
                         // QRZ          CALLSIGN GRID
                         resolved  := true;
+                        result    := true;
                         callheard := w2;
                         gridheard := w3;
                    end;
@@ -533,6 +627,7 @@ implementation
                         // w1           w2       w3
                         // CALLSIGN     CALLSIGN GRID
                         resolved  := true;
+                        result    := true;
                         callheard := w2;
                         gridheard := w3;
                    end;
@@ -541,6 +636,7 @@ implementation
                         // w1           w2       w3
                         // CALLSIGN     CALLSIGN -##
                         resolved  := true;
+                        result    := true;
                         callheard := w2;
                         gridheard := 'NILL';
                    end;
@@ -550,6 +646,7 @@ implementation
                         // CALLSIGN     CALLSIGN R-##
                         // CALLSIGN     CALLSIGN RRR
                         resolved  := true;
+                        result    := true;
                         callheard := w2;
                         gridheard := 'NILL';
                    end;
@@ -558,6 +655,7 @@ implementation
                         // w1           w2       w3
                         // CALLSIGN     CALLSIGN 73
                         resolved  := true;
+                        result    := true;
                         callheard := w2;
                         gridheard := 'NILL';
                    end;
@@ -572,6 +670,7 @@ implementation
                         // w1           w2
                         // TEST         CALLSIGN
                         resolved  := true;
+                        result    := true;
                         callheard := w2;
                         gridheard := 'NILL';
                    end;
@@ -580,6 +679,7 @@ implementation
                         // w1           w2
                         // CALLSIGN     TEST
                         resolved  := true;
+                        result    := true;
                         callheard := w1;
                         gridheard := 'NILL';
                    end;
@@ -589,6 +689,7 @@ implementation
                         // CALLSIGN     GRID6
                         // CALLSIGN     GRID4
                         resolved  := true;
+                        result    := true;
                         callheard := w1;
                         gridheard := w2;
                    end;
@@ -611,6 +712,7 @@ implementation
                                        // QRZ          PFX/CALLSIGN
                                        // QRZ          CALLSIGN/SFX
                                        resolved  := True;
+                                       result    := true;
                                        callheard := w2;  // Remember, w2 contains the full callsign where w6 only contains the base call
                                        gridheard := 'NILL';
                                   end;
@@ -631,6 +733,7 @@ implementation
                                        // CALLSIGN     PFX/CALLSIGN
                                        // CALLSIGN     CALLSIGN/SFX
                                        resolved  := True;
+                                       result    := true;
                                        callheard := w2;  // Remember, w2 contains the full callsign where w6 only contains the base call
                                        gridheard := 'NILL';
                                   end;
@@ -643,12 +746,37 @@ implementation
                              // PFX/CALLSIGN CALLSIGN
                              // CALLSIGN/SFX CALLSIGN
                              resolved  := True;
+                             result    := true;
                              callheard := w2;
                              gridheard := 'NILL';
                         end;
                    end;
               end;
          end;
+    end;
+
+    function TSpot.BuildRemoteString (call, mode, freq, date, time : String) : WideString;
+    begin
+         If freq='0' Then
+            result := 'call' + #0 + call + #0 + 'mode' + #0 + mode + #0 + 'QSO_DATE' + #0 + date + #0 + 'TIME_ON' + #0 + time + #0 + #0
+         else
+            result := 'call' + #0 + call + #0 + 'mode' + #0 + mode + #0 + 'freq' + #0 + freq + #0 + 'QSO_DATE' + #0 + date + #0 + 'TIME_ON' + #0 + time + #0 + #0;
+    end;
+
+    function TSpot.BuildRemoteStringGrid (call, mode, freq, grid, date, time : String) : WideString;
+    begin
+         If freq='0' Then
+            result := 'call' + #0 + call + #0 + 'mode' + #0 + mode + #0 + 'gridsquare' + #0 + grid + #0 + 'QSO_DATE' + #0 + date + #0 + 'TIME_ON' + #0 + time + #0 + #0
+         else
+            result := 'call' + #0 + call + #0 + 'mode' + #0 + mode + #0 + 'freq' + #0 + freq + #0 + 'gridsquare' + #0 + 'QSO_DATE' + #0 + date + #0 + 'TIME_ON' + #0 + time + #0 + #0;
+    end;
+
+    function TSpot.BuildLocalString (station_callsign, my_gridsquare, programid, programversion, my_antenna : String) : WideString;
+    begin
+         result := 'station_callsign' + #0 + station_callsign + #0 + 'my_gridsquare' + #0 + my_gridsquare + #0 +
+                   'programid' + #0 + programid + #0 +
+                   'programversion' + #0 + programversion + #0 +
+                   'my_antenna' + #0 + my_antenna + #0 + #0;
     end;
 
 end.
