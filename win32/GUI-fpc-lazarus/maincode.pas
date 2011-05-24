@@ -4063,6 +4063,8 @@ Begin
      begin
           Label5.Caption := 'PSKR Disconnected';
      end;
+     Label5.Caption := Label5.Caption + '  RB Sent: ' + rb.RBcount + ' Discard: ' + rb.RBfail;
+
      Label30.Caption := rb.rbCount;
      Label19.Caption := rb.pskrCount;
      //if cfgvtwo.Form6.cbUseRB.Checked Then Form1.Label30.Visible := True else Form1.Label30.Visible := False;

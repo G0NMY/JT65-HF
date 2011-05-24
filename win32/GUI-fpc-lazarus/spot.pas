@@ -65,6 +65,7 @@ Type
               prSpots   : spotsArray;
               prVal     : valobject.TValidator;
               prRBCount : CTypes.cuint64;
+              prRBFail  : CTypes.cuint64;
               prPRCount : CTypes.cuint64;
               pskrStats : PSKReporter.REPORTER_STATISTICS;
               pskrstat  : DWORD;
@@ -87,6 +88,7 @@ Type
              function    logoutPSKR : Boolean;
              function    pushSpots  : Boolean;
              function    RBcountS   : String;
+             function    RBfailS    : String;
              function    PRcountS   : String;
              function    pskrTickle : DWORD;
 
@@ -121,6 +123,8 @@ Type
                 write prVersion;
              property rbCount   : String
                 read  RBCountS;
+             property rbFail    : String
+                read  RBFailS;
              property pskrCount : String
                 read  PRCountS;
              property rbInfo    : String
@@ -148,8 +152,6 @@ implementation
          prVal     := valobject.TValidator.create();
          // Setup http object for RB use
          prhttp         := THTTPSend.Create;
-         prhttp.Timeout := 10000;  // 10K ms = 10 s
-         prhttp.Headers.Add('Accept: text/html');
 
          prMyCall  := '';
          prMyGrid  := '';
@@ -163,6 +165,7 @@ implementation
          prVersion := '';
          prRBCount := 0;
          prPRCount := 0;
+         prRBFail  := 0;
          prInfo    := '';
          setlength(prSpots,4096);
          for i := 0 to 4095 do
@@ -230,6 +233,11 @@ implementation
          result := IntToStr(prRBCount);
     end;
 
+    function  TSpot.RBFailS : String;
+    begin
+         result := IntToStr(prRBFail);
+    end;
+
     function  TSpot.PRcountS : String;
     begin
          result := IntToStr(prPRCount);
@@ -272,6 +280,7 @@ implementation
          prRBError    := '';
          prBusy       := True;
          url          := 'http://jt65.w6cqz.org/rb.php?func=LI&callsign=' + prMyCall + '&grid=' + prMyGrid + '&qrg=' + IntToStr(prMyQRG) + '&rbversion=' + prVersion;
+         prhttp.Clear;
          prhttp.Timeout := 10000;  // 10K ms = 10 s
          prhttp.Headers.Add('Accept: text/html');
          rbResult.Clear;
@@ -322,6 +331,7 @@ implementation
               prRBError    := '';
               prBusy       := True;
               url          := 'http://jt65.w6cqz.org/rb.php?func=LO&callsign=' + prMyCall + '&grid=' + prMyGrid + '&qrg=' + IntToStr(prMyQRG) + '&rbversion=' + prVersion;
+              prhttp.Clear;
               prhttp.Timeout := 10000;  // 10K ms = 10 s
               prhttp.Headers.Add('Accept: text/html');
               Try
@@ -401,14 +411,12 @@ implementation
                         if parseExchange(prSpots[i].exchange, callheard, gridheard) and prVal.evalIQRG(prSpots[i].qrg,'LAX',band) then
                         begin
 { TODO : Server code is not live... at this point it will always return QSL when called. }
+                             prhttp.Clear;
+                             prhttp.Timeout := 10000;  // 10K ms = 10 s
+                             prhttp.Headers.Add('Accept: text/html');
                              url := synacode.EncodeURL('http://jt65.w6cqz.org/rb.php?func=RR&callsign=' + prMyCall + '&grid=' + prMyGrid + '&qrg=' + IntToStr(prSpots[i].qrg) + '&rxtime=' + prSpots[i].time + '&rxdate=' + prSpots[i].date + '&callheard=' + callheard + '&gridheard=' + gridheard + '&siglevel=' + IntToStr(prSpots[i].db) + '&deltaf=' + IntToStr(prSpots[i].df) + '&deltat=' + floatToStrF(prSpots[i].dt,ffFixed,0,1) + '&decoder=' + prSpots[i].decoder + '&mode=' + prSpots[i].mode + '&exchange=' + prSpots[i].exchange + '&rbversion=' + prVersion);
                              //url := 'http://jt65.w6cqz.org/rb.php?func=RR&callsign=' + prMyCall + '&grid=' + prMyGrid + '&qrg=' + IntToStr(prSpots[i].qrg) + '&rxtime=' + prSpots[i].time + '&rxdate=' + prSpots[i].date + '&callheard=' + callheard + '&gridheard=' + gridheard + '&siglevel=' + IntToStr(prSpots[i].db) + '&deltaf=' + IntToStr(prSpots[i].df) + '&deltat=' + floatToStrF(prSpots[i].dt,ffFixed,0,1) + '&decoder=' + prSpots[i].decoder + '&mode=' + prSpots[i].mode + '&rbversion=' + prVersion;
 
-                             fname := 'C:\spotdebug.txt';
-                             AssignFile(debugf, fname);
-                             If FileExists(fname) Then Append(debugf) Else Rewrite(debugf);
-                             writeln(debugf,'URL:  ' + url);
-                             CloseFile(debugf);
                              Try
                                 if prHTTP.HTTPMethod('GET', url) Then
                                 begin
@@ -418,14 +426,18 @@ implementation
                                      // NO - Indicates spot failed and safe to retry. (Probably RB Server busy)
                                      // ERR - Indicates RB Server has an issue with the data and not allowed to retry.
                                      If TrimLeft(TrimRight(rbResult.Text)) = 'QSL' Then resolved := true;
-                                     If TrimLeft(TrimRight(rbResult.Text)) = 'QSL' Then inc(prRBCount);
                                      If TrimLeft(TrimRight(rbResult.Text)) = 'NO'  Then resolved := false;
                                      If TrimLeft(TrimRight(rbResult.Text)) = 'ERR' Then resolved := false;
                                      foo := TrimLeft(TrimRight(rbresult.Text));
                                 end
                                 else
                                 begin
-                                     //foo := 'EXCEPTION';
+                                     fname := 'C:\spotdebug.txt';
+                                     AssignFile(debugf, fname);
+                                     If FileExists(fname) Then Append(debugf) Else Rewrite(debugf);
+                                     writeln(debugf,'RESULT:  ' + rbresult.Text);
+                                     CloseFile(debugf);
+                                     foo := 'EXCEPTION';
                                      resolved := False;
                                      result   := False;
                                 end;
@@ -444,6 +456,7 @@ implementation
                                   if foo = 'NO' then prSpots[i].rbsent        := false;
                                   if foo = 'EXCEPTION' then prSpots[i].rbsent := false;
                                   if foo = 'ERR' then prSpots[i].rbsent       := true;
+                                  inc(prRBFail);
                              end;
                         end
                         else
