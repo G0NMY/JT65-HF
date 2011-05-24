@@ -26,7 +26,7 @@ unit spot;
 interface
 
 uses
-  Classes, SysUtils, httpsend, valobject, StrUtils, CTypes, PSKReporter;
+  Classes, SysUtils, httpsend, synacode, valobject, StrUtils, CTypes, PSKReporter;
 
 Type
     spotRecord = record
@@ -70,6 +70,7 @@ Type
               pskrstat  : DWORD;
               prInfo    : String;
               prhttp    : THTTPSend;
+              rbResult  : TStringList;
               // Private functions to format data for PSK Reporter
               function BuildRemoteString (call, mode, freq, date, time : String) : WideString;
               function BuildRemoteStringGrid (call, mode, freq, grid, date, time : String) : WideString;
@@ -179,6 +180,8 @@ implementation
               prspots[i].rbsent   := true;
               prspots[i].pskrsent := true;
          end;
+         rbResult := TStringList.Create;
+         rbResult.Clear;
          // pskrStats variables
          {
          hostname: array[0..256-1] of WideChar;
@@ -265,27 +268,23 @@ implementation
     function TSpot.loginRB : Boolean;
     var
        url      : String;
-       http     : THTTPSend;
-       rbResult : TStringList;
     Begin
          prRBError    := '';
          prBusy       := True;
-         http         := THTTPSend.Create;
          url          := 'http://jt65.w6cqz.org/rb.php?func=LI&callsign=' + prMyCall + '&grid=' + prMyGrid + '&qrg=' + IntToStr(prMyQRG) + '&rbversion=' + prVersion;
-         http.Timeout := 10000;  // 10K ms = 10 s
-         http.Headers.Add('Accept: text/html');
+         prhttp.Timeout := 10000;  // 10K ms = 10 s
+         prhttp.Headers.Add('Accept: text/html');
+         rbResult.Clear;
          Try
             // This logs in to the RB System using parameters set in the object class
-            if not HTTP.HTTPMethod('GET', url) Then
+            if not prHTTP.HTTPMethod('GET', url) Then
             begin
                  prRBOn := False;
                  result := False;
             end
             else
             begin
-                 rbResult := TStringList.Create;
-                 rbResult.Clear;
-                 rbResult.LoadFromStream(HTTP.Document);
+                 rbResult.LoadFromStream(prHTTP.Document);
                  // Messages RB login can return:
                  // QSL - All good, logged in.
                  // NO - Indicates login failed but not due to bad RB data, so it's safe to try again. (Probably RB Server busy)
@@ -300,11 +299,8 @@ implementation
                  If TrimLeft(TrimRight(rbResult.Text)) = 'BAD MODE' Then prRBOn := false;
                  If TrimLeft(TrimRight(rbResult.Text)) = 'NO'       Then prRBOn := false;
                  prRBError := TrimLeft(TrimRight(rbresult.Text));
-                 rbResult.Free;
             end;
-            HTTP.Free;
          Except
-            HTTP.Free;
             prRBError := 'EXCEPTION';
             prRBOn    := False;
          End;
@@ -315,8 +311,6 @@ implementation
     function TSpot.logoutRB : Boolean;
     var
        url      : String;
-       http     : THTTPSend;
-       rbResult : TStringList;
        band     : String;
        go       : Boolean;
     Begin
@@ -324,35 +318,30 @@ implementation
          if prVal.evalIQRG(prMyQRG,'LAX',band) then go := true else go := false;
          if go then
          begin
+              rbResult.Clear;
               prRBError    := '';
               prBusy       := True;
-              http         := THTTPSend.Create;
               url          := 'http://jt65.w6cqz.org/rb.php?func=LO&callsign=' + prMyCall + '&grid=' + prMyGrid + '&qrg=' + IntToStr(prMyQRG) + '&rbversion=' + prVersion;
-              http.Timeout := 10000;  // 10K ms = 10 s
-              http.Headers.Add('Accept: text/html');
+              prhttp.Timeout := 10000;  // 10K ms = 10 s
+              prhttp.Headers.Add('Accept: text/html');
               Try
                  // This logs out the RB using parameters set in the object class
-                 if not HTTP.HTTPMethod('GET', url) Then
+                 if not prHTTP.HTTPMethod('GET', url) Then
                  begin
                       prRBOn := False;
                       result := False;
                  end
                  else
                  begin
-                      rbResult := TStringList.Create;
-                      rbResult.Clear;
-                      rbResult.LoadFromStream(HTTP.Document);
+                      rbResult.LoadFromStream(prHTTP.Document);
                       // Messages RB login can return:
                       // QSL - All good, logged out.
                       // NO - Indicates logout failed. (Probably RB Server busy)
                       If TrimLeft(TrimRight(rbResult.Text)) = 'QSL' Then prRBOn := false;
                       If TrimLeft(TrimRight(rbResult.Text)) = 'NO'  Then prRBOn := true;
                       prRBError := TrimLeft(TrimRight(rbresult.Text));
-                      rbResult.Free;
                  end;
-                 HTTP.Free;
               Except
-                 HTTP.Free;
                  prRBError := 'EXCEPTION';
                  prRBOn    := True;
               End;
@@ -382,7 +371,6 @@ implementation
     function TSpot.pushSpots : Boolean;
     var
        url, foo  : String;
-       rbResult  : TStringList;
        i         : Integer;
        resolved  : Boolean;
        callheard : String;
@@ -406,18 +394,24 @@ implementation
                    if not prSpots[i].rbsent then
                    begin
                         // OK.  Found an entry not marked as sent.  Is it something to send or not?
+                        rbResult.Clear;
                         resolved  := false;
                         callheard := '';
                         gridheard := '';
                         if parseExchange(prSpots[i].exchange, callheard, gridheard) and prVal.evalIQRG(prSpots[i].qrg,'LAX',band) then
                         begin
 { TODO : Server code is not live... at this point it will always return QSL when called. }
-                             url := 'http://jt65.w6cqz.org/rb.php?func=RR&callsign=' + prMyCall + '&grid=' + prMyGrid + '&qrg=' + IntToStr(prSpots[i].qrg) + '&rxtime=' + prSpots[i].time + '&rxdate=' + prSpots[i].date + '&callheard=' + callheard + '&gridheard=' + gridheard + '&siglevel=' + IntToStr(prSpots[i].db) + '&deltaf=' + IntToStr(prSpots[i].df) + '&deltat=' + floatToStrF(prSpots[i].dt,ffFixed,0,1) + '&decoder=' + prSpots[i].decoder + '&mode=' + prSpots[i].mode + '&exchange=' + prSpots[i].exchange + '&rbversion=' + prVersion;
+                             url := synacode.EncodeURL('http://jt65.w6cqz.org/rb.php?func=RR&callsign=' + prMyCall + '&grid=' + prMyGrid + '&qrg=' + IntToStr(prSpots[i].qrg) + '&rxtime=' + prSpots[i].time + '&rxdate=' + prSpots[i].date + '&callheard=' + callheard + '&gridheard=' + gridheard + '&siglevel=' + IntToStr(prSpots[i].db) + '&deltaf=' + IntToStr(prSpots[i].df) + '&deltat=' + floatToStrF(prSpots[i].dt,ffFixed,0,1) + '&decoder=' + prSpots[i].decoder + '&mode=' + prSpots[i].mode + '&exchange=' + prSpots[i].exchange + '&rbversion=' + prVersion);
+                             //url := 'http://jt65.w6cqz.org/rb.php?func=RR&callsign=' + prMyCall + '&grid=' + prMyGrid + '&qrg=' + IntToStr(prSpots[i].qrg) + '&rxtime=' + prSpots[i].time + '&rxdate=' + prSpots[i].date + '&callheard=' + callheard + '&gridheard=' + gridheard + '&siglevel=' + IntToStr(prSpots[i].db) + '&deltaf=' + IntToStr(prSpots[i].df) + '&deltat=' + floatToStrF(prSpots[i].dt,ffFixed,0,1) + '&decoder=' + prSpots[i].decoder + '&mode=' + prSpots[i].mode + '&rbversion=' + prVersion;
+
+                             fname := 'C:\spotdebug.txt';
+                             AssignFile(debugf, fname);
+                             If FileExists(fname) Then Append(debugf) Else Rewrite(debugf);
+                             writeln(debugf,'URL:  ' + url);
+                             CloseFile(debugf);
                              Try
                                 if prHTTP.HTTPMethod('GET', url) Then
                                 begin
-                                     rbResult := TStringList.Create;
-                                     rbResult.Clear;
                                      rbResult.LoadFromStream(prHTTP.Document);
                                      // Messages RB login can return:
                                      // QSL - All good, spot saved.
@@ -428,11 +422,10 @@ implementation
                                      If TrimLeft(TrimRight(rbResult.Text)) = 'NO'  Then resolved := false;
                                      If TrimLeft(TrimRight(rbResult.Text)) = 'ERR' Then resolved := false;
                                      foo := TrimLeft(TrimRight(rbresult.Text));
-                                     rbResult.Free;
                                 end
                                 else
                                 begin
-                                     foo := 'EXCEPTION';
+                                     //foo := 'EXCEPTION';
                                      resolved := False;
                                      result   := False;
                                 end;
