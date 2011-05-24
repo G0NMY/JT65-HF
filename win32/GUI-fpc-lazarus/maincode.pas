@@ -1432,7 +1432,9 @@ Var
    entTXCF, entRXCF    : Integer;
    isiglevel           : Integer;
 begin
-     //if itemsIn and guidedconfig.cfg.txAllowed() Then
+{ TODO : FIX double click message generation with slashed callsign.  It IS NOT working (again) }
+{ TODO : FIX BUG where buttons generate improper message after working with slashed call.
+Example:  Work call/something then click call CQ button.  Message generated is CQ MYCALL not CQ MYCALL MYGRID.  After clicking restore defaults buttons generate propert strings... looks like the error is triggered when a slashed callsign is present in the TX to box.  SQUASH this one with extreme force :) }
      if ctrl.itemsIn Then
      Begin
           If Form1.chkMultiDecode.Checked Then
