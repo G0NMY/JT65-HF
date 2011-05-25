@@ -922,6 +922,7 @@ end;
 
 procedure TForm1.cbEnRBChange(Sender: TObject);
 begin
+{ TODO : Reconnect these to configuration settings for save/restore/init }
      if not guidedconfig.cfg.noSpotting then
      begin
           If cbEnRB.Checked Then
@@ -4055,16 +4056,7 @@ Begin
 
      // RB Check
      pskr := rb.pskrTickle;
-     if rb.pskrConnected then
-     Begin
-          Label5.caption := 'PSKR Connected.  Sent: ' + IntToStr(rb.pskrCallsSent) + ' Buffered: ' + IntToStr(rb.pskrCallsBuff) + ' Discarded: ' + IntToStr(rb.pskrCallsDisc);
-     end
-     else
-     begin
-          Label5.Caption := 'PSKR Disconnected';
-     end;
-     Label5.Caption := Label5.Caption + '  RB Sent: ' + rb.RBcount + ' Discard: ' + rb.RBfail;
-
+     Label5.caption := 'PSKR Sent: ' + IntToStr(rb.pskrCallsSent) + ' Buffered: ' + IntToStr(rb.pskrCallsBuff) + ' Discarded: ' + IntToStr(rb.pskrCallsDisc) + '  RB Sent: ' + rb.RBcount + ' Discard: ' + rb.RBfail;
      Label30.Caption := rb.rbCount;
      Label19.Caption := rb.pskrCount;
      //if cfgvtwo.Form6.cbUseRB.Checked Then Form1.Label30.Visible := True else Form1.Label30.Visible := False;

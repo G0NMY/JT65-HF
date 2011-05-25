@@ -700,11 +700,19 @@ implementation
                    end;
                    if not resolved and ((w1='CQ') or (w1='QRZ')) and prVal.evalCSign(w2) and (w3 = '   ') then
                    begin
-                        { TODO : Case of exchange = QRZ CALLSIGN (with no grid) is being rejected.  Fix. }
-                        { FIXED, I Think }
                         // w1           w2
                         // CQ           CALLSIGN
                         // QRZ          CALLSIGN
+                        resolved  := true;
+                        result    := true;
+                        callheard := w2;
+                        gridheard := 'NILL';
+                   end;
+                   if not resolved and prVal.evalCSign(w1) and prVal.evalCSign(w2) and (w3 = '   ') then
+                   begin
+                        // Tentative on this one...
+                        // w1           w2
+                        // CALLSIGN     CALLSIGN
                         resolved  := true;
                         result    := true;
                         callheard := w2;
