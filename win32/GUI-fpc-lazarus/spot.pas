@@ -51,27 +51,28 @@ Type
     TSpot = Class
        private
               // Control values
-              prMyCall  : String;
-              prMyGrid  : String;
-              prMyQRG   : Integer;
-              prUseRB   : Boolean;
-              prUsePSKR : Boolean;
-              prUseDBF  : Boolean;
-              prRBOn    : Boolean;
-              prRBError : String;
-              prPSKROn  : Boolean;
-              prBusy    : Boolean;
-              prVersion : String;
-              prSpots   : spotsArray;
-              prVal     : valobject.TValidator;
-              prRBCount : CTypes.cuint64;
-              prRBFail  : CTypes.cuint64;
-              prPRCount : CTypes.cuint64;
-              pskrStats : PSKReporter.REPORTER_STATISTICS;
-              pskrstat  : DWORD;
-              prInfo    : String;
-              prhttp    : THTTPSend;
-              rbResult  : TStringList;
+              prMyCall    : String;
+              prMyGrid    : String;
+              prMyQRG     : Integer;
+              prUseRB     : Boolean;
+              prUsePSKR   : Boolean;
+              prUseDBF    : Boolean;
+              prRBOn      : Boolean;
+              prRBError   : String;
+              prPSKROn    : Boolean;
+              prBusy      : Boolean;
+              prVersion   : String;
+              prSpots     : spotsArray;
+              prVal       : valobject.TValidator;
+              prRBCount   : CTypes.cuint64;
+              prRBFail    : CTypes.cuint64;
+              prRBDiscard : CTypes.cuint64;
+              prPRCount   : CTypes.cuint64;
+              pskrStats   : PSKReporter.REPORTER_STATISTICS;
+              pskrstat    : DWORD;
+              prInfo      : String;
+              prhttp      : THTTPSend;
+              rbResult    : TStringList;
               // Private functions to format data for PSK Reporter
               function BuildRemoteString (call, mode, freq, date, time : String) : WideString;
               function BuildRemoteStringGrid (call, mode, freq, grid, date, time : String) : WideString;
@@ -87,8 +88,9 @@ Type
              function    logoutRB   : Boolean;
              function    logoutPSKR : Boolean;
              function    pushSpots  : Boolean;
-             function    RBcountS   : String;
-             function    RBfailS    : String;
+             function    RBCountS   : String;
+             function    RBFailS    : String;
+             function    RBDiscardS : String;
              function    PRcountS   : String;
              function    pskrTickle : DWORD;
 
@@ -123,6 +125,8 @@ Type
                 write prVersion;
              property rbCount   : String
                 read  RBCountS;
+             property rbDiscard : String
+                read  rbDiscardS;
              property rbFail    : String
                 read  RBFailS;
              property pskrCount : String
@@ -153,20 +157,21 @@ implementation
          // Setup http object for RB use
          prhttp         := THTTPSend.Create;
 
-         prMyCall  := '';
-         prMyGrid  := '';
-         prMyQRG   := 0;
-         prUseRB   := false;
-         prUsePSKR := False;
-         prUseDBF  := False;
-         prRBOn    := False;
-         prRBError := '';
-         prPSKROn  := False;
-         prVersion := '';
-         prRBCount := 0;
-         prPRCount := 0;
-         prRBFail  := 0;
-         prInfo    := '';
+         prMyCall    := '';
+         prMyGrid    := '';
+         prMyQRG     := 0;
+         prUseRB     := false;
+         prUsePSKR   := False;
+         prUseDBF    := False;
+         prRBOn      := False;
+         prRBError   := '';
+         prPSKROn    := False;
+         prVersion   := '';
+         prRBCount   := 0;
+         prPRCount   := 0;
+         prRBFail    := 0;
+         prRBDiscard := 0;
+         prInfo      := '';
          setlength(prSpots,4096);
          for i := 0 to 4095 do
          begin
@@ -231,6 +236,11 @@ implementation
     function  TSpot.RBcountS : String;
     begin
          result := IntToStr(prRBCount);
+    end;
+
+    function  TSpot.RBDiscardS : String;
+    begin
+         result := IntToStr(prRBDiscard);
     end;
 
     function  TSpot.RBFailS : String;
@@ -410,13 +420,10 @@ implementation
                         gridheard := '';
                         if parseExchange(prSpots[i].exchange, callheard, gridheard) and prVal.evalIQRG(prSpots[i].qrg,'LAX',band) then
                         begin
-{ TODO : Server code is not live... at this point it will always return QSL when called. }
                              prhttp.Clear;
                              prhttp.Timeout := 10000;  // 10K ms = 10 s
                              prhttp.Headers.Add('Accept: text/html');
-                             url := synacode.EncodeURL('http://jt65.w6cqz.org/rb.php?func=RR&callsign=' + prMyCall + '&grid=' + prMyGrid + '&qrg=' + IntToStr(prSpots[i].qrg) + '&rxtime=' + prSpots[i].time + '&rxdate=' + prSpots[i].date + '&callheard=' + callheard + '&gridheard=' + gridheard + '&siglevel=' + IntToStr(prSpots[i].db) + '&deltaf=' + IntToStr(prSpots[i].df) + '&deltat=' + floatToStrF(prSpots[i].dt,ffFixed,0,1) + '&decoder=' + prSpots[i].decoder + '&mode=' + prSpots[i].mode + '&exchange=' + prSpots[i].exchange + '&rbversion=' + prVersion);
-                             //url := 'http://jt65.w6cqz.org/rb.php?func=RR&callsign=' + prMyCall + '&grid=' + prMyGrid + '&qrg=' + IntToStr(prSpots[i].qrg) + '&rxtime=' + prSpots[i].time + '&rxdate=' + prSpots[i].date + '&callheard=' + callheard + '&gridheard=' + gridheard + '&siglevel=' + IntToStr(prSpots[i].db) + '&deltaf=' + IntToStr(prSpots[i].df) + '&deltat=' + floatToStrF(prSpots[i].dt,ffFixed,0,1) + '&decoder=' + prSpots[i].decoder + '&mode=' + prSpots[i].mode + '&rbversion=' + prVersion;
-
+                             url := synacode.EncodeURL('http://jt65.w6cqz.org/rb.php?func=RR&callsign=' + prMyCall + '&grid=' + prMyGrid + '&qrg=' + IntToStr(prSpots[i].qrg) + '&rxdate=' + prSpots[i].date + '&callheard=' + callheard + '&gridheard=' + gridheard + '&siglevel=' + IntToStr(prSpots[i].db) + '&deltaf=' + IntToStr(prSpots[i].df) + '&deltat=' + floatToStrF(prSpots[i].dt,ffFixed,0,1) + '&decoder=' + prSpots[i].decoder + '&mode=' + prSpots[i].mode + '&exchange=' + prSpots[i].exchange + '&rbversion=' + prVersion);
                              Try
                                 if prHTTP.HTTPMethod('GET', url) Then
                                 begin
@@ -426,6 +433,7 @@ implementation
                                      // NO - Indicates spot failed and safe to retry. (Probably RB Server busy)
                                      // ERR - Indicates RB Server has an issue with the data and not allowed to retry.
                                      If TrimLeft(TrimRight(rbResult.Text)) = 'QSL' Then resolved := true;
+                                     If TrimLeft(TrimRight(rbResult.Text)) = 'QRG' Then resolved := false;
                                      If TrimLeft(TrimRight(rbResult.Text)) = 'NO'  Then resolved := false;
                                      If TrimLeft(TrimRight(rbResult.Text)) = 'ERR' Then resolved := false;
                                      foo := TrimLeft(TrimRight(rbresult.Text));
@@ -453,14 +461,20 @@ implementation
                              end
                              else
                              begin
-                                  if foo = 'NO' then prSpots[i].rbsent        := false;
-                                  if foo = 'EXCEPTION' then prSpots[i].rbsent := false;
-                                  if foo = 'ERR' then prSpots[i].rbsent       := true;
+{ TODO : Pass back error to main code so user can be notified of problem }
+                                  prSpots[i].rbsent:= true;
+                                  result := true;
+                                  //if foo = 'QRG' then prSpots[i].rbsent       := true;  // RB Server says bad QRG so don't try to send this again...
+                                  //if foo = 'NO' then prSpots[i].rbsent        := true; { TODO : Fix this (Set back to true) once I decide how to better handle retries }
+                                  //if foo = 'EXCEPTION' then prSpots[i].rbsent := true; { TODO : Fix this (Set back to true) once I decide how to better handle retries }
+                                  //if foo = 'ERR' then prSpots[i].rbsent       := true;
+                                  //if foo = 'BADDATA' then prSpots[i].rbsent   := true;  // RB Server doesn't like some of the data (probably big DT) so no resend
                                   inc(prRBFail);
                              end;
                         end
                         else
                         begin
+                             inc(prRBDiscard);
                              fname := 'C:\spotdebug.txt';
                              AssignFile(debugf, fname);
                              If FileExists(fname) Then Append(debugf) Else Rewrite(debugf);
@@ -470,6 +484,7 @@ implementation
                              prSpots[i].rbsent   := true;
                              prSpots[i].pskrsent := true;
                         end;
+                        sleep(100); // Lets not overload the RB server with little or no delay between spot posts.
                    end;
               end;
          end;
@@ -491,14 +506,7 @@ implementation
                              if parseExchange(prSpots[i].exchange, callheard, gridheard) and prVal.evalIQRG(prSpots[i].qrg,'LAX',band) then
                              begin
                                   // Init was good, lets do some work
-                                  //function TSpot.BuildRemoteString (call, mode, freq, date, time : String) : WideString;
-                                  //function TSpot.BuildRemoteStringGrid (call, mode, freq, grid, date, time : String) : WideString;
-                                  //function TSpot.BuildLocalString (station_callsign, my_gridsquare, programid, programversion, my_antenna : String) : WideString;
-                                  // BuildRemoteString     constructs the string for reporting to PSKR when a grid was not detected
-                                  // BuildRemoteStringGrid constructs the string for reporting to PSKR when a grid was detected
-                                  // BuildLocalString      constructs the string holding local information for station reporting to PSKR
-{ TODO : Tie this to vairable rather than hard coded to my data! }
-                                  pskrloc := BuildLocalString(prMyCall,prMyGrid,'JT65-HF','2000',prInfo);
+                                  pskrloc := BuildLocalString(prMyCall,prMyGrid,'JT65-HF','200',prInfo);
                                   If not (gridheard='NILL') then
                                   begin
                                        pskrrep := BuildRemoteStringGrid(callheard,'JT65',IntToStr(prSpots[i].qrg),gridHeard,prSpots[i].date[1..8],prSpots[i].date[9..12]+'00');

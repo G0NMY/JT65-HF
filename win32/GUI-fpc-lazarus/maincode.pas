@@ -4056,7 +4056,7 @@ Begin
 
      // RB Check
      pskr := rb.pskrTickle;
-     Label5.caption := 'PSKR Sent: ' + IntToStr(rb.pskrCallsSent) + ' Buffered: ' + IntToStr(rb.pskrCallsBuff) + ' Discarded: ' + IntToStr(rb.pskrCallsDisc) + '  RB Sent: ' + rb.RBcount + ' Discard: ' + rb.RBfail;
+     Label5.caption := 'PSKR Sent: ' + IntToStr(rb.pskrCallsSent) + ' Buffered: ' + IntToStr(rb.pskrCallsBuff) + ' Discarded: ' + IntToStr(rb.pskrCallsDisc) + '  RB Sent: ' + rb.RBcount + ' Discard: ' + rb.rbDiscard + ' Fail: ' + rb.RBfail;
      Label30.Caption := rb.rbCount;
      Label19.Caption := rb.pskrCount;
      //if cfgvtwo.Form6.cbUseRB.Checked Then Form1.Label30.Visible := True else Form1.Label30.Visible := False;
