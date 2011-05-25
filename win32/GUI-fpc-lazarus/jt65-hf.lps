@@ -24,8 +24,8 @@
         <UnitName Value="maincode"/>
         <EditorIndex Value="2"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="2967"/>
-        <CursorPos X="9" Y="2993"/>
+        <TopLine Value="2647"/>
+        <CursorPos X="10" Y="2663"/>
         <UsageCount Value="215"/>
         <Bookmarks Count="2">
           <Item0 X="1" Y="1403" ID="1"/>
@@ -223,10 +223,11 @@
         <Filename Value="d65.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="d65"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="1"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="1093"/>
-        <CursorPos X="110" Y="1113"/>
+        <TopLine Value="1096"/>
+        <CursorPos X="1" Y="1112"/>
         <UsageCount Value="202"/>
         <Loaded Value="True"/>
       </Unit20>
@@ -385,7 +386,7 @@
         <WindowIndex Value="0"/>
         <TopLine Value="188"/>
         <CursorPos X="1" Y="211"/>
-        <UsageCount Value="193"/>
+        <UsageCount Value="194"/>
         <Loaded Value="True"/>
       </Unit34>
       <Unit35>
@@ -396,7 +397,7 @@
         <WindowIndex Value="0"/>
         <TopLine Value="133"/>
         <CursorPos X="1" Y="156"/>
-        <UsageCount Value="193"/>
+        <UsageCount Value="194"/>
         <Loaded Value="True"/>
       </Unit35>
       <Unit36>
@@ -409,7 +410,7 @@
         <WindowIndex Value="0"/>
         <TopLine Value="7"/>
         <CursorPos X="88" Y="34"/>
-        <UsageCount Value="192"/>
+        <UsageCount Value="193"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
       </Unit36>
@@ -421,19 +422,18 @@
         <WindowIndex Value="0"/>
         <TopLine Value="242"/>
         <CursorPos X="17" Y="256"/>
-        <UsageCount Value="174"/>
+        <UsageCount Value="175"/>
         <Loaded Value="True"/>
       </Unit37>
       <Unit38>
         <Filename Value="spot.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="spot"/>
-        <IsVisibleTab Value="True"/>
         <EditorIndex Value="3"/>
         <WindowIndex Value="0"/>
         <TopLine Value="446"/>
-        <CursorPos X="50" Y="466"/>
-        <UsageCount Value="121"/>
+        <CursorPos X="35" Y="467"/>
+        <UsageCount Value="122"/>
         <Loaded Value="True"/>
       </Unit38>
     </Units>
@@ -449,7 +449,7 @@
       </Item1>
       <Item2>
         <Source Value="d65.pas"/>
-        <Line Value="1452"/>
+        <Line Value="1454"/>
       </Item2>
       <Item3>
         <Source Value="maincode.pas"/>

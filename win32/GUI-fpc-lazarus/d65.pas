@@ -110,6 +110,7 @@ Var
    gld65wisfname                 : String;
    gld65kvpath                   : String;
    gld65dokv                     : Boolean;
+   gld65errmsg                   : String;
 
 procedure doDecode(bStart, bEnd : Integer);
 Function  evalKV(Var kdec : String) : Boolean;
@@ -348,6 +349,7 @@ Var
 begin
      glinprog := True;
      gld65HaveDecodes := False;
+     gld65errmsg := '';
      if glnd65FirstRun Then
      Begin
          //
@@ -1079,7 +1081,6 @@ begin
                                        end
                                        else
                                        begin
-{ TODO : Enable recognition that KV may be disabled }
                                             // Oh joy.  Time to try for kv.  Note that KV can now be disabled.
                                             kdec := '';
                                             if FileExists(gld65kvfname) and gld65dokv Then
@@ -1108,7 +1109,8 @@ begin
                                                  deleteFile(gld65kvfname);
                                                  if kverror > 5000 then
                                                  begin
-{ TODO : Fix this to handle the issue rather than bail! }
+                                                      gld65errmsg := 'Could not delete KVASD.DAT after 5K tries.';
+                                                      diagout.Form3.ListBox1.Items.Add(gld65errmsg);
                                                       break;
                                                  end;
                                             end;
