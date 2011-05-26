@@ -27,13 +27,12 @@ uses
   cthreads, cmem,
   {$ENDIF}{$ENDIF}
   Interfaces, // this includes the LCL widgetset
-  Forms , tachartlazaruspkg , maincode , portaudio , encode65 , globalData ,
-  spectrum , cmaps , fftw_jl , adc , samplerate , dac , rawdec , guiConfig ,
-  verHolder , PSKReporter , synaser , adif , log , diagout , waterfall ,
-  d65 , about , rigobject , ddeobject , omnirigobject , civobject ,
-  ddehrdobject , guidedconfig , valobject , paobject , srgraph , hrdinterface5 ,
-  hrdobject , serialobject , adclite , daclite , audiodiag , dispatchobject ,
-  spot;
+  Forms, tachartlazaruspkg, dbflaz, maincode, portaudio, encode65, globalData,
+  spectrum, cmaps, fftw_jl, adc, samplerate, dac, rawdec, guiConfig, verHolder,
+  PSKReporter, synaser, adif, log, diagout, waterfall, d65, about, rigobject,
+  ddeobject, omnirigobject, civobject, ddehrdobject, guidedconfig, valobject,
+  paobject, srgraph, hrdinterface5, hrdobject, serialobject, adclite, daclite,
+  audiodiag, dispatchobject, spot;
 
 {$R *.res}
 

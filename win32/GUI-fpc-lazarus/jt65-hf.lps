@@ -10,7 +10,7 @@
         <EditorIndex Value="23"/>
         <WindowIndex Value="0"/>
         <TopLine Value="22"/>
-        <CursorPos X="1" Y="48"/>
+        <CursorPos X="1" Y="47"/>
         <UsageCount Value="215"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
@@ -24,12 +24,12 @@
         <UnitName Value="maincode"/>
         <EditorIndex Value="2"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="2647"/>
-        <CursorPos X="10" Y="2663"/>
+        <TopLine Value="1243"/>
+        <CursorPos X="28" Y="1264"/>
         <UsageCount Value="215"/>
         <Bookmarks Count="2">
-          <Item0 X="1" Y="1403" ID="1"/>
-          <Item1 X="5" Y="1523" ID="0"/>
+          <Item0 X="1" Y="1404" ID="1"/>
+          <Item1 X="5" Y="1524" ID="0"/>
         </Bookmarks>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
@@ -38,7 +38,7 @@
         <Filename Value="portaudio.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="portaudio"/>
-        <EditorIndex Value="12"/>
+        <EditorIndex Value="13"/>
         <WindowIndex Value="0"/>
         <TopLine Value="1003"/>
         <CursorPos X="36" Y="585"/>
@@ -90,7 +90,7 @@
         <Filename Value="adc.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="adc"/>
-        <EditorIndex Value="13"/>
+        <EditorIndex Value="14"/>
         <WindowIndex Value="0"/>
         <TopLine Value="44"/>
         <CursorPos X="14" Y="68"/>
@@ -109,7 +109,7 @@
         <Filename Value="dac.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="dac"/>
-        <EditorIndex Value="15"/>
+        <EditorIndex Value="16"/>
         <WindowIndex Value="0"/>
         <TopLine Value="22"/>
         <CursorPos X="35" Y="57"/>
@@ -131,7 +131,7 @@
         <Filename Value="guiconfig.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="guiConfig"/>
-        <EditorIndex Value="4"/>
+        <EditorIndex Value="5"/>
         <WindowIndex Value="0"/>
         <TopLine Value="11"/>
         <CursorPos X="1" Y="39"/>
@@ -142,7 +142,7 @@
         <Filename Value="verholder.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="verHolder"/>
-        <EditorIndex Value="8"/>
+        <EditorIndex Value="9"/>
         <WindowIndex Value="0"/>
         <TopLine Value="26"/>
         <CursorPos X="21" Y="50"/>
@@ -223,11 +223,10 @@
         <Filename Value="d65.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="d65"/>
-        <IsVisibleTab Value="True"/>
         <EditorIndex Value="1"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="1096"/>
-        <CursorPos X="1" Y="1112"/>
+        <TopLine Value="248"/>
+        <CursorPos X="84" Y="273"/>
         <UsageCount Value="202"/>
         <Loaded Value="True"/>
       </Unit20>
@@ -246,7 +245,7 @@
         <Filename Value="rigobject.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="rigobject"/>
-        <EditorIndex Value="17"/>
+        <EditorIndex Value="18"/>
         <WindowIndex Value="0"/>
         <TopLine Value="550"/>
         <CursorPos X="24" Y="564"/>
@@ -288,12 +287,10 @@
         <Filename Value="ddehrdobject.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="ddehrdobject"/>
-        <EditorIndex Value="18"/>
         <WindowIndex Value="0"/>
         <TopLine Value="92"/>
         <CursorPos X="12" Y="137"/>
         <UsageCount Value="203"/>
-        <Loaded Value="True"/>
       </Unit26>
       <Unit27>
         <Filename Value="guidedconfig.pas"/>
@@ -301,10 +298,10 @@
         <ComponentName Value="Form7"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="guidedconfig"/>
-        <EditorIndex Value="5"/>
+        <EditorIndex Value="6"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="2816"/>
-        <CursorPos X="11" Y="1431"/>
+        <TopLine Value="437"/>
+        <CursorPos X="11" Y="437"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
@@ -324,7 +321,7 @@
         <Filename Value="paobject.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="paobject"/>
-        <EditorIndex Value="11"/>
+        <EditorIndex Value="12"/>
         <WindowIndex Value="0"/>
         <TopLine Value="145"/>
         <CursorPos X="1" Y="168"/>
@@ -337,7 +334,7 @@
         <ComponentName Value="Form8"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="srgraph"/>
-        <EditorIndex Value="10"/>
+        <EditorIndex Value="11"/>
         <WindowIndex Value="0"/>
         <TopLine Value="40"/>
         <CursorPos X="1" Y="60"/>
@@ -371,7 +368,7 @@
         <Filename Value="serialobject.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="serialobject"/>
-        <EditorIndex Value="9"/>
+        <EditorIndex Value="10"/>
         <WindowIndex Value="0"/>
         <TopLine Value="101"/>
         <CursorPos X="1" Y="129"/>
@@ -382,22 +379,22 @@
         <Filename Value="adclite.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="adclite"/>
-        <EditorIndex Value="14"/>
+        <EditorIndex Value="15"/>
         <WindowIndex Value="0"/>
         <TopLine Value="188"/>
         <CursorPos X="1" Y="211"/>
-        <UsageCount Value="194"/>
+        <UsageCount Value="200"/>
         <Loaded Value="True"/>
       </Unit34>
       <Unit35>
         <Filename Value="daclite.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="daclite"/>
-        <EditorIndex Value="16"/>
+        <EditorIndex Value="17"/>
         <WindowIndex Value="0"/>
         <TopLine Value="133"/>
         <CursorPos X="1" Y="156"/>
-        <UsageCount Value="194"/>
+        <UsageCount Value="200"/>
         <Loaded Value="True"/>
       </Unit35>
       <Unit36>
@@ -406,11 +403,11 @@
         <ComponentName Value="Form6"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="audiodiag"/>
-        <EditorIndex Value="7"/>
+        <EditorIndex Value="8"/>
         <WindowIndex Value="0"/>
         <TopLine Value="7"/>
         <CursorPos X="88" Y="34"/>
-        <UsageCount Value="193"/>
+        <UsageCount Value="207"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
       </Unit36>
@@ -418,11 +415,11 @@
         <Filename Value="dispatchobject.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="dispatchobject"/>
-        <EditorIndex Value="6"/>
+        <EditorIndex Value="7"/>
         <WindowIndex Value="0"/>
         <TopLine Value="242"/>
         <CursorPos X="17" Y="256"/>
-        <UsageCount Value="175"/>
+        <UsageCount Value="201"/>
         <Loaded Value="True"/>
       </Unit37>
       <Unit38>
@@ -431,9 +428,9 @@
         <UnitName Value="spot"/>
         <EditorIndex Value="3"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="446"/>
-        <CursorPos X="35" Y="467"/>
-        <UsageCount Value="122"/>
+        <TopLine Value="46"/>
+        <CursorPos X="1" Y="29"/>
+        <UsageCount Value="148"/>
         <Loaded Value="True"/>
       </Unit38>
     </Units>
@@ -453,15 +450,15 @@
       </Item2>
       <Item3>
         <Source Value="maincode.pas"/>
-        <Line Value="485"/>
+        <Line Value="484"/>
       </Item3>
       <Item4>
         <Source Value="maincode.pas"/>
-        <Line Value="489"/>
+        <Line Value="488"/>
       </Item4>
       <Item5>
         <Source Value="maincode.pas"/>
-        <Line Value="493"/>
+        <Line Value="492"/>
       </Item5>
     </BreakPoints>
   </Debugging>

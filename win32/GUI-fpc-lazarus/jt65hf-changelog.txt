@@ -65,6 +65,15 @@ New interface to PSK Reporter is confirmed as working.  Corrected error in field
 grid.  I had looked at an old (very) ADIF definiton and was, much as in the ADIF logging modulem, used
 grid rather than gridsquare.  Corrected issue with sending time as 4 digits HHMM rather than HHMMSS.
 
+After wasting many many hours attempting to make some of the FPC/Lazarus light weight database functions
+work properly I finally decided to roll my own.  Much as I did back in the 80s with Turbo Pascal 5.0 on a
+8086 box with DOS.  :)  I am now keeping an internal database of all callsigns heard with a total heard
+count, first and last heard date/time and a set of booleans representing bands callsign has been heard on
+(160 ... 2M) and, eventually, a set of booleans representing bands the user has worked a callsign on.  The
+DB also keeps track of grid callsign has been heard in and will track up to 4 distinct grids for those who
+tend to roam a bit.  I will be providing a function to export my custom binary DB format to CSV as well.
+Once the new DB code is a bit more tested I will connect it to the old heard list interface along with
+searching, sorting and etc functions.
 
 New configuration system (guided configuration).  This takes user through all items of
 importance in a step by step process with full validation of input values.  No more bad

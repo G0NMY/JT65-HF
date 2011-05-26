@@ -26,12 +26,11 @@ unit maincode;
 interface
 
 uses
-  Classes , SysUtils , LResources , Forms , Controls , Graphics , Dialogs ,
-  StdCtrls , CTypes , StrUtils , Math , ExtCtrls , ComCtrls , Spin , Windows ,
-  DateUtils , encode65 , globalData , ClipBrd , rawdec , guiConfig , verHolder ,
-  dispatchobject , Menus , log , diagout , synautil , waterfall , d65 ,
-  spectrum , about , FileUtil , guidedconfig , valobject , rigobject ,
-  portaudio , adc , dac , spot; //audiodiag, ;
+  Classes, SysUtils, LResources, Forms, Controls, Graphics, Dialogs, StdCtrls,
+  CTypes, StrUtils, Math, ExtCtrls, ComCtrls, Spin, Windows, DateUtils,
+  encode65, globalData, ClipBrd, rawdec, guiConfig, verHolder, dispatchobject,
+  Menus, log, diagout, synautil, waterfall, d65, spectrum, about, FileUtil,
+  guidedconfig, valobject, rigobject, portaudio, adc, dac, spot; //audiodiag, ;
 
 type
   { TForm1 }
@@ -499,10 +498,10 @@ begin
              Begin
                   If ctrl.dorbReport And not rb.busy Then
                   Begin
-                       // DEBUG
+                       // TODO: DEBUG
                        rb.useRB   := True;
                        rb.usePSKR := True;
-                       rb.useDBF  := False;
+                       rb.useDBF  := True;
                        // REMOVE ABOVE
                        rb.myCall := TrimLeft(TrimRight(guidedconfig.cfg.rbcallsign));
                        rb.myGrid := TrimLeft(TrimRight(guidedconfig.cfg.grid));
@@ -513,8 +512,8 @@ begin
                   Begin
                        // DEBUG
                        rb.useRB   := True;
-                       rb.usePSKR := False;
-                       rb.useDBF  := False;
+                       rb.usePSKR := True;
+                       rb.useDBF  := True;
                        // REMOVE ABOVE
                        rb.myCall := TrimLeft(TrimRight(guidedconfig.cfg.rbcallsign));
                        rb.myGrid := TrimLeft(TrimRight(guidedconfig.cfg.grid));
@@ -526,8 +525,8 @@ begin
                   Begin
                        // DEBUG
                        rb.useRB   := True;
-                       rb.usePSKR := False;
-                       rb.useDBF  := False;
+                       rb.usePSKR := True;
+                       rb.useDBF  := True;
                        // REMOVE ABOVE
                        rb.myCall := TrimLeft(TrimRight(guidedconfig.cfg.rbcallsign));
                        rb.myGrid := TrimLeft(TrimRight(guidedconfig.cfg.grid));
@@ -1242,8 +1241,9 @@ begin
      //   pskrsent : Boolean;
      // end;
 
-
-     If not guidedconfig.cfg.noSpotting and (guidedconfig.cfg.useRB or guidedconfig.cfg.usePSKR) Then
+     // Insuring that redecode spots are not spotted
+{ TODO : Confirm that redecode items are not being sent to spotting object }
+     If not guidedconfig.cfg.noSpotting and (guidedconfig.cfg.useRB or guidedconfig.cfg.usePSKR) and not ctrl.reDecode Then
      Begin
           if eopQRG = sopQRG then
           begin
@@ -1261,6 +1261,7 @@ begin
                if m = 65 then srec.mode := '65A';
                srec.rbsent   := false;
                srec.pskrsent := false;
+               srec.dbfsent  := false;
                if rb.addSpot(srec) then d65.gld65decodes[i].dtProcessed := True else d65.gld65decodes[i].dtProcessed := false;
           end
           else
@@ -2991,6 +2992,8 @@ Begin
      rb.myCall    := guidedconfig.cfg.rbcallsign;
      rb.rbInfo    := guidedconfig.cfg.rbInfo;
      rb.rbVersion := verHolder.rbVersion;
+     rb.logDir    := guidedconfig.cfg.logdir;
+     rb.errDir    := guidedconfig.cfg.logdir;
      //if ctrl.soundvalid then label2.Caption := 'In: ' + guidedconfig.cfg.soundInS + ' Out: ' + guidedconfig.cfg.soundOutS else Label2.Caption := 'Sound I/O INVALID';
 End;
 
