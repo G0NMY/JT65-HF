@@ -27,7 +27,7 @@ interface
 
 uses
   Classes, SysUtils, httpsend, synacode, valobject, StrUtils, CTypes,
-  PSKReporter, DateUtils;
+  PSKReporter, DateUtils, Windows;
 
 Type
     spotRecord = record
@@ -112,6 +112,8 @@ Type
               prRBFail      : CTypes.cuint64;
               prRBDiscard   : CTypes.cuint64;
               prPRCount     : CTypes.cuint64;
+              prDBFCount    : CTypes.cuint64;
+              prDBFUCount   : CTypes.cuint64;
               pskrStats     : PSKReporter.REPORTER_STATISTICS;
               pskrstat      : DWORD;
               prInfo        : String;
@@ -131,6 +133,8 @@ Type
               procedure callsignDB(const db : Array of Char; var str : String);
               procedure gridDB(const db : Array of Char; var str : String);
               function  getDBREC(rec : CTypes.cuint32) : SpotDBRec;
+              function  createDB : Boolean;
+              function  addToDB(const callsign : String; const grid : String; const band : String; const wband : String) : Boolean;
 
        public
              Constructor create;
@@ -145,10 +149,10 @@ Type
              function    RBFailS    : String;
              function    RBDiscardS : String;
              function    PRcountS   : String;
+             function    DBFcountS  : String;
+             function    DBFUcountS : String;
              function    pskrTickle : DWORD;
              // Public db functions
-             function createDB : Boolean;
-             function addToDB(const callsign : String; const grid : String; const band : String; const wband : String) : Boolean;
              function findDB(const callsign : String) : CTypes.cuint32;
              function getDBAll(const callsign : String; var g1,g2,g3,g4 : String; var count : CTypes.cuint32; var first, last : TDateTime;
                                var b160,b80,b40,b30,b20,b17,b15,b12,b10,b6,b2,wb160,wb80,wb40,wb30,wb20,wb17,wb15,wb12,wb10,wb6,wb2 : Boolean) : Boolean;
@@ -191,6 +195,10 @@ Type
                 read  RBFailS;
              property pskrCount : String
                 read  PRCountS;
+             property dbfCount  : String
+                read  DBFCountS;
+             property dbfUCount : String
+                read  DBFUCountS;
              property rbInfo    : String
                 read  prInfo
                 write prInfo;
@@ -236,6 +244,8 @@ implementation
          prRBCount   := 0;
          prPRCount   := 0;
          prRBFail    := 0;
+         prDBFCount  := 0;
+         prDBFUCount := 0;
          prRBDiscard := 0;
          prInfo      := '';
          prLogDir    := '';
@@ -513,11 +523,13 @@ implementation
        f1          : SpotDB;
        f2          : SpotIDX;
        gc          : Integer;
+       st          : TSystemTime;
     begin
          g1 := '';
          g2 := '';
          g3 := '';
          g4 := '';
+         st.Hour := 0;
          result := false;
          // First attempt to find the callsign in the idx
          idx := findDB(upcase(callsign));
@@ -527,7 +539,8 @@ implementation
               // Read in existing record
               sp := getDBREC(idx);
               inc(sp.count);  // Increment heard count
-              sp.last := Now; // Update last heard time... TODO: Use UTC TS from decoder, not Now function.
+              GetSystemTime(st);
+              sp.Last := SystemTimeToDateTime(st); // Update last heard time... This sets to current UTC time
               // Update band markers
               if band = '160' then sp.b160 := true;
               if band = '080' then sp.b80  := true;
@@ -602,6 +615,7 @@ implementation
               seek(f1,idx);
               write(f1,sp);
               CloseFile(f1);
+              inc(prDBFUCount);
               result := true;
          end
          else
@@ -609,7 +623,8 @@ implementation
               // Did not find callsign, doing add
               dbCallsign(callsign,sp.callsign); // Set the callsign :) I forgot this first time around and that was fun (not) to diagnose!
               sp.count := 1;  // Set initial heard count
-              sp.first := Now; // Update last heard time... TODO: Use UTC TS from decoder, not Now function.
+              GetSystemTime(st);
+              sp.First := SystemTimeToDateTime(st); // Update last heard time... This sets to current UTC time
               sp.last  := sp.first;
               // Initialize band markers
               sp.b160  := False;
@@ -703,6 +718,7 @@ implementation
               end;
               write(f2,id);
               CloseFile(f2);
+              inc(prDBFCount);
               result := true;
          end;
     end;
@@ -846,6 +862,16 @@ implementation
     function  TSpot.PRcountS : String;
     begin
          result := IntToStr(prPRCount);
+    end;
+
+    function  TSpot.DBFcountS  : String;
+    begin
+         result := IntToStr(prDBFCount);
+    end;
+
+    function  TSpot.DBFUcountS  : String;
+    begin
+         result := IntToStr(prDBFUCount);
     end;
 
     function  TSpot.addSpot(const spot : spotRecord) : Boolean;

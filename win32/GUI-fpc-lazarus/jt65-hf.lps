@@ -24,8 +24,8 @@
         <UnitName Value="maincode"/>
         <EditorIndex Value="2"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="1243"/>
-        <CursorPos X="28" Y="1264"/>
+        <TopLine Value="4038"/>
+        <CursorPos X="73" Y="4053"/>
         <UsageCount Value="215"/>
         <Bookmarks Count="2">
           <Item0 X="1" Y="1404" ID="1"/>
@@ -426,11 +426,12 @@
         <Filename Value="spot.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="spot"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="3"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="46"/>
-        <CursorPos X="1" Y="29"/>
-        <UsageCount Value="148"/>
+        <TopLine Value="600"/>
+        <CursorPos X="19" Y="618"/>
+        <UsageCount Value="151"/>
         <Loaded Value="True"/>
       </Unit38>
     </Units>

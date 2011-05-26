@@ -461,7 +461,7 @@ object Form1: TForm1
     TabOrder = 9
   end
   object buttonClearList: TButton
-    Left = 513
+    Left = 556
     Height = 25
     Top = 640
     Width = 108
@@ -1150,7 +1150,7 @@ object Form1: TForm1
     Text = '100'
   end
   object btnReDecode: TButton
-    Left = 625
+    Left = 668
     Height = 25
     Top = 640
     Width = 115
