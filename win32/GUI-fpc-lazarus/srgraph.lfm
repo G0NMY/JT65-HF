@@ -1,7 +1,7 @@
 object Form8: TForm8
-  Left = 15
+  Left = 46
   Height = 484
-  Top = 11
+  Top = 35
   Width = 900
   BorderIcons = [biSystemMenu, biMinimize]
   Caption = 'Sample Rate Error Statistics'

@@ -114,6 +114,7 @@ Type
               prPRCount     : CTypes.cuint64;
               prDBFCount    : CTypes.cuint64;
               prDBFUCount   : CTypes.cuint64;
+              prDBLock      : Boolean;
               pskrStats     : PSKReporter.REPORTER_STATISTICS;
               pskrstat      : DWORD;
               prInfo        : String;
@@ -157,7 +158,7 @@ Type
              function getDBAll(const callsign : String; var g1,g2,g3,g4 : String; var count : CTypes.cuint32; var first, last : TDateTime;
                                var b160,b80,b40,b30,b20,b17,b15,b12,b10,b6,b2,wb160,wb80,wb40,wb30,wb20,wb17,wb15,wb12,wb10,wb6,wb2 : Boolean) : Boolean;
              function getDB(const callsign : String; var ret : String) : Boolean;
-
+             function dbToCSV(const fname : String) : Boolean;
              property myCall    : String
                 read  prMyCall
                 write prMyCall;
@@ -247,11 +248,12 @@ implementation
          prDBFCount  := 0;
          prDBFUCount := 0;
          prRBDiscard := 0;
+         prDBLock    := False;
          prInfo      := '';
          prLogDir    := '';
          prErrDir    := '';
-         setlength(prSpots,4096);
-         for i := 0 to 4095 do
+         setlength(prSpots,8192);
+         for i := 0 to 8191 do
          begin
               prspots[i].qrg      := 0;
               prspots[i].date     := '';
@@ -265,6 +267,7 @@ implementation
               prspots[i].mode     := '65A';
               prspots[i].rbsent   := true;
               prspots[i].pskrsent := true;
+              prspots[i].dbfsent  := true;
          end;
          rbResult := TStringList.Create;
          rbResult.Clear;
@@ -512,19 +515,169 @@ implementation
          result := true;
     end;
 
+    function TSpot.dbToCSV(const fname : String) : Boolean;
+    var
+       go  : Boolean;
+       foo : String;
+       csv : String;
+       fn  : TextFile;
+       sp  : SpotDBRec;
+       f1  : SpotDB;
+       res : Boolean;
+       i,j : CTypes.cuint32;
+    begin
+         go  := False;
+         res := False;
+         while prDBLock do
+         begin
+              // If DB is locked I wait a reasonable time for it to unlock.
+              // If it does not become available I move on to other things.
+              for i := 1 to 100 do
+              begin
+                   sleep(20);
+              end;
+         end;
+         if prDBLock then go := false else go := true;
+         if go then prDBLock := True;
+         if go then
+         begin
+              // Lock achieve, export records.
+              if fileExists(prLogDir + '\jt65hf.db') then go := true else go := false;
+              if not (trimleft(trimright(fname)) = '') then foo := fname else foo := prLogDir + '\jt65hfdb.csv';
+              if go then
+              begin
+                   AssignFile(fn, foo);
+                   Rewrite(fn);
+                   WriteLn(fn,'"ID","Callsign","Grid1","Grid2","Grid3","Grid4","Count","YYYY-MM-DD","HH:MM","YYYY-MM-DD","HH:MM","B160","B80","B40","B30","B20","B17","B15","B12","B10","B6","B2","WB160","WB80","WB40","WB30","WB20","WB17","WB15","WB12","WB10","WB6","WB2"');
+                   // Loop the DB and export
+                   AssignFile(f1, prLogDir + '\jt65hf.db');
+                   Reset(f1);
+                   seek(f1,1);  // Skipping record 0 the initial 'dummy' record
+                   i := 1;
+                   while not EOF(f1) do
+                   begin
+                        csv := '';
+                        foo := '';
+                        csv := csv + '"' + intToStr(i) + '",';  // Record number
+                        read(f1,sp);  // Read record
+                        // Translate record data to string for CSV
+                        // Callsign
+                        for j := 1 to 16 do
+                        begin
+                             foo := foo + sp.callsign[j];
+                        end;
+                        csv := csv + '"' + trimleft(trimright(foo)) + '",'; // Callsign
+                        // Grid 1
+                        foo := '';
+                        for j := 1 to 6 do
+                        begin
+                             foo := foo + sp.grid1[j];
+                        end;
+                        foo := trimleft(trimright(foo));
+                        if foo = 'NILL' then foo := '';
+                        csv := csv + '"' + foo + '",'; // Grid 1
+                        // Grid 2
+                        foo := '';
+                        for j := 1 to 6 do
+                        begin
+                             foo := foo + sp.grid2[j];
+                        end;
+                        foo := trimleft(trimright(foo));
+                        if foo = 'NILL' then foo := '';
+                        csv := csv + '"' + foo + '",'; // Grid 2
+                        // Grid 3
+                        foo := '';
+                        for j := 1 to 6 do
+                        begin
+                             foo := foo + sp.grid3[j];
+                        end;
+                        foo := trimleft(trimright(foo));
+                        if foo = 'NILL' then foo := '';
+                        csv := csv + '"' + foo + '",'; // Grid 3
+                        // Grid 4
+                        foo := '';
+                        for j := 1 to 6 do
+                        begin
+                             foo := foo + sp.grid4[j];
+                        end;
+                        foo := trimleft(trimright(foo));
+                        if foo = 'NILL' then foo := '';
+                        csv := csv + '"' + foo + '",'; // Grid 4
+                        // Count
+                        csv := csv + '"' + intTostr(sp.count) + '",'; // Count
+                        // First heard date (YYYY-MM-DD)
+                        csv := csv + '"' + FormatDateTime('yyyy-mm-dd',sp.first) + '",'; // First date
+                        // First heard time (HH:MM)
+                        csv := csv + '"' + FormatDateTime('hh:nn',sp.first) + '",'; // First time
+                        // Last heard date (YYYY-MM-DD)
+                        csv := csv + '"' + FormatDateTime('yyyy-mm-dd',sp.last) + '",'; // First date
+                        // Last heard time (HH:MM)
+                        csv := csv + '"' + FormatDateTime('hh:nn',sp.last) + '",'; // First time
+                        if sp.b160 then csv := csv + '"T",' else csv := csv + '"F",';
+                        if sp.b80 then csv := csv + '"T",' else csv := csv + '"F",';
+                        if sp.b40 then csv := csv + '"T",' else csv := csv + '"F",';
+                        if sp.b30 then csv := csv + '"T",' else csv := csv + '"F",';
+                        if sp.b20 then csv := csv + '"T",' else csv := csv + '"F",';
+                        if sp.b17 then csv := csv + '"T",' else csv := csv + '"F",';
+                        if sp.b15 then csv := csv + '"T",' else csv := csv + '"F",';
+                        if sp.b10 then csv := csv + '"T",' else csv := csv + '"F",';
+                        if sp.b6 then csv := csv + '"T",' else csv := csv + '"F",';
+                        if sp.b2 then csv := csv + '"T",' else csv := csv + '"F",';
+                        if sp.wb160 then csv := csv + '"T",' else csv := csv + '"F",';
+                        if sp.wb80 then csv := csv + '"T",' else csv := csv + '"F",';
+                        if sp.wb40 then csv := csv + '"T",' else csv := csv + '"F",';
+                        if sp.wb30 then csv := csv + '"T",' else csv := csv + '"F",';
+                        if sp.wb20 then csv := csv + '"T",' else csv := csv + '"F",';
+                        if sp.wb17 then csv := csv + '"T",' else csv := csv + '"F",';
+                        if sp.wb15 then csv := csv + '"T",' else csv := csv + '"F",';
+                        if sp.wb10 then csv := csv + '"T",' else csv := csv + '"F",';
+                        if sp.wb6 then csv := csv + '"T",' else csv := csv + '"F",';
+                        if sp.wb2 then csv := csv + '"T"' else csv := csv + '"F"';
+                        WriteLn(fn,csv);
+                        inc(i);
+                   end;
+                   closeFile(f1);
+                   CloseFile(fn);
+                   res := true;
+              end
+              else
+              begin
+                   res := False;
+              end;
+         end
+         else
+         begin
+              // Could not achieve lock or db not present or no records, bailing out.
+              result := res;
+         end;
+         prDBLock := False;
+    end;
+
     function TSpot.addToDB(const callsign : String; const grid : String; const band : String; const wband : String) : Boolean;
     var
        idx, idy    : CTypes.cuint32;
        fn          : String;
        sp          : SpotDBRec;
        id          : SpotDBIdx;
-       gset        : Boolean;
+       gset, go    : Boolean;
        g1,g2,g3,g4 : String;
        f1          : SpotDB;
        f2          : SpotIDX;
-       gc          : Integer;
+       gc, i       : Integer;
        st          : TSystemTime;
     begin
+         go := False;
+         while prDBLock do
+         begin
+              // If DB is locked I wait a reasonable time for it to unlock.
+              // If it does not become available I move on to other things.
+              for i := 1 to 100 do
+              begin
+                   sleep(20);
+              end;
+         end;
+         if prDBLock then go := false else go := true;
+         if go then prDBLock := True;
          g1 := '';
          g2 := '';
          g3 := '';
@@ -532,194 +685,204 @@ implementation
          st.Hour := 0;
          result := false;
          // First attempt to find the callsign in the idx
-         idx := findDB(upcase(callsign));
-         if idx > 0 then
+         if go then
          begin
-              // Found callsign, doing update
-              // Read in existing record
-              sp := getDBREC(idx);
-              inc(sp.count);  // Increment heard count
-              GetSystemTime(st);
-              sp.Last := SystemTimeToDateTime(st); // Update last heard time... This sets to current UTC time
-              // Update band markers
-              if band = '160' then sp.b160 := true;
-              if band = '080' then sp.b80  := true;
-              if band = '040' then sp.b40  := true;
-              if band = '030' then sp.b30  := true;
-              if band = '020' then sp.b20  := true;
-              if band = '017' then sp.b17  := true;
-              if band = '015' then sp.b15  := true;
-              if band = '012' then sp.b12  := true;
-              if band = '010' then sp.b10  := true;
-              if band = '006' then sp.b6   := true;
-              if band = '002' then sp.b2   := true;
-              // Update worked band markers
-              if wband = '160' then sp.wb160 := true;
-              if wband = '080' then sp.wb80  := true;
-              if wband = '040' then sp.wb40  := true;
-              if wband = '030' then sp.wb30  := true;
-              if wband = '020' then sp.wb20  := true;
-              if wband = '017' then sp.wb17  := true;
-              if wband = '015' then sp.wb15  := true;
-              if wband = '012' then sp.wb12  := true;
-              if wband = '010' then sp.wb10  := true;
-              if wband = '006' then sp.wb6   := true;
-              if wband = '002' then sp.wb2   := true;
-              // Determine if the currecnt reported grid has been saved (if grid is available to record).
-              if not (grid = 'NILL') then
+              idx := findDB(upcase(callsign));
+              if idx > 0 then
               begin
-                   // Convert the 4 possible grids to proper strings
-                   // Move record style grids to string
-                   for gc := 1 to 6 do
+                   // Found callsign, doing update
+                   // Read in existing record
+                   sp := getDBREC(idx);
+                   inc(sp.count);  // Increment heard count
+                   GetSystemTime(st);
+                   sp.Last := SystemTimeToDateTime(st); // Update last heard time... This sets to current UTC time
+                   // Update band markers
+                   if band = '160' then sp.b160 := true;
+                   if band = '080' then sp.b80  := true;
+                   if band = '040' then sp.b40  := true;
+                   if band = '030' then sp.b30  := true;
+                   if band = '020' then sp.b20  := true;
+                   if band = '017' then sp.b17  := true;
+                   if band = '015' then sp.b15  := true;
+                   if band = '012' then sp.b12  := true;
+                   if band = '010' then sp.b10  := true;
+                   if band = '006' then sp.b6   := true;
+                   if band = '002' then sp.b2   := true;
+                   // Update worked band markers
+                   if wband = '160' then sp.wb160 := true;
+                   if wband = '080' then sp.wb80  := true;
+                   if wband = '040' then sp.wb40  := true;
+                   if wband = '030' then sp.wb30  := true;
+                   if wband = '020' then sp.wb20  := true;
+                   if wband = '017' then sp.wb17  := true;
+                   if wband = '015' then sp.wb15  := true;
+                   if wband = '012' then sp.wb12  := true;
+                   if wband = '010' then sp.wb10  := true;
+                   if wband = '006' then sp.wb6   := true;
+                   if wband = '002' then sp.wb2   := true;
+                   // Determine if the currecnt reported grid has been saved (if grid is available to record).
+                   if not (grid = 'NILL') then
                    begin
-                        g1 := g1 + sp.grid1[gc];
-                        g2 := g2 + sp.grid2[gc];
-                        g3 := g3 + sp.grid3[gc];
-                        g4 := g4 + sp.grid4[gc];
+                        // Convert the 4 possible grids to proper strings
+                        // Move record style grids to string
+                        for gc := 1 to 6 do
+                        begin
+                             g1 := g1 + sp.grid1[gc];
+                             g2 := g2 + sp.grid2[gc];
+                             g3 := g3 + sp.grid3[gc];
+                             g4 := g4 + sp.grid4[gc];
+                        end;
+                        trimLeft(trimRight(g1));
+                        trimLeft(trimRight(g2));
+                        trimLeft(trimRight(g3));
+                        trimLeft(trimRight(g4));
+                        gset := false;
+                        if not ((grid = g1) or (grid = g2) or (grid = g3) or (grid = g3)) then
+                        begin
+                             // Grid has not been previously saved
+                             // But... do I have a slot for it?
+                             if (not gset) and (g1 = 'NILL') then begin
+                                // g1 is open (this is sp.grid1)
+                                DBGrid(trimleft(trimright(grid)),sp.grid1);
+                                gset := true;
+                             end;
+                             if (not gset) and (g2 = 'NILL') then begin
+                                // g2 is open (this is sp.grid1)
+                                DBGrid(trimleft(trimright(grid)),sp.grid2);
+                                gset := true;
+                             end;
+                             if (not gset) and (g3 = 'NILL') then begin
+                                // g3 is open (this is sp.grid1)
+                                DBGrid(trimleft(trimright(grid)),sp.grid3);
+                                gset := true;
+                             end;
+                             if (not gset) and (g4 = 'NILL') then begin
+                                // g4 is open (this is sp.grid1)
+                                DBGrid(trimleft(trimright(grid)),sp.grid4);
+                                gset := true;
+                             end;
+                        end;
                    end;
-                   trimLeft(trimRight(g1));
-                   trimLeft(trimRight(g2));
-                   trimLeft(trimRight(g3));
-                   trimLeft(trimRight(g4));
-                   gset := false;
-                   if not ((grid = g1) or (grid = g2) or (grid = g3) or (grid = g3)) then
-                   begin
-                        // Grid has not been previously saved
-                        // But... do I have a slot for it?
-                        if (not gset) and (g1 = 'NILL') then begin
-                             // g1 is open (this is sp.grid1)
-                             DBGrid(trimleft(trimright(grid)),sp.grid1);
-                             gset := true;
-                        end;
-                        if (not gset) and (g2 = 'NILL') then begin
-                             // g2 is open (this is sp.grid1)
-                             DBGrid(trimleft(trimright(grid)),sp.grid2);
-                             gset := true;
-                        end;
-                        if (not gset) and (g3 = 'NILL') then begin
-                             // g3 is open (this is sp.grid1)
-                             DBGrid(trimleft(trimright(grid)),sp.grid3);
-                             gset := true;
-                        end;
-                        if (not gset) and (g4 = 'NILL') then begin
-                             // g4 is open (this is sp.grid1)
-                             DBGrid(trimleft(trimright(grid)),sp.grid4);
-                             gset := true;
-                        end;
-                   end;
-              end;
-              // Record updated.  Lets try to write it back.
-              fn := prLogDir + '\jt65hf.db';
-              AssignFile(f1, fn);
-              Reset(f1);
-              seek(f1,idx);
-              write(f1,sp);
-              CloseFile(f1);
-              inc(prDBFUCount);
-              result := true;
-         end
-         else
-         begin
-              // Did not find callsign, doing add
-              dbCallsign(callsign,sp.callsign); // Set the callsign :) I forgot this first time around and that was fun (not) to diagnose!
-              sp.count := 1;  // Set initial heard count
-              GetSystemTime(st);
-              sp.First := SystemTimeToDateTime(st); // Update last heard time... This sets to current UTC time
-              sp.last  := sp.first;
-              // Initialize band markers
-              sp.b160  := False;
-              sp.wb160 := False;
-              sp.b80   := False;
-              sp.wb80  := False;
-              sp.b40   := False;
-              sp.wb40  := False;
-              sp.b30   := False;
-              sp.wb30  := False;
-              sp.b20   := False;
-              sp.wb20  := False;
-              sp.b17   := False;
-              sp.wb17  := False;
-              sp.b15   := False;
-              sp.wb15  := False;
-              sp.b12   := False;
-              sp.wb12  := False;
-              sp.b10   := False;
-              sp.wb10  := False;
-              sp.b6    := False;
-              sp.wb6   := False;
-              sp.b2    := False;
-              sp.wb2   := False;
-              // Update band markers
-              if band = '160' then sp.b160 := true;
-              if band = '080' then sp.b80  := true;
-              if band = '040' then sp.b40  := true;
-              if band = '030' then sp.b30  := true;
-              if band = '020' then sp.b20  := true;
-              if band = '017' then sp.b17  := true;
-              if band = '015' then sp.b15  := true;
-              if band = '012' then sp.b12  := true;
-              if band = '010' then sp.b10  := true;
-              if band = '006' then sp.b6   := true;
-              if band = '002' then sp.b2   := true;
-              // Update worked band markers
-              if wband = '160' then sp.wb160 := true;
-              if wband = '080' then sp.wb80  := true;
-              if wband = '040' then sp.wb40  := true;
-              if wband = '030' then sp.wb30  := true;
-              if wband = '020' then sp.wb20  := true;
-              if wband = '017' then sp.wb17  := true;
-              if wband = '015' then sp.wb15  := true;
-              if wband = '012' then sp.wb12  := true;
-              if wband = '010' then sp.wb10  := true;
-              if wband = '006' then sp.wb6   := true;
-              if wband = '002' then sp.wb2   := true;
-              // Determine if the currecnt reported grid has been saved (if grid is available to record).
-              if not (grid = 'NILL') then
-              begin
-                   // New record so set grid1 if necessary
-                   DBGrid(trimleft(trimright(grid)),sp.grid1);
-                   DBGrid(trimleft(trimright('NILL')),sp.grid2);
-                   DBGrid(trimleft(trimright('NILL')),sp.grid3);
-                   DBGrid(trimleft(trimright('NILL')),sp.grid4);
+                   // Record updated.  Lets try to write it back.
+                   fn := prLogDir + '\jt65hf.db';
+                   AssignFile(f1, fn);
+                   Reset(f1);
+                   seek(f1,idx);
+                   write(f1,sp);
+                   CloseFile(f1);
+                   inc(prDBFUCount);
+                   result := true;
               end
               else
               begin
-                   // New record with no grid so set all to NILL
-                   DBGrid(trimleft(trimright('NILL')),sp.grid1);
-                   DBGrid(trimleft(trimright('NILL')),sp.grid2);
-                   DBGrid(trimleft(trimright('NILL')),sp.grid3);
-                   DBGrid(trimleft(trimright('NILL')),sp.grid4);
+                   // Did not find callsign, doing add
+                   dbCallsign(callsign,sp.callsign); // Set the callsign :) I forgot this first time around and that was fun (not) to diagnose!
+                   sp.count := 1;  // Set initial heard count
+                   GetSystemTime(st);
+                   sp.First := SystemTimeToDateTime(st); // Update last heard time... This sets to current UTC time
+                   sp.last  := sp.first;
+                   // Initialize band markers
+                   sp.b160  := False;
+                   sp.wb160 := False;
+                   sp.b80   := False;
+                   sp.wb80  := False;
+                   sp.b40   := False;
+                   sp.wb40  := False;
+                   sp.b30   := False;
+                   sp.wb30  := False;
+                   sp.b20   := False;
+                   sp.wb20  := False;
+                   sp.b17   := False;
+                   sp.wb17  := False;
+                   sp.b15   := False;
+                   sp.wb15  := False;
+                   sp.b12   := False;
+                   sp.wb12  := False;
+                   sp.b10   := False;
+                   sp.wb10  := False;
+                   sp.b6    := False;
+                   sp.wb6   := False;
+                   sp.b2    := False;
+                   sp.wb2   := False;
+                   // Update band markers
+                   if band = '160' then sp.b160 := true;
+                   if band = '080' then sp.b80  := true;
+                   if band = '040' then sp.b40  := true;
+                   if band = '030' then sp.b30  := true;
+                   if band = '020' then sp.b20  := true;
+                   if band = '017' then sp.b17  := true;
+                   if band = '015' then sp.b15  := true;
+                   if band = '012' then sp.b12  := true;
+                   if band = '010' then sp.b10  := true;
+                   if band = '006' then sp.b6   := true;
+                   if band = '002' then sp.b2   := true;
+                   // Update worked band markers
+                   if wband = '160' then sp.wb160 := true;
+                   if wband = '080' then sp.wb80  := true;
+                   if wband = '040' then sp.wb40  := true;
+                   if wband = '030' then sp.wb30  := true;
+                   if wband = '020' then sp.wb20  := true;
+                   if wband = '017' then sp.wb17  := true;
+                   if wband = '015' then sp.wb15  := true;
+                   if wband = '012' then sp.wb12  := true;
+                   if wband = '010' then sp.wb10  := true;
+                   if wband = '006' then sp.wb6   := true;
+                   if wband = '002' then sp.wb2   := true;
+                   // Determine if the currecnt reported grid has been saved (if grid is available to record).
+                   if not (grid = 'NILL') then
+                   begin
+                        // New record so set grid1 if necessary
+                        DBGrid(trimleft(trimright(grid)),sp.grid1);
+                        DBGrid(trimleft(trimright('NILL')),sp.grid2);
+                        DBGrid(trimleft(trimright('NILL')),sp.grid3);
+                        DBGrid(trimleft(trimright('NILL')),sp.grid4);
+                   end
+                   else
+                   begin
+                        // New record with no grid so set all to NILL
+                        DBGrid(trimleft(trimright('NILL')),sp.grid1);
+                        DBGrid(trimleft(trimright('NILL')),sp.grid2);
+                        DBGrid(trimleft(trimright('NILL')),sp.grid3);
+                        DBGrid(trimleft(trimright('NILL')),sp.grid4);
+                   end;
+                   // Record ready.  Lets try to write it.
+                   // Get to last record
+                   idx := 0;
+                   fn := prLogDir + '\jt65hf.db';
+                   AssignFile(f1, fn);
+                   Reset(f1);
+                   while not eof(f1) do
+                   begin
+                        seek(f1,idx);
+                        inc(idx);
+                   end;
+                   write(f1,sp);
+                   CloseFile(f1);
+                   // If I've got this right idx will be the new record number
+                   // Update the index file with callsign/idx
+                   id.id := idx;
+                   dbCallsign(callsign,id.callsign);
+                   fn := prLogDir + '\jt65hf.id';
+                   AssignFile(f2, fn);
+                   Reset(f2);
+                   idy := 0;
+                   while not eof(f2) do
+                   begin
+                        seek(f2,idy);
+                        inc(idy);
+                   end;
+                   write(f2,id);
+                   CloseFile(f2);
+                   inc(prDBFCount);
+                   result := true;
               end;
-              // Record ready.  Lets try to write it.
-              // Get to last record
-              idx := 0;
-              fn := prLogDir + '\jt65hf.db';
-              AssignFile(f1, fn);
-              Reset(f1);
-              while not eof(f1) do
-              begin
-                   seek(f1,idx);
-                   inc(idx);
-              end;
-              write(f1,sp);
-              CloseFile(f1);
-              // If I've got this right idx will be the new record number
-              // Update the index file with callsign/idx
-              id.id := idx;
-              dbCallsign(callsign,id.callsign);
-              fn := prLogDir + '\jt65hf.id';
-              AssignFile(f2, fn);
-              Reset(f2);
-              idy := 0;
-              while not eof(f2) do
-              begin
-                   seek(f2,idy);
-                   inc(idy);
-              end;
-              write(f2,id);
-              CloseFile(f2);
-              inc(prDBFCount);
-              result := true;
+              // Unlock DB
+              prDBLock := False;
+         end
+         else
+         begin
+              // Could not get unlock on db
+              result := false;
          end;
     end;
 
@@ -880,9 +1043,9 @@ implementation
        inserted  : Boolean;
     begin
          inserted := false;
-         for i := 0 to 4095 do
+         for i := 0 to 8191 do
          begin
-              if prSpots[i].rbsent and prSpots[i].pskrsent then
+              if prSpots[i].rbsent and prSpots[i].pskrsent and prSpots[i].dbfsent then
               begin
                    // Found a spot to insert a new report
                    prspots[i].qrg      := spot.qrg;
@@ -1033,7 +1196,7 @@ implementation
          if prUseRB then
          begin
               // Do RB work
-              for i := 0 to 4095 do
+              for i := 0 to 8191 do
               begin
                    if not prSpots[i].rbsent then
                    begin
@@ -1135,7 +1298,7 @@ implementation
               pskrstat := 0;
               if pskrstat = 0 then
               begin
-                   for i := 0 to 4095 do
+                   for i := 0 to 8191 do
                    begin
                         if not prSpots[i].pskrsent then
                         begin
@@ -1172,7 +1335,7 @@ implementation
          if prUseDBF then
          begin
               if not fileExists(prLogDir + '\jt65hf.db') then createDB; // This sets up the tracking DB
-              for i := 0 to 4095 do
+              for i := 0 to 8191 do
               begin
                    if not prSpots[i].dbfsent then
                    begin
@@ -1195,16 +1358,21 @@ implementation
                              if (prSpots[i].qrg > 143999999) and (prSpots[i].qrg < 148000001) then foo := '002';
                              if not addToDB(callHeard,gridHeard,foo,'') then
                              begin
-                                  foo := 'err';
+                                  // Didn't add spot, probably couldn't get lock
+                                  // so queue it for another try.  Probably need
+                                  // to look at this as over a (very) long period
+                                  // of repeated fails the spots array could become
+                                  // filled with unlogged db entries.
+                                  { TODO: Review above }
+                                  prSpots[i].dbfsent := false;
+                             end
+                             else
+                             begin
+                                  prSpots[i].dbfsent := true;
                              end;
-                             prSpots[i].dbfsent := true;
                         end;
                    end;
               end;
-         end
-         else
-         begin
-              foo := 'err';
          end;
          result := true;
          prBusy := false;

@@ -2994,6 +2994,7 @@ Begin
      rb.rbVersion := verHolder.rbVersion;
      rb.logDir    := guidedconfig.cfg.logdir;
      rb.errDir    := guidedconfig.cfg.logdir;
+     rb.dbToCSV('');
      //if ctrl.soundvalid then label2.Caption := 'In: ' + guidedconfig.cfg.soundInS + ' Out: ' + guidedconfig.cfg.soundOutS else Label2.Caption := 'Sound I/O INVALID';
 End;
 

@@ -32,7 +32,7 @@ uses
   PSKReporter, synaser, adif, log, diagout, waterfall, d65, about, rigobject,
   ddeobject, omnirigobject, civobject, ddehrdobject, guidedconfig, valobject,
   paobject, srgraph, hrdinterface5, hrdobject, serialobject, adclite, daclite,
-  audiodiag, dispatchobject, spot;
+  audiodiag, dispatchobject, spot, heard;
 
 {$R *.res}
 
@@ -47,6 +47,7 @@ begin
   Application .CreateForm (TForm7 , Form7 );
   Application .CreateForm (TForm8 , Form8 );
   Application .CreateForm (TForm6 , Form6 );
+  Application.CreateForm(TForm9, Form9);
   Application.Run;
 end.
 
