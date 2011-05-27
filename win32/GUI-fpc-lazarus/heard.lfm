@@ -33,11 +33,11 @@ object Form9: TForm9
   end
   object lbSearchResults: TListBox
     Left = 8
-    Height = 96
+    Height = 152
     Top = 40
-    Width = 419
+    Width = 382
     Items.Strings = (
-      'No result/Not found'
+      ''
     )
     ItemHeight = 18
     TabOrder = 2
@@ -54,7 +54,7 @@ object Form9: TForm9
   object Label9: TLabel
     Left = 72
     Height = 17
-    Top = 144
+    Top = 200
     Width = 22
     Caption = '160'
     Font.Height = -13
@@ -66,7 +66,7 @@ object Form9: TForm9
   object Label10: TLabel
     Left = 104
     Height = 17
-    Top = 144
+    Top = 200
     Width = 15
     Caption = '80'
     Font.Height = -13
@@ -78,7 +78,7 @@ object Form9: TForm9
   object Label11: TLabel
     Left = 132
     Height = 17
-    Top = 144
+    Top = 200
     Width = 15
     Caption = '40'
     Font.Height = -13
@@ -90,7 +90,7 @@ object Form9: TForm9
   object Label12: TLabel
     Left = 162
     Height = 17
-    Top = 144
+    Top = 200
     Width = 15
     Caption = '30'
     Font.Height = -13
@@ -102,7 +102,7 @@ object Form9: TForm9
   object Label13: TLabel
     Left = 190
     Height = 17
-    Top = 144
+    Top = 200
     Width = 15
     Caption = '20'
     Font.Height = -13
@@ -114,7 +114,7 @@ object Form9: TForm9
   object Label14: TLabel
     Left = 220
     Height = 17
-    Top = 144
+    Top = 200
     Width = 15
     Caption = '17'
     Font.Height = -13
@@ -126,7 +126,7 @@ object Form9: TForm9
   object Label15: TLabel
     Left = 252
     Height = 17
-    Top = 144
+    Top = 200
     Width = 15
     Caption = '15'
     Font.Height = -13
@@ -138,7 +138,7 @@ object Form9: TForm9
   object Label16: TLabel
     Left = 281
     Height = 17
-    Top = 144
+    Top = 200
     Width = 15
     Caption = '12'
     Font.Height = -13
@@ -150,7 +150,7 @@ object Form9: TForm9
   object Label17: TLabel
     Left = 311
     Height = 17
-    Top = 144
+    Top = 200
     Width = 15
     Caption = '10'
     Font.Height = -13
@@ -162,7 +162,7 @@ object Form9: TForm9
   object Label18: TLabel
     Left = 344
     Height = 17
-    Top = 144
+    Top = 200
     Width = 8
     Caption = '6'
     Font.Height = -13
@@ -174,7 +174,7 @@ object Form9: TForm9
   object Label19: TLabel
     Left = 374
     Height = 17
-    Top = 144
+    Top = 200
     Width = 8
     Caption = '2'
     Font.Height = -13
@@ -186,7 +186,7 @@ object Form9: TForm9
   object Label20: TLabel
     Left = 24
     Height = 17
-    Top = 144
+    Top = 200
     Width = 34
     Caption = 'Band'
     Font.Height = -13
@@ -198,7 +198,7 @@ object Form9: TForm9
   object Label21: TLabel
     Left = 19
     Height = 17
-    Top = 168
+    Top = 224
     Width = 39
     Caption = 'Heard'
     Font.Height = -13
@@ -210,7 +210,7 @@ object Form9: TForm9
   object Label22: TLabel
     Left = 8
     Height = 17
-    Top = 192
+    Top = 248
     Width = 50
     Caption = 'Worked'
     Font.Height = -13
@@ -219,199 +219,199 @@ object Form9: TForm9
     ParentColor = False
     ParentFont = False
   end
-  object CheckBox1: TCheckBox
+  object cb160: TCheckBox
     Left = 76
     Height = 17
-    Top = 167
+    Top = 223
     Width = 18
-    Enabled = False
+    OnClick = cbClick
     TabOrder = 25
     TabStop = False
   end
-  object CheckBox2: TCheckBox
+  object cb80: TCheckBox
     Left = 105
     Height = 17
-    Top = 167
+    Top = 223
     Width = 18
-    Enabled = False
+    OnClick = cbClick
     TabOrder = 24
     TabStop = False
   end
-  object CheckBox3: TCheckBox
+  object cb40: TCheckBox
     Left = 133
     Height = 17
-    Top = 167
+    Top = 223
     Width = 18
-    Enabled = False
+    OnClick = cbClick
     TabOrder = 23
     TabStop = False
   end
-  object CheckBox4: TCheckBox
+  object cb30: TCheckBox
     Left = 163
     Height = 17
-    Top = 167
+    Top = 223
     Width = 18
-    Enabled = False
+    OnClick = cbClick
     TabOrder = 22
     TabStop = False
   end
-  object CheckBox5: TCheckBox
+  object cb20: TCheckBox
     Left = 191
     Height = 17
-    Top = 167
+    Top = 223
     Width = 18
-    Enabled = False
+    OnClick = cbClick
     TabOrder = 21
     TabStop = False
   end
-  object CheckBox6: TCheckBox
+  object cb17: TCheckBox
     Left = 221
     Height = 17
-    Top = 167
+    Top = 223
     Width = 18
-    Enabled = False
+    OnClick = cbClick
     TabOrder = 20
     TabStop = False
   end
-  object CheckBox7: TCheckBox
+  object cb15: TCheckBox
     Left = 253
     Height = 17
-    Top = 167
+    Top = 223
     Width = 18
-    Enabled = False
+    OnClick = cbClick
     TabOrder = 19
     TabStop = False
   end
-  object CheckBox8: TCheckBox
+  object cb12: TCheckBox
     Left = 282
     Height = 17
-    Top = 167
+    Top = 223
     Width = 18
-    Enabled = False
+    OnClick = cbClick
     TabOrder = 18
     TabStop = False
   end
-  object CheckBox9: TCheckBox
+  object cb10: TCheckBox
     Left = 312
     Height = 17
-    Top = 167
+    Top = 223
     Width = 18
-    Enabled = False
+    OnClick = cbClick
     TabOrder = 17
     TabStop = False
   end
-  object CheckBox10: TCheckBox
+  object cb6: TCheckBox
     Left = 342
     Height = 17
-    Top = 167
+    Top = 223
     Width = 18
-    Enabled = False
+    OnClick = cbClick
     TabOrder = 16
     TabStop = False
   end
-  object CheckBox11: TCheckBox
+  object cb2: TCheckBox
     Left = 372
     Height = 17
-    Top = 167
+    Top = 223
     Width = 18
-    Enabled = False
+    OnClick = cbClick
     TabOrder = 15
     TabStop = False
   end
-  object CheckBox12: TCheckBox
+  object wcb160: TCheckBox
     Left = 76
     Height = 17
-    Top = 191
+    Top = 247
     Width = 18
     Enabled = False
     TabOrder = 14
     TabStop = False
   end
-  object CheckBox13: TCheckBox
+  object wcb80: TCheckBox
     Left = 105
     Height = 17
-    Top = 191
+    Top = 247
     Width = 18
     Enabled = False
     TabOrder = 13
     TabStop = False
   end
-  object CheckBox14: TCheckBox
+  object wcb40: TCheckBox
     Left = 133
     Height = 17
-    Top = 191
+    Top = 247
     Width = 18
     Enabled = False
     TabOrder = 12
     TabStop = False
   end
-  object CheckBox15: TCheckBox
+  object wcb30: TCheckBox
     Left = 163
     Height = 17
-    Top = 191
+    Top = 247
     Width = 18
     Enabled = False
     TabOrder = 11
     TabStop = False
   end
-  object CheckBox16: TCheckBox
+  object wcb20: TCheckBox
     Left = 191
     Height = 17
-    Top = 191
+    Top = 247
     Width = 18
     Enabled = False
     TabOrder = 10
     TabStop = False
   end
-  object CheckBox17: TCheckBox
+  object wcb17: TCheckBox
     Left = 221
     Height = 17
-    Top = 191
+    Top = 247
     Width = 18
     Enabled = False
     TabOrder = 9
     TabStop = False
   end
-  object CheckBox18: TCheckBox
+  object wcb15: TCheckBox
     Left = 253
     Height = 17
-    Top = 191
+    Top = 247
     Width = 18
     Enabled = False
     TabOrder = 8
     TabStop = False
   end
-  object CheckBox19: TCheckBox
+  object wcb12: TCheckBox
     Left = 282
     Height = 17
-    Top = 191
+    Top = 247
     Width = 18
     Enabled = False
     TabOrder = 7
     TabStop = False
   end
-  object CheckBox20: TCheckBox
+  object wcb10: TCheckBox
     Left = 312
     Height = 17
-    Top = 191
+    Top = 247
     Width = 18
     Enabled = False
     TabOrder = 6
     TabStop = False
   end
-  object CheckBox21: TCheckBox
+  object wcb6: TCheckBox
     Left = 342
     Height = 17
-    Top = 191
+    Top = 247
     Width = 18
     Enabled = False
     TabOrder = 5
     TabStop = False
   end
-  object CheckBox22: TCheckBox
+  object wcb2: TCheckBox
     Left = 372
     Height = 17
-    Top = 191
+    Top = 247
     Width = 18
     Enabled = False
     TabOrder = 4
@@ -420,7 +420,7 @@ object Form9: TForm9
   object Button3: TButton
     Left = 8
     Height = 25
-    Top = 224
+    Top = 280
     Width = 134
     Caption = 'Update Record'
     Enabled = False
@@ -504,5 +504,14 @@ object Form9: TForm9
       Caption = 'Stats DB Added:  '
       ParentColor = False
     end
+  end
+  object Button4: TButton
+    Left = 224
+    Height = 25
+    Top = 280
+    Width = 166
+    Caption = 'Export DB To CSV'
+    OnClick = Button4Click
+    TabOrder = 28
   end
 end

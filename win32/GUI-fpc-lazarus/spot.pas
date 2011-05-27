@@ -660,11 +660,16 @@ implementation
        fn          : String;
        sp          : SpotDBRec;
        id          : SpotDBIdx;
-       gset, go    : Boolean;
+       go, g       : Boolean;
        g1,g2,g3,g4 : String;
+       t           : String;
+       g1set,g2set : Boolean;
+       g3set,g4set : Boolean;
+       gfull       : Boolean;
+       same        : Boolean;
        f1          : SpotDB;
        f2          : SpotIDX;
-       gc, i       : Integer;
+       i           : Integer;
        st          : TSystemTime;
     begin
          go := False;
@@ -721,46 +726,154 @@ implementation
                    if wband = '010' then sp.wb10  := true;
                    if wband = '006' then sp.wb6   := true;
                    if wband = '002' then sp.wb2   := true;
-                   // Determine if the currecnt reported grid has been saved (if grid is available to record).
-                   if not (grid = 'NILL') then
+                   // Convert DB grid entries to string
+                   g1 := '';
+                   g2 := '';
+                   g3 := '';
+                   g4 := '';
+                   g1set := false;
+                   g2set := false;
+                   g3set := false;
+                   g4set := false;
+                   for i := 1 to 6 do
                    begin
-                        // Convert the 4 possible grids to proper strings
-                        // Move record style grids to string
-                        for gc := 1 to 6 do
+                        g1 := g1 + sp.grid1[i];
+                        g2 := g2 + sp.grid2[i];
+                        g3 := g3 + sp.grid3[i];
+                        g4 := g4 + sp.grid4[i];
+                   end;
+                   // This is so annoying, but necessary since a direct compare
+                   // between g# and other var or literal string always resolves
+                   // FALSE.  It's probably some typecasting issue (most likely
+                   // an error on MY part) or (less likely) an FPC bug. SO....
+                   // First check to see if the currently reported grid = 'NILL'
+                   t := 'NILL';
+                   g := false;
+                   for i := 1 to length(grid) do
+                   begin
+                        if t[i] = grid[i] then g := false else g := true;  // Remember, I'm looking to see if grid = 'NILL'
+                   end;
+                   if g then
+                   begin
+                        // reported grid != 'Nill'  Look for an "empty" slot
+                        if grid = 'NILL' Then
+                        t := 'NILL';
+                        same := false;
+                        for i := 1 to length(t) do
                         begin
-                             g1 := g1 + sp.grid1[gc];
-                             g2 := g2 + sp.grid2[gc];
-                             g3 := g3 + sp.grid3[gc];
-                             g4 := g4 + sp.grid4[gc];
+                             if t[i] = g1[i] then same := true else same := false;
                         end;
-                        trimLeft(trimRight(g1));
-                        trimLeft(trimRight(g2));
-                        trimLeft(trimRight(g3));
-                        trimLeft(trimRight(g4));
-                        gset := false;
-                        if not ((grid = g1) or (grid = g2) or (grid = g3) or (grid = g3)) then
+                        if same then g1Set := false else g1Set := true;
+                        t := 'NILL';
+                        same := false;
+                        for i := 1 to length(t) do
                         begin
-                             // Grid has not been previously saved
-                             // But... do I have a slot for it?
-                             if (not gset) and (g1 = 'NILL') then begin
-                                // g1 is open (this is sp.grid1)
-                                DBGrid(trimleft(trimright(grid)),sp.grid1);
-                                gset := true;
+                             if t[i] = g2[i] then same := true else same := false;
+                        end;
+                        if same then g2Set := false else g2Set := true;
+                        t := 'NILL';
+                        same := false;
+                        for i := 1 to length(t) do
+                        begin
+                             if t[i] = g3[i] then same := true else same := false;
+                        end;
+                        if same then g3Set := false else g3Set := true;
+                        t := 'NILL';
+                        same := false;
+                        for i := 1 to length(t) do
+                        begin
+                             if t[i] = g4[i] then same := true else same := false;
+                        end;
+                        if same then g4Set := false else g4Set := true;
+                        gfull := False;
+                        if g1set and g2set and g3set and g4set then gfull := true else gfull := false;
+                        if not gfull then
+                        begin
+                             // Have a spot lets does it need to be filled?  Look to see if g# is
+                             // already set = grid
+                             // Is current grid same as grid1?
+                             same := false;
+                             for i := 1 to length(grid) do
+                             begin
+                                  if grid[i] = sp.grid1[i] then same := true else same := false;
                              end;
-                             if (not gset) and (g2 = 'NILL') then begin
-                                // g2 is open (this is sp.grid1)
-                                DBGrid(trimleft(trimright(grid)),sp.grid2);
-                                gset := true;
+                             // Is current grid same as grid2?
+                             if not same then
+                             begin
+                                  same := false;
+                                  for i := 1 to length(grid) do
+                                  begin
+                                       if grid[i] = sp.grid2[i] then same := true else same := false;
+                                  end;
                              end;
-                             if (not gset) and (g3 = 'NILL') then begin
-                                // g3 is open (this is sp.grid1)
-                                DBGrid(trimleft(trimright(grid)),sp.grid3);
-                                gset := true;
+                             // Is current grid same as grid3?
+                             if not same then
+                             begin
+                                  same := false;
+                                  for i := 1 to length(grid) do
+                                  begin
+                                       if grid[i] = sp.grid3[i] then same := true else same := false;
+                                  end;
                              end;
-                             if (not gset) and (g4 = 'NILL') then begin
-                                // g4 is open (this is sp.grid1)
-                                DBGrid(trimleft(trimright(grid)),sp.grid4);
-                                gset := true;
+                             // Is current grid same as grid4?
+                             if not same then
+                             begin
+                                  same := false;
+                                  for i := 1 to length(grid) do
+                                  begin
+                                       if grid[i] = sp.grid4[i] then same := true else same := false;
+                                  end;
+                             end;
+                             if not same then
+                             begin
+                                  // Grid does match any known entry in record, stuff it
+                                  // in first available spot and be done with this mess.
+                                  same := false;  // Recycle same for now
+                                  if not same and not g1Set then
+                                  begin
+                                       // Grid1 is empty (or 'NILL') so shove it
+                                       i := length(grid);
+                                       sp.grid1[0] := chr(i);
+                                       for i := 1 to length(grid) do
+                                       begin
+                                            sp.grid1[i] := grid[i];
+                                       end;
+                                       same := true;
+                                  end;
+                                  if not same and not g2Set then
+                                  begin
+                                       // Grid2 is empty (or 'NILL') so shove it
+                                       i := length(grid);
+                                       sp.grid2[0] := chr(i);
+                                       for i := 1 to length(grid) do
+                                       begin
+                                            sp.grid2[i] := grid[i];
+                                       end;
+                                       same := true;
+                                  end;
+                                  if not same and not g3Set then
+                                  begin
+                                       // Grid3 is empty (or 'NILL') so shove it
+                                       i := length(grid);
+                                       sp.grid3[0] := chr(i);
+                                       for i := 1 to length(grid) do
+                                       begin
+                                            sp.grid3[i] := grid[i];
+                                       end;
+                                       same := true;
+                                  end;
+                                  if not same and not g4Set then
+                                  begin
+                                       // Grid4 is empty (or 'NILL') so shove it
+                                       i := length(grid);
+                                       sp.grid4[0] := chr(i);
+                                       for i := 1 to length(grid) do
+                                       begin
+                                            sp.grid4[i] := grid[i];
+                                       end;
+                                       same := true;
+                                  end;
+
                              end;
                         end;
                    end;

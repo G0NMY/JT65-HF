@@ -9,8 +9,8 @@
         <IsPartOfProject Value="True"/>
         <EditorIndex Value="23"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="22"/>
-        <CursorPos X="1" Y="47"/>
+        <TopLine Value="25"/>
+        <CursorPos X="1" Y="52"/>
         <UsageCount Value="215"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
@@ -24,12 +24,12 @@
         <UnitName Value="maincode"/>
         <EditorIndex Value="2"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="4059"/>
-        <CursorPos X="6" Y="4074"/>
+        <TopLine Value="7"/>
+        <CursorPos X="69" Y="22"/>
         <UsageCount Value="215"/>
         <Bookmarks Count="2">
-          <Item0 X="1" Y="1404" ID="1"/>
-          <Item1 X="5" Y="1524" ID="0"/>
+          <Item0 X="1" Y="1405" ID="1"/>
+          <Item1 X="5" Y="1525" ID="0"/>
         </Bookmarks>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
@@ -409,7 +409,6 @@
         <CursorPos X="88" Y="34"/>
         <UsageCount Value="207"/>
         <Loaded Value="True"/>
-        <LoadedDesigner Value="True"/>
       </Unit36>
       <Unit37>
         <Filename Value="dispatchobject.pas"/>
@@ -428,9 +427,9 @@
         <UnitName Value="spot"/>
         <EditorIndex Value="3"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="22"/>
-        <CursorPos X="1" Y="1"/>
-        <UsageCount Value="194"/>
+        <TopLine Value="532"/>
+        <CursorPos X="1" Y="555"/>
+        <UsageCount Value="215"/>
         <Loaded Value="True"/>
       </Unit38>
       <Unit39>
@@ -442,9 +441,9 @@
         <IsVisibleTab Value="True"/>
         <EditorIndex Value="4"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="67"/>
-        <CursorPos X="1" Y="102"/>
-        <UsageCount Value="39"/>
+        <TopLine Value="279"/>
+        <CursorPos X="56" Y="283"/>
+        <UsageCount Value="77"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
       </Unit39>
@@ -465,19 +464,19 @@
       </Item2>
       <Item3>
         <Source Value="maincode.pas"/>
-        <Line Value="484"/>
+        <Line Value="485"/>
       </Item3>
       <Item4>
         <Source Value="maincode.pas"/>
-        <Line Value="488"/>
+        <Line Value="489"/>
       </Item4>
       <Item5>
         <Source Value="maincode.pas"/>
-        <Line Value="492"/>
+        <Line Value="493"/>
       </Item5>
       <Item6>
         <Source Value="spot.pas"/>
-        <Line Value="1368"/>
+        <Line Value="1481"/>
       </Item6>
     </BreakPoints>
   </Debugging>

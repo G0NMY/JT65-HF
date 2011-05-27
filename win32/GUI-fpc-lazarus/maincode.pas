@@ -19,6 +19,7 @@
 // the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
 // Boston, MA 02110-1301, USA.
 //
+{ TODO : RB Status is not being properly restored at restart.  FIX }
 unit maincode;
 {$PACKRECORDS C}    (* GCC/Visual C/C++ compatible record packing *)
 {$MODE DELPHI }
@@ -4069,7 +4070,7 @@ Begin
      heard.Form9.Label8.Caption := 'Discarded:  ' + IntToStr(rb.pskrCallsDisc);
 
      heard.Form9.Label23.Caption := 'Stats DB Added:  ' + rb.dbfCount;
-     heard.Form9.Label24.Caption := 'Updated:  ' + rb.dbfUCount;
+     heard.Form9.Label24.Caption := 'Updates:  ' + rb.dbfUCount;
 
      Label30.Caption := rb.rbCount;
      Label19.Caption := rb.pskrCount;

@@ -49,28 +49,29 @@ type
     Button1: TButton;
     Button2: TButton;
     Button3: TButton;
-    CheckBox1: TCheckBox;
-    CheckBox10: TCheckBox;
-    CheckBox11: TCheckBox;
-    CheckBox12: TCheckBox;
-    CheckBox13: TCheckBox;
-    CheckBox14: TCheckBox;
-    CheckBox15: TCheckBox;
-    CheckBox16: TCheckBox;
-    CheckBox17: TCheckBox;
-    CheckBox18: TCheckBox;
-    CheckBox19: TCheckBox;
-    CheckBox2: TCheckBox;
-    CheckBox20: TCheckBox;
-    CheckBox21: TCheckBox;
-    CheckBox22: TCheckBox;
-    CheckBox3: TCheckBox;
-    CheckBox4: TCheckBox;
-    CheckBox5: TCheckBox;
-    CheckBox6: TCheckBox;
-    CheckBox7: TCheckBox;
-    CheckBox8: TCheckBox;
-    CheckBox9: TCheckBox;
+    Button4: TButton;
+    cb160: TCheckBox;
+    cb6: TCheckBox;
+    cb2: TCheckBox;
+    wcb160: TCheckBox;
+    wcb80: TCheckBox;
+    wcb40: TCheckBox;
+    wcb30: TCheckBox;
+    wcb20: TCheckBox;
+    wcb17: TCheckBox;
+    wcb15: TCheckBox;
+    wcb12: TCheckBox;
+    cb80: TCheckBox;
+    wcb10: TCheckBox;
+    wcb6: TCheckBox;
+    wcb2: TCheckBox;
+    cb40: TCheckBox;
+    cb30: TCheckBox;
+    cb20: TCheckBox;
+    cb17: TCheckBox;
+    cb15: TCheckBox;
+    cb12: TCheckBox;
+    cb10: TCheckBox;
     edSearchCallsign: TEdit;
     GroupBox1: TGroupBox;
     Label10: TLabel;
@@ -99,6 +100,8 @@ type
     procedure Button1Click(Sender: TObject);
     procedure Button2Click(Sender: TObject);
     procedure Button3Click(Sender: TObject);
+    procedure Button4Click(Sender: TObject);
+    procedure cbClick(Sender: TObject);
   private
     { private declarations }
   public
@@ -112,6 +115,8 @@ var
   publuCall : String;
   pubhaveDB : Boolean;
   pubfailDB : Boolean;
+  cbstate   : Array[0..10] of Boolean;
+  wcbstate  : Array[0..10] of Boolean;
 
 implementation
 
@@ -147,6 +152,9 @@ begin
      if pubhaveDB Then
      begin
           // Have a record in sp
+          pubDoDB   := False;
+          pubhaveDB := False;
+          pubLUCall := '';
           lbSearchResults.Clear;
           s := '';
           for i := 1 to 16 do
@@ -154,7 +162,8 @@ begin
                s := s + pubSP.callsign[i];
           end;
           s := trimleft(trimright(s));
-          if pubSP.count = 1 then lbSearchResults.Items.Add(s + ' Has been heard 1 time.') else lbSearchResults.Items.Add(s + ' Has been heard ' + IntToStr(pubSP.count) + ' times.');
+          if pubSP.count = 1 then lbSearchResults.Items.Add(' ' + s + ' Has been heard 1 time.') else lbSearchResults.Items.Add(' ' + s + ' Has been heard ' + IntToStr(pubSP.count) + ' times.');
+          lbSearchResults.Items.Add('');
           g1 := '';
           g2 := '';
           g3 := '';
@@ -182,31 +191,77 @@ begin
           if not (g4 = '') then inc(gc);
           if gc > 0 then
           begin
-               if gc > 1 then s := s + 'Grids this call heard from:  ' else s := s + 'Grid this call heard from:  ';
+               if gc > 1 then s := s + ' Grids:  ' else s := s + ' Grid:  ';
                if gc = 1 then s := s + g1;
                if gc = 2 then s := s + g1 + ' ' + g2;
                if gc = 3 then s := s + g1 + ' ' + g2 + ' ' + g3;
                if gc = 4 then s := s + g1 + ' ' + g2 + ' ' + g3 + ' ' + g4;
           end;
           if gc > 0 then lbSearchResults.Items.Add(s);
-          lbSearchResults.Items.Add('First heard on ' + FormatDateTime('dddd mmmm d, yyyy',pubSP.first) + ' at ' + formatDateTime('hh:nn:ss',pubSP.first) + ' UTC');
-          lbSearchResults.Items.Add('Last heard on ' + FormatDateTime('dddd mmmm d, yyyy',pubSP.last) + ' at ' + formatDateTime('hh:nn:ss',pubSP.last) + ' UTC');
+          if gc > 0 then lbSearchResults.Items.Add('');
+          lbSearchResults.Items.Add(' First:  ' + FormatDateTime('mm-dd-yy',pubSP.first) + ' at ' + formatDateTime('hh:nn',pubSP.first) + ' UTC');
+          lbSearchResults.Items.Add('');
+          lbSearchResults.Items.Add(' Last:  ' + FormatDateTime('mm-dd-yy',pubSP.last) + ' at ' + formatDateTime('hh:nn',pubSP.last) + ' UTC');
+          if pubSP.b160 then cbstate[0]  := true;
+          if pubSP.b80  then cbstate[1]  := true;
+          if pubSP.b40  then cbstate[2]  := true;
+          if pubSP.b30  then cbstate[3]  := true;
+          if pubSP.b20  then cbstate[4]  := true;
+          if pubSP.b17  then cbstate[5]  := true;
+          if pubSP.b15  then cbstate[6]  := true;
+          if pubSP.b12  then cbstate[7]  := true;
+          if pubSP.b10  then cbstate[8]  := true;
+          if pubSP.b6   then cbstate[9]  := true;
+          if pubSP.b2   then cbstate[10] := true;
 
-          pubDoDB   := False;
-          pubhaveDB := False;
+          if pubSP.wb160 then wcbstate[0]  := true;
+          if pubSP.wb80  then wcbstate[1]  := true;
+          if pubSP.wb40  then wcbstate[2]  := true;
+          if pubSP.wb30  then wcbstate[3]  := true;
+          if pubSP.wb20  then wcbstate[4]  := true;
+          if pubSP.wb17  then wcbstate[5]  := true;
+          if pubSP.wb15  then wcbstate[6]  := true;
+          if pubSP.wb12  then wcbstate[7]  := true;
+          if pubSP.wb10  then wcbstate[8]  := true;
+          if pubSP.wb6   then wcbstate[9]  := true;
+          if pubSP.wb2   then wcbstate[10] := true;
+
+          cb160.Checked := cbstate[0];
+          cb80.Checked  := cbstate[1];
+          cb40.Checked  := cbstate[2];
+          cb30.Checked  := cbstate[3];
+          cb20.Checked  := cbstate[4];
+          cb17.Checked  := cbstate[5];
+          cb15.Checked  := cbstate[6];
+          cb12.Checked  := cbstate[7];
+          cb10.Checked  := cbstate[8];
+          cb6.Checked   := cbstate[9];
+          cb2.Checked   := cbstate[10];
+
+          wcb160.Checked := wcbstate[0];
+          wcb80.Checked  := wcbstate[1];
+          wcb40.Checked  := wcbstate[2];
+          wcb30.Checked  := wcbstate[3];
+          wcb20.Checked  := wcbstate[4];
+          wcb17.Checked  := wcbstate[5];
+          wcb15.Checked  := wcbstate[6];
+          wcb12.Checked  := wcbstate[7];
+          wcb10.Checked  := wcbstate[8];
+          wcb6.Checked   := wcbstate[9];
+          wcb2.Checked   := wcbstate[10];
      end;
      if pubFailDB Then
      begin
           // Failed to find
           lbSearchResults.Clear;
-          lbSearchResults.Items.Add('Callsign not found.');
+          lbSearchResults.Items.Add(' Callsign not found.');
           pubDoDB := False;
      end;
      if timeout Then
      begin
           // Timed out
           lbSearchResults.Clear;
-          lbSearchResults.Items.Add('Timed out.  Try again later.');
+          lbSearchResults.Items.Add(' Timed out.  Try again later.');
           pubDoDB := False;
      end;
 end;
@@ -221,6 +276,28 @@ begin
      // Update record (really only allows setting of callsign looked up as
      // worked/not worked on a particular band.  It does not allow setting
      // of any other portions of the record
+end;
+
+procedure TForm9.Button4Click(Sender: TObject);
+begin
+     // Export internal DB to CSV file in /basedir/logs
+end;
+
+procedure TForm9.cbClick(Sender: TObject);
+begin
+     // OK... checkboxes are difficult to see (state of) when disabled, so, I
+     // will enable them but not allow the state to actually change :)
+     cb160.Checked := cbstate[0];
+     cb80.Checked  := cbstate[1];
+     cb40.Checked  := cbstate[2];
+     cb30.Checked  := cbstate[3];
+     cb20.Checked  := cbstate[4];
+     cb17.Checked  := cbstate[5];
+     cb15.Checked  := cbstate[6];
+     cb12.Checked  := cbstate[7];
+     cb10.Checked  := cbstate[8];
+     cb6.Checked   := cbstate[9];
+     cb2.Checked   := cbstate[10];
 end;
 
 initialization
