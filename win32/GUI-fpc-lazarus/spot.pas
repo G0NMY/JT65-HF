@@ -133,7 +133,6 @@ Type
               procedure dbGrid(const str : String; var dbstr : Array of Char);
               procedure callsignDB(const db : Array of Char; var str : String);
               procedure gridDB(const db : Array of Char; var str : String);
-              function  getDBREC(rec : CTypes.cuint32) : SpotDBRec;
               function  createDB : Boolean;
               function  addToDB(const callsign : String; const grid : String; const band : String; const wband : String) : Boolean;
 
@@ -155,10 +154,12 @@ Type
              function    pskrTickle : DWORD;
              // Public db functions
              function findDB(const callsign : String) : CTypes.cuint32;
+             function getDBREC(rec : CTypes.cuint32) : SpotDBRec;
              function getDBAll(const callsign : String; var g1,g2,g3,g4 : String; var count : CTypes.cuint32; var first, last : TDateTime;
                                var b160,b80,b40,b30,b20,b17,b15,b12,b10,b6,b2,wb160,wb80,wb40,wb30,wb20,wb17,wb15,wb12,wb10,wb6,wb2 : Boolean) : Boolean;
              function getDB(const callsign : String; var ret : String) : Boolean;
              function dbToCSV(const fname : String) : Boolean;
+
              property myCall    : String
                 read  prMyCall
                 write prMyCall;

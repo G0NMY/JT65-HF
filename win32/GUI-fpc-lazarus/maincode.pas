@@ -30,7 +30,7 @@ uses
   CTypes, StrUtils, Math, ExtCtrls, ComCtrls, Spin, Windows, DateUtils,
   encode65, globalData, ClipBrd, rawdec, guiConfig, verHolder, dispatchobject,
   Menus, log, diagout, synautil, waterfall, d65, spectrum, about, FileUtil,
-  guidedconfig, valobject, rigobject, portaudio, adc, dac, spot; //audiodiag, ;
+  guidedconfig, valobject, rigobject, portaudio, adc, dac, spot, heard; //audiodiag, ;
 
 type
   { TForm1 }
@@ -4003,6 +4003,7 @@ Var
    foo  : String;
    ffoo : Double;
    pskr : DWORD;
+   sp   : spot.spotDBRec;
 Begin
      if rbthread.Suspended then
      begin
@@ -4057,12 +4058,22 @@ Begin
      Form1.MenuItem42.Caption := guidedconfig.cfg.macroList[22];
      Form1.MenuItem43.Caption := guidedconfig.cfg.macroList[23];
 
-
      // RB Check
      pskr := rb.pskrTickle;
-     Label5.caption := 'PSKR Sent: ' + IntToStr(rb.pskrCallsSent) + ' Buffered: ' + IntToStr(rb.pskrCallsBuff) + ' Discarded: ' + IntToStr(rb.pskrCallsDisc) + '  RB Sent: ' + rb.RBcount + ' Discard: ' + rb.rbDiscard + ' Fail: ' + rb.RBfail + ' DBF A: ' + rb.dbfCount + ' U: ' + rb.dbfUCount;
+     heard.Form9.Label3.Caption := 'RB Reports Sent:  ' + rb.RBcount;
+     heard.Form9.Label4.Caption := 'Discarded:  ' + rb.rbDiscard;
+     heard.Form9.Label5.Caption := 'Rejected:  ' + rb.RBfail;
+
+     heard.Form9.Label6.Caption := 'PSKR Reports Sent:  ' + IntToStr(rb.pskrCallsSent);
+     heard.Form9.Label7.Caption := 'Buffered:  ' + IntToStr(rb.pskrCallsBuff);
+     heard.Form9.Label8.Caption := 'Discarded:  ' + IntToStr(rb.pskrCallsDisc);
+
+     heard.Form9.Label23.Caption := 'Stats DB Added:  ' + rb.dbfCount;
+     heard.Form9.Label24.Caption := 'Updated:  ' + rb.dbfUCount;
+
      Label30.Caption := rb.rbCount;
      Label19.Caption := rb.pskrCount;
+
      //if cfgvtwo.Form6.cbUseRB.Checked Then Form1.Label30.Visible := True else Form1.Label30.Visible := False;
 
      // Force Rig control read cycle.
@@ -4204,6 +4215,62 @@ Begin
 
      // Check for RB thread error conditon.
      //if not ctrl.primed then rbThreadCheck();
+
+     // Check to see if user needs a search completed from the heard unit
+     if heard.pubdoDB Then
+     Begin
+          //Heard unit requesting data for callsign in heard.publuCall
+          i := 0;
+          i := rb.findDB(heard.publuCall);
+          if i > 0 then
+          begin
+               sp := rb.getDBREC(i);
+               for i := 0 to 16 do
+               begin
+                    heard.pubSP.callsign[i] := sp.callsign[i];
+               end;
+               for i := 0 to 6 do
+               begin
+                    heard.pubSP.grid1[i] := sp.grid1[i];
+                    heard.pubSP.grid2[i] := sp.grid2[i];
+                    heard.pubSP.grid3[i] := sp.grid3[i];
+                    heard.pubSP.grid4[i] := sp.grid4[i];
+               end;
+               heard.pubSP.count := sp.count;
+               heard.pubSP.first := sp.first;
+               heard.pubSP.last := sp.last;
+               heard.pubSP.b160 := sp.b160;
+               heard.pubSP.b80 := sp.b80;
+               heard.pubSP.b40 := sp.b40;
+               heard.pubSP.b30 := sp.b30;
+               heard.pubSP.b20 := sp.b20;
+               heard.pubSP.b17 := sp.b17;
+               heard.pubSP.b15 := sp.b15;
+               heard.pubSP.b12 := sp.b12;
+               heard.pubSP.b10 := sp.b10;
+               heard.pubSP.b6 := sp.b6;
+               heard.pubSP.b2 := sp.b2;
+               heard.pubSP.wb160 := sp.wb160;
+               heard.pubSP.wb80 := sp.wb80;
+               heard.pubSP.wb40 := sp.wb40;
+               heard.pubSP.wb30 := sp.wb30;
+               heard.pubSP.wb20 := sp.wb20;
+               heard.pubSP.wb17 := sp.wb17;
+               heard.pubSP.wb15 := sp.wb15;
+               heard.pubSP.wb12 := sp.wb12;
+               heard.pubSP.wb10 := sp.wb10;
+               heard.pubSP.wb6 := sp.wb6;
+               heard.pubSP.wb2 := sp.wb2;
+               heard.pubhaveDB := true;
+               heard.pubfailDB := false;
+          end
+          else
+          begin
+               heard.pubfailDB := true;
+               heard.pubhaveDB := false;
+          end;
+     end;
+
 end;
 
 procedure TForm1.oncePerTick();
