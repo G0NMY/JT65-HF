@@ -519,7 +519,7 @@ begin
                        rb.myCall := TrimLeft(TrimRight(guidedconfig.cfg.rbcallsign));
                        rb.myGrid := TrimLeft(TrimRight(guidedconfig.cfg.grid));
                        rb.myQRG  := guidedconfig.cfg.guiQRG;
-                       //ctrl.rbcPing := rb.loginRB;
+                       ctrl.rbcPing := rb.loginRB;
                        ctrl.rbcPing := false;
                   End;
                   if ctrl.doRBLogout And not rb.busy Then
@@ -532,7 +532,7 @@ begin
                        rb.myCall := TrimLeft(TrimRight(guidedconfig.cfg.rbcallsign));
                        rb.myGrid := TrimLeft(TrimRight(guidedconfig.cfg.grid));
                        rb.myQRG  := guidedconfig.cfg.guiQRG;
-                       //ctrl.doRBLogout := rb.logoutRB;
+                       ctrl.doRBLogout := rb.logoutRB;
                        ctrl.doRBLogout := false;
                   End;
                   if ctrl.rbcCache And not rb.busy Then
@@ -739,6 +739,7 @@ begin
        // TX is in progress.  Abort it!
        // Unkey the TX, terminate the PA output stream and set op state to idle.
        globalData.txInProgress := False;
+       dac.dacEnTX:= False;
        sleep(100);
        rig1.PTT(false);
        sleep(100);
@@ -3143,15 +3144,16 @@ Begin
           d65nmsg := 0;
           txsr := 1.0;
           //if tryStrToFloat(cfgvtwo.Form6.edTXSRCor.Text,txsr) Then d65samfacout := StrToFloat(cfgvtwo.Form6.edTXSRCor.Text) else d65samfacout := 1.0;
+          d65samfacout := 1.0;
           // Insert .3 second or 3307 samples of silence
           // .3 Seconds of prepended silence seems to get the timing right,
           // at least on my specific system.  Not sure if this will carry
           // correctly to others.
           for mnlooper := 0 to  3306 do
           begin
-               //dac.d65txBuffer[mnlooper] := 0;
+               dac.d65txBuffer[mnlooper] := 0;
           end;
-          //if txMode = 65 then encode65.gen65(d65txmsg,@txdf,@dac.d65txBuffer[0],@d65nwave,@d65sendingsh,d65sending,@d65nmsg);
+          if ctrl.txMode = 65 then encode65.gen65(d65txmsg,@txdf,@dac.d65txBuffer[0],@d65nwave,@d65sendingsh,d65sending,@d65nmsg);
           //if txMode =  4 Then  encode65.gen4(d65txmsg,@txdf,@dac.d65txBuffer[0],@d65nwave,@d65sendingsh,d65sending,@d65nmsg);
           //if txMode =  4 Then  encode65.gen4(d65txmsg,@txdf,@mdac.d65txBuffer[0],@d65nwave,@d65sendingsh,d65sending,@d65nmsg);
 
@@ -3169,7 +3171,7 @@ Begin
                // Add 1s silence between end of JT65 and start of CW ID
                for mnlooper := mnlooper to mnlooper + 11025 do
                begin
-                    //dac.d65txBuffer[mnlooper] := 0;
+                    dac.d65txBuffer[mnlooper] := 0;
                end;
                // Gen CW ID
                for i := 0 to 110249 do
@@ -3200,7 +3202,7 @@ Begin
                Begin
                     for i := 0 to nwave-1 do
                     begin
-                         //dac.d65txBuffer[mnlooper] := encode65.e65cwid[i];
+                         dac.d65txBuffer[mnlooper] := encode65.e65cwid[i];
                          inc(mnlooper);
                     end;
                End
@@ -3209,20 +3211,20 @@ Begin
                     // CW ID too long... so we will not do it.
                     for i := mnlooper to 661503 do
                     begin
-                         //dac.d65txBuffer[i] := 0;
+                         dac.d65txBuffer[i] := 0;
                     end;
                End;
                // Finish buffer to end with silence.
                for i := mnlooper to 661503 do
                begin
-                    //dac.d65txBuffer[i] := 0;
+                    dac.d65txBuffer[i] := 0;
                end;
           End
           Else
           Begin
                for i := mnlooper to 661503 do
                begin
-                    //dac.d65txBuffer[i] := 0;
+                    dac.d65txBuffer[i] := 0;
                end;
           End;
           // I now have a set of samples representing the JT65A audio
@@ -3247,6 +3249,7 @@ Begin
      Else
      Begin
           globalData.txInProgress := False;
+          dac.dacEnTX := False;
           ctrl.rxInProgress := False;
           form1.chkEnTX.Checked := False;
           ctrl.TxValid := False;
@@ -3282,9 +3285,9 @@ Begin
           d65nmsg := 0;
           txsr := 1.0;
           //if tryStrToFloat(cfgvtwo.Form6.edTXSRCor.Text,txsr) Then d65samfacout := StrToFloat(cfgvtwo.Form6.edTXSRCor.Text) else d65samfacout := 1.0;
+          d65samfacout := 1.0;
           // Generate samples.
-          //if txMode = 65 Then encode65.gen65(d65txmsg,@txdf,@dac.d65txBuffer[0],@d65nwave,@d65sendingsh,d65sending,@d65nmsg);
-
+          if ctrl.txMode = 65 Then encode65.gen65(d65txmsg,@txdf,@dac.d65txBuffer[0],@d65nwave,@d65sendingsh,d65sending,@d65nmsg);
           //if txMode =  4 Then  encode65.gen4(d65txmsg,@txdf,@dac.d65txBuffer[0],@d65nwave,@d65sendingsh,d65sending,@d65nmsg);
           //if txMode =  4 Then  encode65.gen4(d65txmsg,@txdf,@mdac.d65txBuffer[0],@d65nwave,@d65sendingsh,d65sending,@d65nmsg);
 
@@ -3292,7 +3295,7 @@ Begin
           mnlooper := d65nwave;
           while mnlooper < 661504 do
           begin
-               //dac.d65txBuffer[mnlooper] := 0;
+               dac.d65txBuffer[mnlooper] := 0;
                inc(mnlooper);
           end;
           d65nwave := 538624;
@@ -3314,6 +3317,7 @@ Begin
      Else
      Begin
           globalData.txInProgress := False;
+          dac.dacEnTX := False;
           ctrl.rxInProgress := False;
           form1.chkEnTX.Checked := False;
           ctrl.TxValid := False;
@@ -3594,6 +3598,7 @@ Begin
           Begin
                Form1.ProgressBar3.Max := 533504;
                globalData.txInProgress := False;
+               dac.dacEnTX := False;
                ctrl.rxInProgress := True;
                adc.d65rxBufferIdx := 0;
 
@@ -3619,6 +3624,7 @@ Begin
                Form1.ProgressBar3.Position := adc.d65rxBufferIdx;
                ctrl.rxInProgress := True;
                globalData.txInProgress := False;
+               dac.dacEnTX := False;
                If adc.d65rxBufferIdx >= 533504 Then
                Begin
                     // Get End of Period QRG
@@ -3627,6 +3633,7 @@ Begin
                     ctrl.thisAction := 4;
                     ctrl.rxInProgress := False;
                     globalData.txInProgress := False;
+                    dac.dacEnTX := False;
                End;
           End;
      End;
@@ -3663,6 +3670,7 @@ Begin
                          rxCount := 0;
                          rig1.PTT(true);
                          globalData.txInProgress := True;
+                         dac.dacEnTX := True;
                          foo := '';
                          if gst.Hour < 10 then foo := '0' + IntToStr(gst.Hour) + ':' else foo := IntToStr(gst.Hour) + ':';
                          if gst.Minute < 10 then foo := foo + '0' + IntToStr(gst.Minute) else foo := foo + IntToStr(gst.Minute);
@@ -3695,6 +3703,7 @@ Begin
                          ctrl.thisAction := 2;
                          ctrl.nextAction := 2;
                          globalData.txInProgress := False;
+                         dac.dacEnTX := False;
                          ctrl.rxInProgress := False;
                     End;
                End
@@ -3711,10 +3720,12 @@ Begin
           Else
           Begin
                globalData.txInProgress := True;
+               dac.dacEnTX := True;
                ctrl.rxInProgress := False;
                if (dac.d65txBufferIdx >= d65nwave+11025) Or (dac.d65txBufferIdx >= 661503-(11025 DIV 2)) Then
                Begin
                     globalData.txInProgress := False;
+                    dac.dacEnTX := False;
                     rig1.PTT(false);
                     ctrl.thisAction := 5;
                     ctrl.actionSet := False;
@@ -3770,6 +3781,7 @@ Begin
                          rxCount := 0;
                          rig1.PTT(true);
                          globalData.txInProgress := True;
+                         dac.dacEnTX := True;
                          foo := '';
                          if gst.Hour < 10 then foo := '0' + IntToStr(gst.Hour) + ':' else foo := IntToStr(gst.Hour) + ':';
                          if gst.Minute < 10 then foo := foo + '0' + IntToStr(gst.Minute) else foo := foo + IntToStr(gst.Minute);
@@ -3802,6 +3814,7 @@ Begin
                          ctrl.thisAction := 2;
                          ctrl.nextAction := 2;
                          globalData.txInProgress := False;
+                         dac.dacEnTX := False;
                          ctrl.rxInProgress := False;
                     End;
                End
@@ -3819,6 +3832,7 @@ Begin
           Begin
                // Continuing a late sequence TX
                globalData.txInProgress := True;
+               dac.dacEnTX := True;
                ctrl.rxInProgress := False;
                if (dac.d65txBufferIdx >= d65nwave+11025) Or (dac.d65txBufferIdx >= 661503-(11025 DIV 2)) Or (ctrl.thisSecond > 48) Then
                Begin
@@ -3827,6 +3841,7 @@ Begin
                     ctrl.actionSet := False;
                     ctrl.thisAction := 5;
                     globalData.txInProgress := False;
+                    dac.dacEnTX := False;
                     curMsg := '';
                End;
                Form1.ProgressBar3.Position := dac.d65txBufferIdx;
@@ -3843,6 +3858,7 @@ Begin
      sopQRG := guidedconfig.cfg.guiQRG;
      ctrl.rxInProgress := False;
      globalData.txInProgress := False;
+     dac.dacEnTX := False;
      // Paint a start of new period line in the spectrum display.
      for i := 0 to 749 do
      begin
@@ -4342,6 +4358,7 @@ begin
           // End of run once code.
           ctrl.rxInProgress := False;
           globalData.txInProgress := False;
+          dac.dacEnTX := False;
           ctrl.thisAction   := 2;
           ctrl.nextAction   := 2;
      End;
@@ -4527,6 +4544,7 @@ initialization
   ctrl.lastSecond   := 0;     // I use this to update the clock display
   ctrl.rxInProgress := False; // Indicates I'm running a PA prcoess to aquire data
   globalData.txInProgress := False; // Indicates I'm running a PA process to output data
+  dac.dacEnTX := False;
   ctrl.txNextPeriod := False; // Indicates I will begin TX at next inTimeSync True
   ctrl.statusChange := False; // Indicates I will need to change status bar staus block
   ctrl.lastAction   := 1;     // No reason, just setting it to be complete.

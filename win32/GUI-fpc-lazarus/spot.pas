@@ -1185,46 +1185,48 @@ implementation
     function TSpot.loginRB : Boolean;
     var
        url      : String;
+       foo      : String;
+       b        : Boolean;
     Begin
-         //prRBError    := '';
-         //prBusy       := True;
-         //url          := 'http://jt65.w6cqz.org/rb.php?func=LI&callsign=' + prMyCall + '&grid=' + prMyGrid + '&qrg=' + IntToStr(prMyQRG) + '&rbversion=' + prVersion;
-         //prhttp.Clear;
-         //prhttp.Timeout := 10000;  // 10K ms = 10 s
-         //prhttp.Headers.Add('Accept: text/html');
-         //rbResult.Clear;
-         //Try
-         //   // This logs in to the RB System using parameters set in the object class
-         //   if not prHTTP.HTTPMethod('GET', url) Then
-         //   begin
-         //        prRBOn := False;
-         //        result := False;
-         //   end
-         //   else
-         //   begin
-         //        rbResult.LoadFromStream(prHTTP.Document);
-         //        // Messages RB login can return:
-         //        // QSL - All good, logged in.
-         //        // NO - Indicates login failed but not due to bad RB data, so it's safe to try again. (Probably RB Server busy)
-         //        // BAD QRG - Fix the RB's QRG error before trying again.
-         //        // BAD GRID - Invalid Grid value, fix before trying again.
-         //        // BAD CALL - RB Call too short/long, fix before trying again.
-         //        // BAD MODE - RB Mode not 65A or 4B, fix before trying again.
-         //        If TrimLeft(TrimRight(rbResult.Text)) = 'QSL'      Then prRBOn := true;
-         //        If TrimLeft(TrimRight(rbResult.Text)) = 'BAD QRG'  Then prRBOn := false;
-         //        If TrimLeft(TrimRight(rbResult.Text)) = 'BAD GRID' Then prRBOn := false;
-         //        If TrimLeft(TrimRight(rbResult.Text)) = 'BAD CALL' Then prRBOn := false;
-         //        If TrimLeft(TrimRight(rbResult.Text)) = 'BAD MODE' Then prRBOn := false;
-         //        If TrimLeft(TrimRight(rbResult.Text)) = 'NO'       Then prRBOn := false;
-         //        prRBError := TrimLeft(TrimRight(rbresult.Text));
-         //   end;
-         //Except
-         //   prRBError := 'EXCEPTION';
-         //   prRBOn    := False;
-         //End;
-         prRBOn := true;
-         result := prRBOn;
+         prRBError    := '';
+         prBusy       := True;
+         url          := 'http://jt65.w6cqz.org/rb.php?func=LI&callsign=' + prMyCall + '&grid=' + prMyGrid + '&qrg=' + IntToStr(prMyQRG) + '&rbversion=' + prVersion;
+         prhttp.Clear;
+         prhttp.Timeout := 10000;  // 10K ms = 10 s
+         prhttp.Headers.Add('Accept: text/html');
+         rbResult.Clear;
+         Try
+            // This logs in to the RB System using parameters set in the object class
+            if not prHTTP.HTTPMethod('GET', url) Then
+            begin
+                 prRBOn := False;
+                 result := False;
+            end
+            else
+            begin
+                 rbResult.LoadFromStream(prHTTP.Document);
+                 // Messages RB login can return:
+                 // QSL - All good, logged in.
+                 // NO - Indicates login failed but not due to bad RB data, so it's safe to try again. (Probably RB Server busy)
+                 // BAD QRG - Fix the RB's QRG error before trying again.
+                 // BAD GRID - Invalid Grid value, fix before trying again.
+                 // BAD CALL - RB Call too short/long, fix before trying again.
+                 // BAD MODE - RB Mode not 65A or 4B, fix before trying again.
+                 If TrimLeft(TrimRight(rbResult.Text)) = 'QSL'      Then prRBOn := true;
+                 If TrimLeft(TrimRight(rbResult.Text)) = 'BAD QRG'  Then prRBOn := false;
+                 If TrimLeft(TrimRight(rbResult.Text)) = 'BAD GRID' Then prRBOn := false;
+                 If TrimLeft(TrimRight(rbResult.Text)) = 'BAD CALL' Then prRBOn := false;
+                 If TrimLeft(TrimRight(rbResult.Text)) = 'BAD MODE' Then prRBOn := false;
+                 If TrimLeft(TrimRight(rbResult.Text)) = 'NO'       Then prRBOn := false;
+                 prRBError := TrimLeft(TrimRight(rbresult.Text));
+            end;
+         Except
+            prRBError := 'EXCEPTION';
+            prRBOn    := False;
+         End;
          prBusy := False;
+         prBusy := False;
+         result := prRBOn;
     end;
 
     function TSpot.logoutRB : Boolean;
@@ -1232,47 +1234,49 @@ implementation
        url      : String;
        band     : String;
        go       : Boolean;
+       foo      : String;
     Begin
-         //prBusy       := True;
-         //band := '';
-         //if prVal.evalIQRG(prMyQRG,'LAX',band) then go := true else go := false;
-         //if go then
-         //begin
-         //     rbResult.Clear;
-         //     prRBError    := '';
-         //     url          := 'http://jt65.w6cqz.org/rb.php?func=LO&callsign=' + prMyCall + '&grid=' + prMyGrid + '&qrg=' + IntToStr(prMyQRG) + '&rbversion=' + prVersion;
-         //     prhttp.Clear;
-         //     prhttp.Timeout := 10000;  // 10K ms = 10 s
-         //     prhttp.Headers.Add('Accept: text/html');
-         //     Try
-         //        // This logs out the RB using parameters set in the object class
-         //        if not prHTTP.HTTPMethod('GET', url) Then
-         //        begin
-         //             prRBOn := False;
-         //             result := False;
-         //        end
-         //        else
-         //        begin
-         //             rbResult.LoadFromStream(prHTTP.Document);
-         //             // Messages RB login can return:
-         //             // QSL - All good, logged out.
-         //             // NO - Indicates logout failed. (Probably RB Server busy)
-         //             If TrimLeft(TrimRight(rbResult.Text)) = 'QSL' Then prRBOn := false;
-         //             If TrimLeft(TrimRight(rbResult.Text)) = 'NO'  Then prRBOn := true;
-         //             prRBError := TrimLeft(TrimRight(rbresult.Text));
-         //        end;
-         //     Except
-         //        prRBError := 'EXCEPTION';
-         //        prRBOn    := True;
-         //     End;
-         //     if prRBOn then result := false else result := true;
-         //end
-         //else
-         //begin
-         //     prRBError := 'QRG';
-         //     prRBOn    := false;
-         //     result    := false;
-         //end;
+         prBusy       := True;
+         band := '';
+         if prVal.evalIQRG(prMyQRG,'LAX',band) then go := true else go := false;
+         if go then
+         begin
+              rbResult.Clear;
+              prRBError    := '';
+              url          := 'http://jt65.w6cqz.org/rb.php?func=LO&callsign=' + prMyCall + '&grid=' + prMyGrid + '&qrg=' + IntToStr(prMyQRG) + '&rbversion=' + prVersion;
+              prhttp.Clear;
+              prhttp.Timeout := 10000;  // 10K ms = 10 s
+              prhttp.Headers.Add('Accept: text/html');
+              Try
+                 // This logs out the RB using parameters set in the object class
+                 if not prHTTP.HTTPMethod('GET', url) Then
+                 begin
+                      prRBOn := False;
+                      result := False;
+                 end
+                 else
+                 begin
+                      rbResult.LoadFromStream(prHTTP.Document);
+                      // Messages RB login can return:
+                      // QSL - All good, logged out.
+                      // NO - Indicates logout failed. (Probably RB Server busy)
+                      If TrimLeft(TrimRight(rbResult.Text)) = 'QSL' Then prRBOn := false;
+                      If TrimLeft(TrimRight(rbResult.Text)) = 'NO'  Then prRBOn := true;
+                      prRBError := TrimLeft(TrimRight(rbresult.Text));
+                 end;
+              Except
+                 prRBError := 'EXCEPTION';
+                 prRBOn    := True;
+              End;
+              if prRBOn then result := false else result := true;
+         end
+         else
+         begin
+              prRBError := 'QRG';
+              prRBOn    := false;
+              result    := false;
+         end;
+         foo := prRBError;
          result := true;
          prBusy := False;
     end;

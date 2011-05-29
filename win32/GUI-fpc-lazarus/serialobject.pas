@@ -73,140 +73,145 @@ end;
 function TSerial.portValid() : Boolean;
 var
    i : integer;
+   s : String;
 Begin
-      i := -1;
-      if length(prPort)>0 Then
-      Begin
-           // Port is set to something... lets see if it makes sense
-           prPort := upCase(prPort);
-           if prPort[1..3] = 'COM' Then
-           Begin
-                // It starts with COM, now does it have some numbers?
-                if length(prPort) = 4 then
-                begin
-                     // Seems to be COM#
-                     // Fourth character should be a integer in range of 1 ... 9
-                     If TryStrToInt(prPort[4], i) Then
-                     Begin
-                          prPortNumeral := i;
-                          prPortString := prPort;
-                     End
-                     else
-                     begin
-                          i := -1
-                     end;
-                end;
-                if length(prPort) = 5 then
-                begin
-                     // Seems to be COM##
-                     // Fourth and fifth characters should be a integer in range of 10 ... 99
-                     If TryStrToInt(prPort[4..5], i) Then
-                     Begin
-                          prPortNumeral := i;
-                          prPortString := prPort;
-                     End
-                     else
-                     begin
-                          i := -1
-                     End;
-                end;
-                if length(prPort) = 6 then
-                begin
-                     // Seems to be COM###
-                     // Fourth fifth and sixth characters should be a integer in range of 100 to 999 or (really) 255
-                     If TryStrToInt(prPort[4..6], i) Then
-                     Begin
-                          prPortNumeral := i;
-                          prPortString := prPort;
-                     End
-                     else
-                     begin
-                          i := -1
-                     End;
-                end;
-                if length(prPort) > 6 then
-                begin
-                     // Not sure what it is.  :)
-                     // Try looking for an 3 digit integer and discard last character(s)
-                     prPort := prPort[1..6];
-                     If TryStrToInt(prPort[4..6], i) Then
-                     Begin
-                          prPortNumeral := i;
-                          prPortString := prPort;
-                     End
-                     else
-                     begin
-                          i := -1
-                     End;
-                end;
-                if prPortNumeral > 0 then result := True else result := false;
-           end
-           else
-           begin
-                if length(prPort) = 1 then
-                begin
-                     // Seems to be #
-                     If TryStrToInt(prPort[1], i) Then
-                     Begin
-                          prPortNumeral := i;
-                          prPortString := 'COM' + prPort;
-                     end
-                     else
-                     begin
-                          i := -1;
-                     end;
-                end;
-                if length(prPort) = 2 then
-                begin
-                     // Seems to be ##
-                     If TryStrToInt(prPort[1..2], i) Then
-                     Begin
-                          prPortNumeral := i;
-                          prPortString := 'COM' + prPort;
-                     end
-                     else
-                     begin
-                          i := -1;
-                     end;
-                end;
-                if length(prPort) = 3 then
-                begin
-                     // Seems to be ###
-                     If TryStrToInt(prPort[1..3], i) Then
-                     Begin
-                          prPortNumeral := i;
-                          prPortString := 'COM' + prPort;
-                     end
-                     else
-                     begin
-                          i := -1;
-                     end;
-                end;
-                if length(prPort) > 4 then
-                begin
-                     // Not sure what it is. :)
-                     prPort := prPort[1..3];
-                     If TryStrToInt(prPort[1..3], i) Then
-                     Begin
-                          prPortNumeral := i;
-                          prPortString := 'COM' + prPort;
-                     end
-                     else
-                     begin
-                          i := -1;
-                     end;
-                end;
-                if prPortNumeral > 0 then result := True else result := false;
-           end;
-      end
-      else
-      begin
-           result := False;
-      end;
+     s := prPort;
+     i := -1;
+     if length(prPort)>0 Then
+     Begin
+          // Port is set to something... lets see if it makes sense
+          prPort := upCase(prPort);
+          if prPort[1..3] = 'COM' Then
+          Begin
+               // It starts with COM, now does it have some numbers?
+               if length(prPort) = 4 then
+               begin
+                    // Seems to be COM#
+                    // Fourth character should be a integer in range of 1 ... 9
+                    If TryStrToInt(prPort[4], i) Then
+                    Begin
+                         prPortNumeral := i;
+                         prPortString := prPort;
+                    End
+                    else
+                    begin
+                         i := -1
+                    end;
+               end;
+               if length(prPort) = 5 then
+               begin
+                    // Seems to be COM##
+                    // Fourth and fifth characters should be a integer in range of 10 ... 99
+                    If TryStrToInt(prPort[4..5], i) Then
+                    Begin
+                         prPortNumeral := i;
+                         prPortString := prPort;
+                    End
+                    else
+                    begin
+                         i := -1
+                    End;
+               end;
+               if length(prPort) = 6 then
+               begin
+                    // Seems to be COM###
+                    // Fourth fifth and sixth characters should be a integer in range of 100 to 999 or (really) 255
+                    If TryStrToInt(prPort[4..6], i) Then
+                    Begin
+                         prPortNumeral := i;
+                         prPortString := prPort;
+                    End
+                    else
+                    begin
+                         i := -1
+                    End;
+               end;
+               if length(prPort) > 6 then
+               begin
+                    // Not sure what it is.  :)
+                    // Try looking for an 3 digit integer and discard last character(s)
+                    prPort := prPort[1..6];
+                    If TryStrToInt(prPort[4..6], i) Then
+                    Begin
+                         prPortNumeral := i;
+                         prPortString := prPort;
+                    End
+                    else
+                    begin
+                         i := -1
+                    End;
+               end;
+               if prPortNumeral > 0 then result := True else result := false;
+          end
+          else
+          begin
+               if length(prPort) = 1 then
+               begin
+                    // Seems to be #
+                    If TryStrToInt(prPort[1], i) Then
+                    Begin
+                         prPortNumeral := i;
+                         prPortString := 'COM' + prPort;
+                    end
+                    else
+                    begin
+                         i := -1;
+                    end;
+               end;
+               if length(prPort) = 2 then
+               begin
+                    // Seems to be ##
+                    If TryStrToInt(prPort[1..2], i) Then
+                    Begin
+                         prPortNumeral := i;
+                         prPortString := 'COM' + prPort;
+                    end
+                    else
+                    begin
+                         i := -1;
+                    end;
+               end;
+               if length(prPort) = 3 then
+               begin
+                    // Seems to be ###
+                    If TryStrToInt(prPort[1..3], i) Then
+                    Begin
+                         prPortNumeral := i;
+                         prPortString := 'COM' + prPort;
+                    end
+                    else
+                    begin
+                         i := -1;
+                    end;
+               end;
+               if length(prPort) > 4 then
+               begin
+                    // Not sure what it is. :)
+                    prPort := prPort[1..3];
+                    If TryStrToInt(prPort[1..3], i) Then
+                    Begin
+                         prPortNumeral := i;
+                         prPortString := 'COM' + prPort;
+                    end
+                    else
+                    begin
+                         i := -1;
+                    end;
+               end;
+               if prPortNumeral > 0 then result := True else result := false;
+          end;
+     end
+     else
+     begin
+          result := False;
+     end;
 end;
 
 procedure TSerial.PTT(state : Boolean);
+var
+   b : boolean;
 begin
+      b := prAlternate;
       if portValid then
       begin
            if prAlternate then
@@ -219,6 +224,10 @@ begin
                 if state then regPTT(true) else regPTT(false);
                 //if state then prPTT := true else prPTT := false;
            end;
+      end
+      else
+      begin
+           b := false;
       end;
 end;
 

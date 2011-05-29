@@ -569,7 +569,12 @@ implementation
    end;
 
    procedure TRadio.PTT(state : Boolean);
+   Var
+        st : Boolean;
+        s  : String;
    Begin
+        st := state;
+        s  := stControl;
         // Toggles PTT State
         if (stControl = 'COMMANDER') and stCATPTT Then
         begin
@@ -613,12 +618,14 @@ implementation
              if state then
              begin
                   // Call serial ptt on
+                  ser.port := stSPort;
                   ser.PTT(true);
                   stPTT := true;
              end
              else
              begin
                   // Call serial ptt off
+                  ser.port := stSPort;
                   ser.PTT(false);
                   stPTT := false;
              end;
