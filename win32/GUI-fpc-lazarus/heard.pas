@@ -132,10 +132,52 @@ begin
      // Search for callsign in internal DB
      lbSearchResults.Clear;
      lbSearchResults.Items.Add('Searching...');
+     // Clear the transfer record
+     for i := 0 to 16 do
+     begin
+          pubSP.callsign[i] := chr(0);
+          if i < 7 then pubSP.grid1[i] := chr(0);
+          if i < 7 then pubSP.grid2[i] := chr(0);
+          if i < 7 then pubSP.grid3[i] := chr(0);
+          if i < 7 then pubSP.grid4[i] := chr(0);
+     end;
+     pubSP.count := 0;
+     pubSP.first := Now;
+     pubSP.last  := Now;
+     pubSP.b160  := false;
+     pubsp.b80   := false;
+     pubsp.b40   := false;
+     pubsp.b30   := false;
+     pubsp.b20   := false;
+     pubsp.b17   := false;
+     pubsp.b15   := false;
+     pubsp.b12   := false;
+     pubsp.b10   := false;
+     pubsp.b6    := false;
+     pubsp.b2    := false;
+     pubSP.wb160 := false;
+     pubsp.wb80  := false;
+     pubsp.wb40  := false;
+     pubsp.wb30  := false;
+     pubsp.wb20  := false;
+     pubsp.wb17  := false;
+     pubsp.wb15  := false;
+     pubsp.wb12  := false;
+     pubsp.wb10  := false;
+     pubsp.wb6   := false;
+     pubsp.wb2   := false;
+     // Clear the checkbox state arrays
+     for i := 0 to 10 do
+     begin
+          cbstate[i]  := false;
+          wcbstate[i] := false;
+     end;
+     // Publish search params so main code can do the search
      pubLUCall := upcase(trimleft(trimright(edSearchCallsign.Text)));
      pubhaveDB := false;
      pubFailDB := false;
      pubdoDB    := true;
+     // Wait for result
      i := 0;
      timeout := false;
      while (not pubhaveDB) and (not pubFailDB) do
@@ -213,7 +255,6 @@ begin
           if pubSP.b10  then cbstate[8]  := true;
           if pubSP.b6   then cbstate[9]  := true;
           if pubSP.b2   then cbstate[10] := true;
-
           if pubSP.wb160 then wcbstate[0]  := true;
           if pubSP.wb80  then wcbstate[1]  := true;
           if pubSP.wb40  then wcbstate[2]  := true;
@@ -225,7 +266,7 @@ begin
           if pubSP.wb10  then wcbstate[8]  := true;
           if pubSP.wb6   then wcbstate[9]  := true;
           if pubSP.wb2   then wcbstate[10] := true;
-
+          // Set indicator(s) for band(s) station has been heard on
           cb160.Checked := cbstate[0];
           cb80.Checked  := cbstate[1];
           cb40.Checked  := cbstate[2];
@@ -237,7 +278,7 @@ begin
           cb10.Checked  := cbstate[8];
           cb6.Checked   := cbstate[9];
           cb2.Checked   := cbstate[10];
-
+          // Set indicator(s) for band(s) station has been worked
           wcb160.Checked := wcbstate[0];
           wcb80.Checked  := wcbstate[1];
           wcb40.Checked  := wcbstate[2];
@@ -255,6 +296,30 @@ begin
           // Failed to find
           lbSearchResults.Clear;
           lbSearchResults.Items.Add(' Callsign not found.');
+          // Clear heard band indicators;
+          cb160.Checked := cbstate[0];
+          cb80.Checked  := cbstate[1];
+          cb40.Checked  := cbstate[2];
+          cb30.Checked  := cbstate[3];
+          cb20.Checked  := cbstate[4];
+          cb17.Checked  := cbstate[5];
+          cb15.Checked  := cbstate[6];
+          cb12.Checked  := cbstate[7];
+          cb10.Checked  := cbstate[8];
+          cb6.Checked   := cbstate[9];
+          cb2.Checked   := cbstate[10];
+          // Clear worked band indicators;
+          wcb160.Checked := wcbstate[0];
+          wcb80.Checked  := wcbstate[1];
+          wcb40.Checked  := wcbstate[2];
+          wcb30.Checked  := wcbstate[3];
+          wcb20.Checked  := wcbstate[4];
+          wcb17.Checked  := wcbstate[5];
+          wcb15.Checked  := wcbstate[6];
+          wcb12.Checked  := wcbstate[7];
+          wcb10.Checked  := wcbstate[8];
+          wcb6.Checked   := wcbstate[9];
+          wcb2.Checked   := wcbstate[10];
           pubDoDB := False;
      end;
      if timeout Then

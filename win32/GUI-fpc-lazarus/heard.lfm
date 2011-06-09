@@ -225,7 +225,7 @@ object Form9: TForm9
     Top = 223
     Width = 18
     OnClick = cbClick
-    TabOrder = 25
+    TabOrder = 15
     TabStop = False
   end
   object cb80: TCheckBox
@@ -234,7 +234,7 @@ object Form9: TForm9
     Top = 223
     Width = 18
     OnClick = cbClick
-    TabOrder = 24
+    TabOrder = 16
     TabStop = False
   end
   object cb40: TCheckBox
@@ -243,7 +243,7 @@ object Form9: TForm9
     Top = 223
     Width = 18
     OnClick = cbClick
-    TabOrder = 23
+    TabOrder = 17
     TabStop = False
   end
   object cb30: TCheckBox
@@ -252,7 +252,7 @@ object Form9: TForm9
     Top = 223
     Width = 18
     OnClick = cbClick
-    TabOrder = 22
+    TabOrder = 18
     TabStop = False
   end
   object cb20: TCheckBox
@@ -261,7 +261,7 @@ object Form9: TForm9
     Top = 223
     Width = 18
     OnClick = cbClick
-    TabOrder = 21
+    TabOrder = 19
     TabStop = False
   end
   object cb17: TCheckBox
@@ -279,7 +279,7 @@ object Form9: TForm9
     Top = 223
     Width = 18
     OnClick = cbClick
-    TabOrder = 19
+    TabOrder = 21
     TabStop = False
   end
   object cb12: TCheckBox
@@ -288,7 +288,7 @@ object Form9: TForm9
     Top = 223
     Width = 18
     OnClick = cbClick
-    TabOrder = 18
+    TabOrder = 22
     TabStop = False
   end
   object cb10: TCheckBox
@@ -297,7 +297,7 @@ object Form9: TForm9
     Top = 223
     Width = 18
     OnClick = cbClick
-    TabOrder = 17
+    TabOrder = 23
     TabStop = False
   end
   object cb6: TCheckBox
@@ -306,7 +306,7 @@ object Form9: TForm9
     Top = 223
     Width = 18
     OnClick = cbClick
-    TabOrder = 16
+    TabOrder = 24
     TabStop = False
   end
   object cb2: TCheckBox
@@ -315,7 +315,7 @@ object Form9: TForm9
     Top = 223
     Width = 18
     OnClick = cbClick
-    TabOrder = 15
+    TabOrder = 25
     TabStop = False
   end
   object wcb160: TCheckBox
