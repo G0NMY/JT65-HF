@@ -1,0 +1,13 @@
+Decsription of JT65-HF main loop control structure.
+
+JT65-HF uses a time synchronous loop to control program operation plus a number of asynchronous
+events that service the GUI.  The difficult part of this is to sperate the sync and async portions
+of the code.  At the present time the code is so mixed up that it becomes increasingly difficult
+to keep track of things that need to be handled in the sync realm and those that run in the async
+realm.
+
+Compounding this is that I really didn't understand many of the finer points of programming a
+program of this complexity when I began.  Now, some three years later, I would hope, I have a better
+understanding of the needs of JT65-HF and some of the more intricate portions of programming something
+like this in FPC/Lazarus.
+
