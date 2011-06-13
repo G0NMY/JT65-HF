@@ -1321,9 +1321,8 @@ end;
 
 procedure TForm1.menuHeardClick(Sender: TObject);
 begin
-     //cfgvtwo.Form6.Notebook1.ActivePage := 'Heard List/PSKR Setup/RB Setup';
-     //cfgvtwo.Form6.Show;
-     //cfgvtwo.Form6.BringToFront;
+     heard.Form9.Show;
+     heard.Form9.BringToFront;
 end;
 
 procedure TForm1.MenuItemHandler(Sender: TObject);
