@@ -2173,17 +2173,19 @@ end;
 
 procedure TForm1.Timer2Timer(Sender : TObject);
 var
-   qrgk  : Single;
+   qrgk  : Double;
    qrghz : Integer;
    valid : Boolean;
+   foo   : String;
 begin
      Timer2.Enabled := false;
      // OK, input was made to the QRG Entry field and seems to be completed so
      // lets try to validate the field.
      //function testQRG(const qrg : String; var qrgk : Double; var qrghz : Integer) : Boolean;
-     qrgk := 0.0;
+     qrgk  := 0.0;
      qrghz := 0;
-     if mval.testQRG(editManQRG.Text, qrgk, qrghz) then
+     foo   := '';
+     if val1.evalQRG(editManQRG.Text,'LAX',qrgk,qrghz,foo) then
      begin
           valid := false;
           if (qrghz >    1799999) and (qrghz <    2000001) then valid := true;  // 160M

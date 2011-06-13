@@ -1397,7 +1397,8 @@ end;
 
 procedure TForm7.buttonContinue6Click(Sender : TObject);
 var
-   tstflt : Single;
+   tstflt : Double;
+   foo    : String;
 begin
      // Called from Macros Tab
      // Now... can I learn to iterate the controls via code or do I have to do this by 'hand'
@@ -1428,24 +1429,26 @@ begin
      cfg.prMacros[23] := trimleft(trimright(upcase(editMacro24.Text)));
      //
      // TValidator.testQRG(const qrg : String; var qrgk : Double; var qrghz : Integer) : Boolean;
+     // TValidator.evalQRG(const qrg : String; const mode : string; var qrgk : Double; var qrghz : Integer; var asciiqrg : String) : Boolean;
      //
      tstflt := 0.0;
-     val1.testQRG(editQRG1.Text,tstflt,cfg.prQRGs[0]);
-     val1.testQRG(editQRG2.Text,tstflt,cfg.prQRGs[1]);
-     val1.testQRG(editQRG3.Text,tstflt,cfg.prQRGs[2]);
-     val1.testQRG(editQRG4.Text,tstflt,cfg.prQRGs[3]);
-     val1.testQRG(editQRG5.Text,tstflt,cfg.prQRGs[4]);
-     val1.testQRG(editQRG6.Text,tstflt,cfg.prQRGs[5]);
-     val1.testQRG(editQRG7.Text,tstflt,cfg.prQRGs[6]);
-     val1.testQRG(editQRG8.Text,tstflt,cfg.prQRGs[7]);
-     val1.testQRG(editQRG9.Text,tstflt,cfg.prQRGs[8]);
-     val1.testQRG(editQRG10.Text,tstflt,cfg.prQRGs[9]);
-     val1.testQRG(editQRG11.Text,tstflt,cfg.prQRGs[10]);
-     val1.testQRG(editQRG12.Text,tstflt,cfg.prQRGs[11]);
-     val1.testQRG(editQRG13.Text,tstflt,cfg.prQRGs[12]);
-     val1.testQRG(editQRG14.Text,tstflt,cfg.prQRGs[13]);
-     val1.testQRG(editQRG15.Text,tstflt,cfg.prQRGs[14]);
-     val1.testQRG(editQRG16.Text,tstflt,cfg.prQRGs[15]);
+     foo := '';
+     if not val1.evalQRG(editQRG1.Text,'LAX',tstflt,cfg.prQRGs[0],foo) then cfg.prQRGs[0] := 0;
+     if not val1.evalQRG(editQRG2.Text,'LAX',tstflt,cfg.prQRGs[1],foo) then cfg.prQRGs[0] := 0;
+     if not val1.evalQRG(editQRG3.Text,'LAX',tstflt,cfg.prQRGs[2],foo) then cfg.prQRGs[0] := 0;
+     if not val1.evalQRG(editQRG4.Text,'LAX',tstflt,cfg.prQRGs[3],foo) then cfg.prQRGs[0] := 0;
+     if not val1.evalQRG(editQRG5.Text,'LAX',tstflt,cfg.prQRGs[4],foo) then cfg.prQRGs[0] := 0;
+     if not val1.evalQRG(editQRG6.Text,'LAX',tstflt,cfg.prQRGs[5],foo) then cfg.prQRGs[0] := 0;
+     if not val1.evalQRG(editQRG7.Text,'LAX',tstflt,cfg.prQRGs[6],foo) then cfg.prQRGs[0] := 0;
+     if not val1.evalQRG(editQRG8.Text,'LAX',tstflt,cfg.prQRGs[7],foo) then cfg.prQRGs[0] := 0;
+     if not val1.evalQRG(editQRG9.Text,'LAX',tstflt,cfg.prQRGs[8],foo) then cfg.prQRGs[0] := 0;
+     if not val1.evalQRG(editQRG10.Text,'LAX',tstflt,cfg.prQRGs[9],foo) then cfg.prQRGs[0] := 0;
+     if not val1.evalQRG(editQRG11.Text,'LAX',tstflt,cfg.prQRGs[10],foo) then cfg.prQRGs[0] := 0;
+     if not val1.evalQRG(editQRG12.Text,'LAX',tstflt,cfg.prQRGs[11],foo) then cfg.prQRGs[0] := 0;
+     if not val1.evalQRG(editQRG13.Text,'LAX',tstflt,cfg.prQRGs[12],foo) then cfg.prQRGs[0] := 0;
+     if not val1.evalQRG(editQRG14.Text,'LAX',tstflt,cfg.prQRGs[13],foo) then cfg.prQRGs[0] := 0;
+     if not val1.evalQRG(editQRG15.Text,'LAX',tstflt,cfg.prQRGs[14],foo) then cfg.prQRGs[0] := 0;
+     if not val1.evalQRG(editQRG16.Text,'LAX',tstflt,cfg.prQRGs[15],foo) then cfg.prQRGs[0] := 0;
      PageControl1.Pages[7].TabVisible := true;
      PageControl1.ActivePageIndex := 7;
 end;
@@ -2601,7 +2604,7 @@ end;
 procedure TForm7.readConfig(cfgname : string);
 var
    i       : Integer;
-   tmpflt  : single;
+   tmpflt  : double;
    foo     : String;
 begin
      tmpflt := 0.0;
@@ -2748,12 +2751,14 @@ begin
         edQSYTime4.Text := cfg.prQSYTime4;
         edQSYTime5.Text := cfg.prQSYTime5;
         edQSYTime6.Text := cfg.prQSYTime6;
-        if val1.testQRG(cfg.prQSYQRG1,tmpflt,i) then edQRG1.Text := floatToStrF(tmpflt,ffFixed,0,2) else editQRG1.Text := '0';
-        if val1.testQRG(cfg.prQSYQRG2,tmpflt,i) then edQRG2.Text := floatToStrF(tmpflt,ffFixed,0,2) else editQRG2.Text := '0';
-        if val1.testQRG(cfg.prQSYQRG3,tmpflt,i) then edQRG3.Text := floatToStrF(tmpflt,ffFixed,0,2) else editQRG3.Text := '0';
-        if val1.testQRG(cfg.prQSYQRG4,tmpflt,i) then edQRG4.Text := floatToStrF(tmpflt,ffFixed,0,2) else editQRG4.Text := '0';
-        if val1.testQRG(cfg.prQSYQRG5,tmpflt,i) then edQRG5.Text := floatToStrF(tmpflt,ffFixed,0,2) else editQRG5.Text := '0';
-        if val1.testQRG(cfg.prQSYQRG6,tmpflt,i) then edQRG6.Text := floatToStrF(tmpflt,ffFixed,0,2) else editQRG6.Text := '0';
+        tmpflt := 0.0;
+        foo := '';
+        if not val1.evalQRG(cfg.prQSYQRG1,'LAX',tmpflt,i,foo) then edQRG1.Text := '0.0';
+        if not val1.evalQRG(cfg.prQSYQRG2,'LAX',tmpflt,i,foo) then edQRG2.Text := '0.0';
+        if not val1.evalQRG(cfg.prQSYQRG3,'LAX',tmpflt,i,foo) then edQRG3.Text := '0.0';
+        if not val1.evalQRG(cfg.prQSYQRG4,'LAX',tmpflt,i,foo) then edQRG4.Text := '0.0';
+        if not val1.evalQRG(cfg.prQSYQRG5,'LAX',tmpflt,i,foo) then edQRG5.Text := '0.0';
+        if not val1.evalQRG(cfg.prQSYQRG6,'LAX',tmpflt,i,foo) then edQRG6.Text := '0.0';
         if cfg.prQSYTune1 then cbEnAT1.Checked := true else cbEnAT1.Checked := false;
         if cfg.prQSYTune2 then cbEnAT2.Checked := true else cbEnAT2.Checked := false;
         if cfg.prQSYTune3 then cbEnAT3.Checked := true else cbEnAT3.Checked := false;
@@ -2790,22 +2795,23 @@ begin
         editMacro22.Text := macroVal(cfg.prMacros[21]);
         editMacro23.Text := macroVal(cfg.prMacros[22]);
         editMacro24.Text := macroVal(cfg.prMacros[23]);
-        if val1.testQRG(inttostr(cfg.prQRGs[0]),tmpflt,i) then editQRG1.Text := floatToStrF(tmpflt,ffFixed,0,2) else editQRG1.Text := '0';
-        if val1.testQRG(inttostr(cfg.prQRGs[1]),tmpflt,i) then editQRG2.Text := floatToStrF(tmpflt,ffFixed,0,2) else editQRG2.Text := '0';
-        if val1.testQRG(inttostr(cfg.prQRGs[2]),tmpflt,i) then editQRG3.Text := floatToStrF(tmpflt,ffFixed,0,2) else editQRG3.Text := '0';
-        if val1.testQRG(inttostr(cfg.prQRGs[3]),tmpflt,i) then editQRG4.Text := floatToStrF(tmpflt,ffFixed,0,2) else editQRG4.Text := '0';
-        if val1.testQRG(inttostr(cfg.prQRGs[4]),tmpflt,i) then editQRG5.Text := floatToStrF(tmpflt,ffFixed,0,2) else editQRG5.Text := '0';
-        if val1.testQRG(inttostr(cfg.prQRGs[5]),tmpflt,i) then editQRG6.Text := floatToStrF(tmpflt,ffFixed,0,2) else editQRG6.Text := '0';
-        if val1.testQRG(inttostr(cfg.prQRGs[6]),tmpflt,i) then editQRG7.Text := floatToStrF(tmpflt,ffFixed,0,2) else editQRG7.Text := '0';
-        if val1.testQRG(inttostr(cfg.prQRGs[7]),tmpflt,i) then editQRG8.Text := floatToStrF(tmpflt,ffFixed,0,2) else editQRG8.Text := '0';
-        if val1.testQRG(inttostr(cfg.prQRGs[8]),tmpflt,i) then editQRG9.Text := floatToStrF(tmpflt,ffFixed,0,2) else editQRG9.Text := '0';
-        if val1.testQRG(inttostr(cfg.prQRGs[9]),tmpflt,i) then editQRG10.Text := floatToStrF(tmpflt,ffFixed,0,2) else editQRG10.Text := '0';
-        if val1.testQRG(inttostr(cfg.prQRGs[10]),tmpflt,i) then editQRG11.Text := floatToStrF(tmpflt,ffFixed,0,2) else editQRG11.Text := '0';
-        if val1.testQRG(inttostr(cfg.prQRGs[11]),tmpflt,i) then editQRG12.Text := floatToStrF(tmpflt,ffFixed,0,2) else editQRG12.Text := '0';
-        if val1.testQRG(inttostr(cfg.prQRGs[12]),tmpflt,i) then editQRG13.Text := floatToStrF(tmpflt,ffFixed,0,2) else editQRG13.Text := '0';
-        if val1.testQRG(inttostr(cfg.prQRGs[13]),tmpflt,i) then editQRG14.Text := floatToStrF(tmpflt,ffFixed,0,2) else editQRG14.Text := '0';
-        if val1.testQRG(inttostr(cfg.prQRGs[14]),tmpflt,i) then editQRG15.Text := floatToStrF(tmpflt,ffFixed,0,2) else editQRG15.Text := '0';
-        if val1.testQRG(inttostr(cfg.prQRGs[15]),tmpflt,i) then editQRG16.Text := floatToStrF(tmpflt,ffFixed,0,2) else editQRG16.Text := '0';
+
+        if val1.evalQRG(IntToStr(cfg.prQRGs[0]),'LAX',tmpflt,i,foo) then editQRG1.Text := foo else editQRG1.Text := '0.0';
+        if val1.evalQRG(IntToStr(cfg.prQRGs[1]),'LAX',tmpflt,i,foo) then editQRG2.Text := foo else editQRG1.Text := '0.0';
+        if val1.evalQRG(IntToStr(cfg.prQRGs[2]),'LAX',tmpflt,i,foo) then editQRG3.Text := foo else editQRG1.Text := '0.0';
+        if val1.evalQRG(IntToStr(cfg.prQRGs[3]),'LAX',tmpflt,i,foo) then editQRG4.Text := foo else editQRG1.Text := '0.0';
+        if val1.evalQRG(IntToStr(cfg.prQRGs[4]),'LAX',tmpflt,i,foo) then editQRG5.Text := foo else editQRG1.Text := '0.0';
+        if val1.evalQRG(IntToStr(cfg.prQRGs[5]),'LAX',tmpflt,i,foo) then editQRG6.Text := foo else editQRG1.Text := '0.0';
+        if val1.evalQRG(IntToStr(cfg.prQRGs[6]),'LAX',tmpflt,i,foo) then editQRG7.Text := foo else editQRG1.Text := '0.0';
+        if val1.evalQRG(IntToStr(cfg.prQRGs[7]),'LAX',tmpflt,i,foo) then editQRG8.Text := foo else editQRG1.Text := '0.0';
+        if val1.evalQRG(IntToStr(cfg.prQRGs[8]),'LAX',tmpflt,i,foo) then editQRG9.Text := foo else editQRG1.Text := '0.0';
+        if val1.evalQRG(IntToStr(cfg.prQRGs[9]),'LAX',tmpflt,i,foo) then editQRG10.Text := foo else editQRG1.Text := '0.0';
+        if val1.evalQRG(IntToStr(cfg.prQRGs[10]),'LAX',tmpflt,i,foo) then editQRG11.Text := foo else editQRG1.Text := '0.0';
+        if val1.evalQRG(IntToStr(cfg.prQRGs[11]),'LAX',tmpflt,i,foo) then editQRG12.Text := foo else editQRG1.Text := '0.0';
+        if val1.evalQRG(IntToStr(cfg.prQRGs[12]),'LAX',tmpflt,i,foo) then editQRG13.Text := foo else editQRG1.Text := '0.0';
+        if val1.evalQRG(IntToStr(cfg.prQRGs[13]),'LAX',tmpflt,i,foo) then editQRG14.Text := foo else editQRG1.Text := '0.0';
+        if val1.evalQRG(IntToStr(cfg.prQRGs[14]),'LAX',tmpflt,i,foo) then editQRG15.Text := foo else editQRG1.Text := '0.0';
+        if val1.evalQRG(IntToStr(cfg.prQRGs[15]),'LAX',tmpflt,i,foo) then editQRG16.Text := foo else editQRG1.Text := '0.0';
         // Tab 7 Values Colors
         //prCQColor       : TColor;
         //prQSOColor      : TColor;

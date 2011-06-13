@@ -44,7 +44,6 @@ type
         procedure setRBCallsign(msg : String);
         procedure setGrid(msg : String);
         function asciiValidate(msg : Char; mode : String) : Boolean;
-        function testQRG(const qrg : String; var qrgk : single; var qrghz : Integer) : Boolean;
         function evalQRG(const qrg : String; const mode : string; var qrgk : Double; var qrghz : Integer; var asciiqrg : String) : Boolean;
         function evalIQRG(const qrg : Integer; const mode : String; var band : String) : Boolean;
         function evalCSign(const call : String) : Boolean;
@@ -1152,8 +1151,10 @@ implementation
         // I have a single , representing a decimal seperator as in some Euro
         // conventions or a , and a . indicating a thousands demarcation and a
         // decimal demarcation.
-        result := false;
-        // The following works, temporary comment out
+        qrgk     := 0.0;
+        qrghz    := 0;
+        asciiqrg := '';
+        result   := False;
         resolved := false;
         foo := '';
         // Testing for something like 28,076.1 or 14,076.05 or 1,838.155
@@ -1383,8 +1384,7 @@ implementation
         if not resolved and not (ansiContainsText(qrg,',')) and not (ansiContainsText(qrg,'.')) Then
         Begin
              // Seems to have an integer so we'll make it simple
-             if not trystrToInt(qrg,i3) then i3 := 0;
-             resolved := true;
+             if trystrToInt(qrg,i3) then resolved := true else resolved := false;
         end;
         // Now... if resolved = true then i3 will hold an integer value.  Lets
         // see if it seems to make sense.
@@ -1416,8 +1416,10 @@ implementation
 
              if (upcase(mode)='LAX') and resolved then
              begin
-                  //result := i3;
-                  result := true;
+                  qrgk     := i3/1000;
+                  qrghz    := i3;
+                  asciiqrg := floatToStr(qrgk);
+                  result   := true;
              end;
 
              if (upcase(mode)='STRICT') and resolved then
@@ -1440,13 +1442,28 @@ implementation
                   if (i3 >  901999999) and (i3 <  928000001) then resolved := true;  //   33cm
                   if (i3 > 1269999999) and (i3 < 1300000001) then resolved := true;  //   23cm
                   //if resolved then result := i3;
-                  if resolved then result := true;
+                  if resolved then
+                  begin
+                       qrgk     := i3/1000;
+                       qrghz    := i3;
+                       asciiqrg := floatToStr(qrgk);
+                       result   := true;
+                  end;
              end;
 
-             if not resolved then result := false;
+             if not resolved then
+             begin
+                  qrgk     := 0.0;
+                  qrghz    := 0;
+                  asciiqrg := '0.0';
+                  result := false;
+             end;
         end
         else
         begin
+             qrgk     := 0.0;
+             qrghz    := 0;
+             asciiqrg := '0.0';
              result := false;
         end;
    end;
@@ -1461,22 +1478,22 @@ implementation
         // 2 KHz of a designated JT65 QRG.
         band := '';
         valid := false;
-        if (qrg >    1799999) and (qrg <    2000001) then valid := true;
-        if (qrg >    3499999) and (qrg <    4000001) then valid := true;
-        if (qrg >    6999999) and (qrg <    7300001) then valid := true;
-        if (qrg >   10099999) and (qrg <   10150001) then valid := true;
-        if (qrg >   13999999) and (qrg <   14350001) then valid := true;
-        if (qrg >   18067999) and (qrg <   18168001) then valid := true;
-        if (qrg >   20999999) and (qrg <   21450001) then valid := true;
-        if (qrg >   24889999) and (qrg <   24990001) then valid := true;
-        if (qrg >   27999999) and (qrg <   29700001) then valid := true;
-        if (qrg >   49999999) and (qrg <   54000001) then valid := true;
-        if (qrg >  143999999) and (qrg <  148000001) then valid := true;
-        if (qrg >  221999999) and (qrg <  225000001) then valid := true;
-        if (qrg >  419999999) and (qrg <  450000001) then valid := true;
-        if (qrg >  901999999) and (qrg <  928000001) then valid := true;
-        if (qrg > 1269999999) and (qrg < 1295000001) then valid := true;
-        if (qrg > 1239999999) and (qrg < 1300000001) then valid := true;
+        if (qrg >    1799999) and (qrg <    2000001) then valid := true; // 160M
+        if (qrg >    3499999) and (qrg <    4000001) then valid := true; //  80M
+        if (qrg >    6999999) and (qrg <    7300001) then valid := true; //  40M
+        if (qrg >   10099999) and (qrg <   10150001) then valid := true; //  30M
+        if (qrg >   13999999) and (qrg <   14350001) then valid := true; //  20M
+        if (qrg >   18067999) and (qrg <   18168001) then valid := true; //  17M
+        if (qrg >   20999999) and (qrg <   21450001) then valid := true; //  15M
+        if (qrg >   24889999) and (qrg <   24990001) then valid := true; //  12M
+        if (qrg >   27999999) and (qrg <   29700001) then valid := true; //  10M
+        if (qrg >   49999999) and (qrg <   54000001) then valid := true; //   6M
+        if (qrg >  143999999) and (qrg <  148000001) then valid := true; //   2M
+        if (qrg >  221999999) and (qrg <  225000001) then valid := true; //   1.25M
+        if (qrg >  419999999) and (qrg <  450000001) then valid := true; //   70cm
+        if (qrg >  901999999) and (qrg <  928000001) then valid := true; //   33cm
+        if (qrg > 1269999999) and (qrg < 1295000001) then valid := true; //   23cm
+        if (qrg > 1239999999) and (qrg < 1300000001) then valid := true; //   23cm
         if valid then
         begin
              if (qrg >    1799999) and (qrg <    2000001) then band := '160M';
@@ -1520,61 +1537,4 @@ implementation
         end;
         result := valid;
    end;
-{ TODO : Remove multiple validators for items that have more than one.  Basically, settle on one :) }
-   function TValidator.testQRG(const qrg : String; var qrgk : Single; var qrghz : Integer) : Boolean;
-   var
-        tstint   : Integer;
-        tstflt   : Double;
-   begin
-        // Takes QRG value as string in qrg if convertable returns qrg in KHz as float in qrgk
-        // qrg in Hz as integer in qrghz and true/fale if conversion works.
-        // Trying this one last time to streamline it.  According to the RTL docs tryStrToFloat
-        // takes into consideration the locale specific decimal seperator.
-        // "Description:  TryStrToFloat tries to convert the string S to a floating point value, and stores
-        //                the result in Value. It returns True if the operation was succesful, and False if
-        //                it failed. This operation takes into account the system settings for floating point
-        //                representations."
-        tstint := 0;
-        tstflt := 0.0;
-        if not tryStrToFloat(qrg,tstflt) then tstflt := 0.0;
-        if tstflt > 0 then
-        begin
-             // I now have a float > 0 so lets see if it can be evaluated as being in Hz, KHz or MHz
-             // QRG Range of interest for MHz is 1.8 ... 450 (I'll say 500 MHz)
-             // QRG Range of interest for KHz is 1800 ... 500000
-             // QRG Range of interest for Hz is 1800000 ... 500000000
-             if tstflt < 1800.0 then
-             begin
-                  // Probably MHz
-                  tstint := round(tstflt * 1000000);
-             end;
-             if (tstflt > 500) and (tstflt < 1800000) then
-             begin
-                  // Probably KHz
-                  tstint := round(tstflt * 1000);
-             end;
-             if tstflt > 500000 then
-             begin
-                  // Probably Hz
-                  tstint := round(tstflt);
-             end;
-             if tstint > 0 then
-             begin
-                  // I think I have something in Hz now
-                  if (tstint > 1799999) and (tstint < 500000001) then
-                  begin
-                       qrgk   := tstint/1000;
-                       qrghz  := tstint;
-                       result := true;
-                  end
-                  else
-                  begin
-                       qrgk   := 0.0;
-                       qrghz  := 0;
-                       result := false;
-                  end;
-             end;
-        end;
-   end;
-
 end.

@@ -24,8 +24,8 @@
         <UnitName Value="maincode"/>
         <EditorIndex Value="2"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="516"/>
-        <CursorPos X="24" Y="515"/>
+        <TopLine Value="2172"/>
+        <CursorPos X="18" Y="2176"/>
         <UsageCount Value="215"/>
         <Bookmarks Count="2">
           <Item0 X="1" Y="1406" ID="1"/>
@@ -300,8 +300,8 @@
         <UnitName Value="guidedconfig"/>
         <EditorIndex Value="8"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="437"/>
-        <CursorPos X="11" Y="437"/>
+        <TopLine Value="2784"/>
+        <CursorPos X="1" Y="2800"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
@@ -310,10 +310,11 @@
         <Filename Value="valobject.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="valobject"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="0"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="1513"/>
-        <CursorPos X="111" Y="1531"/>
+        <TopLine Value="1464"/>
+        <CursorPos X="83" Y="1496"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
       </Unit28>
@@ -368,11 +369,10 @@
         <Filename Value="serialobject.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="serialobject"/>
-        <IsVisibleTab Value="True"/>
         <EditorIndex Value="4"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="292"/>
-        <CursorPos X="1" Y="306"/>
+        <TopLine Value="289"/>
+        <CursorPos X="1" Y="299"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
       </Unit33>
@@ -443,7 +443,7 @@
         <WindowIndex Value="0"/>
         <TopLine Value="295"/>
         <CursorPos X="38" Y="299"/>
-        <UsageCount Value="141"/>
+        <UsageCount Value="144"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
       </Unit39>
