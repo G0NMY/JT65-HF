@@ -24,12 +24,12 @@
         <UnitName Value="maincode"/>
         <EditorIndex Value="2"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="2172"/>
-        <CursorPos X="18" Y="2176"/>
+        <TopLine Value="1299"/>
+        <CursorPos X="17" Y="1325"/>
         <UsageCount Value="215"/>
         <Bookmarks Count="2">
-          <Item0 X="1" Y="1406" ID="1"/>
-          <Item1 X="5" Y="1526" ID="0"/>
+          <Item0 X="1" Y="1405" ID="1"/>
+          <Item1 X="5" Y="1525" ID="0"/>
         </Bookmarks>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
@@ -310,11 +310,10 @@
         <Filename Value="valobject.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="valobject"/>
-        <IsVisibleTab Value="True"/>
         <EditorIndex Value="0"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="1464"/>
-        <CursorPos X="83" Y="1496"/>
+        <TopLine Value="1"/>
+        <CursorPos X="82" Y="2"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
       </Unit28>
@@ -426,10 +425,11 @@
         <Filename Value="spot.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="spot"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="5"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="852"/>
-        <CursorPos X="27" Y="867"/>
+        <TopLine Value="1348"/>
+        <CursorPos X="1" Y="1364"/>
         <UsageCount Value="215"/>
         <Loaded Value="True"/>
       </Unit38>
@@ -443,7 +443,7 @@
         <WindowIndex Value="0"/>
         <TopLine Value="295"/>
         <CursorPos X="38" Y="299"/>
-        <UsageCount Value="144"/>
+        <UsageCount Value="197"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
       </Unit39>

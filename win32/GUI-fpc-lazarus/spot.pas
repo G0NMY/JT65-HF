@@ -1347,24 +1347,24 @@ implementation
                                 end
                                 else
                                 begin
-                                     fname := 'C:\spotdebug.txt';
-                                     AssignFile(debugf, fname);
-                                     If FileExists(fname) Then Append(debugf) Else Rewrite(debugf);
-                                     writeln(debugf,'Exchange:  ' + prSpots[i].exchange);
-                                     writeLn(debugf,'     URL:  ' + url);
-                                     writeln(debugf,'  Result:  ' + rbresult.Text);
-                                     CloseFile(debugf);
+                                     //fname := 'C:\spotdebug.txt';
+                                     //AssignFile(debugf, fname);
+                                     //If FileExists(fname) Then Append(debugf) Else Rewrite(debugf);
+                                     //writeln(debugf,'Exchange:  ' + prSpots[i].exchange);
+                                     //writeLn(debugf,'     URL:  ' + url);
+                                     //writeln(debugf,'  Result:  ' + rbresult.Text);
+                                     //CloseFile(debugf);
                                      foo := 'EXCEPTION';
                                      resolved := False;
                                 end;
                              Except
-                                fname := 'C:\spotdebug.txt';
-                                AssignFile(debugf, fname);
-                                If FileExists(fname) Then Append(debugf) Else Rewrite(debugf);
-                                writeln(debugf,'Exchange:  ' + prSpots[i].exchange);
-                                writeLn(debugf,'     URL:  ' + url);
-                                writeln(debugf,'  Result:  ' + 'Exception code called');
-                                CloseFile(debugf);
+                                //fname := 'C:\spotdebug.txt';
+                                //AssignFile(debugf, fname);
+                                //If FileExists(fname) Then Append(debugf) Else Rewrite(debugf);
+                                //writeln(debugf,'Exchange:  ' + prSpots[i].exchange);
+                                //writeLn(debugf,'     URL:  ' + url);
+                                //writeln(debugf,'  Result:  ' + 'Exception code called');
+                                //CloseFile(debugf);
                                 foo := 'EXCEPTION';
                                 resolved := false;
                              End;
@@ -1376,13 +1376,13 @@ implementation
                              else
                              begin
 { TODO : Pass back error to main code so user can be notified of problem }
-                                  fname := 'C:\spotdebug.txt';
-                                  AssignFile(debugf, fname);
-                                  If FileExists(fname) Then Append(debugf) Else Rewrite(debugf);
-                                  writeln(debugf,'Exchange:  ' + prSpots[i].exchange);
-                                  writeLn(debugf,'     URL:  ' + url);
-                                  writeln(debugf,'  Result:  ' + foo);
-                                  CloseFile(debugf);
+                                  //fname := 'C:\spotdebug.txt';
+                                  //AssignFile(debugf, fname);
+                                  //If FileExists(fname) Then Append(debugf) Else Rewrite(debugf);
+                                  //writeln(debugf,'Exchange:  ' + prSpots[i].exchange);
+                                  //writeLn(debugf,'     URL:  ' + url);
+                                  //writeln(debugf,'  Result:  ' + foo);
+                                  //CloseFile(debugf);
                                   prSpots[i].rbsent:= true;
                                   //if foo = 'QRG' then prSpots[i].rbsent       := true;  // RB Server says bad QRG so don't try to send this again...
                                   //if foo = 'NO' then prSpots[i].rbsent        := true; { TODO : Fix this (Set back to true) once I decide how to better handle retries }
@@ -1395,13 +1395,13 @@ implementation
                         else
                         begin
                              inc(prRBDiscard);
-                             fname := 'C:\spotdebug.txt';
-                             AssignFile(debugf, fname);
-                             If FileExists(fname) Then Append(debugf) Else Rewrite(debugf);
-                                  writeln(debugf,'Exchange:  ' + prSpots[i].exchange);
-                                  writeLn(debugf,'     URL:  ' + url);
-                                  writeln(debugf,'  Result:  ' + foo);
-                             CloseFile(debugf);
+                             //fname := 'C:\spotdebug.txt';
+                             //AssignFile(debugf, fname);
+                             //If FileExists(fname) Then Append(debugf) Else Rewrite(debugf);
+                             //     writeln(debugf,'Exchange:  ' + prSpots[i].exchange);
+                             //     writeLn(debugf,'     URL:  ' + url);
+                             //     writeln(debugf,'  Result:  ' + foo);
+                             //CloseFile(debugf);
                              // Excahnge did not parse to something of use or qrg invalid.  Mark it sent so it can be cleared.
                              prSpots[i].rbsent   := true;
                              prSpots[i].pskrsent := true;
