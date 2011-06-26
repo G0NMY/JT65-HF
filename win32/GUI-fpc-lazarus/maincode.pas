@@ -1896,7 +1896,8 @@ end;
 procedure TForm1.btnLogQSOClick(Sender: TObject);
 var
    ss   : String;
-   fqrg : Single;
+   fqrg : Double;
+   iqrg : Integer;
    sqrg : String;
 begin
      log.Form2.edLogCall.Text := edHisCall.Text;
@@ -1910,9 +1911,10 @@ begin
      log.Form2.edLogETime.Text := qsoETime;
      log.Form2.edLogSReport.Text := edSigRep.Text;
      fqrg := 0.0;
+     iqrg := 0;
      sqrg := '0';
-     //fqrg := StrToFloat(cfgvtwo.Form6.rigQRG.Text);
-     fqrg := fqrg/1000000;
+     val1.evalQRG(editManQRG.Text,'LAX',fqrg,iqrg,sqrg);
+     fqrg := iqrg/1000000;
      sqrg := FloatToStr(fqrg);
      log.Form2.edLogFrequency.Text := sqrg;
      log.logmycall := ctrl.myCall;
@@ -2669,6 +2671,7 @@ Begin
      rbUseMixChange(rbUseLeft);
      rbUseRight.Checked := guidedconfig.cfg.useAudioRight;
      rbUseMixChange(rbUseRight);
+     if not rbUseLeft.Checked and not rbUseRight.Checked then rbUseLeft.Checked := true;
      tbDgainL.Position := guidedconfig.cfg.dgainL;
      tbDgainLChange(tbDgainL);
      tbDGainR.Position := guidedconfig.cfg.dgainR;
