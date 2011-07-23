@@ -612,7 +612,7 @@ type
 var
   Form7  : TForm7;
   val1   : valobject.TValidator;
-  rig1   : rigobject.TRadio;
+  rig0   : rigobject.TRadio;
   cfg    : guidedconfig.TSettings;
   dsp    : paobject.TpaDSP;
   ser    : serialobject.TSerial;
@@ -2469,24 +2469,24 @@ var
 begin
      Memo1.Clear;
      // Set the rig control method [none, hrd, commander, omni ]
-     if rbHRD.Checked then rig1.rigcontroller       := 'hrd';
-     if rbOmni.Checked then rig1.rigcontroller      := 'omni';
-     if rbNoCAT.Checked then rig1.rigcontroller     := 'none';
-     if rbCommander.Checked then rig1.rigcontroller := 'commander';
-     if (rig1.rigcontroller = 'hrd') or (rig1.rigcontroller = 'omni') or (rig1.rigcontroller = 'none') or (rig1.rigcontroller = 'commander') then
+     if rbHRD.Checked then rig0.rigcontroller       := 'hrd';
+     if rbOmni.Checked then rig0.rigcontroller      := 'omni';
+     if rbNoCAT.Checked then rig0.rigcontroller     := 'none';
+     if rbCommander.Checked then rig0.rigcontroller := 'commander';
+     if (rig0.rigcontroller = 'hrd') or (rig0.rigcontroller = 'omni') or (rig0.rigcontroller = 'none') or (rig0.rigcontroller = 'commander') then
      begin
-          rig1.pollRig();
-          foo := 'QRG = ' + intToStr(rig1.qrg) + ' Hz, Set QRG = 28076000 Hz, ';
-          rig1.setQRG(28076000);
+          rig0.pollRig();
+          foo := 'QRG = ' + intToStr(rig0.qrg) + ' Hz, Set QRG = 28076000 Hz, ';
+          rig0.setQRG(28076000);
           sleep(500);
-          rig1.pollRig();
-          foo := foo + 'QRG = ' + intToStr(rig1.qrg) + ' Hz';
-          foo := foo + sLineBreak + 'Rig = ' + rig1.rig;
+          rig0.pollRig();
+          foo := foo + 'QRG = ' + intToStr(rig0.qrg) + ' Hz';
+          foo := foo + sLineBreak + 'Rig = ' + rig0.rig;
           if cbCatPtt.Checked then
           begin
-               rig1.PTT(true);
+               rig0.PTT(true);
                sleep(1000);
-               rig1.PTT(false);
+               rig0.PTT(false);
           end;
           Memo1.Text := foo;
      end;
@@ -2842,7 +2842,7 @@ initialization
   {$I guidedconfig.lrs}
   prepop := False;
   val1   := valobject.TValidator.create();
-  rig1   := rigobject.TRadio.create();
+  rig0   := rigobject.TRadio.create();
   cfg    := guidedconfig.TSettings.create();
   dsp    := paobject.TpaDSP.create();
   ser    := serialobject.TSerial.create();

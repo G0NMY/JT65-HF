@@ -1,7 +1,7 @@
 object Form9: TForm9
-  Left = 643
+  Left = -2
   Height = 485
-  Top = 142
+  Top = 3
   Width = 900
   BorderIcons = [biSystemMenu, biMinimize]
   Caption = 'Stations Heard'

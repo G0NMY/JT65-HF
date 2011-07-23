@@ -190,59 +190,63 @@ end;
          foo : String;
          i   : integer;
     Begin
-         prddeInst := 0;
-         result := '';
-         if windows.DdeInitialize(@prddeInst,prhszCallback,prddeMode,0) = 0 then
-         begin
-              prddeError := 'No Error';
-              prhszService := windows.DdeCreateStringHandle(prddeInst, prddeService, CP_WINANSI);
-              prhszTopic   := windows.DdeCreateStringHandle(prddeInst, prddeTopic, CP_WINANSI);
-              prhszItem    := windows.DdeCreateStringHandle(prddeInst, prddeItem, CP_WINANSI);
-              if (prhszService = 0) or (prhszTopic = 0) or (prhszItem = 0) then
-              begin
-                   result := '';
-                   prddeError := 'DDE String Alloc Error:  ' + errorToStr(windows.DdeGetLastError(prddeInst));
-              end
-              else
-              begin
-                   prddeError := 'No Error';
-                   prddehConv := windows.DdeConnect(prddeInst, prhszService, prhszTopic, prddePContext);
-                   if prddehConv < 1 Then
-                   begin
-                        result := '';
-                        prddeError := 'Connect DDE Error:  ' + errorToStr(windows.DdeGetLastError(prddeInst));
-                   end
-                   else
-                   Begin
-                        prddeError := 'No Error';
-                        // We're talking...
-                        prhszResult := windows.DdeClientTransaction(nil, 0, prddehConv, prhszItem, CF_TEXT, XTYP_REQUEST, 5000, Nil);
-                        if prhszResult > 0 then
-                        begin
-                             prddeError := 'No Error';
-                             foo := '';
-                             for i := 0 to 4095 do begin prdataBuff[i] := 0; end;
-                             prddeTemp := windows.DdeGetData(prhszResult,@prdataBuff[0],SizeOf(prdataBuff),0);
-                             for i := 0 to prddeTemp-1 do begin foo := foo + chr(prdataBuff[i]); end;
-                             result := foo;
-                        end
-                        else
-                        begin
-                             result := '';
-                             prddeError := 'DDE Client Transaction Error:  ' + errorToStr(windows.DdeGetLastError(prddeInst));
-                        end;
-                   end;
-                   windows.DdeDisconnect(prddehConv);
-                   windows.DdeFreeStringHandle(prddeInst,prhszService);
-                   windows.DdeFreeStringHandle(prddeInst,prhszTopic);
-                   windows.DdeFreeStringHandle(prddeInst,prhszItem);
-                   windows.DdeUninitialize(prddeInst);
-              end;
-         end
-         else
-         begin
-              result := '';
-              prddeError := 'Initialize DDE Error:  ' + errorToStr(windows.DdeGetLastError(prddeInst));
+         try
+            prddeInst := 0;
+            result := '';
+            if windows.DdeInitialize(@prddeInst,prhszCallback,prddeMode,0) = 0 then
+            begin
+                 prddeError := 'No Error';
+                 prhszService := windows.DdeCreateStringHandle(prddeInst, prddeService, CP_WINANSI);
+                 prhszTopic   := windows.DdeCreateStringHandle(prddeInst, prddeTopic, CP_WINANSI);
+                 prhszItem    := windows.DdeCreateStringHandle(prddeInst, prddeItem, CP_WINANSI);
+                 if (prhszService = 0) or (prhszTopic = 0) or (prhszItem = 0) then
+                 begin
+                      result := '';
+                      prddeError := 'DDE String Alloc Error:  ' + errorToStr(windows.DdeGetLastError(prddeInst));
+                 end
+                 else
+                 begin
+                      prddeError := 'No Error';
+                      prddehConv := windows.DdeConnect(prddeInst, prhszService, prhszTopic, prddePContext);
+                      if prddehConv < 1 Then
+                      begin
+                           result := '';
+                           prddeError := 'Connect DDE Error:  ' + errorToStr(windows.DdeGetLastError(prddeInst));
+                      end
+                      else
+                      Begin
+                           prddeError := 'No Error';
+                           // We're talking...
+                           prhszResult := windows.DdeClientTransaction(nil, 0, prddehConv, prhszItem, CF_TEXT, XTYP_REQUEST, 5000, Nil);
+                           if prhszResult > 0 then
+                           begin
+                                prddeError := 'No Error';
+                                foo := '';
+                                for i := 0 to 4095 do begin prdataBuff[i] := 0; end;
+                                prddeTemp := windows.DdeGetData(prhszResult,@prdataBuff[0],SizeOf(prdataBuff),0);
+                                for i := 0 to prddeTemp-1 do begin foo := foo + chr(prdataBuff[i]); end;
+                                result := foo;
+                           end
+                           else
+                           begin
+                                result := '';
+                                prddeError := 'DDE Client Transaction Error:  ' + errorToStr(windows.DdeGetLastError(prddeInst));
+                           end;
+                      end;
+                      windows.DdeDisconnect(prddehConv);
+                      windows.DdeFreeStringHandle(prddeInst,prhszService);
+                      windows.DdeFreeStringHandle(prddeInst,prhszTopic);
+                      windows.DdeFreeStringHandle(prddeInst,prhszItem);
+                      windows.DdeUninitialize(prddeInst);
+                 end;
+            end
+            else
+            begin
+                 result := '';
+                 prddeError := 'Initialize DDE Error:  ' + errorToStr(windows.DdeGetLastError(prddeInst));
+            end;
+         except
+           halt;
          end;
     end;
 

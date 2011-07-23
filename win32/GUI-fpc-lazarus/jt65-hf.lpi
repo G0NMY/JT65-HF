@@ -55,7 +55,7 @@
         <PackageName Value="LCL"/>
       </Item4>
     </RequiredPackages>
-    <Units Count="40">
+    <Units Count="41">
       <Unit0>
         <Filename Value="jt65-hf.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -274,6 +274,11 @@
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="heard"/>
       </Unit39>
+      <Unit40>
+        <Filename Value="rig.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="rig"/>
+      </Unit40>
     </Units>
   </ProjectOptions>
   <CompilerOptions>
@@ -294,8 +299,6 @@
         <OverflowChecks Value="True"/>
         <StackChecks Value="True"/>
       </Checks>
-      <TargetCPU Value="i386"/>
-      <TargetOS Value="win32"/>
     </CodeGeneration>
     <Linking>
       <Debugging>

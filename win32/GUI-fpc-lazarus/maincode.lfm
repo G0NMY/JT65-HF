@@ -600,9 +600,9 @@ object Form1: TForm1
     end
     object rbUseLeft: TRadioButton
       Left = 106
-      Height = 19
+      Height = 18
       Top = 11
-      Width = 36
+      Width = 34
       Caption = '-21'
       Checked = True
       Font.Height = -11
@@ -615,9 +615,9 @@ object Form1: TForm1
     end
     object rbUseRight: TRadioButton
       Left = 106
-      Height = 19
+      Height = 18
       Top = 32
-      Width = 36
+      Width = 34
       Caption = '-21'
       Font.Height = -11
       Font.Name = 'Arial'
@@ -798,7 +798,7 @@ object Form1: TForm1
       Left = 296
       Height = 20
       Top = 13
-      Width = 69
+      Width = 67
       Caption = 'Smooth'
       Font.Height = -13
       Font.Name = 'Arial'
@@ -865,9 +865,9 @@ object Form1: TForm1
   end
   object chkEnTX: TCheckBox
     Left = 288
-    Height = 19
+    Height = 18
     Top = 72
-    Width = 48
+    Width = 46
     Caption = 'EATX'
     Enabled = False
     Font.Height = -11
@@ -878,10 +878,10 @@ object Form1: TForm1
   end
   object chkAutoTxDF: TCheckBox
     Left = 684
-    Height = 19
+    Height = 17
     Hint = 'If Checked TX and RX DF will always be same.'
     Top = 478
-    Width = 20
+    Width = 18
     Checked = True
     Font.Height = -12
     Font.Name = 'Arial'
@@ -959,9 +959,9 @@ object Form1: TForm1
   end
   object chkNB: TCheckBox
     Left = 684
-    Height = 19
+    Height = 18
     Top = 528
-    Width = 84
+    Width = 82
     Caption = 'Noise Blank'
     Font.Height = -11
     Font.Name = 'Arial'
@@ -972,9 +972,9 @@ object Form1: TForm1
   end
   object chkAFC: TCheckBox
     Left = 684
-    Height = 19
+    Height = 18
     Top = 504
-    Width = 42
+    Width = 40
     Caption = 'AFC'
     Font.Height = -11
     Font.Name = 'Arial'
@@ -985,9 +985,9 @@ object Form1: TForm1
   end
   object chkMultiDecode: TCheckBox
     Left = 684
-    Height = 19
+    Height = 18
     Top = 552
-    Width = 97
+    Width = 95
     Caption = 'Multi-decoder'
     Checked = True
     Font.Height = -11
@@ -1050,7 +1050,7 @@ object Form1: TForm1
     Left = 556
     Height = 20
     Top = 251
-    Width = 167
+    Width = 165
     Caption = 'TX Text (13 Characters)'
     Font.Height = -13
     Font.Name = 'Arial'
@@ -1063,7 +1063,7 @@ object Form1: TForm1
     Left = 556
     Height = 20
     Top = 303
-    Width = 108
+    Width = 106
     Caption = 'TX Generated'
     Checked = True
     Font.Color = clRed
@@ -1120,7 +1120,7 @@ object Form1: TForm1
     Left = 556
     Height = 20
     Top = 588
-    Width = 82
+    Width = 80
     Caption = 'Enable RB'
     Checked = True
     OnChange = cbEnRBChange
@@ -1131,7 +1131,7 @@ object Form1: TForm1
     Left = 556
     Height = 20
     Top = 611
-    Width = 100
+    Width = 98
     Caption = 'Enable PSKR'
     Checked = True
     OnChange = cbEnRBChange

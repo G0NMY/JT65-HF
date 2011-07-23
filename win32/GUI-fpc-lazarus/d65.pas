@@ -26,20 +26,8 @@ unit d65;
 interface
 
 uses
-    //Classes, SysUtils, CTypes, globalData, samplerate, math, Process, diagout,
-    //Types, StrUtils, rawDec;
-
-    Classes,
-    Types,
-    SysUtils,
-    StrUtils,
-    CTypes,
-    globalData,
-    samplerate,
-    math,
-    Process,
-    diagout,
-    rawDec;
+    Classes, Types, SysUtils, StrUtils, CTypes, globalData, samplerate, math,
+    Process, diagout, rawDec;
 
 Const
   JT_DLL = 'jt65.dll';

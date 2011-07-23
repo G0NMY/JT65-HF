@@ -31,7 +31,7 @@ uses
   CTypes, StrUtils, Math, ExtCtrls, ComCtrls, Spin, Windows, DateUtils,
   encode65, globalData, ClipBrd, rawdec, guiConfig, verHolder, dispatchobject,
   Menus, log, diagout, synautil, waterfall, d65, spectrum, about, FileUtil,
-  guidedconfig, valobject, rigobject, portaudio, adc, dac, spot, heard; //audiodiag, ;
+  guidedconfig, valobject, portaudio, adc, dac, spot, heard, rig;
 
 type
   { TForm1 }
@@ -303,6 +303,13 @@ type
             Constructor Create(CreateSuspended : boolean);
     end;
 
+    rigControlThread = class(TThread)
+       protected
+             procedure Execute; override;
+       public
+             Constructor Create(CreateSuspended : boolean);
+    end;
+
     rbHeard = record
        callsign : String;
        count    : Integer;
@@ -318,6 +325,7 @@ type
 
      decoderThread              : decodeThread;
      rbThread                   : rbcThread;
+     rigThread                  : rigControlThread;
 
      mnlooper, ij               : Integer;
      sLevel1, sLevel2, sLevelM  : Integer;
@@ -355,7 +363,6 @@ type
      cwidMsg                    : PChar;
      d65sending                 : PChar;
 
-     rig                        : rigobject.TRadio;
      mval                       : valobject.TValidator;
      ctrl                       : dispatchobject.TDispatcher;
      rb                         : spot.TSpot;
@@ -369,6 +376,12 @@ begin
 end;
 
 constructor rbcThread.Create(CreateSuspended : boolean);
+begin
+     FreeOnTerminate := True;
+     inherited Create(CreateSuspended);
+end;
+
+constructor rigControlThread.Create(CreateSuspended : boolean);
 begin
      FreeOnTerminate := True;
      inherited Create(CreateSuspended);
@@ -472,27 +485,68 @@ end;
 function TForm1.utcTime(): TSYSTEMTIME;
 Var
    st : TSYSTEMTIME;
+   tempqrg : double;
 Begin
      st.Hour:=0;
      GetSystemTime(st);
      result := st;
 End;
 
+procedure rigControlThread.Execute;
+var
+   st        : TSYSTEMTIME;
+   qrgpolled : Boolean;
+   lastPoll  : Word;
+   counter   : Word;
+   pttState  : Boolean;
+begin
+     counter := 0;
+     st.Hour := 0;
+     lastPoll := 0;
+     qrgpolled := False;
+     pttState := False;
+     While not rigThread.Terminated and not rigThread.suspended do
+     begin
+          GetSystemTime(st);
+          if not qrgpolled then
+          begin
+               rig.rigReadQRG := True;
+               qrgpolled := True;
+               lastPoll := st.second;
+          end
+          else
+          begin
+               if ((st.Second = 0) or (st.second = 5) or (st.second = 10) or
+               (st.second = 15) or (st.second = 20) or (st.second = 25) or
+               (st.second = 30) or (st.second = 35) or (st.second = 40) or
+               (st.second = 45) or (st.second = 50) or (st.second = 55))
+               And not (lastPoll = st.second) then
+               begin
+                    lastPoll := st.second;
+                    qrgPolled := false;
+               end;
+          end;
+          if not rig.rigBusy And (not qrgpolled or not (pttState = rig.rigptt)) then
+          begin
+               counter := 0;
+               rig.poll();
+               pttState := rig.rigPTT;
+          end
+          else
+          begin
+               inc(counter);
+          end;
+          //if counter > 10 then
+          //begin
+               //halt;
+          //end;
+          sleep(100);
+     end;
+end;
+
 procedure rbcThread.Execute;
 begin
-     if rb.busy then
-     begin
-          halt;
-     end;
-     if Terminated then
-     begin
-          halt;
-     end;
-     if Suspended then
-     begin
-          halt;
-     end;
-     while not Terminated and not Suspended do
+     while not rbThread.Terminated and not rbThread.Suspended do
      begin
           Try
              if Length(TrimLeft(TrimRight(guidedconfig.cfg.rbcallsign)))>0 Then
@@ -551,7 +605,7 @@ end;
 
 procedure decodeThread.Execute;
 begin
-     while not Terminated and not Suspended and not d65.glinprog do
+     while not decoderThread.Terminated and not decoderThread.Suspended and not d65.glinprog do
      begin
           Try
           if ctrl.d65doDecodePass And not d65.glinprog Then
@@ -741,7 +795,7 @@ begin
        globalData.txInProgress := False;
        dac.dacEnTX:= False;
        sleep(100);
-       rig1.PTT(false);
+       rig.rigPTT := False;
        sleep(100);
        ctrl.nextAction := 2;
        ctrl.txNextPeriod := False;
@@ -1174,7 +1228,7 @@ begin
      if cbEnPSKR.Checked then guidedconfig.cfg.usePSKR := true else guidedconfig.cfg.usePSKR := false;
      // GUI elements that are maintained in configuration file have now been updated for saving.
      guidedconfig.Form7.saveConfig(guidedconfig.cfg.cfgdir+'\jt65hf.ini');
-     rig1.PTT(false);
+     rig.rigPTT := False;
      //if globalData.rbLoggedIn Then
      //Begin
      //     cfgvtwo.glrbcLogout := True;
@@ -1197,11 +1251,14 @@ begin
           if termcount > 9 then break;
      end;
      decoderThread.Suspend;
+     decoderThread.Terminate;
      rbThread.Suspend;
      rbThread.Terminate;
-     decoderThread.Terminate;
+     rigThread.Suspend;
+     rigThread.Terminate;
      if not rbThread.FreeOnTerminate Then rbThread.Free;
      if not decoderThread.FreeOnTerminate Then decoderThread.Free;
+     if not rigThread.FreeOnTerminate Then rigThread.Free;
      portAudio.Pa_StopStream(paInStream);
      portAudio.Pa_StopStream(paOutStream);
      termcount := 0;
@@ -2543,12 +2600,16 @@ var
    Folder             : array[0..MAX_PATH] of Char;
    lfile              : TextFile;
    tbol               : Boolean;
+   tempfoo : String;
 Begin
      // This procedure is only executed once at program start
      // Initialize the decoder output listbox, need this here now in case
      // I need to display an error message later in the initializer.
      timer1.Enabled := false;
      timer2.Enabled := false;
+     heard.Form9.Hide;
+     // Setup rig controller thread
+     rig.init();
      Form1.ListBox1.Clear;
      ctrl.firstReport := True;
      ctrl.itemsIn := False;
@@ -2710,26 +2771,14 @@ Begin
      // This sets the full station callsign prefix callsign suffix (Will be either just callsign or prefix/callsign or callsign/suffix)
      ctrl.myCall := guidedconfig.cfg.getPrefix() + guidedconfig.cfg.callsign + guidedconfig.cfg.getSuffix();
      ctrl.myGrid := guidedconfig.cfg.grid;
-     rig1.rigcontroller := guidedconfig.cfg.CATMethod;
-{ TODO : Handle exceptions generated when rig control software is not running! }
-     rig1.pollRig();  // Go ahead and attempt to read the rig and update the main gui [remember, even no rig control uses rig control :) ]
-     sleep(100);
-{ TODO : Change this to use QRG validator code! }
-     if not (upcase(rig1.rigcontroller) = 'NONE') then
-     begin
-          //editManQRG.Text := floatToStr(rig1.qrg/1000);
-          //
-          //mval.evalQRG(IntToStr(rig1.qrg),'LAX', qrgk, qrghz, editManQRG.Text);
-     end;
+     rig.rigController := guidedconfig.cfg.CATMethod;
      // Setup PTT controller
-     rig1.useAltPTT := guidedconfig.cfg.AltPTT;
-     if guidedconfig.cfg.PTTMethod = 'VOX' then rig1.useVOXPTT := true else rig1.useVOXPTT := false;
-     if guidedconfig.cfg.PTTMethod = 'COM' then rig1.useSerialPTT := true else rig1.useSerialPTT := false;
-     if guidedconfig.cfg.PTTMethod = 'CAT' then rig1.useCATPTT := true else rig1.useCATPTT := false;
-     if guidedconfig.cfg.PTTMethod = 'OFF' then rig1.noTX := true else rig1.noTX := false;
-     rig1.pttlines := guidedconfig.cfg.pttLines;
-     rig1.pttport := guidedconfig.cfg.PTTPort;
-     rig1.ptt(false);
+     rig.rigAltPTT :=  guidedconfig.cfg.AltPTT;
+     rig.rigPTTMethod := guidedconfig.cfg.PTTMethod;
+     rig.rigPTTLines := guidedconfig.cfg.pttLines;
+     rig.rigPTTPort := guidedconfig.cfg.PTTPort;
+     rig.rigPTT := false;
+     rigThread := rigControlThread.Create(False);
      // Init PA.  If this doesn't work there's no reason to continue.
      //audiodiag.Form6.Label5.Visible := True;
      //audiodiag.Form6.Show;
@@ -2963,7 +3012,6 @@ Begin
      Begin
           ctrl.nextMinute := st.Minute+1;
      End;
-     // Create the decoder thread with param False so it starts.
      d65.glinProg := False;
      // Create threads with param False so they start.
      decoderThread := decodeThread.Create(False);
@@ -3002,6 +3050,14 @@ Begin
      rb.errDir    := guidedconfig.cfg.logdir;
      rb.dbToCSV('');
      //if ctrl.soundvalid then label2.Caption := 'In: ' + guidedconfig.cfg.soundInS + ' Out: ' + guidedconfig.cfg.soundOutS else Label2.Caption := 'Sound I/O INVALID';
+     // Poll rig controller (Even if under manual rig control this still applies)
+     { TODO : Change this to use QRG validator code! }
+     if not (upcase(rig.rigcontroller) = 'NONE') then
+     begin
+          //editManQRG.Text := floatToStr(rig1.qrg/1000);
+          //
+          //mval.evalQRG(IntToStr(rig1.qrg),'LAX', qrgk, qrghz, editManQRG.Text);
+     end;
 End;
 
 procedure TForm1.updateSR();
@@ -3672,7 +3728,7 @@ Begin
                          dac.d65txBufferIdx := 0;
                          dac.d65txBufferPtr := @dac.d65txBuffer[0];
                          rxCount := 0;
-                         rig1.PTT(true);
+                         rig.rigPTT := true;;
                          globalData.txInProgress := True;
                          dac.dacEnTX := True;
                          foo := '';
@@ -3730,7 +3786,7 @@ Begin
                Begin
                     globalData.txInProgress := False;
                     dac.dacEnTX := False;
-                    rig1.PTT(false);
+                    rig.rigPTT := False;
                     ctrl.thisAction := 5;
                     ctrl.actionSet := False;
                     curMsg := '';
@@ -3783,7 +3839,7 @@ Begin
                          dac.d65txBufferPtr := @dac.d65txBuffer[0];
 
                          rxCount := 0;
-                         rig1.PTT(true);
+                         rig.rigPTT := True;
                          globalData.txInProgress := True;
                          dac.dacEnTX := True;
                          foo := '';
@@ -3841,7 +3897,7 @@ Begin
                if (dac.d65txBufferIdx >= d65nwave+11025) Or (dac.d65txBufferIdx >= 661503-(11025 DIV 2)) Or (ctrl.thisSecond > 48) Then
                Begin
                     // I have a full TX cycle when d65txBufferIdx >= 538624 or thisSecond > 48
-                    rig1.PTT(false);
+                    rig.rigPTT := false;
                     ctrl.actionSet := False;
                     ctrl.thisAction := 5;
                     globalData.txInProgress := False;
@@ -3902,120 +3958,6 @@ Begin
                rawdec.Form5.ListBox1.Items.Delete(idx);
           end;
      End;
-     // Is it time for an auto QSY? (Abort auto QSY if TX enabled...)
-     //if not Form1.chkEnTX.Checked And globalData.hrdcatControlcurrentRig.hrdAlive Then
-     //Begin
-     //     if cfgvtwo.Form6.cbEnableQSY1.Checked Then
-     //     Begin
-     //          if (st.Hour = cfgvtwo.Form6.qsyHour1.Value) And (st.Minute = cfgvtwo.Form6.qsyMinute1.Value) Then
-     //          Begin
-     //               // QSY time slot 1
-     //               If TryStrToInt(cfgvtwo.Form6.edQRGQSY1.Text, ifoo) Then
-     //               Begin
-     //                    if ifoo > 1799999 Then
-     //                    Begin
-     //                         if cfgvtwo.Form6.rbHRD4.Checked Then globalData.hrdVersion :=4;
-     //                         if cfgvtwo.Form6.rbHRD5.Checked Then globalData.hrdVersion :=5;
-     //                         if catControl.writeHRD('[' + globalData.hrdcatControlcurrentRig.radioContext + '] set frequency-hz ' + cfgvtwo.Form6.edQRGQSY1.Text) Then
-     //                         Begin
-     //                              if cfgvtwo.Form6.cbATQSY1.Checked Then
-     //                              Begin
-     //                              // Auto-tune cycle requested
-     //                              end;
-     //                         end;
-     //                    end;
-     //               end;
-     //          end;
-     //     end;
-     //     if cfgvtwo.Form6.cbEnableQSY2.Checked Then
-     //     Begin
-     //          if (st.Hour = cfgvtwo.Form6.qsyHour2.Value) And (st.Minute = cfgvtwo.Form6.qsyMinute2.Value) Then
-     //          Begin
-     //               // QSY time slot 2
-     //               If TryStrToInt(cfgvtwo.Form6.edQRGQSY2.Text, ifoo) Then
-     //               Begin
-     //                    if ifoo > 1799999 Then
-     //                    Begin
-     //                         if cfgvtwo.Form6.rbHRD4.Checked Then globalData.hrdVersion :=4;
-     //                         if cfgvtwo.Form6.rbHRD5.Checked Then globalData.hrdVersion :=5;
-     //                         if catControl.writeHRD('[' + globalData.hrdcatControlcurrentRig.radioContext + '] set frequency-hz ' + cfgvtwo.Form6.edQRGQSY2.Text) Then
-     //                         Begin
-     //                              if cfgvtwo.Form6.cbATQSY2.Checked Then
-     //                              Begin
-     //                              // Auto-tune cycle requested
-     //                              end;
-     //                         end;
-     //                    end;
-     //               end;
-     //          end;
-     //     end;
-     //     if cfgvtwo.Form6.cbEnableQSY3.Checked Then
-     //     Begin
-     //          if (st.Hour = cfgvtwo.Form6.qsyHour3.Value) And (st.Minute = cfgvtwo.Form6.qsyMinute3.Value) Then
-     //          Begin
-     //               // QSY time slot 3
-     //               If TryStrToInt(cfgvtwo.Form6.edQRGQSY3.Text, ifoo) Then
-     //               Begin
-     //                    if ifoo > 1799999 Then
-     //                    Begin
-     //                         if cfgvtwo.Form6.rbHRD4.Checked Then globalData.hrdVersion :=4;
-     //                         if cfgvtwo.Form6.rbHRD5.Checked Then globalData.hrdVersion :=5;
-     //                         if catControl.writeHRD('[' + globalData.hrdcatControlcurrentRig.radioContext + '] set frequency-hz ' + cfgvtwo.Form6.edQRGQSY3.Text) Then
-     //                         Begin
-     //                              if cfgvtwo.Form6.cbATQSY3.Checked Then
-     //                              Begin
-     //                              // Auto-tune cycle requested
-     //                              end;
-     //                         end;
-     //                    end;
-     //               end;
-     //          end;
-     //     end;
-     //     if cfgvtwo.Form6.cbEnableQSY4.Checked Then
-     //     Begin
-     //          if (st.Hour = cfgvtwo.Form6.qsyHour4.Value) And (st.Minute = cfgvtwo.Form6.qsyMinute4.Value) Then
-     //          Begin
-     //               // QSY time slot 4
-     //               If TryStrToInt(cfgvtwo.Form6.edQRGQSY4.Text, ifoo) Then
-     //               Begin
-     //                    if ifoo > 1799999 Then
-     //                    Begin
-     //                         if cfgvtwo.Form6.rbHRD4.Checked Then globalData.hrdVersion :=4;
-     //                         if cfgvtwo.Form6.rbHRD5.Checked Then globalData.hrdVersion :=5;
-     //                         if catControl.writeHRD('[' + globalData.hrdcatControlcurrentRig.radioContext + '] set frequency-hz ' + cfgvtwo.Form6.edQRGQSY4.Text) Then
-     //                         Begin
-     //                              if cfgvtwo.Form6.cbATQSY4.Checked Then
-     //                              Begin
-     //                              // Auto-tune cycle requested
-     //                              end;
-     //                         end;
-     //                    end;
-     //               end;
-     //          end;
-     //     end;
-     //     if cfgvtwo.Form6.cbEnableQSY5.Checked Then
-     //     Begin
-     //          if (st.Hour = cfgvtwo.Form6.qsyHour5.Value) And (st.Minute = cfgvtwo.Form6.qsyMinute5.Value) Then
-     //          Begin
-     //               // QSY time slot 5
-     //               If TryStrToInt(cfgvtwo.Form6.edQRGQSY5.Text, ifoo) Then
-     //               Begin
-     //                    if ifoo > 1799999 Then
-     //                    Begin
-     //                         if cfgvtwo.Form6.rbHRD4.Checked Then globalData.hrdVersion :=4;
-     //                         if cfgvtwo.Form6.rbHRD5.Checked Then globalData.hrdVersion :=5;
-     //                         if catControl.writeHRD('[' + globalData.hrdcatControlcurrentRig.radioContext + '] set frequency-hz ' + cfgvtwo.Form6.edQRGQSY5.Text) Then
-     //                         Begin
-     //                              if cfgvtwo.Form6.cbATQSY5.Checked Then
-     //                              Begin
-     //                              // Auto-tune cycle requested
-     //                              end;
-     //                         end;
-     //                    end;
-     //               end;
-     //          end;
-     //     end;
-     //end;
 End;
 
 procedure TForm1.processOncePerSecond(st : TSystemTime);
@@ -4098,9 +4040,10 @@ Begin
      //if cfgvtwo.Form6.cbUseRB.Checked Then Form1.Label30.Visible := True else Form1.Label30.Visible := False;
 
      // Force Rig control read cycle.
-     if (st.Second = 0) or (st.Second = 15) or (st.Second = 30) or (st.Second = 45) Then rig1.pollRig();
+     {TODO : Have rig controller polling take place on once per tick code }
+     //if (st.Second = 0) or (st.Second = 15) or (st.Second = 30) or (st.Second = 45) Then rig1.pollRig();
 { TODO : Fix this to use validator! }
-     if not (upcase(rig1.rigcontroller) = 'NONE') then editManQRG.Text := floatToStr(rig1.qrg/1000);
+     if not (upcase(rig.rigController) = 'NONE') then editManQRG.Text := floatToStr(rig.rigqrg/1000);
 { TODO : Add code to allow setting QRG via CAT control if it is enabled. }
      // Set manual entry ability.
      //if (cfgvtwo.glcatBy = 'none') and not cfgvtwo.glsi57Set Then Form1.editManQRG.Enabled := True else Form1.editManQRG.Enabled := False;
@@ -4459,31 +4402,9 @@ initialization
   {$I maincode.lrs}
   // Setup class/object
   ctrl := dispatchobject.TDispatcher.create();  // This object holds all the many variable that controls program flow
-  rig  := rigobject.TRadio.create();  // Rig control object (Used even if control is manual)
+  //rig  := rigobject.TRadio.create();  // Rig control object (Used even if control is manual)
   rb   := spot.TSpot.create(); // Used even if spotting is disabled
   mval := valobject.TValidator.create(); // This creates a access point to validation routines
-  // rbc runs in its own thread and will send reports (if user ebables) at 3
-  // and 33 seconds.  The thread will be triggered at each time interval and
-  // suspended once rbc.rbcActive is False.
-  // Initialize rbRecords array
-  //for mnlooper := 0 to 499 do
-  //begin
-  //     rbc.glrbReports[mnlooper].rbTimeStamp := '';
-  //     rbc.glrbReports[mnlooper].rbNumSync   := '';
-  //     rbc.glrbReports[mnlooper].rbSigLevel  := '';
-  //     rbc.glrbReports[mnlooper].rbDeltaTime := '';
-  //     rbc.glrbReports[mnlooper].rbDeltaFreq := '';
-  //     rbc.glrbReports[mnlooper].rbSigW      := '';
-  //     rbc.glrbReports[mnlooper].rbCharSync  := '';
-  //     rbc.glrbReports[mnlooper].rbDecoded   := '';
-  //     rbc.glrbReports[mnlooper].rbFrequency := '';
-  //     rbc.glrbReports[mnlooper].rbProcessed := True;
-  //     rbc.glrbReports[mnlooper].rbCached    := False;
-  //end;
-  //for mnlooper := 0 to 499 do
-  //begin
-  //     rbc.glrbsLastCall[mnlooper] := '';
-  //end;
   // The decoder runs in its own thread and will process the rxBuffer any time
   // globalData.d65doDecodePass = True.  I also need to define whether I want to do
   // multi-decode, the low..high multi-decode range and the step size or, for
@@ -4532,8 +4453,6 @@ initialization
   // Miscelanious operational vars.
   ctrl.runOnce := True;
   spectrum.specFirstRun := True;
-  //cfgvtwo.glrbcLogin := False;
-  //cfgvtwo.glrbcLogout := False;
   ctrl.rbcPing := False;
   ctrl.dorbReport := False;
   ctrl.alreadyHere := False; // Used to detect an overrun of timer servicing loop.
@@ -4562,19 +4481,13 @@ initialization
   //
   exchange     := '';
   //adc.adcT         := 0;
-
   //adc.adcE         := 0;
-
   ctrl.firstReport  := True;
   ctrl.useBuffer := 0;
   //adc.adcLDgain := 0;
-
   //adc.adcRDgain := 0;
-
   lastMsg := '';
   curMsg := '';
-  //cfgvtwo.glautoSR := False;
-  //rbc.glrbNoInet := True;
   rbRunOnce := True;
   ctrl.thisTX := '';
   ctrl.lastTX := '';
@@ -4588,7 +4501,6 @@ initialization
   ctrl.doCAT := False;
   sopQRG := 0;
   eopQRG := 0;
-  //cfgvtwo.glcatBy := 'none';
   ctrl.doRB := False;
   spectrum.specfftCount := 0;
   spectrum.specSpeed2 := 1;
@@ -4602,8 +4514,6 @@ initialization
   globalData.spectrumComputing65 := False;
   globalData.audioComputing := False;
   ctrl.resyncLoop := False;
-  //adc.adcRunning := False;
-
   d65.glnd65firstrun := True;
   d65.glbinspace := 100;
   d65.glDFTolerance := 100;
@@ -4616,7 +4526,6 @@ initialization
   // Create stream for spectrum image
   globalData.specMs65 := TMemoryStream.Create;
   //adc.adcECount := 0;
-
   ctrl.reDecode := False;
   // Clear rewind buffers
   For mnlooper := 0 to 661503 do

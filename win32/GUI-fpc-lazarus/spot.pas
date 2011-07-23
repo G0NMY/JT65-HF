@@ -313,8 +313,8 @@ implementation
     // Lazarus and FPC have several formal database routines along with various
     // data aware controls.  DB methods range from simple in memory DB all the
     // way up to using complex SQL systems like MySQL.  After looking at all the
-    // options I came to the conclusion that none of those really offer what I'm
-    // looking for.  Thus rolling my own.
+    // options I came to the conclusion that no built in option really offer what
+    // I'm looking for.  Thus rolling my own.
     // Back in the 1980s I wrote a primitive DB system that ran on a 8086 DOS
     // platform using Turbo Pascal and, believe it or not, what I need to do here
     // is similar in its requirements.  So, unlike way back when, I choose to do
@@ -1406,7 +1406,7 @@ implementation
                              prSpots[i].rbsent   := true;
                              prSpots[i].pskrsent := true;
                         end;
-                        sleep(100); // Lets not overload the RB server with little or no delay between spot posts.
+                        sleep(50); // Lets not overload the RB server with little or no delay between spot posts.
                    end;
               end;
          end;

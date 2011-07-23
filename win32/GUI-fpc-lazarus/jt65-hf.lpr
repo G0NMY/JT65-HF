@@ -32,7 +32,7 @@ uses
   PSKReporter, synaser, adif, log, diagout, waterfall, d65, about, rigobject,
   ddeobject, omnirigobject, civobject, ddehrdobject, guidedconfig, valobject,
   paobject, srgraph, hrdinterface5, hrdobject, serialobject, adclite, daclite,
-  audiodiag, dispatchobject, spot, heard;
+  audiodiag, dispatchobject, spot, heard, rig;
 
 {$R *.res}
 

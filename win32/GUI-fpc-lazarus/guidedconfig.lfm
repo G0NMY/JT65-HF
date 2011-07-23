@@ -1664,7 +1664,7 @@ object Form7: TForm7
         Left = 4
         Height = 23
         Top = 197
-        Width = 267
+        Width = 265
         Caption = 'Disable all spotting functionality.'
         Font.Height = -16
         Font.Name = 'Arial'
@@ -1690,7 +1690,7 @@ object Form7: TForm7
           Left = 6
           Height = 23
           Top = 8
-          Width = 357
+          Width = 355
           Caption = 'W6CQZ JT65 spotting network (RB Network)'
           OnChange = cbRBEnableChange
           TabOrder = 0
@@ -1699,7 +1699,7 @@ object Form7: TForm7
           Left = 422
           Height = 23
           Top = 8
-          Width = 125
+          Width = 123
           Caption = 'PSK Reporter'
           OnChange = cbRBEnableChange
           TabOrder = 1

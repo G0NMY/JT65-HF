@@ -94,6 +94,7 @@ end;
 
 procedure TCIVCommander.pollRig();
 begin
+     try
      // DDE Object at long last completed.  Below is example of its use.  I've used it to
      // (so far) interface with CI-V Commander and HRD.
      dde1.ddeService := 'CI-V Commander';
@@ -110,6 +111,9 @@ begin
      prRigType := dde1.ddeGetItem;
      dde1.ddeItem := 'RadioName';
      prRigName := dde1.ddeGetItem;
+     except
+       halt;
+     end;
 end;
 
 procedure TCIVCommander.setRig(msg : String);
