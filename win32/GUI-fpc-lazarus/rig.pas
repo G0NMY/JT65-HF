@@ -35,7 +35,6 @@ implementation
        if rigPTTMethod = 'OFF' then rig1.noTX := true else rig1.noTX := false;
        rig1.rigcontroller := rigController;
        tempFoo := rig1.rigController;
-
        if rigPTT then rig1.PTT(true) else rig1.PTT(false);
        if rigReadQRG then
        begin

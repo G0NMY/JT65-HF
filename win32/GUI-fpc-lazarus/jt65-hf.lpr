@@ -27,7 +27,7 @@ uses
   cthreads, cmem,
   {$ENDIF}{$ENDIF}
   Interfaces, // this includes the LCL widgetset
-  Forms, tachartlazaruspkg, dbflaz, maincode, portaudio, encode65, globalData,
+  Forms, tachartlazaruspkg, maincode, portaudio, encode65, globalData,
   spectrum, cmaps, fftw_jl, adc, samplerate, dac, rawdec, guiConfig, verHolder,
   PSKReporter, synaser, adif, log, diagout, waterfall, d65, about, rigobject,
   ddeobject, omnirigobject, civobject, ddehrdobject, guidedconfig, valobject,

@@ -79,7 +79,9 @@ type
     Label15: TLabel;
     Label16: TLabel;
     Label17: TLabel;
+    Label18 : TLabel ;
     Label19: TLabel;
+    Label2 : TLabel ;
     Label20: TLabel;
     Label22: TLabel;
     Label23: TLabel;
@@ -102,6 +104,7 @@ type
     Label39: TLabel;
     Label4: TLabel;
     Label40: TLabel;
+    Label41 : TLabel ;
     Label5 : TLabel ;
     Label50: TLabel;
     Label6: TLabel;
@@ -366,6 +369,11 @@ type
      mval                       : valobject.TValidator;
      ctrl                       : dispatchobject.TDispatcher;
      rb                         : spot.TSpot;
+
+     pttState,pttDelta,qrgDelta : Boolean;
+     forceqrgread               : Boolean;
+     wcounter,pcounter,qcounter : Word;
+
 implementation
 
 { TForm1 }
@@ -493,53 +501,34 @@ Begin
 End;
 
 procedure rigControlThread.Execute;
-var
-   st        : TSYSTEMTIME;
-   qrgpolled : Boolean;
-   lastPoll  : Word;
-   counter   : Word;
-   pttState  : Boolean;
 begin
-     counter := 0;
-     st.Hour := 0;
-     lastPoll := 0;
-     qrgpolled := False;
+     wcounter := 0;
+     qcounter := 0;
+     pcounter := 0;
      pttState := False;
+     pttDelta := False;
+     qrgDelta := False;
      While not rigThread.Terminated and not rigThread.suspended do
      begin
-          GetSystemTime(st);
-          if not qrgpolled then
+          if qrgDelta then rig.rigReadQRG := True;
+          if not rig.rigBusy then
           begin
-               rig.rigReadQRG := True;
-               qrgpolled := True;
-               lastPoll := st.second;
-          end
-          else
-          begin
-               if ((st.Second = 0) or (st.second = 5) or (st.second = 10) or
-               (st.second = 15) or (st.second = 20) or (st.second = 25) or
-               (st.second = 30) or (st.second = 35) or (st.second = 40) or
-               (st.second = 45) or (st.second = 50) or (st.second = 55))
-               And not (lastPoll = st.second) then
+               wcounter := 0;
+               if qrgDelta or pttDelta then
                begin
-                    lastPoll := st.second;
-                    qrgPolled := false;
+                    if qrgDelta then inc(qcounter);
+                    if pttDelta then inc(pcounter);
+                    if qrgDelta then rig.rigReadQRG := true else rig.rigReadQRG := False;
+                    rig.rigPTT := pttState;
+                    rig.poll();
+                    if qrgDelta then qrgDelta := False;
+                    if pttDelta then pttDelta := False;
                end;
-          end;
-          if not rig.rigBusy And (not qrgpolled or not (pttState = rig.rigptt)) then
-          begin
-               counter := 0;
-               rig.poll();
-               pttState := rig.rigPTT;
           end
           else
           begin
-               inc(counter);
+               inc(wcounter);
           end;
-          //if counter > 10 then
-          //begin
-               //halt;
-          //end;
           sleep(100);
      end;
 end;
@@ -795,7 +784,8 @@ begin
        globalData.txInProgress := False;
        dac.dacEnTX:= False;
        sleep(100);
-       rig.rigPTT := False;
+       pttState := False;
+       pttDelta := True;
        sleep(100);
        ctrl.nextAction := 2;
        ctrl.txNextPeriod := False;
@@ -1228,7 +1218,8 @@ begin
      if cbEnPSKR.Checked then guidedconfig.cfg.usePSKR := true else guidedconfig.cfg.usePSKR := false;
      // GUI elements that are maintained in configuration file have now been updated for saving.
      guidedconfig.Form7.saveConfig(guidedconfig.cfg.cfgdir+'\jt65hf.ini');
-     rig.rigPTT := False;
+     pttState := False;
+     pttDelta := True;
      //if globalData.rbLoggedIn Then
      //Begin
      //     cfgvtwo.glrbcLogout := True;
@@ -2777,7 +2768,8 @@ Begin
      rig.rigPTTMethod := guidedconfig.cfg.PTTMethod;
      rig.rigPTTLines := guidedconfig.cfg.pttLines;
      rig.rigPTTPort := guidedconfig.cfg.PTTPort;
-     rig.rigPTT := false;
+     pttState := False;
+     pttDelta := True;
      rigThread := rigControlThread.Create(False);
      // Init PA.  If this doesn't work there's no reason to continue.
      //audiodiag.Form6.Label5.Visible := True;
@@ -3728,7 +3720,8 @@ Begin
                          dac.d65txBufferIdx := 0;
                          dac.d65txBufferPtr := @dac.d65txBuffer[0];
                          rxCount := 0;
-                         rig.rigPTT := true;;
+                         pttState := True;
+                         pttDelta := True;
                          globalData.txInProgress := True;
                          dac.dacEnTX := True;
                          foo := '';
@@ -3786,7 +3779,8 @@ Begin
                Begin
                     globalData.txInProgress := False;
                     dac.dacEnTX := False;
-                    rig.rigPTT := False;
+                    pttState := False;
+                    pttDelta := True;
                     ctrl.thisAction := 5;
                     ctrl.actionSet := False;
                     curMsg := '';
@@ -3839,7 +3833,8 @@ Begin
                          dac.d65txBufferPtr := @dac.d65txBuffer[0];
 
                          rxCount := 0;
-                         rig.rigPTT := True;
+                         pttState := True;
+                         pttDelta := True;
                          globalData.txInProgress := True;
                          dac.dacEnTX := True;
                          foo := '';
@@ -3897,7 +3892,8 @@ Begin
                if (dac.d65txBufferIdx >= d65nwave+11025) Or (dac.d65txBufferIdx >= 661503-(11025 DIV 2)) Or (ctrl.thisSecond > 48) Then
                Begin
                     // I have a full TX cycle when d65txBufferIdx >= 538624 or thisSecond > 48
-                    rig.rigPTT := false;
+                    pttState := False;
+                    pttDelta := True;
                     ctrl.actionSet := False;
                     ctrl.thisAction := 5;
                     globalData.txInProgress := False;
@@ -3972,13 +3968,14 @@ Begin
      begin
           rbthread.Suspended := false;
      end;
-
-     //if rbthread.Suspended then
-     //begin
-          //halt;
-     //end;
-
      ctrl.doRB := true;
+     if (st.second = 0) or (st.second = 30) or (st.second = 45) or
+        (st.second = 55) or forceqrgread then qrgDelta := True;
+     if forceqrgread then forceqrgread := false;
+
+     Label2.Caption := 'Rig control overruns = ' + IntToStr(wcounter);
+     Label18.Caption := 'QRG Cycles = ' + IntToStr(qcounter);
+     Label41.Caption := 'PTT Cycles = ' + IntToStr(pcounter);
      // Keep popup menu items in sync
      Form1.MenuItem22.Caption := floatToStr(guidedconfig.cfg.qrgList[0]/1000);
      Form1.MenuItem23.Caption := floatToStr(guidedconfig.cfg.qrgList[1]/1000);
@@ -4020,25 +4017,19 @@ Begin
      Form1.MenuItem41.Caption := guidedconfig.cfg.macroList[21];
      Form1.MenuItem42.Caption := guidedconfig.cfg.macroList[22];
      Form1.MenuItem43.Caption := guidedconfig.cfg.macroList[23];
-
      // RB Check
      pskr := rb.pskrTickle;
      heard.Form9.Label3.Caption := 'RB Reports Sent:  ' + rb.RBcount;
      heard.Form9.Label4.Caption := 'Discarded:  ' + rb.rbDiscard;
      heard.Form9.Label5.Caption := 'Rejected:  ' + rb.RBfail;
-
      heard.Form9.Label6.Caption := 'PSKR Reports Sent:  ' + IntToStr(rb.pskrCallsSent);
      heard.Form9.Label7.Caption := 'Buffered:  ' + IntToStr(rb.pskrCallsBuff);
      heard.Form9.Label8.Caption := 'Discarded:  ' + IntToStr(rb.pskrCallsDisc);
-
      heard.Form9.Label23.Caption := 'Stats DB Added:  ' + rb.dbfCount;
      heard.Form9.Label24.Caption := 'Updates:  ' + rb.dbfUCount;
-
      Label30.Caption := rb.rbCount;
      Label19.Caption := rb.pskrCount;
-
      //if cfgvtwo.Form6.cbUseRB.Checked Then Form1.Label30.Visible := True else Form1.Label30.Visible := False;
-
      // Force Rig control read cycle.
      {TODO : Have rig controller polling take place on once per tick code }
      //if (st.Second = 0) or (st.Second = 15) or (st.Second = 30) or (st.Second = 45) Then rig1.pollRig();
@@ -4070,36 +4061,9 @@ Begin
          Form1.Label12.Font.Color := clBlack;
          Form1.editManQRG.Font.Color := clBlack;
      end;
-     //If globalData.rbLoggedIn Then Form1.Label30.Font.Color := clBlack else Form1.Label30.Font.Color := clRed;
-
      // Update AU Levels display
      displayAudio(audioAve1, audioAve2);
      if Form1.chkMultiDecode.Checked Then ctrl.watchMulti := False;
-     // Update rbstats once per minute at second = 30
-     If st.Second = 30 Then
-     Begin
-          // Process the calls heard list
-          //for i := 0 to 499 do
-          //Begin
-               //if Length(rbc.glrbsLastCall[i]) > 0 Then
-               //Begin
-               //     updateList(rbc.glrbsLastCall[i]);
-               //     rbc.glrbsLastCall[i] := '';
-               //End;
-          //End;
-          // Now update the calls heard string grid
-          //cfgvtwo.Form6.sgCallsHeard.RowCount := 1;
-          //for i := 0 to 499 do
-          //begin
-          //     if rbsHeardList[i].count > 0 Then
-          //     Begin
-          //          cfgvtwo.Form6.sgCallsHeard.InsertColRow(False,1);
-          //          cfgvtwo.Form6.sgCallsHeard.Cells[0,1] := rbsHeardList[i].callsign;
-          //          cfgvtwo.Form6.sgCallsHeard.Cells[1,1] := IntToStr(rbsHeardList[i].count);
-          //     End;
-          //end;
-     end;
-
      // Update clock display
      ctrl.lastSecond := st.Second;
      foo := Format('%2.2D',[st.Year]);
@@ -4176,10 +4140,6 @@ Begin
                //globalData.rbRunOnce := False;
           //End;
      //End;
-
-     // Check for RB thread error conditon.
-     //if not ctrl.primed then rbThreadCheck();
-
      // Check to see if user needs a search completed from the heard unit
      if heard.pubdoDB Then
      Begin
@@ -4234,7 +4194,6 @@ Begin
                heard.pubhaveDB := false;
           end;
      end;
-
 end;
 
 procedure TForm1.oncePerTick();
@@ -4540,5 +4499,6 @@ initialization
   // These will, hopefully, be set true soon.
   ctrl.soundvalid := False;
   ctrl.fftvalid   := False;
+forceqrgread := true;
 end.
 
