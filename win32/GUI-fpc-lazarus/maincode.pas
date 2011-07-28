@@ -777,32 +777,24 @@ end;
 procedure TForm1.btnHaltTxClick(Sender: TObject);
 begin
   // Halt an upcoming or ongoing TX
-  if globalData.txInProgress Then
-  Begin
-       // TX is in progress.  Abort it!
-       // Unkey the TX, terminate the PA output stream and set op state to idle.
-       globalData.txInProgress := False;
-       dac.dacEnTX:= False;
-       sleep(100);
-       pttState := False;
-       pttDelta := True;
-       sleep(100);
-       ctrl.nextAction := 2;
-       ctrl.txNextPeriod := False;
-       Form1.chkEnTX.Checked := False;
-       ctrl.thisAction := 2;
-       ctrl.actionSet := False;
-       ctrl.txCount := 0;
-  end
-  else
-  begin
-       // TX was requested but has not started.  Cancel request.
-       if ctrl.nextAction = 3 then ctrl.nextAction := 2;
-       if ctrl.txNextPeriod Then ctrl.txNextPeriod := False;
-       chkEnTX.Checked := False;
-       ctrl.actionSet := False;
-       ctrl.txCount := 0;
-  end;
+  globalData.txInProgress := False;
+  dac.dacEnTX:= False;
+  sleep(100);
+  pttState := False;
+  pttDelta := True;
+  sleep(100);
+  ctrl.nextAction := 2;
+  ctrl.txNextPeriod := False;
+  Form1.chkEnTX.Checked := False;
+  ctrl.thisAction := 2;
+  ctrl.actionSet := False;
+  ctrl.txCount := 0;
+  // TX was requested but has not started.  Cancel request.
+  if ctrl.nextAction = 3 then ctrl.nextAction := 2;
+  if ctrl.txNextPeriod Then ctrl.txNextPeriod := False;
+  chkEnTX.Checked := False;
+  ctrl.actionSet := False;
+  ctrl.txCount := 0;
 end;
 
 procedure TForm1.btnRawDecoderClick(Sender: TObject);
