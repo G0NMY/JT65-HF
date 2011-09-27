@@ -12,7 +12,8 @@ object Form6: TForm6
   Constraints.MinHeight = 542
   Constraints.MinWidth = 800
   OnCreate = FormCreate
-  LCLVersion = '0.9.28.2'
+  LCLVersion = '0.9.30'
+  Visible = True
   object Notebook1: TNotebook
     Left = 8
     Height = 488
@@ -303,6 +304,7 @@ object Form6: TForm6
         ShowHidden = False
         ButtonWidth = 23
         NumGlyphs = 0
+        MaxLength = 0
         TabOrder = 11
       end
       object cbRestoreMulti: TCheckBox
@@ -440,8 +442,8 @@ object Form6: TForm6
           Width = 69
           Caption = 'Radio 1'
           Checked = True
-          State = cbChecked
           TabOrder = 1
+          TabStop = True
         end
         object radioOmni2: TRadioButton
           Left = 140
@@ -450,7 +452,6 @@ object Form6: TForm6
           Width = 69
           Caption = 'Radio 2'
           TabOrder = 2
-          TabStop = False
         end
       end
       object RadioGroup1: TRadioGroup
@@ -488,7 +489,6 @@ object Form6: TForm6
           Width = 129
           Caption = 'Version 4'
           TabOrder = 1
-          TabStop = False
         end
         object rbHRD5: TRadioButton
           Left = 249
@@ -497,8 +497,8 @@ object Form6: TForm6
           Width = 127
           Caption = 'Version 5'
           Checked = True
-          State = cbChecked
           TabOrder = 2
+          TabStop = True
         end
       end
       object RadioGroup2: TRadioGroup
@@ -524,7 +524,7 @@ object Form6: TForm6
           Left = 6
           Height = 23
           Top = 6
-          Width = 84
+          Width = 126
           Caption = 'Enable'
           OnChange = chkUseCommanderChange
           TabOrder = 0
@@ -1070,7 +1070,7 @@ object Form6: TForm6
         Left = 228
         Height = 17
         Top = 85
-        Width = 284
+        Width = 282
         Caption = '[Optional] Antenna Description for PSK Reporter.'
         ParentColor = False
       end
@@ -1286,8 +1286,8 @@ object Form6: TForm6
         Left = 3
         Height = 17
         Top = 277
-        Width = 91
-        Caption = '11 - 24920 KHz'
+        Width = 90
+        Caption = '11 - 24917 KHz'
         Font.Height = -13
         Font.Name = 'Arial'
         Font.Style = [fsBold]
@@ -1490,7 +1490,7 @@ object Form6: TForm6
         Left = 358
         Height = 17
         Top = 341
-        Width = 23
+        Width = 22
         Caption = '11 -'
         Font.Height = -13
         Font.Name = 'Arial'
@@ -1538,7 +1538,7 @@ object Form6: TForm6
         Left = 543
         Height = 129
         Top = 191
-        Width = 210
+        Width = 209
         Caption = 'Right clicking in the Free Text'#13#10'entry box in the main program'#13#10'screen will present a dialog'#13#10'of these message definitions.'#13#10'Note.  The first 3 fixed entries'#13#10'send the JT65 shorthand'#13#10'sequences and should only be'#13#10'used when absolutely necessary.'
         Font.Height = -13
         Font.Name = 'Arial'
@@ -1857,7 +1857,6 @@ object Form6: TForm6
         Width = 197
         Caption = 'Multiply Entered Frequency X2'
         TabOrder = 2
-        TabStop = False
       end
       object radioSI570X1: TRadioButton
         Left = 12
@@ -1866,7 +1865,6 @@ object Form6: TForm6
         Width = 197
         Caption = 'Multiply Entered Frequency X1'
         TabOrder = 3
-        TabStop = False
       end
       object radioSI570X4: TRadioButton
         Left = 12
@@ -1875,8 +1873,8 @@ object Form6: TForm6
         Width = 197
         Caption = 'Multiply Entered Frequency X4'
         Checked = True
-        State = cbChecked
         TabOrder = 6
+        TabStop = True
       end
       object cbSi570PTT: TCheckBox
         Left = 316
@@ -1914,8 +1912,8 @@ object Form6: TForm6
         Top = 13
         Width = 168
         Alignment = taCenter
-        Color = clLime
         CharCase = ecUppercase
+        Color = clLime
         Font.Height = -19
         Font.Name = 'Courier New'
         Font.Style = [fsBold]
@@ -1965,8 +1963,8 @@ object Form6: TForm6
         Top = 59
         Width = 168
         Alignment = taCenter
-        Color = clRed
         CharCase = ecUppercase
+        Color = clRed
         Font.Height = -19
         Font.Name = 'Courier New'
         Font.Style = [fsBold]
@@ -2016,8 +2014,8 @@ object Form6: TForm6
         Top = 109
         Width = 168
         Alignment = taCenter
-        Color = clSilver
         CharCase = ecUppercase
+        Color = clSilver
         Font.Height = -19
         Font.Name = 'Courier New'
         Font.Style = [fsBold]

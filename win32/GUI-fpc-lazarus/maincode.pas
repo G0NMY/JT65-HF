@@ -2054,7 +2054,7 @@ Begin
      If Sender=Form1.MenuItem7 Then Form1.editManQRG.Text := '18102';
      If Sender=Form1.MenuItem8 Then Form1.editManQRG.Text := '18106';
      If Sender=Form1.MenuItem9 Then Form1.editManQRG.Text := '21076';
-     If Sender=Form1.MenuItem10 Then Form1.editManQRG.Text := '24920';
+     If Sender=Form1.MenuItem10 Then Form1.editManQRG.Text := '24917';
      If Sender=Form1.MenuItem11 Then Form1.editManQRG.Text := '28076';
      If Sender=Form1.MenuItem12 Then Form1.editManQRG.Text := '1838';
      If Sender=Form1.MenuItem22 Then Form1.editManQRG.Text := cfgvtwo.Form6.edUserQRG1.Text;
@@ -3352,17 +3352,17 @@ end;
 
 procedure TForm1.initializerCode();
 var
-   paInS, paOutS, foo : String;
-   i, ifoo, kverr     : Integer;
-   paDefApi           : Integer;
-   paDefApiDevCount   : Integer;
-   vint, tstint       : Integer;
-   vstr               : PChar;
-   st                 : TSYSTEMTIME;
-   tstflt             : Double;
-   //fname, fna         : String;
-   fname              : String;
-   verUpdate          : Boolean;
+   paInS, paOutS, foo  : String;
+   i, ifoo, kverr      : Integer;
+   paDefApi            : Integer;
+   paDefApiDevCount    : Integer;
+   vint, tstint        : Integer;
+   painputs, paoutputs : Integer;
+   vstr                : PChar;
+   st                  : TSYSTEMTIME;
+   tstflt              : Double;
+   fname               : String;
+   verUpdate           : Boolean;
 Begin
      kverr := 0;
      while FileExists('KVASD.DAT') do
@@ -3461,16 +3461,12 @@ Begin
      //globalData.rbID := '1';
      rbc.glrbCallsign := TrimLeft(TrimRight(cfgvtwo.Form6.editPSKRCall.Text)) + '-2';
      // Init PA.  If this doesn't work there's no reason to continue.
-     //showmessage('initializing portaudio');
      PaResult := portaudio.Pa_Initialize();
      If PaResult <> 0 Then ShowMessage('Fatal Error.  Could not initialize portaudio.');
      If PaResult = 0 Then dlog.fileDebug('Portaudio initialized OK.');
-     //showmessage('initialized portaudio');
      // Now I need to populate the Sound In/Out pulldowns.  First I'm going to get
      // a list of the portaudio API descriptions.  For now I'm going to stick with
-     // the default windows interface, but in the future I may look at directsound
-     // usage as well.
-     //showmessage('getting portaudio default api');
+     // the default windows interface.
      paDefApi := portaudio.Pa_GetDefaultHostApi();
      if paDefApi >= 0 Then
      Begin
@@ -3480,8 +3476,37 @@ Begin
           paDefApiDevCount := portaudio.Pa_GetHostApiInfo(paDefApi)^.deviceCount;
           i := paDefApiDevCount-1;
 
-          //showmessage('portaudio reports ' + intToStr(paDefApiDevCount) + ' device nodes');
+          // Get a count of input and output devices.  If input OR output
+          // device count = 0 then CAN NOT continue as I need both.
 
+          painputs  := 0;
+          paoutputs := 0;
+
+          While i >= 0 do
+          Begin
+               If portaudio.Pa_GetDeviceInfo(i)^.maxInputChannels > 0 Then inc(painputs);
+               If portaudio.Pa_GetDeviceInfo(i)^.maxOutputChannels > 0 Then inc(paoutputs);
+               dec(i);
+          end;
+
+          // Test for invaLid sound configuration based on device count.
+          if (painputs=0) OR (paoutputs=0) Then
+          Begin
+               // Unworkable hardware configuration.  Inform and exit.
+               foo := 'Sound hardware error!' + sLineBreak + sLineBreak;
+               if painputs = 0 Then foo :=  foo + 'Your system has no input devices present.' + sLineBreak +
+                                            'Perhaps the sound device is unplugged or' + sLineBreak +
+                                            'requires an input cable to be present.';
+               if paoutputs = 0 Then foo := foo + 'Your system has no output devices present.' + sLineBreak +
+                                            'Perhaps the sound device is unplugged or' + sLineBreak +
+                                            'requires an output cable to be present.';
+               foo := foo + sLineBreak +    'JT65-HF can not continue.  Please check' + sLineBreak +
+                                            'your sound setup and try again.';
+               showmessage(foo);
+               halt;
+          end;
+
+          i := paDefApiDevCount-1;
           While i >= 0 do
           Begin
                // I need to populate the pulldowns with the devices supported by
@@ -4349,9 +4374,6 @@ Begin
      dlog.fileDebug('Setting up ADC.');
      //showmessage('Setting up audio input');
 
-     // Working in for handling mono.  Need to try to open stereo then, if fail,
-     // attempt mono.
-
      foo := cfgvtwo.Form6.cbAudioIn.Items.Strings[cfgvtwo.Form6.cbAudioIn.ItemIndex];
      paInParams.device := StrToInt(foo[1..2]);
      paInParams.sampleFormat := paInt16;
@@ -4360,25 +4382,19 @@ Begin
      ppaInParams := @paInParams;
      // Set rxBuffer index to start of array.
      adc.d65rxBufferIdx := 0;
-     //madc.d65rxBufferIdx := 0;
 
      adc.adcT := 0;
-     //madc.adcT := 0;
 
      // Set ptr to start of buffer.
      adc.d65rxBufferPtr := @adc.d65rxBuffer[0];
-     //madc.d65rxBufferPtr := @madc.d65rxBuffer[0];
 
      // Initialize rx stream.
      paInParams.channelCount := 2;
      paResult := portaudio.Pa_OpenStream(paInStream,ppaInParams,Nil,11025,2048,0,@adc.adcCallback,Pointer(Self));
-     //if paResult <> 0 Then
-     //Begin
-          //paInParams.channelCount := 1;
-          //paResult := portaudio.Pa_OpenStream(paInStream,ppaInParams,Nil,11025,2048,0,@madc.adcCallback,Pointer(Self));
-     //end;
      if paResult <> 0 Then
      Begin
+          // Was unable to open, perhaps the default device will work?
+
           ShowMessage('PA Error:  ' + StrPas(portaudio.Pa_GetErrorText(paResult)) + ' Could not setup for stereo input.  Program will exit.');
           halt;
      end
