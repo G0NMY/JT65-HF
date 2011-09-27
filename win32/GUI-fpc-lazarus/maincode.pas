@@ -272,6 +272,7 @@ type
     procedure si570Raiseptt();
     procedure si570Lowerptt();
     Function  ValidateCallsign(csign : String) : Boolean;
+    function  evalGrid(const grid : String) : Boolean;
 
   private
     { private declarations }
@@ -4591,7 +4592,7 @@ Begin
      // Verify callsign meets the JT65 protocol requirements.
      if ValidateCallsign(cfgvtwo.glmycall) then continue := true else continue := false;
      // Verify grid is a valid 4 or 6 character value
-
+     if evalGrid(cfgvtwo.Form6.edMyGrid.Text) then continue := true else continue := false;
      if continue then
      begin
           // Call and grid is good, enable TX, RB and PSKR functions as desired by end user.
@@ -4619,6 +4620,28 @@ Begin
           Form1.cbEnPSKR.Checked := False;
           Form1.cbEnPSKR.Enabled := False;
           globalData.canTX := False;
+          if not ValidateCallsign(cfgvtwo.glmycall) then
+          begin
+               foo := 'Callsign entered does not meet the requirements' + sLineBreak +
+                      'of the JT65 protocol.  Please check for common' + sLineBreak +
+                      'errors such a typographical error or using a slashed' + sLineBreak +
+                      'zero in place of a real ASCII 0.  Transmit, RB and ' + sLineBreak +
+                      'PSK Reporter functions are disabled.  If you feel the' + sLineBreak +
+                      'evaluation of your callsign is in error then notify' + sLineBreak +
+                      'W6CQZ via the JT65-HF support group.';
+               showmessage(foo);
+          end;
+          if not evalGrid(cfgvtwo.Form6.edMyGrid.Text) then
+          begin
+               foo := 'Maidenhead Grid square does not meet the requirements' + sLineBreak +
+                      'of the JT65 protocol.  Please check for common' + sLineBreak +
+                      'errors such a typographical error or using a slashed' + sLineBreak +
+                      'zero in place of a real ASCII 0.  Transmit, RB and ' + sLineBreak +
+                      'PSK Reporter functions are disabled.  If you feel the' + sLineBreak +
+                      'evaluation of your grid is in error then notify' + sLineBreak +
+                      'W6CQZ via the JT65-HF support group.';
+               showmessage(foo);
+          end;
      end;
      // Create and initialize TWaterfallControl
      Waterfall := TWaterfallControl.Create(Self);
@@ -4630,6 +4653,59 @@ Begin
      Waterfall.OnMouseDown := waterfallMouseDown;
      Waterfall.DoubleBuffered := True;
 End;
+
+function  TForm1.evalGrid(const grid : String) : Boolean;
+var
+     valid    : Boolean;
+     testGrid : String;
+begin
+     valid := True;
+     testGrid := trimleft(trimright(grid));
+     testGrid := upcase(testGrid);
+     if (length(testGrid) < 4) or (length(testGrid) > 6) or (length(testGrid) = 5) then
+     begin
+          valid := False;
+     end
+     else
+     begin
+          valid := True;
+     end;
+     if valid then
+     begin
+          // Validate grid
+          // Grid format:
+          // Length = 4 or 6
+          // characters 1 and 2 range of A ... R, upper case, alpha only.
+          // characters 3 and 4 range of 0 ... 9, numeric only.
+          // characters 5 and 6 range of a ... x, lower case, alpha only, optional.
+          // Validate grid
+          if length(testGrid) = 6 then
+          begin
+               testGrid[1] := upcase(testGrid[1]);
+               testGrid[2] := upcase(testGrid[2]);
+               testGrid[5] := lowercase(testGrid[5]);
+               testGrid[6] := lowercase(testGrid[6]);
+               valid := false;
+               case testGrid[1] of 'A'..'R': valid := True else valid := False; end;
+               if valid then case testGrid[2] of 'A'..'R': valid := True else valid := False; end;
+               if valid then case testGrid[3] of '0'..'9': valid := True else valid := False; end;
+               if valid then case testGrid[4] of '0'..'9': valid := True else valid := False; end;
+               if valid then case testGrid[5] of 'a'..'x': valid := True else valid := False; end;
+               if valid then case testGrid[6] of 'a'..'x': valid := True else valid := False; end;
+          end
+          else
+          begin
+               testGrid[1] := upcase(testGrid[1]);
+               testGrid[2] := upcase(testGrid[2]);
+               valid := false;
+               case testGrid[1] of 'A'..'R': valid := True else valid := False; end;
+               if valid then case testGrid[2] of 'A'..'R': valid := True else valid := False; end;
+               if valid then case testGrid[3] of '0'..'9': valid := True else valid := False; end;
+               if valid then case testGrid[4] of '0'..'9': valid := True else valid := False; end;
+          end;
+     End;
+     result := valid;
+end;
 
 Function TForm1.ValidateCallsign(csign : String) : Boolean;
 var
