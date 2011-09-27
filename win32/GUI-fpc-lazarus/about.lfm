@@ -11,15 +11,13 @@ object Form4: TForm4
   Constraints.MaxWidth = 400
   Constraints.MinHeight = 300
   Constraints.MinWidth = 400
-  LCLVersion = '0.9.30'
+  LCLVersion = '0.9.28.2'
   object Memo1: TMemo
     Left = 8
     Height = 280
     Top = 8
     Width = 384
     Lines.Strings = (
-      'JT65-HF Version 2.0.0 xx-xxx-2011'
-      ''
       'JT65-HF (c)2008...2011 Joe Large W6CQZ'
       ''
       'JT65-HF is an implementation of the JT65 protocol with an'

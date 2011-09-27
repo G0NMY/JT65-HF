@@ -1,5 +1,6 @@
+unit guiConfig;
 //
-// Copyright (c) 2008...2011 J C Large - W6CQZ
+// Copyright (c) 2008,2009 J C Large - W6CQZ
 //
 //
 // JT65-HF is the legal property of its developer.
@@ -19,7 +20,6 @@
 // the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
 // Boston, MA 02110-1301, USA.
 //
-unit guiConfig;
 {$mode objfpc}{$H+}
 
 interface

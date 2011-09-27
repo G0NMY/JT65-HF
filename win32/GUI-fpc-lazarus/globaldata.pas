@@ -1,5 +1,6 @@
+unit globalData;
 //
-// Copyright (c) 2008...2011 J C Large - W6CQZ
+// Copyright (c) 2008,2009 J C Large - W6CQZ
 //
 //
 // JT65-HF is the legal property of its developer.
@@ -19,8 +20,6 @@
 // the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
 // Boston, MA 02110-1301, USA.
 //
-unit globalData;
-
 {$mode objfpc}{$H+}
 
 interface
@@ -64,9 +63,18 @@ Var
    spectrumComputing65     : Boolean;
    audioComputing          : Boolean;
    specNewSpec65           : Boolean;
+   gqrg                    : Double;
+   strqrg                  : String;
+   rbLoggedIn              : Boolean;
+   rbCacheOnly             : Boolean;
    txInProgress            : Boolean;
    debugOn                 : Boolean;
+   fullcall                : String;
    gmode                   : Integer; // 65 or 4
+   mtext                   : String;
+   si570ptt                : Boolean;
+   hrdcatControlcurrentRig : hrdrigCAP;
+   hrdVersion              : Integer;
 
    // The variable list above comprises those variables used in more than two
    // units (inclusive of maincode).  Addition of variables to this list should

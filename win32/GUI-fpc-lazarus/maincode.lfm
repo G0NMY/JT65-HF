@@ -1,7 +1,7 @@
 object Form1: TForm1
-  Left = 10
+  Left = 0
   Height = 690
-  Top = 6
+  Top = 9
   Width = 935
   ActiveControl = btnReDecode
   Caption = 'JT65-HF'
@@ -15,6 +15,7 @@ object Form1: TForm1
   Font.Name = 'Arial'
   Menu = MainMenu1
   OnClose = FormClose
+  OnCreate = FormCreate
   SessionProperties = 'Left;Top'
   ShowHint = True
   LCLVersion = '0.9.30'
@@ -60,7 +61,7 @@ object Form1: TForm1
   object Label3: TLabel
     Left = 556
     Height = 17
-    Top = 358
+    Top = 361
     Width = 311
     Caption = 'Use buttons below to call CQ and answer callers.'
     Font.Height = -13
@@ -72,7 +73,7 @@ object Form1: TForm1
   object Label15: TLabel
     Left = 556
     Height = 17
-    Top = 403
+    Top = 406
     Width = 253
     Caption = 'Use buttons below when answering CQ.'
     Font.Height = -13
@@ -187,7 +188,7 @@ object Form1: TForm1
     ParentFont = False
   end
   object Label26: TLabel
-    Left = 623
+    Left = 616
     Height = 15
     Top = 456
     Width = 31
@@ -214,7 +215,7 @@ object Form1: TForm1
     Left = 556
     Height = 20
     Top = 228
-    Width = 330
+    Width = 329
     Caption = 'Message To TX:  1234567890123456789012'
     Font.Height = -16
     Font.Name = 'Arial'
@@ -237,11 +238,11 @@ object Form1: TForm1
     ParentFont = False
   end
   object Label13: TLabel
-    Left = 580
+    Left = 556
     Height = 15
-    Top = 523
-    Width = 67
-    Caption = 'Decoder BW'
+    Top = 533
+    Width = 104
+    Caption = 'Single Decoder BW'
     Font.Height = -11
     Font.Name = 'Arial'
     Font.Style = [fsBold]
@@ -249,7 +250,7 @@ object Form1: TForm1
     ParentFont = False
   end
   object Label39: TLabel
-    Left = 709
+    Left = 697
     Height = 15
     Top = 479
     Width = 73
@@ -266,7 +267,7 @@ object Form1: TForm1
     Left = 177
     Height = 15
     Top = 210
-    Width = 298
+    Width = 296
     Caption = 'Left click waterfall to set TX CF, Right click sets RX CF.'
     Font.Height = -11
     Font.Name = 'Arial'
@@ -275,10 +276,10 @@ object Form1: TForm1
     ParentFont = False
   end
   object Label19: TLabel
-    Left = 667
+    Left = 761
     Height = 17
     Hint = 'Double click to disable PSKR'
-    Top = 613
+    Top = 645
     Width = 8
     Caption = '0'
     Font.Height = -13
@@ -288,9 +289,9 @@ object Form1: TForm1
     OnDblClick = Label19DblClick
   end
   object Label12: TLabel
-    Left = 805
+    Left = 829
     Height = 17
-    Top = 576
+    Top = 587
     Width = 88
     Caption = 'Dial QRG KHz'
     Font.Height = -13
@@ -300,19 +301,19 @@ object Form1: TForm1
     ParentFont = False
   end
   object Label23: TLabel
-    Left = 789
+    Left = 812
     Height = 17
-    Top = 648
+    Top = 647
     Width = 118
     Caption = 'Right Click for Menu'
     ParentColor = False
     PopupMenu = popupQRG
   end
   object Label30: TLabel
-    Left = 667
+    Left = 761
     Height = 17
     Hint = 'Double click to disable RB'
-    Top = 590
+    Top = 621
     Width = 8
     Caption = '0'
     Font.Height = -13
@@ -320,6 +321,17 @@ object Form1: TForm1
     ParentColor = False
     ParentFont = False
     OnDblClick = Label30DblClick
+  end
+  object Label2: TLabel
+    Left = 733
+    Height = 15
+    Top = 606
+    Width = 64
+    Caption = 'Reports Sent'
+    Font.Height = -11
+    Font.Name = 'Arial'
+    ParentColor = False
+    ParentFont = False
   end
   object edMsg: TEdit
     Left = 556
@@ -338,10 +350,10 @@ object Form1: TForm1
     TabOrder = 0
   end
   object edHisCall: TEdit
-    Left = 793
+    Left = 784
     Height = 24
     Top = 475
-    Width = 84
+    Width = 93
     CharCase = ecUppercase
     Font.Height = -13
     Font.Name = 'Arial'
@@ -370,7 +382,7 @@ object Form1: TForm1
   object buttonCQ: TButton
     Left = 556
     Height = 23
-    Top = 377
+    Top = 380
     Width = 72
     Caption = 'Call CQ'
     Font.Height = -13
@@ -383,7 +395,7 @@ object Form1: TForm1
   object buttonAnswerCQ: TButton
     Left = 635
     Height = 23
-    Top = 423
+    Top = 426
     Width = 104
     Caption = 'Answer CQ'
     Font.Height = -13
@@ -396,7 +408,7 @@ object Form1: TForm1
   object buttonSendReport: TButton
     Left = 635
     Height = 23
-    Top = 377
+    Top = 380
     Width = 104
     Caption = 'Answer Caller'
     Font.Height = -13
@@ -409,7 +421,7 @@ object Form1: TForm1
   object buttonAckReport1: TButton
     Left = 748
     Height = 23
-    Top = 377
+    Top = 380
     Width = 100
     Caption = 'Send RRR'
     Font.Height = -13
@@ -422,7 +434,7 @@ object Form1: TForm1
   object buttonAckReport2: TButton
     Left = 748
     Height = 23
-    Top = 423
+    Top = 426
     Width = 100
     Caption = 'Send Report'
     Font.Height = -13
@@ -461,9 +473,9 @@ object Form1: TForm1
     TabOrder = 9
   end
   object buttonClearList: TButton
-    Left = 444
+    Left = 4
     Height = 25
-    Top = 640
+    Top = 639
     Width = 108
     Caption = 'Clear Decodes'
     Font.Height = -13
@@ -476,7 +488,7 @@ object Form1: TForm1
   object buttonEndQSO2: TButton
     Left = 858
     Height = 69
-    Top = 377
+    Top = 380
     Width = 69
     Caption = 'Send 73'
     Font.Height = -13
@@ -522,27 +534,26 @@ object Form1: TForm1
     Font.Height = -11
     Font.Name = 'Arial'
     ParentFont = False
-    ParentShowHint = False
     TabOrder = 14
     object Label1: TLabel
       Left = 11
-      Height = 38
-      Top = 218
-      Width = 129
+      Height = 42
+      Top = 212
+      Width = 137
       Caption = '16:10:05'
-      Font.Height = -32
+      Font.Height = -35
       Font.Name = 'Arial'
       Font.Style = [fsBold]
       ParentColor = False
       ParentFont = False
     end
     object Label9: TLabel
-      Left = 28
-      Height = 20
-      Top = 197
-      Width = 96
+      Left = 17
+      Height = 25
+      Top = 183
+      Width = 124
       Caption = '2009-Mar-30'
-      Font.Height = -17
+      Font.Height = -21
       Font.Name = 'Arial'
       Font.Style = [fsBold]
       ParentColor = False
@@ -551,7 +562,7 @@ object Form1: TForm1
     object Label4: TLabel
       Left = 1
       Height = 29
-      Top = 52
+      Top = 73
       Width = 153
       Caption = 'Optimum input level is 0 with'#13#10'only background noise present.'
       ParentColor = False
@@ -559,7 +570,7 @@ object Form1: TForm1
     object Label10: TLabel
       Left = 1
       Height = 15
-      Top = 99
+      Top = 124
       Width = 19
       Caption = 'L: 0'
       ParentColor = False
@@ -567,7 +578,7 @@ object Form1: TForm1
     object Label11: TLabel
       Left = 1
       Height = 15
-      Top = 123
+      Top = 149
       Width = 20
       Caption = 'R: 0'
       ParentColor = False
@@ -575,15 +586,15 @@ object Form1: TForm1
     object Label25: TLabel
       Left = 1
       Height = 15
-      Top = 84
-      Width = 85
+      Top = 107
+      Width = 84
       Caption = 'Digital Audio Gain'
       ParentColor = False
     end
     object Label33: TLabel
       Left = 1
       Height = 15
-      Top = -5
+      Top = -4
       Width = 90
       Caption = 'Audio Input Levels'
       ParentColor = False
@@ -591,7 +602,7 @@ object Form1: TForm1
     object pbAu2: TProgressBar
       Left = 1
       Height = 18
-      Top = 32
+      Top = 45
       Width = 100
       Smooth = True
       Step = 1
@@ -600,9 +611,9 @@ object Form1: TForm1
     end
     object rbUseLeft: TRadioButton
       Left = 106
-      Height = 18
-      Top = 11
-      Width = 34
+      Height = 19
+      Top = 16
+      Width = 36
       Caption = '-21'
       Checked = True
       Font.Height = -11
@@ -615,9 +626,9 @@ object Form1: TForm1
     end
     object rbUseRight: TRadioButton
       Left = 106
-      Height = 18
-      Top = 32
-      Width = 34
+      Height = 19
+      Top = 45
+      Width = 36
       Caption = '-21'
       Font.Height = -11
       Font.Name = 'Arial'
@@ -626,26 +637,26 @@ object Form1: TForm1
       ParentFont = False
       TabOrder = 2
     end
-    object tbDgainL: TTrackBar
+    object TrackBar1: TTrackBar
       Left = 37
       Height = 20
-      Top = 99
+      Top = 124
       Width = 120
       Max = 6
       Min = -6
-      OnChange = tbDgainLChange
+      OnChange = TrackBar1Change
       Position = 0
       TickStyle = tsNone
       TabOrder = 3
     end
-    object tbDGainR: TTrackBar
+    object TrackBar2: TTrackBar
       Left = 37
       Height = 20
-      Top = 123
+      Top = 149
       Width = 120
       Max = 6
       Min = -6
-      OnChange = tbDgainLChange
+      OnChange = TrackBar2Change
       Position = 0
       TickStyle = tsNone
       TabOrder = 4
@@ -653,36 +664,12 @@ object Form1: TForm1
     object pbAU1: TProgressBar
       Left = 2
       Height = 18
-      Top = 11
+      Top = 16
       Width = 100
       Smooth = True
       Step = 1
       TabOrder = 5
       BarShowText = True
-    end
-    object Label2: TLabel
-      Left = 2
-      Height = 15
-      Top = 141
-      Width = 33
-      Caption = 'Label2'
-      ParentColor = False
-    end
-    object Label18: TLabel
-      Left = 1
-      Height = 15
-      Top = 157
-      Width = 39
-      Caption = 'Label18'
-      ParentColor = False
-    end
-    object Label41: TLabel
-      Left = 1
-      Height = 15
-      Top = 174
-      Width = 39
-      Caption = 'Label41'
-      ParentColor = False
     end
   end
   object GroupBox4: TGroupBox
@@ -808,13 +795,13 @@ object Form1: TForm1
       TickStyle = tsNone
       TabOrder = 2
     end
-    object spinSpecSpeed: TSpinEdit
+    object SpinEdit1: TSpinEdit
       Left = 207
       Height = 22
       Top = 13
       Width = 38
       MaxValue = 5
-      OnChange = spinSpecSpeedChange
+      OnChange = SpinEdit1Change
       TabOrder = 3
       Value = 5
     end
@@ -822,7 +809,7 @@ object Form1: TForm1
       Left = 296
       Height = 20
       Top = 13
-      Width = 67
+      Width = 69
       Caption = 'Smooth'
       Font.Height = -13
       Font.Name = 'Arial'
@@ -889,9 +876,9 @@ object Form1: TForm1
   end
   object chkEnTX: TCheckBox
     Left = 288
-    Height = 18
+    Height = 19
     Top = 72
-    Width = 46
+    Width = 48
     Caption = 'EATX'
     Enabled = False
     Font.Height = -11
@@ -901,11 +888,11 @@ object Form1: TForm1
     TabOrder = 19
   end
   object chkAutoTxDF: TCheckBox
-    Left = 684
-    Height = 17
+    Left = 677
+    Height = 19
     Hint = 'If Checked TX and RX DF will always be same.'
     Top = 478
-    Width = 18
+    Width = 20
     Checked = True
     Font.Height = -12
     Font.Name = 'Arial'
@@ -916,7 +903,7 @@ object Form1: TForm1
     TabOrder = 20
   end
   object spinDecoderCF: TSpinEdit
-    Left = 623
+    Left = 616
     Height = 22
     Top = 475
     Width = 55
@@ -970,7 +957,7 @@ object Form1: TForm1
   object spinDecoderBW: TSpinEdit
     Left = 595
     Height = 24
-    Top = 538
+    Top = 550
     Width = 18
     Font.Height = -13
     Font.Name = 'Arial'
@@ -982,10 +969,10 @@ object Form1: TForm1
     Value = 4
   end
   object chkNB: TCheckBox
-    Left = 684
-    Height = 18
-    Top = 528
-    Width = 82
+    Left = 677
+    Height = 19
+    Top = 554
+    Width = 84
     Caption = 'Noise Blank'
     Font.Height = -11
     Font.Name = 'Arial'
@@ -995,10 +982,10 @@ object Form1: TForm1
     TabOrder = 26
   end
   object chkAFC: TCheckBox
-    Left = 684
-    Height = 18
-    Top = 504
-    Width = 40
+    Left = 677
+    Height = 19
+    Top = 533
+    Width = 42
     Caption = 'AFC'
     Font.Height = -11
     Font.Name = 'Arial'
@@ -1008,11 +995,11 @@ object Form1: TForm1
     TabOrder = 27
   end
   object chkMultiDecode: TCheckBox
-    Left = 684
-    Height = 18
-    Top = 552
-    Width = 95
-    Caption = 'Multi-decoder'
+    Left = 556
+    Height = 19
+    Top = 587
+    Width = 136
+    Caption = 'Enable Multi-decoder'
     Checked = True
     Font.Height = -11
     Font.Name = 'Arial'
@@ -1074,7 +1061,7 @@ object Form1: TForm1
     Left = 556
     Height = 20
     Top = 251
-    Width = 165
+    Width = 167
     Caption = 'TX Text (13 Characters)'
     Font.Height = -13
     Font.Name = 'Arial'
@@ -1087,7 +1074,7 @@ object Form1: TForm1
     Left = 556
     Height = 20
     Top = 303
-    Width = 106
+    Width = 108
     Caption = 'TX Generated'
     Checked = True
     Font.Color = clRed
@@ -1100,10 +1087,10 @@ object Form1: TForm1
     TabStop = True
   end
   object btnDefaults: TButton
-    Left = 793
+    Left = 784
     Height = 27
     Top = 541
-    Width = 137
+    Width = 146
     Caption = 'Restore Defaults'
     Font.Height = -13
     Font.Name = 'Arial'
@@ -1113,10 +1100,10 @@ object Form1: TForm1
     TabOrder = 32
   end
   object editManQRG: TEdit
-    Left = 744
+    Left = 812
     Height = 37
-    Top = 602
-    Width = 186
+    Top = 606
+    Width = 118
     Alignment = taCenter
     Font.Height = -24
     Font.Name = 'Arial'
@@ -1128,10 +1115,10 @@ object Form1: TForm1
     Text = '0'
   end
   object btnLogQSO: TButton
-    Left = 793
+    Left = 784
     Height = 32
     Top = 504
-    Width = 137
+    Width = 146
     Caption = 'Log QSO'
     Font.Height = -13
     Font.Name = 'Arial'
@@ -1141,31 +1128,27 @@ object Form1: TForm1
     TabOrder = 34
   end
   object cbEnRB: TCheckBox
-    Left = 556
+    Left = 650
     Height = 20
-    Top = 588
-    Width = 80
+    Top = 619
+    Width = 82
     Caption = 'Enable RB'
-    Checked = True
     OnChange = cbEnRBChange
-    State = cbChecked
     TabOrder = 35
   end
   object cbEnPSKR: TCheckBox
-    Left = 556
+    Left = 650
     Height = 20
-    Top = 611
-    Width = 98
+    Top = 643
+    Width = 100
     Caption = 'Enable PSKR'
-    Checked = True
-    OnChange = cbEnRBChange
-    State = cbChecked
+    OnClick = cbEnPSKRClick
     TabOrder = 36
   end
   object Edit2: TEdit
     Left = 556
     Height = 24
-    Top = 538
+    Top = 550
     Width = 40
     Font.Height = -13
     Font.Name = 'Arial'
@@ -1178,9 +1161,9 @@ object Form1: TForm1
     Text = '100'
   end
   object btnReDecode: TButton
-    Left = 560
+    Left = 437
     Height = 25
-    Top = 640
+    Top = 639
     Width = 115
     Caption = 'Decode Again'
     Font.Height = -13
@@ -1190,76 +1173,389 @@ object Form1: TForm1
     ParentFont = False
     TabOrder = 38
   end
-  object Label5: TLabel
-    Left = 5
-    Height = 17
-    Top = 643
-    Width = 380
-    Caption = 'Input:  xxxxxxxxxxxxxxxxxxxx  Output:  xxxxxxxxxxxxxxxxxxxx'
-    ParentColor = False
-  end
-  object Edit3: TEdit
-    Left = 621
-    Height = 24
-    Top = 538
-    Width = 40
-    Font.Height = -13
-    Font.Name = 'Arial'
-    Font.Style = [fsBold]
-    MaxLength = 3
-    ParentFont = False
-    ReadOnly = True
-    TabStop = False
-    TabOrder = 39
-    Text = '100'
-  end
-  object spinDecoderMBW: TSpinEdit
-    Left = 660
-    Height = 24
-    Top = 538
-    Width = 18
-    Font.Height = -13
-    Font.Name = 'Arial'
-    MaxValue = 4
-    MinValue = 1
-    OnChange = spinDecoderMBWChange
-    ParentFont = False
-    TabOrder = 40
-    Value = 4
-  end
-  object Label32: TLabel
-    Left = 556
-    Height = 15
-    Top = 565
-    Width = 35
-    Caption = 'Single'
-    Font.Height = -11
-    Font.Name = 'Arial'
-    Font.Style = [fsBold]
-    ParentColor = False
-    ParentFont = False
-  end
-  object Label40: TLabel
-    Left = 621
-    Height = 15
-    Top = 565
-    Width = 28
-    Caption = 'Multi'
-    Font.Height = -11
-    Font.Name = 'Arial'
-    Font.Style = [fsBold]
-    ParentColor = False
-    ParentFont = False
-  end
   object Timer1: TTimer
     Interval = 220
     OnTimer = Timer1Timer
-    left = 800
-    top = 40
+    left = 648
+    top = 56
+  end
+  object cfg: TXMLPropStorage
+    StoredValues = <    
+      item
+        Name = 'call'
+      end    
+      item
+        Name = 'grid'
+      end    
+      item
+        Name = 'txCF'
+        Value = '0'
+      end    
+      item
+        Name = 'rxCF'
+        Value = '0'
+      end    
+      item
+        Name = 'multirange'
+        Value = '1000'
+      end    
+      item
+        Name = 'soundin'
+        Value = '0'
+      end    
+      item
+        Name = 'soundout'
+        Value = '0'
+      end    
+      item
+        Name = 'ldgain'
+        Value = '0'
+      end    
+      item
+        Name = 'rdgain'
+        Value = '0'
+      end    
+      item
+        Name = 'samfacin'
+        Value = '1'
+      end    
+      item
+        Name = 'samfacout'
+        Value = '1'
+      end    
+      item
+        Name = 'audiochan'
+        Value = '0'
+      end    
+      item
+        Name = 'autoSR'
+        Value = '0'
+      end    
+      item
+        Name = 'pttPort'
+        Value = 'None'
+      end    
+      item
+        Name = 'catPort'
+        Value = 'None'
+      end    
+      item
+        Name = 'afc'
+        Value = '0'
+      end    
+      item
+        Name = 'noiseblank'
+        Value = '0'
+      end    
+      item
+        Name = 'brightness'
+        Value = '0'
+      end    
+      item
+        Name = 'contrast'
+        Value = '0'
+      end    
+      item
+        Name = 'colormap'
+        Value = '0'
+      end    
+      item
+        Name = 'specspeed'
+        Value = '0'
+      end    
+      item
+        Name = 'version'
+        Value = 'A13'
+      end    
+      item
+        Name = 'txWatchDog'
+        Value = '1'
+      end    
+      item
+        Name = 'multiQSOToggle'
+        Value = '1'
+      end    
+      item
+        Name = 'multiQSOWatchDog'
+        Value = '1'
+      end    
+      item
+        Name = 'saveCSV'
+        Value = '1'
+      end    
+      item
+        Name = 'csvPath'
+      end    
+      item
+        Name = 'adiPath'
+      end    
+      item
+        Name = 'hamlibRig'
+        Value = '0'
+      end    
+      item
+        Name = 'hamlibSpeed'
+        Value = '9600'
+      end    
+      item
+        Name = 'hamlibHandshake'
+        Value = 'None'
+      end    
+      item
+        Name = 'hamlibDBits'
+        Value = '8'
+      end    
+      item
+        Name = 'hamlibParity'
+        Value = 'None'
+      end    
+      item
+        Name = 'hamlibSBits'
+        Value = '1'
+      end    
+      item
+        Name = 'hamLibRTS'
+        Value = 'Unset'
+      end    
+      item
+        Name = 'hamlibDTR'
+        Value = 'Unset'
+      end    
+      item
+        Name = 'hamlibCIV'
+        Value = '5E'
+      end    
+      item
+        Name = 'catBy'
+        Value = 'none'
+      end    
+      item
+        Name = 'usePSKR'
+        Value = 'no'
+      end    
+      item
+        Name = 'useRB'
+        Value = 'no'
+      end    
+      item
+        Name = 'pskrAntenna'
+      end    
+      item
+        Name = 'pskrCall'
+      end    
+      item
+        Name = 'optFFT'
+        Value = 'on'
+      end    
+      item
+        Name = 'useAltPTT'
+        Value = 'no'
+      end    
+      item
+        Name = 'useHRDPTT'
+        Value = 'no'
+      end    
+      item
+        Name = 'userQRG1'
+        Value = '0'
+      end    
+      item
+        Name = 'userQRG2'
+        Value = '0'
+      end    
+      item
+        Name = 'userQRG3'
+        Value = '0'
+      end    
+      item
+        Name = 'userQRG4'
+        Value = '0'
+      end    
+      item
+        Name = 'usrMsg1'
+      end    
+      item
+        Name = 'usrMsg2'
+      end    
+      item
+        Name = 'usrMsg3'
+      end    
+      item
+        Name = 'usrMsg4'
+      end    
+      item
+        Name = 'usrMsg5'
+      end    
+      item
+        Name = 'usrMsg6'
+      end    
+      item
+        Name = 'usrMsg7'
+      end    
+      item
+        Name = 'usrMsg8'
+      end    
+      item
+        Name = 'usrMsg9'
+      end    
+      item
+        Name = 'usrMsg10'
+      end    
+      item
+        Name = 'smooth'
+        Value = 'on'
+      end    
+      item
+        Name = 'restoreMulti'
+        Value = 'on'
+      end    
+      item
+        Name = 'specVGain'
+        Value = '0'
+      end    
+      item
+        Name = 'binspace'
+        Value = '3'
+      end    
+      item
+        Name = 'cqColor'
+        Value = '8'
+      end    
+      item
+        Name = 'callColor'
+        Value = '7'
+      end    
+      item
+        Name = 'qsoColor'
+        Value = '6'
+      end    
+      item
+        Name = 'pfx'
+        Value = '0'
+      end    
+      item
+        Name = 'sfx'
+        Value = '0'
+      end    
+      item
+        Name = 'si570mul'
+        Value = '4'
+      end    
+      item
+        Name = 'si570cor'
+        Value = '0'
+      end    
+      item
+        Name = 'si570qrg'
+        Value = '0'
+      end    
+      item
+        Name = 'si570ptt'
+        Value = 'n'
+      end    
+      item
+        Name = 'useCWID'
+        Value = '0'
+      end    
+      item
+        Name = 'useCATTxDF'
+        Value = 'no'
+      end    
+      item
+        Name = 'enAutoQSY1'
+        Value = 'no'
+      end    
+      item
+        Name = 'enAutoQSY2'
+        Value = 'no'
+      end    
+      item
+        Name = 'enAutoQSY3'
+        Value = 'no'
+      end    
+      item
+        Name = 'enAutoQSY4'
+        Value = 'no'
+      end    
+      item
+        Name = 'enAutoQSY5'
+        Value = 'no'
+      end    
+      item
+        Name = 'autoQSYUTC1'
+        Value = '0000'
+      end    
+      item
+        Name = 'autoQSYUTC2'
+        Value = '0000'
+      end    
+      item
+        Name = 'autoQSYUTC3'
+        Value = '0000'
+      end    
+      item
+        Name = 'autoQSYUTC4'
+        Value = '0000'
+      end    
+      item
+        Name = 'autoQSYUTC5'
+        Value = '0000'
+      end    
+      item
+        Name = 'autoQSYQRG1'
+        Value = '14076000'
+      end    
+      item
+        Name = 'autoQSYQRG2'
+        Value = '14076000'
+      end    
+      item
+        Name = 'autoQSYQRG3'
+        Value = '14076000'
+      end    
+      item
+        Name = 'autoQSYQRG4'
+        Value = '14076000'
+      end    
+      item
+        Name = 'autoQSYQRG5'
+        Value = '14076000'
+      end    
+      item
+        Name = 'autoQSYAT1'
+        Value = 'no'
+      end    
+      item
+        Name = 'autoQSYAT2'
+        Value = 'no'
+      end    
+      item
+        Name = 'autoQSYAT3'
+        Value = 'no'
+      end    
+      item
+        Name = 'autoQSYAT4'
+        Value = 'no'
+      end    
+      item
+        Name = 'autoQSYAT5'
+        Value = 'no'
+      end    
+      item
+        Name = 'hrdAddress'
+        Value = 'localhost'
+      end    
+      item
+        Name = 'hrdPort'
+        Value = '7809'
+      end>
+    FileName = 'station.xml'
+    left = 688
+    top = 56
   end
   object popupQRG: TPopupMenu
-    left = 704
-    top = 40
+    left = 552
+    top = 56
     object MenuItem12: TMenuItem
       Caption = '1838'
       OnClick = MenuItemHandler
@@ -1276,6 +1572,16 @@ object Form1: TForm1
     end
     object MenuItem3: TMenuItem
       Caption = '7076'
+      RadioItem = True
+      OnClick = MenuItemHandler
+    end
+    object MenuItem4: TMenuItem
+      Caption = '10139'
+      RadioItem = True
+      OnClick = MenuItemHandler
+    end
+    object MenuItem5: TMenuItem
+      Caption = '10147'
       RadioItem = True
       OnClick = MenuItemHandler
     end
@@ -1300,7 +1606,7 @@ object Form1: TForm1
       OnClick = MenuItemHandler
     end
     object MenuItem10: TMenuItem
-      Caption = '24917'
+      Caption = '24920'
       RadioItem = True
       OnClick = MenuItemHandler
     end
@@ -1310,73 +1616,25 @@ object Form1: TForm1
       OnClick = MenuItemHandler
     end
     object MenuItem22: TMenuItem
-      Caption = '0'
+      Caption = 'User Defined 1'
       OnClick = MenuItemHandler
     end
     object MenuItem23: TMenuItem
-      Caption = '0'
+      Caption = 'User Defined 2'
       OnClick = MenuItemHandler
     end
     object MenuItem28: TMenuItem
-      Caption = '0'
+      Caption = 'User Defined 3'
       OnClick = MenuItemHandler
     end
     object MenuItem29: TMenuItem
-      Caption = '0'
-      OnClick = MenuItemHandler
-    end
-    object MenuItem4: TMenuItem
-      Caption = '0'
-      OnClick = MenuItemHandler
-    end
-    object MenuItem5: TMenuItem
-      Caption = '0'
-      OnClick = MenuItemHandler
-    end
-    object MenuItem44: TMenuItem
-      Caption = '0'
-      OnClick = MenuItemHandler
-    end
-    object MenuItem45: TMenuItem
-      Caption = '0'
-      OnClick = MenuItemHandler
-    end
-    object MenuItem46: TMenuItem
-      Caption = '0'
-      OnClick = MenuItemHandler
-    end
-    object MenuItem47: TMenuItem
-      Caption = '0'
-      OnClick = MenuItemHandler
-    end
-    object MenuItem48: TMenuItem
-      Caption = '0'
-      OnClick = MenuItemHandler
-    end
-    object MenuItem49: TMenuItem
-      Caption = '0'
-      OnClick = MenuItemHandler
-    end
-    object MenuItem50: TMenuItem
-      Caption = '0'
-      OnClick = MenuItemHandler
-    end
-    object MenuItem51: TMenuItem
-      Caption = '0'
-      OnClick = MenuItemHandler
-    end
-    object MenuItem52: TMenuItem
-      Caption = '0'
-      OnClick = MenuItemHandler
-    end
-    object MenuItem53: TMenuItem
-      Caption = '0'
+      Caption = 'User Defined 4'
       OnClick = MenuItemHandler
     end
   end
   object popupMsgs: TPopupMenu
-    left = 704
-    top = 96
+    left = 600
+    top = 56
     object MenuItem13: TMenuItem
       Caption = 'Short-hand RO'
       OnClick = MenuItemHandler
@@ -1390,81 +1648,49 @@ object Form1: TForm1
       OnClick = MenuItemHandler
     end
     object MenuItem16: TMenuItem
+      Caption = 'New Item5'
       OnClick = MenuItemHandler
     end
     object MenuItem17: TMenuItem
+      Caption = 'New Item6'
       OnClick = MenuItemHandler
     end
     object MenuItem18: TMenuItem
+      Caption = 'New Item7'
       OnClick = MenuItemHandler
     end
     object MenuItem19: TMenuItem
+      Caption = 'New Item8'
       OnClick = MenuItemHandler
     end
     object MenuItem20: TMenuItem
+      Caption = 'New Item9'
       OnClick = MenuItemHandler
     end
     object MenuItem21: TMenuItem
+      Caption = 'New Item10'
       OnClick = MenuItemHandler
     end
     object MenuItem24: TMenuItem
+      Caption = 'New Item11'
       OnClick = MenuItemHandler
     end
     object MenuItem25: TMenuItem
+      Caption = 'New Item12'
       OnClick = MenuItemHandler
     end
     object MenuItem26: TMenuItem
+      Caption = 'New Item13'
       OnClick = MenuItemHandler
     end
     object MenuItem27: TMenuItem
-      OnClick = MenuItemHandler
-    end
-    object MenuItem30: TMenuItem
-      OnClick = MenuItemHandler
-    end
-    object MenuItem31: TMenuItem
-      OnClick = MenuItemHandler
-    end
-    object MenuItem32: TMenuItem
-      OnClick = MenuItemHandler
-    end
-    object MenuItem33: TMenuItem
-      OnClick = MenuItemHandler
-    end
-    object MenuItem34: TMenuItem
-      OnClick = MenuItemHandler
-    end
-    object MenuItem35: TMenuItem
-      OnClick = MenuItemHandler
-    end
-    object MenuItem36: TMenuItem
-      OnClick = MenuItemHandler
-    end
-    object MenuItem37: TMenuItem
-      OnClick = MenuItemHandler
-    end
-    object MenuItem38: TMenuItem
-      OnClick = MenuItemHandler
-    end
-    object MenuItem39: TMenuItem
-      OnClick = MenuItemHandler
-    end
-    object MenuItem40: TMenuItem
-      OnClick = MenuItemHandler
-    end
-    object MenuItem41: TMenuItem
-      OnClick = MenuItemHandler
-    end
-    object MenuItem42: TMenuItem
-      OnClick = MenuItemHandler
-    end
-    object MenuItem43: TMenuItem
+      Caption = 'New Item13'
       OnClick = MenuItemHandler
     end
   end
   object MainMenu1: TMainMenu
-    left = 880
-    top = 40
+    left = 728
+    top = 56
     object menuSetup: TMenuItem
       Caption = 'Setup'
       OnClick = menuSetupClick
@@ -1489,11 +1715,5 @@ object Form1: TForm1
       Caption = 'About JT65-HF'
       OnClick = menuAboutClick
     end
-  end
-  object Timer2: TTimer
-    Interval = 2000
-    OnTimer = Timer2Timer
-    left = 800
-    top = 96
   end
 end

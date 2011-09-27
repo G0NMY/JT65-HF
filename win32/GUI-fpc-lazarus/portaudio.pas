@@ -820,6 +820,7 @@ function Pa_OpenStream( var stream: PPaStream;
                        streamCallback: PPaStreamCallback;
                        userData: Pointer ): TPaError; cdecl; external LibName;
 
+
 {** A simplified version of Pa_OpenStream() that opens the default input
  and/or output devices.
 

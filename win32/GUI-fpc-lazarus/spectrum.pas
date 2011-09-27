@@ -1,5 +1,6 @@
+unit spectrum;
 //
-// Copyright (c) 2008...2011 J C Large - W6CQZ
+// Copyright (c) 2008,2009 J C Large - W6CQZ
 //
 //
 // JT65-HF is the legal property of its developer.
@@ -19,8 +20,6 @@
 // the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
 // Boston, MA 02110-1301, USA.
 //
-unit spectrum;
-
 {$mode objfpc}{$H+}
 
 interface
@@ -278,8 +277,6 @@ Var
    ss65                                : Array[0..2047] of CTypes.cfloat;
    floatSpectra                        : Array[0..749] of CTypes.cfloat;
    integerSpectra                      : Array[0..749] of CTypes.cint32;
-   tempbool                            : Boolean;
-   tempdoub                            : CTypes.cdouble;
 Begin
      // Compute spectrum display.  Expects 4096 samples in dBuffer
      globalData.spectrumComputing65 := True;
@@ -353,7 +350,6 @@ Begin
         end;
         // Apply the resampler here so the spectrum display is a
         // touch more accurate if SR correction enabled.
-        tempdoub := globalData.d65samfacin;
         if globalData.d65samfacin <> 1.0 Then
         Begin
              samratio := 1.0/globalData.d65samfacin;

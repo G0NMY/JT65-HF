@@ -1,5 +1,6 @@
+unit dlog;
 //
-// Copyright (c) 2008...2011 J C Large - W6CQZ
+// Copyright (c) 2008,2009 J C Large - W6CQZ
 //
 //
 // JT65-HF is the legal property of its developer.
@@ -19,18 +20,17 @@
 // the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
 // Boston, MA 02110-1301, USA.
 //
-unit dlog;
 {$mode objfpc}{$H+}
 interface
 uses
-  Classes, SysUtils, globalData;
+  Classes, SysUtils, globalData, cfgvtwo;
 
    procedure fileDebug(Const estring : String);
 
 implementation
    procedure fileDebug(Const estring : String);
    Begin
-        //cfgvtwo.Form6.lbDiagLog.Items.Insert(0, estring);
+        cfgvtwo.Form6.lbDiagLog.Items.Insert(0, estring);
    End;
 end.
 
