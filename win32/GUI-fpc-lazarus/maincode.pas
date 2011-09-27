@@ -3362,7 +3362,7 @@ var
    st                  : TSYSTEMTIME;
    tstflt              : Double;
    fname               : String;
-   verUpdate           : Boolean;
+   verUpdate, continue : Boolean;
 Begin
      kverr := 0;
      while FileExists('KVASD.DAT') do
@@ -3459,7 +3459,7 @@ Begin
      end;
      rbc.glrbsSentCount := 0;
      //globalData.rbID := '1';
-     rbc.glrbCallsign := TrimLeft(TrimRight(cfgvtwo.Form6.editPSKRCall.Text)) + '-2';
+     rbc.glrbCallsign := TrimLeft(TrimRight(cfgvtwo.Form6.editPSKRCall.Text)) + '-1';
      // Init PA.  If this doesn't work there's no reason to continue.
      PaResult := portaudio.Pa_Initialize();
      If PaResult <> 0 Then ShowMessage('Fatal Error.  Could not initialize portaudio.');
@@ -3489,7 +3489,7 @@ Begin
                dec(i);
           end;
 
-          // Test for invaLid sound configuration based on device count.
+          // Test for invaLid sound configuration based on device count.  Bail if hardware is invalid.
           if (painputs=0) OR (paoutputs=0) Then
           Begin
                // Unworkable hardware configuration.  Inform and exit.
@@ -3538,7 +3538,6 @@ Begin
           cfgvtwo.Form6.cbAudioIn.ItemIndex := portaudio.Pa_GetHostApiInfo(paDefApi)^.defaultInputDevice;
           cfgvtwo.Form6.cbAudioOut.ItemIndex := portaudio.Pa_GetHostApiInfo(paDefApi)^.defaultOutputDevice-2;
           dlog.fileDebug('Audio Devices added to pulldowns.');
-          //showmessage('portaudio device list placed in configuration selectors');
      End
      Else
      Begin
@@ -3546,14 +3545,10 @@ Begin
           // can't provide a default API value >= 0.  TODO Handle this should it
           // happen.
           dlog.fileDebug('FATAL:  Portaudio DID NOT INIT.  No defapi found.');
-          ShowMessage('FATAL:  Portaudio DID NOT INIT.  No defapi found, program closing.');
+          ShowMessage('FATAL:  Portaudio DID NOT initialize.  No default API found, program closing.');
           halt;
      End;
 
-     //showmessage('portaudio initialization completed...');
-
-     //if globalData.debugOn Then fna := 'D' else fna := '';
-     //fname := GetAppConfigDir(False)+'station1.xml' + fna;
      fname := GetAppConfigDir(False)+'station1.xml';
      {$IFDEF win32}
        if not fileExists(fname) Then
@@ -3563,9 +3558,7 @@ Begin
        if not fileExists(fname) Then
      {$ENDIF}
      Begin
-
           //showmessage('Running initial configuration...');
-
           cfgvtwo.glmustConfig := True;
           // Setup default sane value for config form.
           cfgvtwo.Form6.edMyCall.Clear;
@@ -4360,7 +4353,6 @@ Begin
           Else
           Begin
                dlog.fileDebug('FFT Wisdom missing... you should run optfft');
-               //showmessage('Failed to import optimal FFT data as it does not exist...');
           End;
      End
      Else
@@ -4368,13 +4360,12 @@ Begin
           d65.glfftFWisdom := 0;
           d65.glfftSWisdom := 0;
           dlog.fileDebug('Running without optimal FFT enabled by user request.');
-          //showmessage('Running WITHOUT optimal FFT data via user choice...');
      End;
      // Setup input device
      dlog.fileDebug('Setting up ADC.');
-     //showmessage('Setting up audio input');
 
      foo := cfgvtwo.Form6.cbAudioIn.Items.Strings[cfgvtwo.Form6.cbAudioIn.ItemIndex];
+     paInParams.channelCount := 2;
      paInParams.device := StrToInt(foo[1..2]);
      paInParams.sampleFormat := paInt16;
      paInParams.suggestedLatency := 1;
@@ -4389,34 +4380,105 @@ Begin
      adc.d65rxBufferPtr := @adc.d65rxBuffer[0];
 
      // Initialize rx stream.
-     paInParams.channelCount := 2;
+     continue := False;
      paResult := portaudio.Pa_OpenStream(paInStream,ppaInParams,Nil,11025,2048,0,@adc.adcCallback,Pointer(Self));
      if paResult <> 0 Then
      Begin
           // Was unable to open, perhaps the default device will work?
-
-          ShowMessage('PA Error:  ' + StrPas(portaudio.Pa_GetErrorText(paResult)) + ' Could not setup for stereo input.  Program will exit.');
-          halt;
+          continue := false;
      end
      else
      begin
-         paResult := portaudio.Pa_StartStream(paInStream);
+          continue := true;
      end;
-     // Start the stream.
-     if paResult <> 0 Then
-     Begin
-          ShowMessage('PA Error:  ' + StrPas(portaudio.Pa_GetErrorText(paResult)));
-          halt;
-     End;
-     //showmessage('Setting up audio input completed...');
+     If continue then
+     begin
+          continue := false;
+          // Start the stream.
+          paResult := portaudio.Pa_StartStream(paInStream);
+          if paResult <> 0 Then
+          Begin
+               // Was unable to start stream, try default input device before bailing.
+               continue := false;
+          End
+          Else
+          Begin
+               continue := True;
+          end;
+     end;
 
+     If not continue then
+     begin
+          // For reasons unkown could not open the selected input device.  Try default
+          // input device and, failing that, terminate program.  Simple check first...
+          // Is the selected device the default?  If so no need to try again.
+          if paInParams.device = portaudio.Pa_GetHostApiInfo(paDefApi)^.defaultInputDevice then
+          begin
+               // No need to try again, I've already attempted opening default device.
+               foo := 'Sound hardware error!' + sLineBreak + sLineBreak;
+               foo := foo + 'Could not open the previously selected input device.' + sLineBreak +
+                            'Attempt to open default input device also failed.' + sLineBreak +
+                            'Is your sound device plugged in and operational?' + sLineBreak + sLineBreak +
+                            'Please check your hardware and try again.';
+               showmessage(foo);
+               halt;
+          end;
+          // Attempt to open default input device, failing that, terminate.
+          paInParams.device := portaudio.Pa_GetHostApiInfo(paDefApi)^.defaultInputDevice;
+          continue := False;
+          paResult := portaudio.Pa_OpenStream(paInStream,ppaInParams,Nil,11025,2048,0,@adc.adcCallback,Pointer(Self));
+          if paResult <> 0 Then
+          Begin
+               // Was unable to open default device.  All hope is lost.  Terminate.
+               foo := 'Sound hardware error!' + sLineBreak + sLineBreak;
+               foo := foo + 'Could not open the previously selected input device.' + sLineBreak +
+                            'Attempt to open default input device also failed.' + sLineBreak +
+                            'Is your sound device plugged in and operational?' + sLineBreak + sLineBreak +
+                            'Please check your hardware and try again.';
+               showmessage(foo);
+               halt;
+          end
+          else
+          begin
+               // Default initialize, attempt to start stream before celebrating.
+               continue := True;
+          end;
+          If continue then
+          begin
+               continue := false;
+               // Start the stream.
+               paResult := portaudio.Pa_StartStream(paInStream);
+               if paResult <> 0 Then
+               Begin
+                    // Was unable to open default device.  All hope is lost.  Terminate.
+                    foo := 'Sound hardware error!' + sLineBreak + sLineBreak;
+                    foo := foo + 'Could not open the previously selected input device.' + sLineBreak +
+                                 'Attempt to open default input device also failed.' + sLineBreak +
+                                 'Is your sound device plugged in and operational?' + sLineBreak + sLineBreak +
+                                 'Please check your hardware and try again.';
+                    showmessage(foo);
+                    halt;
+               End
+               Else
+               Begin
+                    // Default opened and running, show a warning about the situation.
+                    continue := True;
+                    foo := 'Sound hardware error!' + sLineBreak + sLineBreak;
+                    foo := foo + 'Could not open the previously selected input device.' + sLineBreak + sLineBreak +
+                                 'Currently using the DEFAULT input device!  This may' + sLineBreak +
+                                 'not be the device you expect to use.' + sLineBreak + sLineBreak +
+                                 'Please check your hardware/configuration.';
+                    showmessage(foo);
+               end;
+          end;
+     end;
+     // If I make it here, something opened for input, be it the selected or default.  Now repeat for output.
+
+     continue := False;
      // Setup output device
-
      dlog.fileDebug('Setting up DAC.');
-     //showmessage('Setting up audio output');
-
-
      foo := cfgvtwo.Form6.cbAudioOut.Items.Strings[cfgvtwo.Form6.cbAudioOut.ItemIndex];
+     paOutParams.channelCount := 2;
      paOutParams.device := StrToInt(foo[1..2]);
      paOutParams.sampleFormat := paInt16;
      paOutParams.suggestedLatency := 1;
@@ -4424,37 +4486,104 @@ Begin
      ppaOutParams := @paOutParams;
      // Set txBuffer index to start of array.
      dac.d65txBufferIdx := 0;
-     //mdac.d65txBufferIdx := 0;
-
-     dac.dacT := 0;
-     //mdac.dacT := 0;
-
      // Set ptr to start of buffer.
      dac.d65txBufferPtr := @dac.d65txBuffer[0];
-     //mdac.d65txBufferPtr := @mdac.d65txBuffer[0];
+     dac.dacT := 0;
+     //portaudio.Pa_GetHostApiInfo(paDefApi)^.defaultOutputDevice-2;
 
      // Initialize tx stream.
-     paOutParams.channelCount := 2;
      paResult := portaudio.Pa_OpenStream(paOutStream,Nil,ppaOutParams,11025,2048,0,@dac.dacCallback,Pointer(Self));
-     //if paResult <> 0 Then
-     //Begin
-          //paOutParams.channelCount := 1;
-          //paResult := portaudio.Pa_OpenStream(paOutStream,Nil,ppaOutParams,11025,2048,0,@mdac.dacCallback,Pointer(Self));
-     //End;
      if paResult <> 0 Then
      Begin
-          ShowMessage('PA Error:  ' + StrPas(portaudio.Pa_GetErrorText(paResult)));
-          //Need to exit this puppy, pa is dead.
-     End;
-
-     // Start the stream.
-     paResult := portaudio.Pa_StartStream(paOutStream);
-     if paResult <> 0 Then
+          // Selected output device fails, will attempt default before bailing.
+          continue := False;
+     End
+     Else
      Begin
-          ShowMessage('PA Error:  ' + StrPas(portaudio.Pa_GetErrorText(paResult)));
-          //Need to exit this puppy, pa is dead.
-     End;
-     //showmessage('Setting up audio output completed...');
+          // Open was good, on to start.
+          continue := True;
+     end;
+     if continue then
+     begin
+          // Start the stream.
+          paResult := portaudio.Pa_StartStream(paOutStream);
+          if paResult <> 0 Then
+          Begin
+               // Start stream fails, will attempt default before bailing.
+               continue := false;
+          End
+          else
+          begin
+               // Good to go
+               continue := true;
+          end;
+     end;
+     // Open output fails
+     if not continue then
+     begin
+          // For reasons unkown could not open the selected output device.  Try default
+          // output device and, failing that, terminate program.  Simple check first...
+          // Is the selected device the default?  If so no need to try again.
+          if paOutParams.device = portaudio.Pa_GetHostApiInfo(paDefApi)^.defaultOutputDevice then
+          begin
+               // No need to try again, I've already attempted opening default device.
+               foo := 'Sound hardware error!' + sLineBreak + sLineBreak;
+               foo := foo + 'Could not open the previously selected output device.' + sLineBreak +
+                            'Attempt to open default output device also failed.' + sLineBreak +
+                            'Is your sound device plugged in and operational?' + sLineBreak + sLineBreak +
+                            'Please check your hardware and try again.';
+               showmessage(foo);
+               halt;
+          end;
+          // Attempt to open default output device, failing that, terminate.
+          paOutParams.device := portaudio.Pa_GetHostApiInfo(paDefApi)^.defaultOutputDevice;
+          continue := False;
+          // Initialize tx stream.
+          paResult := portaudio.Pa_OpenStream(paOutStream,Nil,ppaOutParams,11025,2048,0,@dac.dacCallback,Pointer(Self));
+          if paResult <> 0 Then
+          Begin
+               // Was unable to open default device.  All hope is lost.  Terminate.
+               foo := 'Sound hardware error!' + sLineBreak + sLineBreak;
+               foo := foo + 'Could not open the previously selected output device.' + sLineBreak +
+                            'Attempt to open default output device also failed.' + sLineBreak +
+                            'Is your sound device plugged in and operational?' + sLineBreak + sLineBreak +
+                            'Please check your hardware and try again.';
+               showmessage(foo);
+               halt;
+          End
+          Else
+          Begin
+               // Open was good, on to start.
+               continue := True;
+          end;
+          if continue then
+          begin
+               // Start the stream.
+               paResult := portaudio.Pa_StartStream(paOutStream);
+               if paResult <> 0 Then
+               Begin
+                    // Was unable to open default device.  All hope is lost.  Terminate.
+                    foo := 'Sound hardware error!' + sLineBreak + sLineBreak;
+                    foo := foo + 'Could not open the previously selected outout device.' + sLineBreak +
+                                 'Attempt to open default output device also failed.' + sLineBreak +
+                                 'Is your sound device plugged in and operational?' + sLineBreak + sLineBreak +
+                                 'Please check your hardware and try again.';
+                    showmessage(foo);
+                    halt;
+               End
+               else
+               begin
+                    // Good to go
+                    continue := true;
+                    foo := 'Sound hardware error!' + sLineBreak + sLineBreak;
+                    foo := foo + 'Could not open the previously selected output device.' + sLineBreak + sLineBreak +
+                                 'Currently using the DEFAULT output device!  This may' + sLineBreak +
+                                 'not be the device you expect to use.' + sLineBreak + sLineBreak +
+                                 'Please check your hardware/configuration.';
+                    showmessage(foo);
+               end;
+          end;
+     end;
 
      if cfgvtwo.Form6.cbUsePSKReporter.Checked Then
      Begin
@@ -6097,7 +6226,7 @@ initialization
 
   d65.glnd65firstrun := True;
   d65.glbinspace := 100;
-  globalData.debugOn := True;
+  globalData.debugOn := False;
   globalData.gmode := 65;
   txmode := globalData.gmode;
   mnHavePrefix := False;
