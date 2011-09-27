@@ -271,6 +271,7 @@ type
     procedure saveCSV();
     procedure si570Raiseptt();
     procedure si570Lowerptt();
+    Function  ValidateCallsign(csign : String) : Boolean;
 
   private
     { private declarations }
@@ -4585,26 +4586,42 @@ Begin
           end;
      end;
 
-     if cfgvtwo.Form6.cbUsePSKReporter.Checked Then
-     Begin
-          //showmessage('Initializing PSK Reporter...');
-          // Initialize PSK Reporter DLL
-          If PSKReporter.ReporterInitialize('report.pskreporter.info','4739') = 0 Then pskrstat := 1 else pskrstat := 0;
-          Form1.cbEnPSKR.Checked := True;
-          //showmessage('PSK Reporter initialized...');
-     End
-     Else
-     Begin
+     // Check callsign and grid for validity.
+     continue := False;
+     // Verify callsign meets the JT65 protocol requirements.
+     if ValidateCallsign(cfgvtwo.glmycall) then continue := true else continue := false;
+     // Verify grid is a valid 4 or 6 character value
+
+     if continue then
+     begin
+          // Call and grid is good, enable TX, RB and PSKR functions as desired by end user.
+          Form1.cbEnRB.Enabled := True;
+          Form1.cbEnPSKR.Enabled := True;
+          globalData.canTX := True;
+          if cfgvtwo.Form6.cbUsePSKReporter.Checked Then
+          Begin
+               // Initialize PSK Reporter DLL
+               If PSKReporter.ReporterInitialize('report.pskreporter.info','4739') = 0 Then pskrstat := 1 else pskrstat := 0;
+               Form1.cbEnPSKR.Checked := True;
+          End
+          Else
+          Begin
+               Form1.cbEnPSKR.Checked := False;
+          end;
+
+          if cfgvtwo.Form6.cbUseRB.Checked then Form1.cbEnRB.Checked := True else Form1.cbEnRB.Checked := False;
+     end
+     else
+     begin
+          // Callsign and/or grid is invalid.  RB, PSKR and TX is disabled.
+          Form1.cbEnRB.Checked := False;
+          Form1.cbEnRB.Enabled := False;
           Form1.cbEnPSKR.Checked := False;
+          Form1.cbEnPSKR.Enabled := False;
+          globalData.canTX := False;
      end;
-
-     if cfgvtwo.Form6.cbUseRB.Checked then Form1.cbEnRB.Checked := True else Form1.cbEnRB.Checked := False;
-
      // Create and initialize TWaterfallControl
-     //showmessage('Initializing spectrum display');
-
      Waterfall := TWaterfallControl.Create(Self);
-     //if guiConfig.getGUIType() Then Waterfall.Height := 105 else Waterfall.Height := 180;
      Waterfall.Height := 180;
      Waterfall.Width  := 750;
      Waterfall.Top    := 25;
@@ -4612,8 +4629,299 @@ Begin
      Waterfall.Parent := Self;
      Waterfall.OnMouseDown := waterfallMouseDown;
      Waterfall.DoubleBuffered := True;
-     //showmessage('Initialized spectrum display...');
 End;
+
+Function TForm1.ValidateCallsign(csign : String) : Boolean;
+var
+     valid    : Boolean;
+     testcall : String;
+Begin
+     valid := True;
+     result := False;
+     testcall := csign;
+     // Simple length check
+     if (length(testcall) < 3) or (length(testcall) > 6) then valid := False else valid := True;
+     // Not too short or too long, now test for presence of 'bad' characters.
+     if valid then
+     begin
+          If (AnsiContainsText(testcall,'/')) Or (AnsiContainsText(testcall,'.')) Or
+             (AnsiContainsText(testcall,'-')) Or (AnsiContainsText(testcall,'\')) Or
+             (AnsiContainsText(testcall,',')) Or (AnsiContainsText(testcall,' ')) Then valid := False else valid := true;
+     end;
+     // If length and bad character checks pass on to the full validator
+     if valid then
+     begin
+          valid := False;
+          // Callsign rules:
+          // Length must be >= 3 and <= 6
+          // Must be of one of the following;
+          // A = Alpha character A ... Z
+          // # = Numeral 0 ... 9
+          //
+          // A#A A#AA A#AAA or AA#A AA#AA AA#AAA or #A#A #A#AA #A#AAA or
+          // A##A A##AA A##AAA
+          //
+          // All characters must be A...Z or 0...9 or space
+          if length(testCall) = 3 Then
+          Begin
+               // 3 Character callsigns have only one valid format: A#A
+               valid := False;
+               case testcall[1] of 'A'..'Z': valid := True else valid := False; end;
+               if valid then
+               begin
+                    case testcall[2] of '0'..'9': valid := True else valid := False; end;
+               end;
+               if valid then
+               begin
+                    case testcall[3] of 'A'..'Z': valid := True else valid := False; end;
+               end;
+               //if not valid then
+               //begin
+               //     if testcall = 'SWL' then valid := true else valid := false;
+               //end;
+          End;
+          if length(testCall) = 4 Then
+          Begin
+               // 4 Character callsigns can be:  A#AA AA#A #A#A A##A
+               // Testing for A#AA
+               valid := False;
+               case testcall[1] of 'A'..'Z': valid := True else valid := False; end;
+               if valid then
+               begin
+                    case testcall[2] of '0'..'9': valid := True else valid := False; end;
+               end;
+               if valid then
+               begin
+                    case testcall[3] of 'A'..'Z': valid := True else valid := False; end;
+               end;
+               if valid then
+               begin
+                    case testcall[4] of 'A'..'Z': valid := True else valid := False; end;
+               end;
+               // Testing for AA#A (if test above didn't return true)
+               if not valid then
+               begin
+                    case testcall[1] of 'A'..'Z': valid := True else valid := False; end;
+                    if valid then
+                    begin
+                         case testcall[2] of 'A'..'Z': valid := True else valid := False; end;
+                    end;
+                    if valid then
+                    begin
+                         case testcall[3] of '0'..'9': valid := True else valid := False; end;
+                    end;
+                    if valid then
+                    begin
+                         case testcall[4] of 'A'..'Z': valid := True else valid := False; end;
+                    end;
+               end;
+               // Testing for #A#A (if test above didn't return true)
+               if not valid then
+               begin
+                    case testcall[1] of '0'..'9': valid := True else valid := False; end;
+                    if valid then
+                    begin
+                         case testcall[2] of 'A'..'Z': valid := True else valid := False; end;
+                    end;
+                    if valid then
+                    begin
+                         case testcall[3] of '0'..'9': valid := True else valid := False; end;
+                    end;
+                    if valid then
+                    begin
+                         case testcall[4] of 'A'..'Z': valid := True else valid := False; end;
+                    end;
+               end;
+               // Testing for A##A (if test above didn't return true)
+               if not valid then
+               begin
+                    case testcall[1] of 'A'..'Z': valid := True else valid := False; end;
+                    if valid then
+                    begin
+                         case testcall[2] of '0'..'9': valid := True else valid := False; end;
+                    end;
+                    if valid then
+                    begin
+                         case testcall[3] of '0'..'9': valid := True else valid := False; end;
+                    end;
+                    if valid then
+                    begin
+                         case testcall[4] of 'A'..'Z': valid := True else valid := False; end;
+                    end;
+               end;
+          End;
+          if length(testCall) = 5 Then
+          Begin
+               // 5 Character callsigns can be:  A#AAA AA#AA #A#AA A##AA
+               // Testing for A#AAA
+               valid := False;
+               case testcall[1] of 'A'..'Z': valid := True else valid := False; end;
+               if valid then
+               begin
+                    case testcall[2] of '0'..'9': valid := True else valid := False; end;
+               end;
+               if valid then
+               begin
+                    case testcall[3] of 'A'..'Z': valid := True else valid := False; end;
+               end;
+               if valid then
+               begin
+                    case testcall[4] of 'A'..'Z': valid := True else valid := False; end;
+               end;
+               if valid then
+               begin
+                    case testcall[5] of 'A'..'Z': valid := True else valid := False; end;
+               end;
+               // Testing for AA#AA (if test above didn't return true)
+               if not valid then
+               begin
+                    case testcall[1] of 'A'..'Z': valid := True else valid := False; end;
+                    if valid then
+                    begin
+                         case testcall[2] of 'A'..'Z': valid := True else valid := False; end;
+                    end;
+                    if valid then
+                    begin
+                         case testcall[3] of '0'..'9': valid := True else valid := False; end;
+                    end;
+                    if valid then
+                    begin
+                         case testcall[4] of 'A'..'Z': valid := True else valid := False; end;
+                    end;
+                    if valid then
+                    begin
+                         case testcall[5] of 'A'..'Z': valid := True else valid := False; end;
+                    end;
+               end;
+               // Testing for #A#AA (if test above didn't return true)
+               if not valid then
+               begin
+                    case testcall[1] of '0'..'9': valid := True else valid := False; end;
+                    if valid then
+                    begin
+                         case testcall[2] of 'A'..'Z': valid := True else valid := False; end;
+                    end;
+                    if valid then
+                    begin
+                         case testcall[3] of '0'..'9': valid := True else valid := False; end;
+                    end;
+                    if valid then
+                    begin
+                         case testcall[4] of 'A'..'Z': valid := True else valid := False; end;
+                    end;
+                    if valid then
+                    begin
+                         case testcall[5] of 'A'..'Z': valid := True else valid := False; end;
+                    end;
+               end;
+               // Testing for A##AA (if test above didn't return true)
+               if not valid then
+               begin
+                    case testcall[1] of 'A'..'Z': valid := True else valid := False; end;
+                    if valid then
+                    begin
+                         case testcall[2] of '0'..'9': valid := True else valid := False; end;
+                    end;
+                    if valid then
+                    begin
+                         case testcall[3] of '0'..'9': valid := True else valid := False; end;
+                    end;
+                    if valid then
+                    begin
+                         case testcall[4] of 'A'..'Z': valid := True else valid := False; end;
+                    end;
+                    if valid then
+                    begin
+                         case testcall[5] of 'A'..'Z': valid := True else valid := False; end;
+                    end;
+               end;
+          End;
+          if length(testCall) = 6 Then
+          Begin
+               // 6 Character callsigns can be:  AA#AAA #A#AAA A##AAA
+               // Testing for AA#AAA
+               valid := False;
+               case testcall[1] of 'A'..'Z': valid := True else valid := False; end;
+               if valid then
+               begin
+                    case testcall[2] of 'A'..'Z': valid := True else valid := False; end;
+               end;
+               if valid then
+               begin
+                    case testcall[3] of '0'..'9': valid := True else valid := False; end;
+               end;
+               if valid then
+               begin
+                    case testcall[4] of 'A'..'Z': valid := True else valid := False; end;
+               end;
+               if valid then
+               begin
+                    case testcall[5] of 'A'..'Z': valid := True else valid := False; end;
+               end;
+               if valid then
+               begin
+                    case testcall[6] of 'A'..'Z': valid := True else valid := False; end;
+               end;
+               // Testing for #A#AAA (if test above didn't return true)
+               if not valid then
+               begin
+                    case testcall[1] of '0'..'9': valid := True else valid := False; end;
+                    if valid then
+                    begin
+                         case testcall[2] of 'A'..'Z': valid := True else valid := False; end;
+                    end;
+                    if valid then
+                    begin
+                         case testcall[3] of '0'..'9': valid := True else valid := False; end;
+                    end;
+                    if valid then
+                    begin
+                         case testcall[4] of 'A'..'Z': valid := True else valid := False; end;
+                    end;
+                    if valid then
+                    begin
+                         case testcall[5] of 'A'..'Z': valid := True else valid := False; end;
+                    end;
+                    if valid then
+                    begin
+                         case testcall[6] of 'A'..'Z': valid := True else valid := False; end;
+                    end;
+               end;
+               // Testing for A##AAA (if test above didn't return true)
+               if not valid then
+               begin
+                    case testcall[1] of 'A'..'Z': valid := True else valid := False; end;
+                    if valid then
+                    begin
+                         case testcall[2] of '0'..'9': valid := True else valid := False; end;
+                    end;
+                    if valid then
+                    begin
+                         case testcall[3] of '0'..'9': valid := True else valid := False; end;
+                    end;
+                    if valid then
+                    begin
+                         case testcall[4] of 'A'..'Z': valid := True else valid := False; end;
+                    end;
+                    if valid then
+                    begin
+                         case testcall[5] of 'A'..'Z': valid := True else valid := False; end;
+                    end;
+                    if valid then
+                    begin
+                         case testcall[6] of 'A'..'Z': valid := True else valid := False; end;
+                    end;
+               end;
+          End;
+          // All possible 3, 4, 5 and 6 character length callsigns have been tested
+          // for conformance to JT65 callsign encoding rules.  If valid = true we're
+          // good to go.  Of course, you can still specify a callsign that is not
+          // 'real', but, which conforms to the encoding rules...  I make no attempt
+          // to validate a callsign to be something that is valid/legal.  Only that it
+          // conforms to the encoder rules.
+     end;
+     result := valid;
+end;
 
 procedure TForm1.updateSR();
 Var
