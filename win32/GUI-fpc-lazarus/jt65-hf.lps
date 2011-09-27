@@ -26,13 +26,14 @@
         <EditorIndex Value="5"/>
         <WindowIndex Value="0"/>
         <TopLine Value="3353"/>
-        <CursorPos X="18" Y="3356"/>
+        <CursorPos X="1" Y="3368"/>
         <UsageCount Value="215"/>
         <Bookmarks Count="2">
           <Item0 X="1" Y="4236" ID="0"/>
           <Item1 X="1" Y="443" ID="1"/>
         </Bookmarks>
         <Loaded Value="True"/>
+        <LoadedDesigner Value="True"/>
       </Unit1>
       <Unit2>
         <Filename Value="portaudio.pas"/>
