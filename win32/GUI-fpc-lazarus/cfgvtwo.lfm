@@ -13,7 +13,6 @@ object Form6: TForm6
   Constraints.MinWidth = 800
   OnCreate = FormCreate
   LCLVersion = '0.9.30'
-  Visible = True
   object Notebook1: TNotebook
     Left = 8
     Height = 488
@@ -1784,7 +1783,7 @@ object Form6: TForm6
         Left = 12
         Height = 45
         Top = 349
-        Width = 723
+        Width = 722
         Caption = 'NOTE:  This will only control an Si570 via USB connection.  You must continue'#13#10'to use software such as Rocky or PowerSDR as the radio software!'
         Font.Height = -19
         Font.Name = 'Arial'

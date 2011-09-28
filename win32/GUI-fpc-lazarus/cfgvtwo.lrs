@@ -5,508 +5,508 @@ LazarusResources.Add('TForm6','FORMDATA',[
   +' '#3#11'BorderIcons'#11#0#7'Caption'#6#13'Configuration'#12'ClientHeight'#3
   +#30#2#11'ClientWidth'#3' '#3#21'Constraints.MaxHeight'#3#30#2#20'Constraints'
   +'.MaxWidth'#3' '#3#21'Constraints.MinHeight'#3#30#2#20'Constraints.MinWidth'
-  +#3' '#3#8'OnCreate'#7#10'FormCreate'#10'LCLVersion'#6#6'0.9.30'#7'Visible'#9
-  +#0#9'TNotebook'#9'Notebook1'#4'Left'#2#8#6'Height'#3#232#1#3'Top'#2#8#5'Widt'
-  +'h'#3#16#3#11'Font.Height'#2#243#9'Font.Name'#6#5'Arial'#9'PageIndex'#2#0#10
-  +'ParentFont'#8#8'TabOrder'#2#0#0#5'TPage'#5'Page1'#7'Caption'#6#13'Station S'
-  +'etup'#11'ClientWidth'#3#8#3#12'ClientHeight'#3#203#1#0#6'TLabel'#7'Label26'
-  +#4'Left'#2#5#6'Height'#2#15#3'Top'#2#6#5'Width'#2'-'#7'Caption'#6#8'Callsign'
-  +#11'Font.Height'#2#245#9'Font.Name'#6#5'Arial'#10'Font.Style'#11#6'fsBold'#0
-  +#11'ParentColor'#8#10'ParentFont'#8#0#0#6'TLabel'#7'Label27'#4'Left'#2#4#6'H'
-  +'eight'#2#15#3'Top'#2':'#5'Width'#3#223#0#7'Caption'#6'*Grid (4 or 6 Charact'
-  +'ers).  Required value.'#11'Font.Height'#2#245#9'Font.Name'#6#5'Arial'#10'Fo'
-  +'nt.Style'#11#6'fsBold'#0#11'ParentColor'#8#10'ParentFont'#8#0#0#6'TLabel'#7
-  +'Label22'#4'Left'#2#4#6'Height'#2#15#3'Top'#2'i'#5'Width'#2'j'#7'Caption'#6
-  +#18'Sound Input Device'#11'Font.Height'#2#245#9'Font.Name'#6#5'Arial'#10'Fon'
-  +'t.Style'#11#6'fsBold'#0#11'ParentColor'#8#10'ParentFont'#8#0#0#6'TLabel'#7
-  +'Label23'#4'Left'#3';'#1#6'Height'#2#15#3'Top'#2'i'#5'Width'#2's'#7'Caption'
-  +#6#19'Sound Output Device'#11'Font.Height'#2#245#9'Font.Name'#6#5'Arial'#10
+  +#3' '#3#8'OnCreate'#7#10'FormCreate'#10'LCLVersion'#6#6'0.9.30'#0#9'TNoteboo'
+  +'k'#9'Notebook1'#4'Left'#2#8#6'Height'#3#232#1#3'Top'#2#8#5'Width'#3#16#3#11
+  +'Font.Height'#2#243#9'Font.Name'#6#5'Arial'#9'PageIndex'#2#0#10'ParentFont'#8
+  +#8'TabOrder'#2#0#0#5'TPage'#5'Page1'#7'Caption'#6#13'Station Setup'#11'Clien'
+  +'tWidth'#3#8#3#12'ClientHeight'#3#203#1#0#6'TLabel'#7'Label26'#4'Left'#2#5#6
+  +'Height'#2#15#3'Top'#2#6#5'Width'#2'-'#7'Caption'#6#8'Callsign'#11'Font.Heig'
+  +'ht'#2#245#9'Font.Name'#6#5'Arial'#10'Font.Style'#11#6'fsBold'#0#11'ParentCo'
+  +'lor'#8#10'ParentFont'#8#0#0#6'TLabel'#7'Label27'#4'Left'#2#4#6'Height'#2#15
+  +#3'Top'#2':'#5'Width'#3#223#0#7'Caption'#6'*Grid (4 or 6 Characters).  Requi'
+  +'red value.'#11'Font.Height'#2#245#9'Font.Name'#6#5'Arial'#10'Font.Style'#11
+  +#6'fsBold'#0#11'ParentColor'#8#10'ParentFont'#8#0#0#6'TLabel'#7'Label22'#4'L'
+  +'eft'#2#4#6'Height'#2#15#3'Top'#2'i'#5'Width'#2'j'#7'Caption'#6#18'Sound Inp'
+  +'ut Device'#11'Font.Height'#2#245#9'Font.Name'#6#5'Arial'#10'Font.Style'#11#6
+  +'fsBold'#0#11'ParentColor'#8#10'ParentFont'#8#0#0#6'TLabel'#7'Label23'#4'Lef'
+  +'t'#3';'#1#6'Height'#2#15#3'Top'#2'i'#5'Width'#2's'#7'Caption'#6#19'Sound Ou'
+  +'tput Device'#11'Font.Height'#2#245#9'Font.Name'#6#5'Arial'#10'Font.Style'#11
+  +#6'fsBold'#0#11'ParentColor'#8#10'ParentFont'#8#0#0#6'TLabel'#7'Label53'#4'L'
+  +'eft'#2#5#6'Height'#2#15#3'Top'#3#160#0#5'Width'#2'V'#7'Caption'#6#14'RX Sam'
+  +'ple Rate'#11'Font.Height'#2#245#9'Font.Name'#6#5'Arial'#10'Font.Style'#11#6
+  +'fsBold'#0#11'ParentColor'#8#10'ParentFont'#8#0#0#6'TLabel'#7'Label54'#4'Lef'
+  +'t'#2'y'#6'Height'#2#15#3'Top'#3#160#0#5'Width'#2'V'#7'Caption'#6#14'TX Samp'
+  +'le Rate'#11'Font.Height'#2#245#9'Font.Name'#6#5'Arial'#10'Font.Style'#11#6
+  +'fsBold'#0#11'ParentColor'#8#10'ParentFont'#8#0#0#6'TLabel'#7'Label14'#4'Lef'
+  +'t'#2#5#6'Height'#2'!'#3'Top'#3#203#0#5'Width'#3'~'#2#7'Caption'#6#189'Autom'
+  +'atic adjustment may cause some initial skewing of spectrum display until SR'
+  +' settles.  This is harmless.'#13#10'In most cases it is suggested that Auto'
+  +'matic sample rate correction be enabled.'#11'Font.Height'#2#243#9'Font.Name'
+  +#6#5'Arial'#11'ParentColor'#8#10'ParentFont'#8#0#0#6'TLabel'#7'Label29'#4'Le'
+  +'ft'#2#5#6'Height'#2#15#3'Top'#3#151#1#5'Width'#3#248#0#7'Caption'#6'/Locati'
+  +'on of RX/TX history file (JT65hf-log.csv)'#11'Font.Height'#2#245#9'Font.Nam'
+  +'e'#6#5'Arial'#10'Font.Style'#11#6'fsBold'#0#11'ParentColor'#8#10'ParentFont'
+  +#8#0#0#6'TLabel'#7'Label28'#4'Left'#2'd'#6'Height'#2#15#3'Top'#2#6#5'Width'#2
+  +'!'#7'Caption'#6#6'Prefix'#11'Font.Height'#2#245#9'Font.Name'#6#5'Arial'#10
   +'Font.Style'#11#6'fsBold'#0#11'ParentColor'#8#10'ParentFont'#8#0#0#6'TLabel'
-  +#7'Label53'#4'Left'#2#5#6'Height'#2#15#3'Top'#3#160#0#5'Width'#2'V'#7'Captio'
-  +'n'#6#14'RX Sample Rate'#11'Font.Height'#2#245#9'Font.Name'#6#5'Arial'#10'Fo'
+  +#7'Label30'#4'Left'#3#204#0#6'Height'#2#15#3'Top'#2#6#5'Width'#2' '#7'Captio'
+  +'n'#6#6'Suffix'#11'Font.Height'#2#245#9'Font.Name'#6#5'Arial'#10'Font.Style'
+  +#11#6'fsBold'#0#11'ParentColor'#8#10'ParentFont'#8#0#0#6'TLabel'#7'Label70'#4
+  +'Left'#3#28#1#6'Height'#2'['#3'Top'#2#6#5'Width'#3#223#1#7'Caption'#12'\'#1#0
+  +#0'Note:  Suffix/Prefix is suggested to only be used in situations where'#13
+  +#10'you have a legal requirement to do so.  You may define a suffix OR'#13#10
+  +'a prefix but not both.  Suffix/prefix support in the JT65 protocol is a'#13
+  +#10'(very) complex issue.  My suggestion is to avoid its use if at all'#13#10
+  +'possible.  Suffix/prefix support in JT65-HF is, at best, incomplete.'#11'Fo'
+  +'nt.Height'#2#241#9'Font.Name'#6#5'Arial'#10'Font.Style'#11#6'fsBold'#0#11'P'
+  +'arentColor'#8#10'ParentFont'#8#0#0#5'TEdit'#8'edMyCall'#4'Left'#2#5#6'Heigh'
+  +'t'#2#24#3'Top'#2#24#5'Width'#2'P'#8'CharCase'#7#11'ecUppercase'#11'Font.Hei'
+  +'ght'#2#243#9'Font.Name'#6#5'Arial'#8'OnChange'#7#14'edMyCallChange'#10'Pare'
+  +'ntFont'#8#8'TabOrder'#2#0#0#0#5'TEdit'#8'edMyGrid'#4'Left'#2#5#6'Height'#2
+  +#24#3'Top'#2'K'#5'Width'#2'P'#11'Font.Height'#2#243#9'Font.Name'#6#5'Arial'
+  +#10'ParentFont'#8#8'TabOrder'#2#1#0#0#9'TComboBox'#9'cbAudioIn'#4'Left'#2#4#6
+  +'Height'#2#24#3'Top'#2'y'#5'Width'#3','#1#11'Font.Height'#2#243#9'Font.Name'
+  +#6#5'Arial'#10'ItemHeight'#2#16#9'ItemIndex'#2#0#13'Items.Strings'#1#6#13'De'
+  +'fault Input'#0#8'OnChange'#7#15'cbAudioInChange'#10'ParentFont'#8#5'Style'#7
+  +#14'csDropDownList'#8'TabOrder'#2#2#4'Text'#6#13'Default Input'#0#0#9'TCombo'
+  +'Box'#10'cbAudioOut'#4'Left'#3';'#1#6'Height'#2#24#3'Top'#2'y'#5'Width'#3','
+  +#1#11'Font.Height'#2#243#9'Font.Name'#6#5'Arial'#10'ItemHeight'#2#16#9'ItemI'
+  +'ndex'#2#0#13'Items.Strings'#1#6#13'Default Ouput'#0#8'OnChange'#7#16'cbAudi'
+  +'oOutChange'#10'ParentFont'#8#5'Style'#7#14'csDropDownList'#8'TabOrder'#2#3#4
+  +'Text'#6#13'Default Ouput'#0#0#5'TEdit'#9'edRXSRCor'#4'Left'#2#5#6'Height'#2
+  +#24#3'Top'#3#176#0#5'Width'#2'?'#11'Font.Height'#2#243#9'Font.Name'#6#5'Aria'
+  ,'l'#10'Font.Style'#11#6'fsBold'#0#10'ParentFont'#8#8'TabOrder'#2#4#4'Text'#6
+  +#6'1.0000'#0#0#5'TEdit'#9'edTXSRCor'#4'Left'#2'y'#6'Height'#2#24#3'Top'#3#176
+  +#0#5'Width'#2'?'#11'Font.Height'#2#243#9'Font.Name'#6#5'Arial'#10'Font.Style'
+  +#11#6'fsBold'#0#10'ParentFont'#8#8'TabOrder'#2#5#4'Text'#6#6'1.0000'#0#0#9'T'
+  +'CheckBox'#15'chkEnableAutoSR'#4'Left'#3#220#0#6'Height'#2#19#3'Top'#3#177#0
+  +#5'Width'#3#29#1#7'Caption'#6'.Enable Automatic RX/TX Sample Rate Correction'
+  +'.'#11'Font.Height'#2#245#9'Font.Name'#6#5'Arial'#10'Font.Style'#11#6'fsBold'
+  +#0#8'OnChange'#7#21'chkEnableAutoSRChange'#10'ParentFont'#8#14'ParentShowHin'
+  +'t'#8#8'ShowHint'#9#8'TabOrder'#2#6#0#0#9'TCheckBox'#12'cbTXWatchDog'#4'Left'
+  +#2#4#6'Height'#2#20#3'Top'#3#250#0#5'Width'#3#196#1#7'Caption'#6'EDisable TX'
+  +' after sending same message 15 times. (Runaway TX watchdog)'#7'Checked'#9#5
+  +'State'#7#9'cbChecked'#8'TabOrder'#2#7#0#0#9'TCheckBox'#17'cbDisableMultiQSO'
+  +#4'Left'#2#4#6'Height'#2#20#3'Top'#3#20#1#5'Width'#3#15#2#7'Caption'#6'SDisa'
+  +'ble Multidecoder while in QSO.  Suggested unless you have a fast CPU (>1.5G'
+  +'Hz).'#7'Checked'#9#5'State'#7#9'cbChecked'#8'TabOrder'#2#8#0#0#9'TCheckBox'
+  +#17'cbMultiAutoEnable'#4'Left'#2#4#6'Height'#2#20#3'Top'#3'.'#1#5'Width'#3
+  +#190#1#7'Caption'#6'KEnable Multidecoder after 2 minutes of no TX (If disabl'
+  +'ed by option above).'#7'Checked'#9#5'State'#7#9'cbChecked'#8'TabOrder'#2#9#0
+  +#0#9'TCheckBox'#9'cbSaveCSV'#4'Left'#2#4#6'Height'#2#20#3'Top'#3'{'#1#5'Widt'
+  +'h'#3'"'#1#7'Caption'#6'/Save text of decodes and transmissions to file.'#7
+  +'Checked'#9#5'State'#7#9'cbChecked'#8'TabOrder'#2#10#0#0#14'TDirectoryEdit'
+  +#14'DirectoryEdit1'#4'Left'#2#4#6'Height'#2#24#3'Top'#3#169#1#5'Width'#3#199
+  +#2#10'ShowHidden'#8#11'ButtonWidth'#2#23#9'NumGlyphs'#2#0#9'MaxLength'#2#0#8
+  +'TabOrder'#2#11#0#0#9'TCheckBox'#14'cbRestoreMulti'#4'Left'#2#4#6'Height'#2
+  +#20#3'Top'#3'I'#1#5'Width'#3#242#0#7'Caption'#6'%Restore defaults sets Multi'
+  +'decoder On'#7'Checked'#9#5'State'#7#9'cbChecked'#8'TabOrder'#2#12#0#0#9'TCo'
+  +'mboBox'#11'comboPrefix'#4'Left'#2'd'#6'Height'#2#24#3'Top'#2#24#5'Width'#2
+  +'\'#10'ItemHeight'#2#16#9'ItemIndex'#2#0#13'Items.Strings'#1#6#4'NONE'#0#8'O'
+  +'nChange'#7#17'comboPrefixChange'#5'Style'#7#14'csDropDownList'#8'TabOrder'#2
+  +#13#4'Text'#6#4'NONE'#0#0#9'TComboBox'#11'comboSuffix'#4'Left'#3#204#0#6'Hei'
+  +'ght'#2#24#3'Top'#2#24#5'Width'#2'@'#10'ItemHeight'#2#16#9'ItemIndex'#2#0#13
+  +'Items.Strings'#1#6#4'NONE'#0#8'OnChange'#7#17'comboPrefixChange'#5'Style'#7
+  +#14'csDropDownList'#8'TabOrder'#2#14#4'Text'#6#4'NONE'#0#0#9'TCheckBox'#6'cb'
+  +'CWID'#4'Left'#2#4#6'Height'#2#20#3'Top'#3'a'#1#5'Width'#3#16#1#7'Caption'#6
+  +'''Send CW ID With 73 or Free Text Message'#8'TabOrder'#2#15#0#0#0#5'TPage'#5
+  +'Page2'#7'Caption'#6#15'Rig Control/PTT'#11'ClientWidth'#3#8#3#12'ClientHeig'
+  +'ht'#3#203#1#0#6'TLabel'#6'Label1'#4'Left'#3#196#0#6'Height'#2#17#3'Top'#3#13
+  +#1#5'Width'#3#174#0#7'Caption'#6#27'Rig Control Reported QRG Hz'#11'ParentCo'
+  +'lor'#8#7'Visible'#8#0#0#6'TLabel'#7'Label10'#4'Left'#2#10#6'Height'#2#17#3
+  +'Top'#2#23#5'Width'#2'4'#7'Caption'#6#8'PTT Port'#11'ParentColor'#8#0#0#6'TL'
+  +'abel'#6'Label3'#4'Left'#2'q'#6'Height'#2#17#3'Top'#2#23#5'Width'#3#184#1#7
+  +'Caption'#6'MTest PTT will Key/Unkey your Transceiver.  No audio will be sen'
+  +'t during test.'#11'ParentColor'#8#0#0#6'TLabel'#6'Label9'#4'Left'#2#10#6'He'
+  +'ight'#2#17#3'Top'#2#2#5'Width'#3'/'#2#7'Caption'#6'UEnter your PTT port int'
+  +'o the input box below in the format COM###, for example, COM11'#11'Font.Hei'
+  +'ght'#2#243#9'Font.Name'#6#5'Arial'#10'Font.Style'#11#6'fsBold'#0#11'ParentC'
+  +'olor'#8#10'ParentFont'#8#0#0#5'TEdit'#6'rigQRG'#4'Left'#3#196#0#6'Height'#2
+  +#24#3'Top'#3'!'#1#5'Width'#2'P'#8'ReadOnly'#9#8'TabOrder'#2#0#4'Text'#6#1'0'
+  +#7'Visible'#8#0#0#11'TRadioGroup'#9'OmniGroup'#4'Left'#3#148#1#6'Height'#2'5'
+  +#3'Top'#2'H'#5'Width'#3#219#0#8'AutoFill'#9#7'Caption'#6#7'OmniRig'#28'Child'
+  +'Sizing.LeftRightSpacing'#2#6#28'ChildSizing.TopBottomSpacing'#2#6#29'ChildS'
+  +'izing.EnlargeHorizontal'#7#24'crsHomogenousChildResize'#27'ChildSizing.Enla'
+  +'rgeVertical'#7#24'crsHomogenousChildResize'#28'ChildSizing.ShrinkHorizontal'
+  +#7#14'crsScaleChilds'#26'ChildSizing.ShrinkVertical'#7#14'crsScaleChilds'#18
+  +'ChildSizing.Layout'#7#29'cclLeftToRightThenTopToBottom'#27'ChildSizing.Cont'
+  +'rolsPerLine'#2#3#12'ClientHeight'#2'#'#11'ClientWidth'#3#215#0#7'Columns'#2
+  +#3#8'TabOrder'#2#1#0#9'TCheckBox'#10'chkUseOmni'#4'Left'#2#6#6'Height'#2#23#3
+  +'Top'#2#6#5'Width'#2'A'#7'Caption'#6#6'Enable'#8'OnChange'#7#16'chkUseOmniCh'
+  +'ange'#8'TabOrder'#2#0#0#0#12'TRadioButton'#10'radioOmni1'#4'Left'#2'G'#6'He'
+  +'ight'#2#23#3'Top'#2#6#5'Width'#2'E'#7'Caption'#6#7'Radio 1'#7'Checked'#9#8
+  +'TabOrder'#2#1#7'TabStop'#9#0#0#12'TRadioButton'#10'radioOmni2'#4'Left'#3#140
+  +#0#6'Height'#2#23#3'Top'#2#6#5'Width'#2'E'#7'Caption'#6#7'Radio 2'#8'TabOrde'
+  +'r'#2#2#0#0#0#11'TRadioGroup'#11'RadioGroup1'#4'Left'#2#10#6'Height'#2'5'#3
+  +'Top'#2'H'#5'Width'#3#130#1#8'AutoFill'#9#7'Caption'#6#16'Ham Radio Deluxe'
+  ,#28'ChildSizing.LeftRightSpacing'#2#6#28'ChildSizing.TopBottomSpacing'#2#6#29
+  +'ChildSizing.EnlargeHorizontal'#7#24'crsHomogenousChildResize'#27'ChildSizin'
+  +'g.EnlargeVertical'#7#24'crsHomogenousChildResize'#28'ChildSizing.ShrinkHori'
+  +'zontal'#7#14'crsScaleChilds'#26'ChildSizing.ShrinkVertical'#7#14'crsScaleCh'
+  +'ilds'#18'ChildSizing.Layout'#7#29'cclLeftToRightThenTopToBottom'#27'ChildSi'
+  +'zing.ControlsPerLine'#2#3#12'ClientHeight'#2'#'#11'ClientWidth'#3'~'#1#7'Co'
+  +'lumns'#2#3#8'TabOrder'#2#2#0#9'TCheckBox'#9'chkUseHRD'#4'Left'#2#6#6'Height'
+  +#2#23#3'Top'#2#6#5'Width'#2'r'#7'Caption'#6#6'Enable'#8'OnChange'#7#15'chkUs'
+  +'eHRDChange'#8'TabOrder'#2#0#0#0#12'TRadioButton'#6'rbHRD4'#4'Left'#2'x'#6'H'
+  +'eight'#2#23#3'Top'#2#6#5'Width'#3#129#0#7'Caption'#6#9'Version 4'#8'TabOrde'
+  +'r'#2#1#0#0#12'TRadioButton'#6'rbHRD5'#4'Left'#3#249#0#6'Height'#2#23#3'Top'
+  +#2#6#5'Width'#2#127#7'Caption'#6#9'Version 5'#7'Checked'#9#8'TabOrder'#2#2#7
+  +'TabStop'#9#0#0#0#11'TRadioGroup'#11'RadioGroup2'#4'Left'#3'v'#2#6'Height'#2
+  +'5'#3'Top'#2'H'#5'Width'#3#142#0#8'AutoFill'#9#7'Caption'#6#9'Commander'#28
+  +'ChildSizing.LeftRightSpacing'#2#6#28'ChildSizing.TopBottomSpacing'#2#6#29'C'
+  +'hildSizing.EnlargeHorizontal'#7#24'crsHomogenousChildResize'#27'ChildSizing'
+  +'.EnlargeVertical'#7#24'crsHomogenousChildResize'#28'ChildSizing.ShrinkHoriz'
+  +'ontal'#7#14'crsScaleChilds'#26'ChildSizing.ShrinkVertical'#7#14'crsScaleChi'
+  +'lds'#18'ChildSizing.Layout'#7#29'cclLeftToRightThenTopToBottom'#27'ChildSiz'
+  +'ing.ControlsPerLine'#2#3#12'ClientHeight'#2'#'#11'ClientWidth'#3#138#0#7'Co'
+  +'lumns'#2#3#8'TabOrder'#2#3#0#9'TCheckBox'#15'chkUseCommander'#4'Left'#2#6#6
+  +'Height'#2#23#3'Top'#2#6#5'Width'#2'~'#7'Caption'#6#6'Enable'#8'OnChange'#7
+  +#21'chkUseCommanderChange'#8'TabOrder'#2#0#0#0#0#9'TGroupBox'#8'groupHRD'#4
+  +'Left'#2#10#6'Height'#3'J'#1#3'Top'#2#127#5'Width'#3#250#2#7'Caption'#6#11'H'
+  +'RD Details'#12'ClientHeight'#3'8'#1#11'ClientWidth'#3#246#2#11'Font.Height'
+  +#2#243#9'Font.Name'#6#5'Arial'#10'Font.Style'#11#6'fsBold'#0#10'ParentFont'#8
+  +#8'TabOrder'#2#4#7'Visible'#8#0#6'TLabel'#7'Label11'#4'Left'#3#177#1#6'Heigh'
+  +'t'#2#17#3'Top'#2'O'#5'Width'#3#154#0#7'Caption'#6#25'Audio Gain (Currently:'
+  +'  )'#11'Font.Height'#2#243#9'Font.Name'#6#5'Arial'#10'Font.Style'#11#6'fsBo'
+  +'ld'#0#11'ParentColor'#8#10'ParentFont'#8#0#0#6'TLabel'#7'Label15'#4'Left'#3
+  +#177#1#6'Height'#2#17#3'Top'#3#179#0#5'Width'#3#139#0#7'Caption'#6#23'Mic Ga'
+  +'in (Currently:  )'#11'Font.Height'#2#243#9'Font.Name'#6#5'Arial'#10'Font.St'
+  +'yle'#11#6'fsBold'#0#11'ParentColor'#8#10'ParentFont'#8#0#0#6'TLabel'#7'Labe'
+  +'l16'#4'Left'#2#6#6'Height'#2#17#3'Top'#3#188#0#5'Width'#2'K'#7'Caption'#6#10
+  +'Rig QRG Hz'#11'Font.Height'#2#243#9'Font.Name'#6#5'Arial'#10'Font.Style'#11
+  +#6'fsBold'#0#11'ParentColor'#8#10'ParentFont'#8#0#0#6'TLabel'#7'Label17'#4'L'
+  +'eft'#3#177#1#6'Height'#2#17#3'Top'#3#129#0#5'Width'#3#134#0#7'Caption'#6#22
+  +'RF Gain (Currently:  )'#11'Font.Height'#2#243#9'Font.Name'#6#5'Arial'#10'Fo'
   +'nt.Style'#11#6'fsBold'#0#11'ParentColor'#8#10'ParentFont'#8#0#0#6'TLabel'#7
-  +'Label54'#4'Left'#2'y'#6'Height'#2#15#3'Top'#3#160#0#5'Width'#2'V'#7'Caption'
-  +#6#14'TX Sample Rate'#11'Font.Height'#2#245#9'Font.Name'#6#5'Arial'#10'Font.'
-  +'Style'#11#6'fsBold'#0#11'ParentColor'#8#10'ParentFont'#8#0#0#6'TLabel'#7'La'
-  +'bel14'#4'Left'#2#5#6'Height'#2'!'#3'Top'#3#203#0#5'Width'#3'~'#2#7'Caption'
-  +#6#189'Automatic adjustment may cause some initial skewing of spectrum displ'
-  +'ay until SR settles.  This is harmless.'#13#10'In most cases it is suggeste'
-  +'d that Automatic sample rate correction be enabled.'#11'Font.Height'#2#243#9
-  +'Font.Name'#6#5'Arial'#11'ParentColor'#8#10'ParentFont'#8#0#0#6'TLabel'#7'La'
-  +'bel29'#4'Left'#2#5#6'Height'#2#15#3'Top'#3#151#1#5'Width'#3#248#0#7'Caption'
-  +#6'/Location of RX/TX history file (JT65hf-log.csv)'#11'Font.Height'#2#245#9
-  +'Font.Name'#6#5'Arial'#10'Font.Style'#11#6'fsBold'#0#11'ParentColor'#8#10'Pa'
-  +'rentFont'#8#0#0#6'TLabel'#7'Label28'#4'Left'#2'd'#6'Height'#2#15#3'Top'#2#6
-  +#5'Width'#2'!'#7'Caption'#6#6'Prefix'#11'Font.Height'#2#245#9'Font.Name'#6#5
-  +'Arial'#10'Font.Style'#11#6'fsBold'#0#11'ParentColor'#8#10'ParentFont'#8#0#0
-  +#6'TLabel'#7'Label30'#4'Left'#3#204#0#6'Height'#2#15#3'Top'#2#6#5'Width'#2' '
-  +#7'Caption'#6#6'Suffix'#11'Font.Height'#2#245#9'Font.Name'#6#5'Arial'#10'Fon'
-  +'t.Style'#11#6'fsBold'#0#11'ParentColor'#8#10'ParentFont'#8#0#0#6'TLabel'#7
-  +'Label70'#4'Left'#3#28#1#6'Height'#2'['#3'Top'#2#6#5'Width'#3#223#1#7'Captio'
-  +'n'#12'\'#1#0#0'Note:  Suffix/Prefix is suggested to only be used in situati'
-  +'ons where'#13#10'you have a legal requirement to do so.  You may define a s'
-  +'uffix OR'#13#10'a prefix but not both.  Suffix/prefix support in the JT65 p'
-  +'rotocol is a'#13#10'(very) complex issue.  My suggestion is to avoid its us'
-  +'e if at all'#13#10'possible.  Suffix/prefix support in JT65-HF is, at best,'
-  +' incomplete.'#11'Font.Height'#2#241#9'Font.Name'#6#5'Arial'#10'Font.Style'
-  +#11#6'fsBold'#0#11'ParentColor'#8#10'ParentFont'#8#0#0#5'TEdit'#8'edMyCall'#4
-  +'Left'#2#5#6'Height'#2#24#3'Top'#2#24#5'Width'#2'P'#8'CharCase'#7#11'ecUpper'
-  +'case'#11'Font.Height'#2#243#9'Font.Name'#6#5'Arial'#8'OnChange'#7#14'edMyCa'
-  +'llChange'#10'ParentFont'#8#8'TabOrder'#2#0#0#0#5'TEdit'#8'edMyGrid'#4'Left'
-  +#2#5#6'Height'#2#24#3'Top'#2'K'#5'Width'#2'P'#11'Font.Height'#2#243#9'Font.N'
-  +'ame'#6#5'Arial'#10'ParentFont'#8#8'TabOrder'#2#1#0#0#9'TComboBox'#9'cbAudio'
-  +'In'#4'Left'#2#4#6'Height'#2#24#3'Top'#2'y'#5'Width'#3','#1#11'Font.Height'#2
-  +#243#9'Font.Name'#6#5'Arial'#10'ItemHeight'#2#16#9'ItemIndex'#2#0#13'Items.S'
-  +'trings'#1#6#13'Default Input'#0#8'OnChange'#7#15'cbAudioInChange'#10'Parent'
-  +'Font'#8#5'Style'#7#14'csDropDownList'#8'TabOrder'#2#2#4'Text'#6#13'Default '
-  +'Input'#0#0#9'TComboBox'#10'cbAudioOut'#4'Left'#3';'#1#6'Height'#2#24#3'Top'
-  +#2'y'#5'Width'#3','#1#11'Font.Height'#2#243#9'Font.Name'#6#5'Arial'#10'ItemH'
-  +'eight'#2#16#9'ItemIndex'#2#0#13'Items.Strings'#1#6#13'Default Ouput'#0#8'On'
-  +'Change'#7#16'cbAudioOutChange'#10'ParentFont'#8#5'Style'#7#14'csDropDownLis'
-  +'t'#8'TabOrder'#2#3#4'Text'#6#13'Default Ouput'#0#0#5'TEdit'#9'edRXSRCor'#4
-  +'Left'#2#5#6'Height'#2#24#3'Top'#3#176#0#5'Width'#2'?'#11'Font.Height'#2#243
-  ,#9'Font.Name'#6#5'Arial'#10'Font.Style'#11#6'fsBold'#0#10'ParentFont'#8#8'Ta'
-  +'bOrder'#2#4#4'Text'#6#6'1.0000'#0#0#5'TEdit'#9'edTXSRCor'#4'Left'#2'y'#6'He'
-  +'ight'#2#24#3'Top'#3#176#0#5'Width'#2'?'#11'Font.Height'#2#243#9'Font.Name'#6
-  +#5'Arial'#10'Font.Style'#11#6'fsBold'#0#10'ParentFont'#8#8'TabOrder'#2#5#4'T'
-  +'ext'#6#6'1.0000'#0#0#9'TCheckBox'#15'chkEnableAutoSR'#4'Left'#3#220#0#6'Hei'
-  +'ght'#2#19#3'Top'#3#177#0#5'Width'#3#29#1#7'Caption'#6'.Enable Automatic RX/'
-  +'TX Sample Rate Correction.'#11'Font.Height'#2#245#9'Font.Name'#6#5'Arial'#10
-  +'Font.Style'#11#6'fsBold'#0#8'OnChange'#7#21'chkEnableAutoSRChange'#10'Paren'
-  +'tFont'#8#14'ParentShowHint'#8#8'ShowHint'#9#8'TabOrder'#2#6#0#0#9'TCheckBox'
-  +#12'cbTXWatchDog'#4'Left'#2#4#6'Height'#2#20#3'Top'#3#250#0#5'Width'#3#196#1
-  +#7'Caption'#6'EDisable TX after sending same message 15 times. (Runaway TX w'
-  +'atchdog)'#7'Checked'#9#5'State'#7#9'cbChecked'#8'TabOrder'#2#7#0#0#9'TCheck'
-  +'Box'#17'cbDisableMultiQSO'#4'Left'#2#4#6'Height'#2#20#3'Top'#3#20#1#5'Width'
-  +#3#15#2#7'Caption'#6'SDisable Multidecoder while in QSO.  Suggested unless y'
-  +'ou have a fast CPU (>1.5GHz).'#7'Checked'#9#5'State'#7#9'cbChecked'#8'TabOr'
-  +'der'#2#8#0#0#9'TCheckBox'#17'cbMultiAutoEnable'#4'Left'#2#4#6'Height'#2#20#3
-  +'Top'#3'.'#1#5'Width'#3#190#1#7'Caption'#6'KEnable Multidecoder after 2 minu'
-  +'tes of no TX (If disabled by option above).'#7'Checked'#9#5'State'#7#9'cbCh'
-  +'ecked'#8'TabOrder'#2#9#0#0#9'TCheckBox'#9'cbSaveCSV'#4'Left'#2#4#6'Height'#2
-  +#20#3'Top'#3'{'#1#5'Width'#3'"'#1#7'Caption'#6'/Save text of decodes and tra'
-  +'nsmissions to file.'#7'Checked'#9#5'State'#7#9'cbChecked'#8'TabOrder'#2#10#0
-  +#0#14'TDirectoryEdit'#14'DirectoryEdit1'#4'Left'#2#4#6'Height'#2#24#3'Top'#3
-  +#169#1#5'Width'#3#199#2#10'ShowHidden'#8#11'ButtonWidth'#2#23#9'NumGlyphs'#2
-  +#0#9'MaxLength'#2#0#8'TabOrder'#2#11#0#0#9'TCheckBox'#14'cbRestoreMulti'#4'L'
-  +'eft'#2#4#6'Height'#2#20#3'Top'#3'I'#1#5'Width'#3#242#0#7'Caption'#6'%Restor'
-  +'e defaults sets Multidecoder On'#7'Checked'#9#5'State'#7#9'cbChecked'#8'Tab'
-  +'Order'#2#12#0#0#9'TComboBox'#11'comboPrefix'#4'Left'#2'd'#6'Height'#2#24#3
-  +'Top'#2#24#5'Width'#2'\'#10'ItemHeight'#2#16#9'ItemIndex'#2#0#13'Items.Strin'
-  +'gs'#1#6#4'NONE'#0#8'OnChange'#7#17'comboPrefixChange'#5'Style'#7#14'csDropD'
-  +'ownList'#8'TabOrder'#2#13#4'Text'#6#4'NONE'#0#0#9'TComboBox'#11'comboSuffix'
-  +#4'Left'#3#204#0#6'Height'#2#24#3'Top'#2#24#5'Width'#2'@'#10'ItemHeight'#2#16
-  +#9'ItemIndex'#2#0#13'Items.Strings'#1#6#4'NONE'#0#8'OnChange'#7#17'comboPref'
-  +'ixChange'#5'Style'#7#14'csDropDownList'#8'TabOrder'#2#14#4'Text'#6#4'NONE'#0
-  +#0#9'TCheckBox'#6'cbCWID'#4'Left'#2#4#6'Height'#2#20#3'Top'#3'a'#1#5'Width'#3
-  +#16#1#7'Caption'#6'''Send CW ID With 73 or Free Text Message'#8'TabOrder'#2
-  +#15#0#0#0#5'TPage'#5'Page2'#7'Caption'#6#15'Rig Control/PTT'#11'ClientWidth'
-  +#3#8#3#12'ClientHeight'#3#203#1#0#6'TLabel'#6'Label1'#4'Left'#3#196#0#6'Heig'
-  +'ht'#2#17#3'Top'#3#13#1#5'Width'#3#174#0#7'Caption'#6#27'Rig Control Reporte'
-  +'d QRG Hz'#11'ParentColor'#8#7'Visible'#8#0#0#6'TLabel'#7'Label10'#4'Left'#2
-  +#10#6'Height'#2#17#3'Top'#2#23#5'Width'#2'4'#7'Caption'#6#8'PTT Port'#11'Par'
-  +'entColor'#8#0#0#6'TLabel'#6'Label3'#4'Left'#2'q'#6'Height'#2#17#3'Top'#2#23
-  +#5'Width'#3#184#1#7'Caption'#6'MTest PTT will Key/Unkey your Transceiver.  N'
-  +'o audio will be sent during test.'#11'ParentColor'#8#0#0#6'TLabel'#6'Label9'
-  +#4'Left'#2#10#6'Height'#2#17#3'Top'#2#2#5'Width'#3'/'#2#7'Caption'#6'UEnter '
-  +'your PTT port into the input box below in the format COM###, for example, C'
-  +'OM11'#11'Font.Height'#2#243#9'Font.Name'#6#5'Arial'#10'Font.Style'#11#6'fsB'
-  +'old'#0#11'ParentColor'#8#10'ParentFont'#8#0#0#5'TEdit'#6'rigQRG'#4'Left'#3
-  +#196#0#6'Height'#2#24#3'Top'#3'!'#1#5'Width'#2'P'#8'ReadOnly'#9#8'TabOrder'#2
-  +#0#4'Text'#6#1'0'#7'Visible'#8#0#0#11'TRadioGroup'#9'OmniGroup'#4'Left'#3#148
-  +#1#6'Height'#2'5'#3'Top'#2'H'#5'Width'#3#219#0#8'AutoFill'#9#7'Caption'#6#7
-  +'OmniRig'#28'ChildSizing.LeftRightSpacing'#2#6#28'ChildSizing.TopBottomSpaci'
-  +'ng'#2#6#29'ChildSizing.EnlargeHorizontal'#7#24'crsHomogenousChildResize'#27
-  +'ChildSizing.EnlargeVertical'#7#24'crsHomogenousChildResize'#28'ChildSizing.'
-  +'ShrinkHorizontal'#7#14'crsScaleChilds'#26'ChildSizing.ShrinkVertical'#7#14
-  +'crsScaleChilds'#18'ChildSizing.Layout'#7#29'cclLeftToRightThenTopToBottom'
-  +#27'ChildSizing.ControlsPerLine'#2#3#12'ClientHeight'#2'#'#11'ClientWidth'#3
-  +#215#0#7'Columns'#2#3#8'TabOrder'#2#1#0#9'TCheckBox'#10'chkUseOmni'#4'Left'#2
-  +#6#6'Height'#2#23#3'Top'#2#6#5'Width'#2'A'#7'Caption'#6#6'Enable'#8'OnChange'
-  +#7#16'chkUseOmniChange'#8'TabOrder'#2#0#0#0#12'TRadioButton'#10'radioOmni1'#4
-  +'Left'#2'G'#6'Height'#2#23#3'Top'#2#6#5'Width'#2'E'#7'Caption'#6#7'Radio 1'#7
-  +'Checked'#9#8'TabOrder'#2#1#7'TabStop'#9#0#0#12'TRadioButton'#10'radioOmni2'
-  +#4'Left'#3#140#0#6'Height'#2#23#3'Top'#2#6#5'Width'#2'E'#7'Caption'#6#7'Radi'
-  +'o 2'#8'TabOrder'#2#2#0#0#0#11'TRadioGroup'#11'RadioGroup1'#4'Left'#2#10#6'H'
-  +'eight'#2'5'#3'Top'#2'H'#5'Width'#3#130#1#8'AutoFill'#9#7'Caption'#6#16'Ham '
-  ,'Radio Deluxe'#28'ChildSizing.LeftRightSpacing'#2#6#28'ChildSizing.TopBottom'
-  +'Spacing'#2#6#29'ChildSizing.EnlargeHorizontal'#7#24'crsHomogenousChildResiz'
-  +'e'#27'ChildSizing.EnlargeVertical'#7#24'crsHomogenousChildResize'#28'ChildS'
-  +'izing.ShrinkHorizontal'#7#14'crsScaleChilds'#26'ChildSizing.ShrinkVertical'
-  +#7#14'crsScaleChilds'#18'ChildSizing.Layout'#7#29'cclLeftToRightThenTopToBot'
-  +'tom'#27'ChildSizing.ControlsPerLine'#2#3#12'ClientHeight'#2'#'#11'ClientWid'
-  +'th'#3'~'#1#7'Columns'#2#3#8'TabOrder'#2#2#0#9'TCheckBox'#9'chkUseHRD'#4'Lef'
-  +'t'#2#6#6'Height'#2#23#3'Top'#2#6#5'Width'#2'r'#7'Caption'#6#6'Enable'#8'OnC'
-  +'hange'#7#15'chkUseHRDChange'#8'TabOrder'#2#0#0#0#12'TRadioButton'#6'rbHRD4'
-  +#4'Left'#2'x'#6'Height'#2#23#3'Top'#2#6#5'Width'#3#129#0#7'Caption'#6#9'Vers'
-  +'ion 4'#8'TabOrder'#2#1#0#0#12'TRadioButton'#6'rbHRD5'#4'Left'#3#249#0#6'Hei'
-  +'ght'#2#23#3'Top'#2#6#5'Width'#2#127#7'Caption'#6#9'Version 5'#7'Checked'#9#8
-  +'TabOrder'#2#2#7'TabStop'#9#0#0#0#11'TRadioGroup'#11'RadioGroup2'#4'Left'#3
-  +'v'#2#6'Height'#2'5'#3'Top'#2'H'#5'Width'#3#142#0#8'AutoFill'#9#7'Caption'#6
-  +#9'Commander'#28'ChildSizing.LeftRightSpacing'#2#6#28'ChildSizing.TopBottomS'
-  +'pacing'#2#6#29'ChildSizing.EnlargeHorizontal'#7#24'crsHomogenousChildResize'
-  +#27'ChildSizing.EnlargeVertical'#7#24'crsHomogenousChildResize'#28'ChildSizi'
-  +'ng.ShrinkHorizontal'#7#14'crsScaleChilds'#26'ChildSizing.ShrinkVertical'#7
-  +#14'crsScaleChilds'#18'ChildSizing.Layout'#7#29'cclLeftToRightThenTopToBotto'
-  +'m'#27'ChildSizing.ControlsPerLine'#2#3#12'ClientHeight'#2'#'#11'ClientWidth'
-  +#3#138#0#7'Columns'#2#3#8'TabOrder'#2#3#0#9'TCheckBox'#15'chkUseCommander'#4
-  +'Left'#2#6#6'Height'#2#23#3'Top'#2#6#5'Width'#2'~'#7'Caption'#6#6'Enable'#8
-  +'OnChange'#7#21'chkUseCommanderChange'#8'TabOrder'#2#0#0#0#0#9'TGroupBox'#8
-  +'groupHRD'#4'Left'#2#10#6'Height'#3'J'#1#3'Top'#2#127#5'Width'#3#250#2#7'Cap'
-  +'tion'#6#11'HRD Details'#12'ClientHeight'#3'8'#1#11'ClientWidth'#3#246#2#11
-  +'Font.Height'#2#243#9'Font.Name'#6#5'Arial'#10'Font.Style'#11#6'fsBold'#0#10
-  +'ParentFont'#8#8'TabOrder'#2#4#7'Visible'#8#0#6'TLabel'#7'Label11'#4'Left'#3
-  +#177#1#6'Height'#2#17#3'Top'#2'O'#5'Width'#3#154#0#7'Caption'#6#25'Audio Gai'
-  +'n (Currently:  )'#11'Font.Height'#2#243#9'Font.Name'#6#5'Arial'#10'Font.Sty'
-  +'le'#11#6'fsBold'#0#11'ParentColor'#8#10'ParentFont'#8#0#0#6'TLabel'#7'Label'
-  +'15'#4'Left'#3#177#1#6'Height'#2#17#3'Top'#3#179#0#5'Width'#3#139#0#7'Captio'
-  +'n'#6#23'Mic Gain (Currently:  )'#11'Font.Height'#2#243#9'Font.Name'#6#5'Ari'
+  +'Label18'#4'Left'#3#177#1#6'Height'#2#17#3'Top'#3#229#0#5'Width'#3#185#0#7'C'
+  +'aption'#6#30'RF Output Level (Currently:  )'#11'Font.Height'#2#243#9'Font.N'
+  +'ame'#6#5'Arial'#10'Font.Style'#11#6'fsBold'#0#11'ParentColor'#8#10'ParentFo'
+  +'nt'#8#0#0#6'TLabel'#7'Label24'#4'Left'#3#186#2#6'Height'#2#17#3'Top'#2#8#5
+  +'Width'#2''''#7'Caption'#6#5'S9+70'#11'ParentColor'#8#0#0#6'TLabel'#7'Label2'
+  +'5'#4'Left'#3#177#1#6'Height'#2#17#3'Top'#2' '#5'Width'#2'i'#7'Caption'#6#16
+  +'Left Audio Level'#11'ParentColor'#8#0#0#6'TLabel'#7'Label31'#4'Left'#3'}'#2
+  +#6'Height'#2#17#3'Top'#2' '#5'Width'#2'r'#7'Caption'#6#17'Right Audio Level'
+  +#11'ParentColor'#8#0#0#6'TLabel'#7'Label21'#4'Left'#2#30#6'Height'#2#17#3'To'
+  +'p'#2#8#5'Width'#2'P'#7'Caption'#6#11'At UTC Time'#11'ParentColor'#8#0#0#6'T'
+  +'Label'#7'Label32'#4'Left'#3#142#0#6'Height'#2#17#3'Top'#2#8#5'Width'#2'M'#7
+  +'Caption'#6#10'QSY to QRG'#11'ParentColor'#8#0#0#6'TLabel'#7'Label66'#4'Left'
+  +#3#245#0#6'Height'#2#17#3'Top'#2#8#5'Width'#2'Y'#7'Caption'#6#12'Tune Antenn'
+  +'a'#11'ParentColor'#8#0#0#6'TLabel'#7'Label68'#4'Left'#2#6#6'Height'#2#17#3
+  +'Top'#3#31#1#5'Width'#3#128#0#7'Caption'#6#18'HRD Server Address'#11'ParentC'
+  +'olor'#8#0#0#6'TLabel'#7'Label69'#4'Left'#3#29#1#6'Height'#2#17#3'Top'#3#31#1
+  +#5'Width'#2#27#7'Caption'#6#4'Port'#11'ParentColor'#8#0#0#9'TTrackBar'#12'sl'
+  +'iderAFGain'#4'Left'#3#167#1#6'Height'#2#25#3'Top'#2'a'#5'Width'#3'H'#1#3'Ma'
+  +'x'#3#255#0#8'OnChange'#7#18'sliderAFGainChange'#8'Position'#2#0#9'TickStyle'
+  +#7#6'tsNone'#8'TabOrder'#2#0#0#0#9'TTrackBar'#13'sliderMicGain'#4'Left'#3#167
+  +#1#6'Height'#2#25#3'Top'#3#197#0#5'Width'#3'H'#1#3'Max'#3#255#0#8'OnChange'#7
+  +#19'sliderMicGainChange'#8'Position'#2#0#9'TickStyle'#7#6'tsNone'#8'TabOrder'
+  +#2#1#0#0#5'TEdit'#5'Edit4'#4'Left'#2'V'#6'Height'#2#24#3'Top'#3#185#0#5'Widt'
+  +'h'#2'P'#11'Font.Height'#2#243#9'Font.Name'#6#5'Arial'#10'Font.Style'#11#6'f'
+  +'sBold'#0#10'ParentFont'#8#8'TabOrder'#2#2#4'Text'#6#8'14076000'#0#0#7'TButt'
+  ,'on'#9'setHRDQRG'#4'Left'#3#174#0#6'Height'#2#24#3'Top'#3#185#0#5'Width'#2'd'
+  +#7'Caption'#6#7'Set QRG'#11'Font.Height'#2#243#9'Font.Name'#6#5'Arial'#10'Fo'
+  +'nt.Style'#11#6'fsBold'#0#7'OnClick'#7#14'setHRDQRGClick'#10'ParentFont'#8#8
+  +'TabOrder'#2#3#0#0#9'TTrackBar'#12'sliderRFGain'#4'Left'#3#167#1#6'Height'#2
+  +#25#3'Top'#3#147#0#5'Width'#3'H'#1#3'Max'#3#255#0#8'OnChange'#7#18'sliderRFG'
+  +'ainChange'#8'Position'#2#0#9'TickStyle'#7#6'tsNone'#8'TabOrder'#2#4#0#0#9'T'
+  +'TrackBar'#13'sliderPALevel'#4'Left'#3#167#1#6'Height'#2#25#3'Top'#3#247#0#5
+  +'Width'#3'H'#1#3'Max'#3#255#0#8'OnChange'#7#19'sliderPALevelChange'#8'Positi'
+  +'on'#2#0#9'TickStyle'#7#6'tsNone'#8'TabOrder'#2#5#0#0#12'TProgressBar'#8'pbS'
+  +'Meter'#4'Left'#3#177#1#6'Height'#2#17#3'Top'#2#8#5'Width'#3#255#0#3'Max'#3
+  +#255#0#6'Smooth'#9#8'TabOrder'#2#6#0#0#12'TProgressBar'#8'pbAULeft'#4'Left'#3
+  +#177#1#6'Height'#2#17#3'Top'#2'3'#5'Width'#2'd'#6'Smooth'#9#8'TabOrder'#2#7#0
+  +#0#12'TProgressBar'#9'pbAURight'#4'Left'#3#139#2#6'Height'#2#17#3'Top'#2'3'#5
+  +'Width'#2'd'#6'Smooth'#9#8'TabOrder'#2#8#0#0#9'TCheckBox'#10'chkTxDFVFO'#4'L'
+  +'eft'#2#6#6'Height'#2#20#3'Top'#3#252#0#5'Width'#3'J'#1#7'Caption'#6'.Shift '
+  +'QRG to match DF if TxDF matching enabled'#8'TabOrder'#2#9#0#0#9'TCheckBox'#9
+  +'chkHRDPTT'#4'Left'#2#7#6'Height'#2#20#3'Top'#3#220#0#5'Width'#2'|'#7'Captio'
+  +'n'#6#15'Use HRD for PTT'#8'TabOrder'#2#10#0#0#9'TSpinEdit'#8'qsyHour1'#4'Le'
+  +'ft'#2#30#6'Height'#2#24#3'Top'#2#28#5'Width'#2'2'#11'Font.Height'#2#243#9'F'
+  +'ont.Name'#6#5'Arial'#8'MaxValue'#2#23#10'ParentFont'#8#8'TabOrder'#2#11#0#0
+  +#9'TSpinEdit'#10'qsyMinute1'#4'Left'#2'O'#6'Height'#2#24#3'Top'#2#28#5'Width'
+  +#2'2'#11'Font.Height'#2#243#9'Font.Name'#6#5'Arial'#8'MaxValue'#2';'#10'Pare'
+  +'ntFont'#8#8'TabOrder'#2#12#0#0#5'TEdit'#9'edQRGQSY1'#4'Left'#3#142#0#6'Heig'
+  +'ht'#2#24#3'Top'#2#28#5'Width'#3#128#0#8'TabOrder'#2#13#0#0#9'TCheckBox'#12
+  +'cbEnableQSY1'#4'Left'#2#6#6'Height'#2#19#3'Top'#2#30#5'Width'#2#20#8'TabOrd'
+  +'er'#2#14#0#0#9'TSpinEdit'#8'qsyHour2'#4'Left'#2#30#6'Height'#2#24#3'Top'#2
+  +';'#5'Width'#2'2'#11'Font.Height'#2#243#9'Font.Name'#6#5'Arial'#8'MaxValue'#2
+  +#23#10'ParentFont'#8#8'TabOrder'#2#15#0#0#9'TSpinEdit'#10'qsyMinute2'#4'Left'
+  +#2'O'#6'Height'#2#24#3'Top'#2';'#5'Width'#2'2'#11'Font.Height'#2#243#9'Font.'
+  +'Name'#6#5'Arial'#8'MaxValue'#2';'#10'ParentFont'#8#8'TabOrder'#2#16#0#0#5'T'
+  +'Edit'#9'edQRGQSY2'#4'Left'#3#142#0#6'Height'#2#24#3'Top'#2';'#5'Width'#3#128
+  +#0#8'TabOrder'#2#17#0#0#9'TCheckBox'#12'cbEnableQSY2'#4'Left'#2#6#6'Height'#2
+  +#19#3'Top'#2'>'#5'Width'#2#20#8'TabOrder'#2#18#0#0#9'TSpinEdit'#8'qsyHour3'#4
+  +'Left'#2#30#6'Height'#2#24#3'Top'#2'X'#5'Width'#2'2'#11'Font.Height'#2#243#9
+  +'Font.Name'#6#5'Arial'#8'MaxValue'#2#23#10'ParentFont'#8#8'TabOrder'#2#19#0#0
+  +#9'TSpinEdit'#10'qsyMinute3'#4'Left'#2'O'#6'Height'#2#24#3'Top'#2'W'#5'Width'
+  +#2'2'#11'Font.Height'#2#243#9'Font.Name'#6#5'Arial'#8'MaxValue'#2';'#10'Pare'
+  +'ntFont'#8#8'TabOrder'#2#20#0#0#5'TEdit'#9'edQRGQSY3'#4'Left'#3#142#0#6'Heig'
+  +'ht'#2#24#3'Top'#2'X'#5'Width'#3#128#0#8'TabOrder'#2#21#0#0#9'TCheckBox'#12
+  +'cbEnableQSY3'#4'Left'#2#6#6'Height'#2#19#3'Top'#2'['#5'Width'#2#20#8'TabOrd'
+  +'er'#2#22#0#0#9'TSpinEdit'#8'qsyHour4'#4'Left'#2#30#6'Height'#2#24#3'Top'#2
+  +'v'#5'Width'#2'2'#11'Font.Height'#2#243#9'Font.Name'#6#5'Arial'#8'MaxValue'#2
+  +#23#10'ParentFont'#8#8'TabOrder'#2#23#0#0#9'TSpinEdit'#10'qsyMinute4'#4'Left'
+  +#2'O'#6'Height'#2#24#3'Top'#2'v'#5'Width'#2'2'#11'Font.Height'#2#243#9'Font.'
+  +'Name'#6#5'Arial'#8'MaxValue'#2';'#10'ParentFont'#8#8'TabOrder'#2#24#0#0#5'T'
+  +'Edit'#9'edQRGQSY4'#4'Left'#3#142#0#6'Height'#2#24#3'Top'#2'u'#5'Width'#3#128
+  +#0#8'TabOrder'#2#25#0#0#9'TCheckBox'#12'cbEnableQSY4'#4'Left'#2#6#6'Height'#2
+  +#19#3'Top'#2'w'#5'Width'#2#20#8'TabOrder'#2#26#0#0#9'TSpinEdit'#8'qsyHour5'#4
+  +'Left'#2#30#6'Height'#2#24#3'Top'#3#148#0#5'Width'#2'2'#11'Font.Height'#2#243
+  +#9'Font.Name'#6#5'Arial'#8'MaxValue'#2#23#10'ParentFont'#8#8'TabOrder'#2#27#0
+  +#0#9'TSpinEdit'#10'qsyMinute5'#4'Left'#2'O'#6'Height'#2#24#3'Top'#3#148#0#5
+  +'Width'#2'2'#11'Font.Height'#2#243#9'Font.Name'#6#5'Arial'#8'MaxValue'#2';'
+  +#10'ParentFont'#8#8'TabOrder'#2#28#0#0#5'TEdit'#9'edQRGQSY5'#4'Left'#3#142#0
+  +#6'Height'#2#24#3'Top'#3#148#0#5'Width'#3#128#0#8'TabOrder'#2#29#0#0#9'TChec'
+  +'kBox'#12'cbEnableQSY5'#4'Left'#2#6#6'Height'#2#19#3'Top'#3#150#0#5'Width'#2
+  +#20#8'TabOrder'#2#30#0#0#9'TCheckBox'#8'cbATQSY1'#4'Left'#3#22#1#6'Height'#2
+  +#19#3'Top'#2#30#5'Width'#2#20#8'TabOrder'#2#31#0#0#9'TCheckBox'#8'cbATQSY2'#4
+  +'Left'#3#22#1#6'Height'#2#19#3'Top'#2'>'#5'Width'#2#20#8'TabOrder'#2' '#0#0#9
+  +'TCheckBox'#8'cbATQSY3'#4'Left'#3#22#1#6'Height'#2#19#3'Top'#2'['#5'Width'#2
+  +#20#8'TabOrder'#2'!'#0#0#9'TCheckBox'#8'cbATQSY4'#4'Left'#3#22#1#6'Height'#2
+  +#19#3'Top'#2'w'#5'Width'#2#20#8'TabOrder'#2'"'#0#0#9'TCheckBox'#8'cbATQSY5'#4
+  +'Left'#3#22#1#6'Height'#2#19#3'Top'#3#150#0#5'Width'#2#20#8'TabOrder'#2'#'#0
+  +#0#7'TButton'#10'testHRDPTT'#4'Left'#3#175#0#6'Height'#2#25#3'Top'#3#217#0#5
+  +'Width'#2'e'#7'Caption'#6#12'Test HRD PTT'#7'OnClick'#7#15'testHRDPTTClick'#8
+  ,'TabOrder'#2'$'#0#0#5'TEdit'#10'hrdAddress'#4'Left'#3#140#0#6'Height'#2#24#4
+  +'Hint'#6'&This should almost always be localhost'#3'Top'#3#29#1#5'Width'#3
+  +#134#0#8'OnChange'#7#16'hrdAddressChange'#14'ParentShowHint'#8#8'ShowHint'#9
+  +#8'TabOrder'#2'%'#4'Text'#6#9'localhost'#0#0#5'TEdit'#7'hrdPort'#4'Left'#3'='
+  +#1#6'Height'#2#24#4'Hint'#6#12'Usually 7809'#3'Top'#3#29#1#5'Width'#2'0'#8'O'
+  +'nChange'#7#13'hrdPortChange'#14'ParentShowHint'#8#8'ShowHint'#9#8'TabOrder'
+  +#2'&'#4'Text'#6#4'7809'#0#0#0#5'TEdit'#20'editUserDefinedPort1'#4'Left'#2#10
+  +#6'Height'#2#24#3'Top'#2'+'#5'Width'#2'Z'#8'CharCase'#7#11'ecUppercase'#8'Ta'
+  +'bOrder'#2#5#4'Text'#6#4'NONE'#0#0#7'TButton'#13'buttonTestPTT'#4'Left'#2'q'
+  +#6'Height'#2#24#3'Top'#2'+'#5'Width'#2'K'#7'Caption'#6#8'Test PTT'#7'OnClick'
+  +#7#18'buttonTestPTTClick'#8'TabOrder'#2#6#0#0#9'TCheckBox'#11'cbUseAltPTT'#4
+  +'Left'#3#213#0#6'Height'#2#20#3'Top'#2'/'#5'Width'#3#203#1#7'Caption'#6'JUse'
+  +' Alternate PTT Method.  Only enable this if you have problems with PTT.'#8
+  +'TabOrder'#2#7#0#0#0#5'TPage'#5'Page6'#7'Caption'#6#30'Heard List/PSKR Setup'
+  +'/RB Setup'#11'ClientWidth'#3#8#3#12'ClientHeight'#3#203#1#0#6'TLabel'#7'Lab'
+  +'el34'#4'Left'#3#228#0#6'Height'#2#17#3'Top'#2#13#5'Width'#3#22#2#7'Caption'
+  +#6'][Optional] Call for PSK Reporter or RB.  Suffixed/Prefixed is allowed.  '
+  +'DO NOT add -1 -2 etc.'#11'ParentColor'#8#0#0#6'TLabel'#7'Label33'#4'Left'#3
+  +#228#0#6'Height'#2#17#3'Top'#2'U'#5'Width'#3#26#1#7'Caption'#6'0[Optional] A'
+  +'ntenna Description for PSK Reporter.'#11'ParentColor'#8#0#0#11'TStringGrid'
+  +#12'sgCallsHeard'#4'Left'#2#4#6'Height'#3#192#1#3'Top'#2#5#5'Width'#3#210#0
+  +#11'AutoAdvance'#7#6'aaDown'#8'ColCount'#2#2#7'Columns'#14#1#15'Title.Alignm'
+  +'ent'#7#8'taCenter'#13'Title.Caption'#6#4'Call'#5'Width'#3#128#0#0#1#15'Titl'
+  +'e.Alignment'#7#8'taCenter'#13'Title.Caption'#6#5'Count'#5'Width'#2'<'#0#0#9
+  +'FixedCols'#2#0#7'Options'#11#15'goFixedVertLine'#15'goFixedHorzLine'#10'goV'
+  +'ertLine'#10'goHorzLine'#14'goSmoothScroll'#0#8'RowCount'#2#1#10'ScrollBars'
+  +#7#10'ssVertical'#8'TabOrder'#2#0#7'TabStop'#8#16'TitleFont.Height'#2#243#14
+  +'TitleFont.Name'#6#5'Arial'#0#0#5'TEdit'#12'editPSKRCall'#4'Left'#3#228#0#6
+  +'Height'#2#24#3'Top'#2'%'#5'Width'#2'p'#8'CharCase'#7#11'ecUppercase'#8'TabO'
+  +'rder'#2#1#0#0#5'TEdit'#15'editPSKRAntenna'#4'Left'#3#228#0#6'Height'#2#24#3
+  +'Top'#2'm'#5'Width'#3#214#1#8'TabOrder'#2#2#0#0#9'TCheckBox'#8'cbNoInet'#4'L'
+  +'eft'#3#228#0#6'Height'#2#20#3'Top'#3'E'#1#5'Width'#3#178#0#7'Caption'#6#26
+  +'Operate RB in Offline Mode'#8'OnChange'#7#14'cbNoInetChange'#8'TabOrder'#2#3
+  +#7'Visible'#8#0#0#9'TCheckBox'#16'cbUsePSKReporter'#4'Left'#3#228#0#6'Height'
+  +#2#20#3'Top'#3#5#1#5'Width'#3#219#0#7'Caption'#6' Spot Receptions via PSK Re'
+  +'porter'#8'TabOrder'#2#4#7'Visible'#8#0#0#9'TCheckBox'#7'cbUseRB'#4'Left'#3
+  +#228#0#6'Height'#2#20#3'Top'#3'%'#1#5'Width'#3#208#0#7'Caption'#6#30'Spot Re'
+  +'ceptions via RB Network'#8'OnChange'#7#13'cbUseRBChange'#8'TabOrder'#2#5#7
+  +'Visible'#8#0#0#0#5'TPage'#5'Page5'#7'Caption'#6#6'Macros'#11'ClientWidth'#3
+  +#8#3#12'ClientHeight'#3#203#1#0#6'TLabel'#6'Label2'#4'Left'#2#1#6'Height'#2
+  +#20#3'Top'#2#13#5'Width'#2#127#7'Caption'#6#16'QRG Definitions.'#11'Font.Hei'
+  +'ght'#2#240#9'Font.Name'#6#5'Arial'#10'Font.Style'#11#6'fsBold'#0#11'ParentC'
+  +'olor'#8#10'ParentFont'#8#0#0#6'TLabel'#7'Label35'#4'Left'#2#3#6'Height'#2#17
+  +#3'Top'#2'%'#5'Width'#2'M'#7'Caption'#6#12'1 - 1838 KHz'#11'Font.Height'#2
+  +#243#9'Font.Name'#6#5'Arial'#10'Font.Style'#11#6'fsBold'#0#11'ParentColor'#8
+  +#10'ParentFont'#8#0#0#6'TLabel'#7'Label36'#4'Left'#2#3#6'Height'#2#17#3'Top'
+  +#2'='#5'Width'#2'M'#7'Caption'#6#12'2 - 3576 KHz'#11'Font.Height'#2#243#9'Fo'
+  +'nt.Name'#6#5'Arial'#10'Font.Style'#11#6'fsBold'#0#11'ParentColor'#8#10'Pare'
+  +'ntFont'#8#0#0#6'TLabel'#7'Label37'#4'Left'#2#3#6'Height'#2#17#3'Top'#2'U'#5
+  +'Width'#2'M'#7'Caption'#6#12'3 - 7039 KHz'#11'Font.Height'#2#243#9'Font.Name'
+  +#6#5'Arial'#10'Font.Style'#11#6'fsBold'#0#11'ParentColor'#8#10'ParentFont'#8
+  +#0#0#6'TLabel'#7'Label39'#4'Left'#2#3#6'Height'#2#17#3'Top'#2'm'#5'Width'#2
+  +'M'#7'Caption'#6#12'4 - 7076 KHz'#11'Font.Height'#2#243#9'Font.Name'#6#5'Ari'
   +'al'#10'Font.Style'#11#6'fsBold'#0#11'ParentColor'#8#10'ParentFont'#8#0#0#6
-  +'TLabel'#7'Label16'#4'Left'#2#6#6'Height'#2#17#3'Top'#3#188#0#5'Width'#2'K'#7
-  +'Caption'#6#10'Rig QRG Hz'#11'Font.Height'#2#243#9'Font.Name'#6#5'Arial'#10
-  +'Font.Style'#11#6'fsBold'#0#11'ParentColor'#8#10'ParentFont'#8#0#0#6'TLabel'
-  +#7'Label17'#4'Left'#3#177#1#6'Height'#2#17#3'Top'#3#129#0#5'Width'#3#134#0#7
-  +'Caption'#6#22'RF Gain (Currently:  )'#11'Font.Height'#2#243#9'Font.Name'#6#5
-  +'Arial'#10'Font.Style'#11#6'fsBold'#0#11'ParentColor'#8#10'ParentFont'#8#0#0
-  +#6'TLabel'#7'Label18'#4'Left'#3#177#1#6'Height'#2#17#3'Top'#3#229#0#5'Width'
-  +#3#185#0#7'Caption'#6#30'RF Output Level (Currently:  )'#11'Font.Height'#2
-  +#243#9'Font.Name'#6#5'Arial'#10'Font.Style'#11#6'fsBold'#0#11'ParentColor'#8
-  +#10'ParentFont'#8#0#0#6'TLabel'#7'Label24'#4'Left'#3#186#2#6'Height'#2#17#3
-  +'Top'#2#8#5'Width'#2''''#7'Caption'#6#5'S9+70'#11'ParentColor'#8#0#0#6'TLabe'
-  +'l'#7'Label25'#4'Left'#3#177#1#6'Height'#2#17#3'Top'#2' '#5'Width'#2'i'#7'Ca'
-  +'ption'#6#16'Left Audio Level'#11'ParentColor'#8#0#0#6'TLabel'#7'Label31'#4
-  +'Left'#3'}'#2#6'Height'#2#17#3'Top'#2' '#5'Width'#2'r'#7'Caption'#6#17'Right'
-  +' Audio Level'#11'ParentColor'#8#0#0#6'TLabel'#7'Label21'#4'Left'#2#30#6'Hei'
-  +'ght'#2#17#3'Top'#2#8#5'Width'#2'P'#7'Caption'#6#11'At UTC Time'#11'ParentCo'
-  +'lor'#8#0#0#6'TLabel'#7'Label32'#4'Left'#3#142#0#6'Height'#2#17#3'Top'#2#8#5
-  +'Width'#2'M'#7'Caption'#6#10'QSY to QRG'#11'ParentColor'#8#0#0#6'TLabel'#7'L'
-  +'abel66'#4'Left'#3#245#0#6'Height'#2#17#3'Top'#2#8#5'Width'#2'Y'#7'Caption'#6
-  +#12'Tune Antenna'#11'ParentColor'#8#0#0#6'TLabel'#7'Label68'#4'Left'#2#6#6'H'
-  +'eight'#2#17#3'Top'#3#31#1#5'Width'#3#128#0#7'Caption'#6#18'HRD Server Addre'
-  +'ss'#11'ParentColor'#8#0#0#6'TLabel'#7'Label69'#4'Left'#3#29#1#6'Height'#2#17
-  +#3'Top'#3#31#1#5'Width'#2#27#7'Caption'#6#4'Port'#11'ParentColor'#8#0#0#9'TT'
-  +'rackBar'#12'sliderAFGain'#4'Left'#3#167#1#6'Height'#2#25#3'Top'#2'a'#5'Widt'
-  +'h'#3'H'#1#3'Max'#3#255#0#8'OnChange'#7#18'sliderAFGainChange'#8'Position'#2
-  +#0#9'TickStyle'#7#6'tsNone'#8'TabOrder'#2#0#0#0#9'TTrackBar'#13'sliderMicGai'
-  +'n'#4'Left'#3#167#1#6'Height'#2#25#3'Top'#3#197#0#5'Width'#3'H'#1#3'Max'#3
-  +#255#0#8'OnChange'#7#19'sliderMicGainChange'#8'Position'#2#0#9'TickStyle'#7#6
-  +'tsNone'#8'TabOrder'#2#1#0#0#5'TEdit'#5'Edit4'#4'Left'#2'V'#6'Height'#2#24#3
-  +'Top'#3#185#0#5'Width'#2'P'#11'Font.Height'#2#243#9'Font.Name'#6#5'Arial'#10
-  +'Font.Style'#11#6'fsBold'#0#10'ParentFont'#8#8'TabOrder'#2#2#4'Text'#6#8'140'
-  ,'76000'#0#0#7'TButton'#9'setHRDQRG'#4'Left'#3#174#0#6'Height'#2#24#3'Top'#3
-  +#185#0#5'Width'#2'd'#7'Caption'#6#7'Set QRG'#11'Font.Height'#2#243#9'Font.Na'
-  +'me'#6#5'Arial'#10'Font.Style'#11#6'fsBold'#0#7'OnClick'#7#14'setHRDQRGClick'
-  +#10'ParentFont'#8#8'TabOrder'#2#3#0#0#9'TTrackBar'#12'sliderRFGain'#4'Left'#3
-  +#167#1#6'Height'#2#25#3'Top'#3#147#0#5'Width'#3'H'#1#3'Max'#3#255#0#8'OnChan'
-  +'ge'#7#18'sliderRFGainChange'#8'Position'#2#0#9'TickStyle'#7#6'tsNone'#8'Tab'
-  +'Order'#2#4#0#0#9'TTrackBar'#13'sliderPALevel'#4'Left'#3#167#1#6'Height'#2#25
-  +#3'Top'#3#247#0#5'Width'#3'H'#1#3'Max'#3#255#0#8'OnChange'#7#19'sliderPALeve'
-  +'lChange'#8'Position'#2#0#9'TickStyle'#7#6'tsNone'#8'TabOrder'#2#5#0#0#12'TP'
-  +'rogressBar'#8'pbSMeter'#4'Left'#3#177#1#6'Height'#2#17#3'Top'#2#8#5'Width'#3
-  +#255#0#3'Max'#3#255#0#6'Smooth'#9#8'TabOrder'#2#6#0#0#12'TProgressBar'#8'pbA'
-  +'ULeft'#4'Left'#3#177#1#6'Height'#2#17#3'Top'#2'3'#5'Width'#2'd'#6'Smooth'#9
-  +#8'TabOrder'#2#7#0#0#12'TProgressBar'#9'pbAURight'#4'Left'#3#139#2#6'Height'
-  +#2#17#3'Top'#2'3'#5'Width'#2'd'#6'Smooth'#9#8'TabOrder'#2#8#0#0#9'TCheckBox'
-  +#10'chkTxDFVFO'#4'Left'#2#6#6'Height'#2#20#3'Top'#3#252#0#5'Width'#3'J'#1#7
-  +'Caption'#6'.Shift QRG to match DF if TxDF matching enabled'#8'TabOrder'#2#9
-  +#0#0#9'TCheckBox'#9'chkHRDPTT'#4'Left'#2#7#6'Height'#2#20#3'Top'#3#220#0#5'W'
-  +'idth'#2'|'#7'Caption'#6#15'Use HRD for PTT'#8'TabOrder'#2#10#0#0#9'TSpinEdi'
-  +'t'#8'qsyHour1'#4'Left'#2#30#6'Height'#2#24#3'Top'#2#28#5'Width'#2'2'#11'Fon'
-  +'t.Height'#2#243#9'Font.Name'#6#5'Arial'#8'MaxValue'#2#23#10'ParentFont'#8#8
-  +'TabOrder'#2#11#0#0#9'TSpinEdit'#10'qsyMinute1'#4'Left'#2'O'#6'Height'#2#24#3
-  +'Top'#2#28#5'Width'#2'2'#11'Font.Height'#2#243#9'Font.Name'#6#5'Arial'#8'Max'
-  +'Value'#2';'#10'ParentFont'#8#8'TabOrder'#2#12#0#0#5'TEdit'#9'edQRGQSY1'#4'L'
-  +'eft'#3#142#0#6'Height'#2#24#3'Top'#2#28#5'Width'#3#128#0#8'TabOrder'#2#13#0
-  +#0#9'TCheckBox'#12'cbEnableQSY1'#4'Left'#2#6#6'Height'#2#19#3'Top'#2#30#5'Wi'
-  +'dth'#2#20#8'TabOrder'#2#14#0#0#9'TSpinEdit'#8'qsyHour2'#4'Left'#2#30#6'Heig'
-  +'ht'#2#24#3'Top'#2';'#5'Width'#2'2'#11'Font.Height'#2#243#9'Font.Name'#6#5'A'
-  +'rial'#8'MaxValue'#2#23#10'ParentFont'#8#8'TabOrder'#2#15#0#0#9'TSpinEdit'#10
-  +'qsyMinute2'#4'Left'#2'O'#6'Height'#2#24#3'Top'#2';'#5'Width'#2'2'#11'Font.H'
-  +'eight'#2#243#9'Font.Name'#6#5'Arial'#8'MaxValue'#2';'#10'ParentFont'#8#8'Ta'
-  +'bOrder'#2#16#0#0#5'TEdit'#9'edQRGQSY2'#4'Left'#3#142#0#6'Height'#2#24#3'Top'
-  +#2';'#5'Width'#3#128#0#8'TabOrder'#2#17#0#0#9'TCheckBox'#12'cbEnableQSY2'#4
-  +'Left'#2#6#6'Height'#2#19#3'Top'#2'>'#5'Width'#2#20#8'TabOrder'#2#18#0#0#9'T'
-  +'SpinEdit'#8'qsyHour3'#4'Left'#2#30#6'Height'#2#24#3'Top'#2'X'#5'Width'#2'2'
-  +#11'Font.Height'#2#243#9'Font.Name'#6#5'Arial'#8'MaxValue'#2#23#10'ParentFon'
-  +'t'#8#8'TabOrder'#2#19#0#0#9'TSpinEdit'#10'qsyMinute3'#4'Left'#2'O'#6'Height'
-  +#2#24#3'Top'#2'W'#5'Width'#2'2'#11'Font.Height'#2#243#9'Font.Name'#6#5'Arial'
-  +#8'MaxValue'#2';'#10'ParentFont'#8#8'TabOrder'#2#20#0#0#5'TEdit'#9'edQRGQSY3'
-  +#4'Left'#3#142#0#6'Height'#2#24#3'Top'#2'X'#5'Width'#3#128#0#8'TabOrder'#2#21
-  +#0#0#9'TCheckBox'#12'cbEnableQSY3'#4'Left'#2#6#6'Height'#2#19#3'Top'#2'['#5
-  +'Width'#2#20#8'TabOrder'#2#22#0#0#9'TSpinEdit'#8'qsyHour4'#4'Left'#2#30#6'He'
-  +'ight'#2#24#3'Top'#2'v'#5'Width'#2'2'#11'Font.Height'#2#243#9'Font.Name'#6#5
-  +'Arial'#8'MaxValue'#2#23#10'ParentFont'#8#8'TabOrder'#2#23#0#0#9'TSpinEdit'
-  +#10'qsyMinute4'#4'Left'#2'O'#6'Height'#2#24#3'Top'#2'v'#5'Width'#2'2'#11'Fon'
-  +'t.Height'#2#243#9'Font.Name'#6#5'Arial'#8'MaxValue'#2';'#10'ParentFont'#8#8
-  +'TabOrder'#2#24#0#0#5'TEdit'#9'edQRGQSY4'#4'Left'#3#142#0#6'Height'#2#24#3'T'
-  +'op'#2'u'#5'Width'#3#128#0#8'TabOrder'#2#25#0#0#9'TCheckBox'#12'cbEnableQSY4'
-  +#4'Left'#2#6#6'Height'#2#19#3'Top'#2'w'#5'Width'#2#20#8'TabOrder'#2#26#0#0#9
-  +'TSpinEdit'#8'qsyHour5'#4'Left'#2#30#6'Height'#2#24#3'Top'#3#148#0#5'Width'#2
-  +'2'#11'Font.Height'#2#243#9'Font.Name'#6#5'Arial'#8'MaxValue'#2#23#10'Parent'
-  +'Font'#8#8'TabOrder'#2#27#0#0#9'TSpinEdit'#10'qsyMinute5'#4'Left'#2'O'#6'Hei'
-  +'ght'#2#24#3'Top'#3#148#0#5'Width'#2'2'#11'Font.Height'#2#243#9'Font.Name'#6
-  +#5'Arial'#8'MaxValue'#2';'#10'ParentFont'#8#8'TabOrder'#2#28#0#0#5'TEdit'#9
-  +'edQRGQSY5'#4'Left'#3#142#0#6'Height'#2#24#3'Top'#3#148#0#5'Width'#3#128#0#8
-  +'TabOrder'#2#29#0#0#9'TCheckBox'#12'cbEnableQSY5'#4'Left'#2#6#6'Height'#2#19
-  +#3'Top'#3#150#0#5'Width'#2#20#8'TabOrder'#2#30#0#0#9'TCheckBox'#8'cbATQSY1'#4
-  +'Left'#3#22#1#6'Height'#2#19#3'Top'#2#30#5'Width'#2#20#8'TabOrder'#2#31#0#0#9
-  +'TCheckBox'#8'cbATQSY2'#4'Left'#3#22#1#6'Height'#2#19#3'Top'#2'>'#5'Width'#2
-  +#20#8'TabOrder'#2' '#0#0#9'TCheckBox'#8'cbATQSY3'#4'Left'#3#22#1#6'Height'#2
-  +#19#3'Top'#2'['#5'Width'#2#20#8'TabOrder'#2'!'#0#0#9'TCheckBox'#8'cbATQSY4'#4
-  +'Left'#3#22#1#6'Height'#2#19#3'Top'#2'w'#5'Width'#2#20#8'TabOrder'#2'"'#0#0#9
-  +'TCheckBox'#8'cbATQSY5'#4'Left'#3#22#1#6'Height'#2#19#3'Top'#3#150#0#5'Width'
-  +#2#20#8'TabOrder'#2'#'#0#0#7'TButton'#10'testHRDPTT'#4'Left'#3#175#0#6'Heigh'
-  +'t'#2#25#3'Top'#3#217#0#5'Width'#2'e'#7'Caption'#6#12'Test HRD PTT'#7'OnClic'
-  ,'k'#7#15'testHRDPTTClick'#8'TabOrder'#2'$'#0#0#5'TEdit'#10'hrdAddress'#4'Lef'
-  +'t'#3#140#0#6'Height'#2#24#4'Hint'#6'&This should almost always be localhost'
-  +#3'Top'#3#29#1#5'Width'#3#134#0#8'OnChange'#7#16'hrdAddressChange'#14'Parent'
-  +'ShowHint'#8#8'ShowHint'#9#8'TabOrder'#2'%'#4'Text'#6#9'localhost'#0#0#5'TEd'
-  +'it'#7'hrdPort'#4'Left'#3'='#1#6'Height'#2#24#4'Hint'#6#12'Usually 7809'#3'T'
-  +'op'#3#29#1#5'Width'#2'0'#8'OnChange'#7#13'hrdPortChange'#14'ParentShowHint'
-  +#8#8'ShowHint'#9#8'TabOrder'#2'&'#4'Text'#6#4'7809'#0#0#0#5'TEdit'#20'editUs'
-  +'erDefinedPort1'#4'Left'#2#10#6'Height'#2#24#3'Top'#2'+'#5'Width'#2'Z'#8'Cha'
-  +'rCase'#7#11'ecUppercase'#8'TabOrder'#2#5#4'Text'#6#4'NONE'#0#0#7'TButton'#13
-  +'buttonTestPTT'#4'Left'#2'q'#6'Height'#2#24#3'Top'#2'+'#5'Width'#2'K'#7'Capt'
-  +'ion'#6#8'Test PTT'#7'OnClick'#7#18'buttonTestPTTClick'#8'TabOrder'#2#6#0#0#9
-  +'TCheckBox'#11'cbUseAltPTT'#4'Left'#3#213#0#6'Height'#2#20#3'Top'#2'/'#5'Wid'
-  +'th'#3#203#1#7'Caption'#6'JUse Alternate PTT Method.  Only enable this if yo'
-  +'u have problems with PTT.'#8'TabOrder'#2#7#0#0#0#5'TPage'#5'Page6'#7'Captio'
-  +'n'#6#30'Heard List/PSKR Setup/RB Setup'#11'ClientWidth'#3#8#3#12'ClientHeig'
-  +'ht'#3#203#1#0#6'TLabel'#7'Label34'#4'Left'#3#228#0#6'Height'#2#17#3'Top'#2
-  +#13#5'Width'#3#22#2#7'Caption'#6'][Optional] Call for PSK Reporter or RB.  S'
-  +'uffixed/Prefixed is allowed.  DO NOT add -1 -2 etc.'#11'ParentColor'#8#0#0#6
-  +'TLabel'#7'Label33'#4'Left'#3#228#0#6'Height'#2#17#3'Top'#2'U'#5'Width'#3#26
-  +#1#7'Caption'#6'0[Optional] Antenna Description for PSK Reporter.'#11'Parent'
-  +'Color'#8#0#0#11'TStringGrid'#12'sgCallsHeard'#4'Left'#2#4#6'Height'#3#192#1
-  +#3'Top'#2#5#5'Width'#3#210#0#11'AutoAdvance'#7#6'aaDown'#8'ColCount'#2#2#7'C'
-  +'olumns'#14#1#15'Title.Alignment'#7#8'taCenter'#13'Title.Caption'#6#4'Call'#5
-  +'Width'#3#128#0#0#1#15'Title.Alignment'#7#8'taCenter'#13'Title.Caption'#6#5
-  +'Count'#5'Width'#2'<'#0#0#9'FixedCols'#2#0#7'Options'#11#15'goFixedVertLine'
-  +#15'goFixedHorzLine'#10'goVertLine'#10'goHorzLine'#14'goSmoothScroll'#0#8'Ro'
-  +'wCount'#2#1#10'ScrollBars'#7#10'ssVertical'#8'TabOrder'#2#0#7'TabStop'#8#16
-  +'TitleFont.Height'#2#243#14'TitleFont.Name'#6#5'Arial'#0#0#5'TEdit'#12'editP'
-  +'SKRCall'#4'Left'#3#228#0#6'Height'#2#24#3'Top'#2'%'#5'Width'#2'p'#8'CharCas'
-  +'e'#7#11'ecUppercase'#8'TabOrder'#2#1#0#0#5'TEdit'#15'editPSKRAntenna'#4'Lef'
-  +'t'#3#228#0#6'Height'#2#24#3'Top'#2'm'#5'Width'#3#214#1#8'TabOrder'#2#2#0#0#9
-  +'TCheckBox'#8'cbNoInet'#4'Left'#3#228#0#6'Height'#2#20#3'Top'#3'E'#1#5'Width'
-  +#3#178#0#7'Caption'#6#26'Operate RB in Offline Mode'#8'OnChange'#7#14'cbNoIn'
-  +'etChange'#8'TabOrder'#2#3#7'Visible'#8#0#0#9'TCheckBox'#16'cbUsePSKReporter'
-  +#4'Left'#3#228#0#6'Height'#2#20#3'Top'#3#5#1#5'Width'#3#219#0#7'Caption'#6' '
-  +'Spot Receptions via PSK Reporter'#8'TabOrder'#2#4#7'Visible'#8#0#0#9'TCheck'
-  +'Box'#7'cbUseRB'#4'Left'#3#228#0#6'Height'#2#20#3'Top'#3'%'#1#5'Width'#3#208
-  +#0#7'Caption'#6#30'Spot Receptions via RB Network'#8'OnChange'#7#13'cbUseRBC'
-  +'hange'#8'TabOrder'#2#5#7'Visible'#8#0#0#0#5'TPage'#5'Page5'#7'Caption'#6#6
-  +'Macros'#11'ClientWidth'#3#8#3#12'ClientHeight'#3#203#1#0#6'TLabel'#6'Label2'
-  +#4'Left'#2#1#6'Height'#2#20#3'Top'#2#13#5'Width'#2#127#7'Caption'#6#16'QRG D'
-  +'efinitions.'#11'Font.Height'#2#240#9'Font.Name'#6#5'Arial'#10'Font.Style'#11
-  +#6'fsBold'#0#11'ParentColor'#8#10'ParentFont'#8#0#0#6'TLabel'#7'Label35'#4'L'
-  +'eft'#2#3#6'Height'#2#17#3'Top'#2'%'#5'Width'#2'M'#7'Caption'#6#12'1 - 1838 '
-  +'KHz'#11'Font.Height'#2#243#9'Font.Name'#6#5'Arial'#10'Font.Style'#11#6'fsBo'
-  +'ld'#0#11'ParentColor'#8#10'ParentFont'#8#0#0#6'TLabel'#7'Label36'#4'Left'#2
-  +#3#6'Height'#2#17#3'Top'#2'='#5'Width'#2'M'#7'Caption'#6#12'2 - 3576 KHz'#11
-  +'Font.Height'#2#243#9'Font.Name'#6#5'Arial'#10'Font.Style'#11#6'fsBold'#0#11
-  +'ParentColor'#8#10'ParentFont'#8#0#0#6'TLabel'#7'Label37'#4'Left'#2#3#6'Heig'
-  +'ht'#2#17#3'Top'#2'U'#5'Width'#2'M'#7'Caption'#6#12'3 - 7039 KHz'#11'Font.He'
-  +'ight'#2#243#9'Font.Name'#6#5'Arial'#10'Font.Style'#11#6'fsBold'#0#11'Parent'
-  +'Color'#8#10'ParentFont'#8#0#0#6'TLabel'#7'Label39'#4'Left'#2#3#6'Height'#2
-  +#17#3'Top'#2'm'#5'Width'#2'M'#7'Caption'#6#12'4 - 7076 KHz'#11'Font.Height'#2
-  +#243#9'Font.Name'#6#5'Arial'#10'Font.Style'#11#6'fsBold'#0#11'ParentColor'#8
-  +#10'ParentFont'#8#0#0#6'TLabel'#7'Label41'#4'Left'#2#3#6'Height'#2#17#3'Top'
-  +#3#133#0#5'Width'#2'T'#7'Caption'#6#13'5 - 10139 KHz'#11'Font.Height'#2#243#9
-  +'Font.Name'#6#5'Arial'#10'Font.Style'#11#6'fsBold'#0#11'ParentColor'#8#10'Pa'
-  +'rentFont'#8#0#0#6'TLabel'#7'Label42'#4'Left'#2#3#6'Height'#2#17#3'Top'#3#157
-  +#0#5'Width'#2'T'#7'Caption'#6#13'6 - 10147 KHz'#11'Font.Height'#2#243#9'Font'
-  +'.Name'#6#5'Arial'#10'Font.Style'#11#6'fsBold'#0#11'ParentColor'#8#10'Parent'
-  +'Font'#8#0#0#6'TLabel'#7'Label43'#4'Left'#2#3#6'Height'#2#17#3'Top'#3#181#0#5
-  +'Width'#2'T'#7'Caption'#6#13'7 - 14076 KHz'#11'Font.Height'#2#243#9'Font.Nam'
-  +'e'#6#5'Arial'#10'Font.Style'#11#6'fsBold'#0#11'ParentColor'#8#10'ParentFont'
-  +#8#0#0#6'TLabel'#7'Label44'#4'Left'#2#3#6'Height'#2#17#3'Top'#3#205#0#5'Widt'
-  ,'h'#2'T'#7'Caption'#6#13'8 - 18102 KHz'#11'Font.Height'#2#243#9'Font.Name'#6
-  +#5'Arial'#10'Font.Style'#11#6'fsBold'#0#11'ParentColor'#8#10'ParentFont'#8#0
-  +#0#6'TLabel'#7'Label45'#4'Left'#2#3#6'Height'#2#17#3'Top'#3#229#0#5'Width'#2
-  +'T'#7'Caption'#6#13'9 - 18106 KHz'#11'Font.Height'#2#243#9'Font.Name'#6#5'Ar'
-  +'ial'#10'Font.Style'#11#6'fsBold'#0#11'ParentColor'#8#10'ParentFont'#8#0#0#6
-  +'TLabel'#7'Label46'#4'Left'#2#3#6'Height'#2#17#3'Top'#3#253#0#5'Width'#2'['#7
-  +'Caption'#6#14'10 - 21076 KHz'#11'Font.Height'#2#243#9'Font.Name'#6#5'Arial'
+  +'TLabel'#7'Label41'#4'Left'#2#3#6'Height'#2#17#3'Top'#3#133#0#5'Width'#2'T'#7
+  +'Caption'#6#13'5 - 10139 KHz'#11'Font.Height'#2#243#9'Font.Name'#6#5'Arial'
   +#10'Font.Style'#11#6'fsBold'#0#11'ParentColor'#8#10'ParentFont'#8#0#0#6'TLab'
-  +'el'#7'Label47'#4'Left'#2#3#6'Height'#2#17#3'Top'#3#21#1#5'Width'#2'Z'#7'Cap'
-  +'tion'#6#14'11 - 24917 KHz'#11'Font.Height'#2#243#9'Font.Name'#6#5'Arial'#10
+  +'el'#7'Label42'#4'Left'#2#3#6'Height'#2#17#3'Top'#3#157#0#5'Width'#2'T'#7'Ca'
+  +'ption'#6#13'6 - 10147 KHz'#11'Font.Height'#2#243#9'Font.Name'#6#5'Arial'#10
   +'Font.Style'#11#6'fsBold'#0#11'ParentColor'#8#10'ParentFont'#8#0#0#6'TLabel'
-  +#7'Label48'#4'Left'#2#3#6'Height'#2#17#3'Top'#3'-'#1#5'Width'#2'['#7'Caption'
-  +#6#14'12 - 28076 KHz'#11'Font.Height'#2#243#9'Font.Name'#6#5'Arial'#10'Font.'
-  +'Style'#11#6'fsBold'#0#11'ParentColor'#8#10'ParentFont'#8#0#0#6'TLabel'#7'La'
-  +'bel49'#4'Left'#2#3#6'Height'#2#17#3'Top'#3'G'#1#5'Width'#2#23#7'Caption'#6#4
-  +'13 -'#11'Font.Height'#2#243#9'Font.Name'#6#5'Arial'#10'Font.Style'#11#6'fsB'
-  +'old'#0#11'ParentColor'#8#10'ParentFont'#8#0#0#6'TLabel'#7'Label50'#4'Left'#2
-  +#3#6'Height'#2#17#3'Top'#3'g'#1#5'Width'#2#23#7'Caption'#6#4'14 -'#11'Font.H'
-  +'eight'#2#243#9'Font.Name'#6#5'Arial'#10'Font.Style'#11#6'fsBold'#0#11'Paren'
-  +'tColor'#8#10'ParentFont'#8#0#0#6'TLabel'#7'Label51'#4'Left'#2#3#6'Height'#2
-  +#17#3'Top'#3#135#1#5'Width'#2#23#7'Caption'#6#4'15 -'#11'Font.Height'#2#243#9
-  +'Font.Name'#6#5'Arial'#10'Font.Style'#11#6'fsBold'#0#11'ParentColor'#8#10'Pa'
-  +'rentFont'#8#0#0#6'TLabel'#7'Label52'#4'Left'#2#3#6'Height'#2#17#3'Top'#3#168
-  +#1#5'Width'#2#23#7'Caption'#6#4'16 -'#11'Font.Height'#2#243#9'Font.Name'#6#5
-  +'Arial'#10'Font.Style'#11#6'fsBold'#0#11'ParentColor'#8#10'ParentFont'#8#0#0
-  +#6'TLabel'#7'Label55'#4'Left'#3'm'#1#6'Height'#2#20#3'Top'#2#13#5'Width'#3
-  +#155#0#7'Caption'#6#19'Message Definitions'#11'Font.Height'#2#240#9'Font.Nam'
-  +'e'#6#5'Arial'#10'Font.Style'#11#6'fsBold'#0#11'ParentColor'#8#10'ParentFont'
-  +#8#0#0#6'TLabel'#7'Label56'#4'Left'#3'm'#1#6'Height'#2#17#3'Top'#2'%'#5'Widt'
-  +'h'#2'r'#7'Caption'#6#17'1 - Short Hand RO'#11'Font.Height'#2#243#9'Font.Nam'
-  +'e'#6#5'Arial'#10'Font.Style'#11#6'fsBold'#0#11'ParentColor'#8#10'ParentFont'
-  +#8#0#0#6'TLabel'#7'Label57'#4'Left'#3'm'#1#6'Height'#2#17#3'Top'#2'='#5'Widt'
-  +'h'#2'z'#7'Caption'#6#18'2 - Short Hand RRR'#11'Font.Height'#2#243#9'Font.Na'
-  +'me'#6#5'Arial'#10'Font.Style'#11#6'fsBold'#0#11'ParentColor'#8#10'ParentFon'
-  +'t'#8#0#0#6'TLabel'#7'Label58'#4'Left'#3'm'#1#6'Height'#2#17#3'Top'#2'U'#5'W'
-  +'idth'#2'm'#7'Caption'#6#17'3 - Short Hand 73'#11'Font.Height'#2#243#9'Font.'
-  +'Name'#6#5'Arial'#10'Font.Style'#11#6'fsBold'#0#11'ParentColor'#8#10'ParentF'
-  +'ont'#8#0#0#6'TLabel'#7'Label59'#4'Left'#3'm'#1#6'Height'#2#17#3'Top'#2'm'#5
-  +'Width'#2#16#7'Caption'#6#3'4 -'#11'Font.Height'#2#243#9'Font.Name'#6#5'Aria'
-  +'l'#10'Font.Style'#11#6'fsBold'#0#11'ParentColor'#8#10'ParentFont'#8#0#0#6'T'
-  +'Label'#7'Label60'#4'Left'#3'm'#1#6'Height'#2#17#3'Top'#3#142#0#5'Width'#2#16
-  +#7'Caption'#6#3'5 -'#11'Font.Height'#2#243#9'Font.Name'#6#5'Arial'#10'Font.S'
+  +#7'Label43'#4'Left'#2#3#6'Height'#2#17#3'Top'#3#181#0#5'Width'#2'T'#7'Captio'
+  +'n'#6#13'7 - 14076 KHz'#11'Font.Height'#2#243#9'Font.Name'#6#5'Arial'#10'Fon'
+  +'t.Style'#11#6'fsBold'#0#11'ParentColor'#8#10'ParentFont'#8#0#0#6'TLabel'#7
+  +'Label44'#4'Left'#2#3#6'Height'#2#17#3'Top'#3#205#0#5'Width'#2'T'#7'Caption'
+  ,#6#13'8 - 18102 KHz'#11'Font.Height'#2#243#9'Font.Name'#6#5'Arial'#10'Font.S'
   +'tyle'#11#6'fsBold'#0#11'ParentColor'#8#10'ParentFont'#8#0#0#6'TLabel'#7'Lab'
-  +'el61'#4'Left'#3'm'#1#6'Height'#2#17#3'Top'#3#175#0#5'Width'#2#16#7'Caption'
-  +#6#3'6 -'#11'Font.Height'#2#243#9'Font.Name'#6#5'Arial'#10'Font.Style'#11#6
-  +'fsBold'#0#11'ParentColor'#8#10'ParentFont'#8#0#0#6'TLabel'#7'Label62'#4'Lef'
-  +'t'#3'm'#1#6'Height'#2#17#3'Top'#3#206#0#5'Width'#2#16#7'Caption'#6#3'7 -'#11
-  +'Font.Height'#2#243#9'Font.Name'#6#5'Arial'#10'Font.Style'#11#6'fsBold'#0#11
-  +'ParentColor'#8#10'ParentFont'#8#0#0#6'TLabel'#7'Label63'#4'Left'#3'm'#1#6'H'
-  +'eight'#2#17#3'Top'#3#242#0#5'Width'#2#16#7'Caption'#6#3'8 -'#11'Font.Height'
+  +'el45'#4'Left'#2#3#6'Height'#2#17#3'Top'#3#229#0#5'Width'#2'T'#7'Caption'#6
+  +#13'9 - 18106 KHz'#11'Font.Height'#2#243#9'Font.Name'#6#5'Arial'#10'Font.Sty'
+  +'le'#11#6'fsBold'#0#11'ParentColor'#8#10'ParentFont'#8#0#0#6'TLabel'#7'Label'
+  +'46'#4'Left'#2#3#6'Height'#2#17#3'Top'#3#253#0#5'Width'#2'['#7'Caption'#6#14
+  +'10 - 21076 KHz'#11'Font.Height'#2#243#9'Font.Name'#6#5'Arial'#10'Font.Style'
+  +#11#6'fsBold'#0#11'ParentColor'#8#10'ParentFont'#8#0#0#6'TLabel'#7'Label47'#4
+  +'Left'#2#3#6'Height'#2#17#3'Top'#3#21#1#5'Width'#2'Z'#7'Caption'#6#14'11 - 2'
+  +'4917 KHz'#11'Font.Height'#2#243#9'Font.Name'#6#5'Arial'#10'Font.Style'#11#6
+  +'fsBold'#0#11'ParentColor'#8#10'ParentFont'#8#0#0#6'TLabel'#7'Label48'#4'Lef'
+  +'t'#2#3#6'Height'#2#17#3'Top'#3'-'#1#5'Width'#2'['#7'Caption'#6#14'12 - 2807'
+  +'6 KHz'#11'Font.Height'#2#243#9'Font.Name'#6#5'Arial'#10'Font.Style'#11#6'fs'
+  +'Bold'#0#11'ParentColor'#8#10'ParentFont'#8#0#0#6'TLabel'#7'Label49'#4'Left'
+  +#2#3#6'Height'#2#17#3'Top'#3'G'#1#5'Width'#2#23#7'Caption'#6#4'13 -'#11'Font'
+  +'.Height'#2#243#9'Font.Name'#6#5'Arial'#10'Font.Style'#11#6'fsBold'#0#11'Par'
+  +'entColor'#8#10'ParentFont'#8#0#0#6'TLabel'#7'Label50'#4'Left'#2#3#6'Height'
+  +#2#17#3'Top'#3'g'#1#5'Width'#2#23#7'Caption'#6#4'14 -'#11'Font.Height'#2#243
+  +#9'Font.Name'#6#5'Arial'#10'Font.Style'#11#6'fsBold'#0#11'ParentColor'#8#10
+  +'ParentFont'#8#0#0#6'TLabel'#7'Label51'#4'Left'#2#3#6'Height'#2#17#3'Top'#3
+  +#135#1#5'Width'#2#23#7'Caption'#6#4'15 -'#11'Font.Height'#2#243#9'Font.Name'
+  +#6#5'Arial'#10'Font.Style'#11#6'fsBold'#0#11'ParentColor'#8#10'ParentFont'#8
+  +#0#0#6'TLabel'#7'Label52'#4'Left'#2#3#6'Height'#2#17#3'Top'#3#168#1#5'Width'
+  +#2#23#7'Caption'#6#4'16 -'#11'Font.Height'#2#243#9'Font.Name'#6#5'Arial'#10
+  +'Font.Style'#11#6'fsBold'#0#11'ParentColor'#8#10'ParentFont'#8#0#0#6'TLabel'
+  +#7'Label55'#4'Left'#3'm'#1#6'Height'#2#20#3'Top'#2#13#5'Width'#3#155#0#7'Cap'
+  +'tion'#6#19'Message Definitions'#11'Font.Height'#2#240#9'Font.Name'#6#5'Aria'
+  +'l'#10'Font.Style'#11#6'fsBold'#0#11'ParentColor'#8#10'ParentFont'#8#0#0#6'T'
+  +'Label'#7'Label56'#4'Left'#3'm'#1#6'Height'#2#17#3'Top'#2'%'#5'Width'#2'r'#7
+  +'Caption'#6#17'1 - Short Hand RO'#11'Font.Height'#2#243#9'Font.Name'#6#5'Ari'
+  +'al'#10'Font.Style'#11#6'fsBold'#0#11'ParentColor'#8#10'ParentFont'#8#0#0#6
+  +'TLabel'#7'Label57'#4'Left'#3'm'#1#6'Height'#2#17#3'Top'#2'='#5'Width'#2'z'#7
+  +'Caption'#6#18'2 - Short Hand RRR'#11'Font.Height'#2#243#9'Font.Name'#6#5'Ar'
+  +'ial'#10'Font.Style'#11#6'fsBold'#0#11'ParentColor'#8#10'ParentFont'#8#0#0#6
+  +'TLabel'#7'Label58'#4'Left'#3'm'#1#6'Height'#2#17#3'Top'#2'U'#5'Width'#2'm'#7
+  +'Caption'#6#17'3 - Short Hand 73'#11'Font.Height'#2#243#9'Font.Name'#6#5'Ari'
+  +'al'#10'Font.Style'#11#6'fsBold'#0#11'ParentColor'#8#10'ParentFont'#8#0#0#6
+  +'TLabel'#7'Label59'#4'Left'#3'm'#1#6'Height'#2#17#3'Top'#2'm'#5'Width'#2#16#7
+  +'Caption'#6#3'4 -'#11'Font.Height'#2#243#9'Font.Name'#6#5'Arial'#10'Font.Sty'
+  +'le'#11#6'fsBold'#0#11'ParentColor'#8#10'ParentFont'#8#0#0#6'TLabel'#7'Label'
+  +'60'#4'Left'#3'm'#1#6'Height'#2#17#3'Top'#3#142#0#5'Width'#2#16#7'Caption'#6
+  +#3'5 -'#11'Font.Height'#2#243#9'Font.Name'#6#5'Arial'#10'Font.Style'#11#6'fs'
+  +'Bold'#0#11'ParentColor'#8#10'ParentFont'#8#0#0#6'TLabel'#7'Label61'#4'Left'
+  +#3'm'#1#6'Height'#2#17#3'Top'#3#175#0#5'Width'#2#16#7'Caption'#6#3'6 -'#11'F'
+  +'ont.Height'#2#243#9'Font.Name'#6#5'Arial'#10'Font.Style'#11#6'fsBold'#0#11
+  +'ParentColor'#8#10'ParentFont'#8#0#0#6'TLabel'#7'Label62'#4'Left'#3'm'#1#6'H'
+  +'eight'#2#17#3'Top'#3#206#0#5'Width'#2#16#7'Caption'#6#3'7 -'#11'Font.Height'
   +#2#243#9'Font.Name'#6#5'Arial'#10'Font.Style'#11#6'fsBold'#0#11'ParentColor'
-  +#8#10'ParentFont'#8#0#0#6'TLabel'#7'Label64'#4'Left'#3'm'#1#6'Height'#2#17#3
-  +'Top'#3#19#1#5'Width'#2#16#7'Caption'#6#3'9 -'#11'Font.Height'#2#243#9'Font.'
-  +'Name'#6#5'Arial'#10'Font.Style'#11#6'fsBold'#0#11'ParentColor'#8#10'ParentF'
-  +'ont'#8#0#0#6'TLabel'#8'Label122'#4'Left'#3'f'#1#6'Height'#2#17#3'Top'#3'4'#1
-  +#5'Width'#2#23#7'Caption'#6#4'10 -'#11'Font.Height'#2#243#9'Font.Name'#6#5'A'
-  +'rial'#10'Font.Style'#11#6'fsBold'#0#11'ParentColor'#8#10'ParentFont'#8#0#0#6
-  +'TLabel'#8'Label123'#4'Left'#3'f'#1#6'Height'#2#17#3'Top'#3'U'#1#5'Width'#2
-  +#22#7'Caption'#6#4'11 -'#11'Font.Height'#2#243#9'Font.Name'#6#5'Arial'#10'Fo'
+  +#8#10'ParentFont'#8#0#0#6'TLabel'#7'Label63'#4'Left'#3'm'#1#6'Height'#2#17#3
+  +'Top'#3#242#0#5'Width'#2#16#7'Caption'#6#3'8 -'#11'Font.Height'#2#243#9'Font'
+  +'.Name'#6#5'Arial'#10'Font.Style'#11#6'fsBold'#0#11'ParentColor'#8#10'Parent'
+  +'Font'#8#0#0#6'TLabel'#7'Label64'#4'Left'#3'm'#1#6'Height'#2#17#3'Top'#3#19#1
+  +#5'Width'#2#16#7'Caption'#6#3'9 -'#11'Font.Height'#2#243#9'Font.Name'#6#5'Ar'
+  +'ial'#10'Font.Style'#11#6'fsBold'#0#11'ParentColor'#8#10'ParentFont'#8#0#0#6
+  +'TLabel'#8'Label122'#4'Left'#3'f'#1#6'Height'#2#17#3'Top'#3'4'#1#5'Width'#2
+  +#23#7'Caption'#6#4'10 -'#11'Font.Height'#2#243#9'Font.Name'#6#5'Arial'#10'Fo'
   +'nt.Style'#11#6'fsBold'#0#11'ParentColor'#8#10'ParentFont'#8#0#0#6'TLabel'#8
-  +'Label124'#4'Left'#3'f'#1#6'Height'#2#17#3'Top'#3'w'#1#5'Width'#2#23#7'Capti'
-  +'on'#6#4'12 -'#11'Font.Height'#2#243#9'Font.Name'#6#5'Arial'#10'Font.Style'
-  +#11#6'fsBold'#0#11'ParentColor'#8#10'ParentFont'#8#0#0#6'TLabel'#8'Label125'
-  +#4'Left'#3'f'#1#6'Height'#2#17#3'Top'#3#153#1#5'Width'#2#23#7'Caption'#6#4'1'
-  ,'3 -'#11'Font.Height'#2#243#9'Font.Name'#6#5'Arial'#10'Font.Style'#11#6'fsBo'
-  +'ld'#0#11'ParentColor'#8#10'ParentFont'#8#0#0#6'TLabel'#7'Label20'#4'Left'#3
-  +#31#2#6'Height'#3#145#0#3'Top'#2'%'#5'Width'#3#222#0#7'Caption'#6#254'Messag'
-  +'e definitions is used for'#13#10'entering free text messages.  You'#13#10'm'
-  +'ay define up to ten of these'#13#10'each limited to 13 characters and'#13#10
-  +'may only contain the 43 characters'#13#10'of the JT65 character set, which '
-  +'is;'#13#10#13#10'0123456789ABCDEFGHIJKLMNO'#13#10'PQRSTUVWXYZ +-./?'#11'Fon'
-  +'t.Height'#2#243#9'Font.Name'#6#5'Arial'#10'Font.Style'#11#6'fsBold'#0#11'Pa'
-  +'rentColor'#8#10'ParentFont'#8#0#0#6'TLabel'#7'Label38'#4'Left'#3#31#2#6'Hei'
-  +'ght'#3#129#0#3'Top'#3#191#0#5'Width'#3#209#0#7'Caption'#6#245'Right clickin'
-  +'g in the Free Text'#13#10'entry box in the main program'#13#10'screen will '
-  +'present a dialog'#13#10'of these message definitions.'#13#10'Note.  The fir'
-  +'st 3 fixed entries'#13#10'send the JT65 shorthand'#13#10'sequences and shou'
-  +'ld only be'#13#10'used when absolutely necessary.'#11'Font.Height'#2#243#9
+  +'Label123'#4'Left'#3'f'#1#6'Height'#2#17#3'Top'#3'U'#1#5'Width'#2#22#7'Capti'
+  +'on'#6#4'11 -'#11'Font.Height'#2#243#9'Font.Name'#6#5'Arial'#10'Font.Style'
+  +#11#6'fsBold'#0#11'ParentColor'#8#10'ParentFont'#8#0#0#6'TLabel'#8'Label124'
+  +#4'Left'#3'f'#1#6'Height'#2#17#3'Top'#3'w'#1#5'Width'#2#23#7'Caption'#6#4'12'
+  +' -'#11'Font.Height'#2#243#9'Font.Name'#6#5'Arial'#10'Font.Style'#11#6'fsBol'
+  +'d'#0#11'ParentColor'#8#10'ParentFont'#8#0#0#6'TLabel'#8'Label125'#4'Left'#3
+  +'f'#1#6'Height'#2#17#3'Top'#3#153#1#5'Width'#2#23#7'Caption'#6#4'13 -'#11'Fo'
+  ,'nt.Height'#2#243#9'Font.Name'#6#5'Arial'#10'Font.Style'#11#6'fsBold'#0#11'P'
+  +'arentColor'#8#10'ParentFont'#8#0#0#6'TLabel'#7'Label20'#4'Left'#3#31#2#6'He'
+  +'ight'#3#145#0#3'Top'#2'%'#5'Width'#3#222#0#7'Caption'#6#254'Message definit'
+  +'ions is used for'#13#10'entering free text messages.  You'#13#10'may define'
+  +' up to ten of these'#13#10'each limited to 13 characters and'#13#10'may onl'
+  +'y contain the 43 characters'#13#10'of the JT65 character set, which is;'#13
+  +#10#13#10'0123456789ABCDEFGHIJKLMNO'#13#10'PQRSTUVWXYZ +-./?'#11'Font.Height'
+  +#2#243#9'Font.Name'#6#5'Arial'#10'Font.Style'#11#6'fsBold'#0#11'ParentColor'
+  +#8#10'ParentFont'#8#0#0#6'TLabel'#7'Label38'#4'Left'#3#31#2#6'Height'#3#129#0
+  +#3'Top'#3#191#0#5'Width'#3#209#0#7'Caption'#6#245'Right clicking in the Free'
+  +' Text'#13#10'entry box in the main program'#13#10'screen will present a dia'
+  +'log'#13#10'of these message definitions.'#13#10'Note.  The first 3 fixed en'
+  +'tries'#13#10'send the JT65 shorthand'#13#10'sequences and should only be'#13
+  +#10'used when absolutely necessary.'#11'Font.Height'#2#243#9'Font.Name'#6#5
+  +'Arial'#10'Font.Style'#11#6'fsBold'#0#11'ParentColor'#8#10'ParentFont'#8#0#0
+  +#6'TLabel'#7'Label40'#4'Left'#3#208#0#6'Height'#2#17#3'Top'#3#181#1#5'Width'
+  +#2'i'#7'Caption'#6#17'Message validator'#10'Font.Color'#7#5'clRed'#11'Font.H'
+  +'eight'#2#243#9'Font.Name'#6#5'Arial'#11'ParentColor'#8#10'ParentFont'#8#7'V'
+  +'isible'#8#0#0#6'TLabel'#7'Label71'#4'Left'#3#31#2#6'Height'#2'a'#3'Top'#3'N'
+  +#1#5'Width'#3#214#0#7'Caption'#6#188'Do not begin a free text message'#13#10
+  +'with RRR, RO or 73 as it will be'#13#10'sent as shorthand even if you add'
+  +#13#10'text to the first ''word'' (RRR, RO,'#13#10'73).  This will be correc'
+  +'ted in'#13#10'future versions.'#11'Font.Height'#2#243#9'Font.Name'#6#5'Aria'
+  +'l'#10'Font.Style'#11#6'fsBold'#0#11'ParentColor'#8#10'ParentFont'#8#0#0#6'T'
+  +'Label'#7'Label72'#4'Left'#2'k'#6'Height'#2'q'#3'Top'#2'%'#5'Width'#3#242#0#7
+  +'Caption'#6#226'Commonly used JT65 dial QRG values'#13#10'have been predefin'
+  +'ed for the first 12'#13#10'slots.  You may define 4 custom'#13#10'values.  '
+  +'These will be usable when'#13#10'setting QRG from the main program'#13#10's'
+  +'creen by right clicking on the QRG'#13#10'entry box.'#11'Font.Height'#2#243
+  +#9'Font.Name'#6#5'Arial'#10'Font.Style'#11#6'fsBold'#0#11'ParentColor'#8#10
+  +'ParentFont'#8#0#0#5'TEdit'#10'edUserQRG1'#4'Left'#2#31#6'Height'#2#24#3'Top'
+  +#3'E'#1#5'Width'#2'@'#8'TabOrder'#2#0#4'Text'#6#1'0'#0#0#5'TEdit'#10'edUserQ'
+  +'RG2'#4'Left'#2#31#6'Height'#2#24#3'Top'#3'e'#1#5'Width'#2'@'#8'TabOrder'#2#1
+  +#4'Text'#6#1'0'#0#0#5'TEdit'#10'edUserQRG3'#4'Left'#2#31#6'Height'#2#24#3'To'
+  +'p'#3#132#1#5'Width'#2'@'#8'TabOrder'#2#2#4'Text'#6#1'0'#0#0#5'TEdit'#10'edU'
+  +'serQRG4'#4'Left'#2#31#6'Height'#2#24#3'Top'#3#165#1#5'Width'#2'@'#8'TabOrde'
+  +'r'#2#3#4'Text'#6#1'0'#0#0#5'TEdit'#10'edUserMsg4'#4'Left'#3#129#1#6'Height'
+  +#2#24#3'Top'#2'k'#5'Width'#3#144#0#8'CharCase'#7#11'ecUppercase'#9'MaxLength'
+  +#2#13#8'OnChange'#7#15'edUserMsgChange'#8'TabOrder'#2#4#0#0#5'TEdit'#10'edUs'
+  +'erMsg5'#4'Left'#3#130#1#6'Height'#2#24#3'Top'#3#140#0#5'Width'#3#143#0#8'Ch'
+  +'arCase'#7#11'ecUppercase'#9'MaxLength'#2#13#8'OnChange'#7#15'edUserMsgChang'
+  +'e'#8'TabOrder'#2#5#0#0#5'TEdit'#10'edUserMsg6'#4'Left'#3#129#1#6'Height'#2
+  +#24#3'Top'#3#173#0#5'Width'#3#144#0#8'CharCase'#7#11'ecUppercase'#9'MaxLengt'
+  +'h'#2#13#8'OnChange'#7#15'edUserMsgChange'#8'TabOrder'#2#6#0#0#5'TEdit'#10'e'
+  +'dUserMsg7'#4'Left'#3#129#1#6'Height'#2#24#3'Top'#3#206#0#5'Width'#3#144#0#8
+  +'CharCase'#7#11'ecUppercase'#9'MaxLength'#2#13#8'OnChange'#7#15'edUserMsgCha'
+  +'nge'#8'TabOrder'#2#7#0#0#5'TEdit'#10'edUserMsg8'#4'Left'#3#129#1#6'Height'#2
+  +#24#3'Top'#3#240#0#5'Width'#3#144#0#8'CharCase'#7#11'ecUppercase'#9'MaxLengt'
+  +'h'#2#13#8'OnChange'#7#15'edUserMsgChange'#8'TabOrder'#2#8#0#0#5'TEdit'#10'e'
+  +'dUserMsg9'#4'Left'#3#129#1#6'Height'#2#24#3'Top'#3#17#1#5'Width'#3#144#0#8
+  +'CharCase'#7#11'ecUppercase'#9'MaxLength'#2#13#8'OnChange'#7#15'edUserMsgCha'
+  +'nge'#8'TabOrder'#2#9#0#0#5'TEdit'#11'edUserMsg10'#4'Left'#3#130#1#6'Height'
+  +#2#24#3'Top'#3'2'#1#5'Width'#3#143#0#8'CharCase'#7#11'ecUppercase'#9'MaxLeng'
+  +'th'#2#13#8'OnChange'#7#15'edUserMsgChange'#8'TabOrder'#2#10#0#0#5'TEdit'#11
+  +'edUserMsg11'#4'Left'#3#130#1#6'Height'#2#24#3'Top'#3'S'#1#5'Width'#3#143#0#8
+  +'CharCase'#7#11'ecUppercase'#9'MaxLength'#2#13#8'OnChange'#7#15'edUserMsgCha'
+  +'nge'#8'TabOrder'#2#11#0#0#5'TEdit'#11'edUserMsg12'#4'Left'#3#130#1#6'Height'
+  +#2#24#3'Top'#3'u'#1#5'Width'#3#143#0#8'CharCase'#7#11'ecUppercase'#9'MaxLeng'
+  +'th'#2#13#8'OnChange'#7#15'edUserMsgChange'#8'TabOrder'#2#12#0#0#5'TEdit'#11
+  +'edUserMsg13'#4'Left'#3#129#1#6'Height'#2#24#3'Top'#3#151#1#5'Width'#3#144#0
+  +#8'CharCase'#7#11'ecUppercase'#9'MaxLength'#2#13#8'OnChange'#7#15'edUserMsgC'
+  +'hange'#8'TabOrder'#2#13#0#0#0#5'TPage'#5'Page3'#7'Caption'#6#17'Si570 USB C'
+  +'ontrol'#11'ClientWidth'#3#8#3#12'ClientHeight'#3#203#1#0#6'TLabel'#6'Label6'
+  +#4'Left'#2#12#6'Height'#2#17#3'Top'#2#5#5'Width'#3#192#1#7'Caption'#6'BVERY '
+  ,'experimental control of Si570 VFO using DG8SAQ USB Interface.'#11'Font.Heig'
+  +'ht'#2#243#9'Font.Name'#6#5'Arial'#10'Font.Style'#11#6'fsBold'#0#11'ParentCo'
+  +'lor'#8#10'ParentFont'#8#0#0#6'TLabel'#6'Label8'#4'Left'#2#12#6'Height'#2'!'
+  +#3'Top'#2'E'#5'Width'#3'.'#2#7'Caption'#6#144'VFO Frequency in Hertz.  This '
+  +'will be multipied X4 unless multiplier option is uncheked.'#13#10'For SoftR'
+  +'ock SDR devices you should use X4 multiplier!'#11'Font.Height'#2#243#9'Font'
+  +'.Name'#6#5'Arial'#10'Font.Style'#11#6'fsBold'#0#11'ParentColor'#8#10'Parent'
+  +'Font'#8#0#0#6'TLabel'#6'Label4'#4'Left'#2#12#6'Height'#2#17#3'Top'#3#141#0#5
+  +'Width'#3#182#2#7'Caption'#6'pCorrection in Hertz.  This will be added to QR'
+  +'G before setting Si570.  Use - sign to have a negative correction.'#11'Font'
+  +'.Height'#2#243#9'Font.Name'#6#5'Arial'#10'Font.Style'#11#6'fsBold'#0#11'Par'
+  +'entColor'#8#10'ParentFont'#8#0#0#6'TLabel'#6'Label5'#4'Left'#2#12#6'Height'
+  +#2#17#3'Top'#3'='#1#5'Width'#3#176#0#7'Caption'#6#26'Indicated QRG KHz:  000'
+  +'000'#11'Font.Height'#2#243#9'Font.Name'#6#5'Arial'#10'Font.Style'#11#6'fsBo'
+  +'ld'#0#11'ParentColor'#8#10'ParentFont'#8#0#0#6'TLabel'#6'Label7'#4'Left'#3#4
+  +#1#6'Height'#2#17#3'Top'#3'='#1#5'Width'#3#151#0#7'Caption'#6#22'Si570 QRG K'
+  +'Hz:  000000'#11'Font.Height'#2#243#9'Font.Name'#6#5'Arial'#10'Font.Style'#11
+  +#6'fsBold'#0#11'ParentColor'#8#10'ParentFont'#8#0#0#6'TLabel'#7'Label65'#4'L'
+  +'eft'#2#12#6'Height'#2'-'#3'Top'#3']'#1#5'Width'#3#210#2#7'Caption'#6#143'NO'
+  +'TE:  This will only control an Si570 via USB connection.  You must continue'
+  +#13#10'to use software such as Rocky or PowerSDR as the radio software!'#11
+  +'Font.Height'#2#237#9'Font.Name'#6#5'Arial'#10'Font.Style'#11#6'fsBold'#0#11
+  +'ParentColor'#8#10'ParentFont'#8#0#0#6'TLabel'#7'Label67'#4'Left'#2#12#6'Hei'
+  +'ght'#2'-'#3'Top'#3#141#1#5'Width'#3'['#2#7'Caption'#6'@'#13#10'JT65-HF does'
+  +' NOT implement an SDR RX/TX platform at this time.'#11'Font.Height'#2#237#9
   +'Font.Name'#6#5'Arial'#10'Font.Style'#11#6'fsBold'#0#11'ParentColor'#8#10'Pa'
-  +'rentFont'#8#0#0#6'TLabel'#7'Label40'#4'Left'#3#208#0#6'Height'#2#17#3'Top'#3
-  +#181#1#5'Width'#2'i'#7'Caption'#6#17'Message validator'#10'Font.Color'#7#5'c'
-  +'lRed'#11'Font.Height'#2#243#9'Font.Name'#6#5'Arial'#11'ParentColor'#8#10'Pa'
-  +'rentFont'#8#7'Visible'#8#0#0#6'TLabel'#7'Label71'#4'Left'#3#31#2#6'Height'#2
-  +'a'#3'Top'#3'N'#1#5'Width'#3#214#0#7'Caption'#6#188'Do not begin a free text'
-  +' message'#13#10'with RRR, RO or 73 as it will be'#13#10'sent as shorthand e'
-  +'ven if you add'#13#10'text to the first ''word'' (RRR, RO,'#13#10'73).  Thi'
-  +'s will be corrected in'#13#10'future versions.'#11'Font.Height'#2#243#9'Fon'
-  +'t.Name'#6#5'Arial'#10'Font.Style'#11#6'fsBold'#0#11'ParentColor'#8#10'Paren'
-  +'tFont'#8#0#0#6'TLabel'#7'Label72'#4'Left'#2'k'#6'Height'#2'q'#3'Top'#2'%'#5
-  +'Width'#3#242#0#7'Caption'#6#226'Commonly used JT65 dial QRG values'#13#10'h'
-  +'ave been predefined for the first 12'#13#10'slots.  You may define 4 custom'
-  +#13#10'values.  These will be usable when'#13#10'setting QRG from the main p'
-  +'rogram'#13#10'screen by right clicking on the QRG'#13#10'entry box.'#11'Fon'
-  +'t.Height'#2#243#9'Font.Name'#6#5'Arial'#10'Font.Style'#11#6'fsBold'#0#11'Pa'
-  +'rentColor'#8#10'ParentFont'#8#0#0#5'TEdit'#10'edUserQRG1'#4'Left'#2#31#6'He'
-  +'ight'#2#24#3'Top'#3'E'#1#5'Width'#2'@'#8'TabOrder'#2#0#4'Text'#6#1'0'#0#0#5
-  +'TEdit'#10'edUserQRG2'#4'Left'#2#31#6'Height'#2#24#3'Top'#3'e'#1#5'Width'#2
-  +'@'#8'TabOrder'#2#1#4'Text'#6#1'0'#0#0#5'TEdit'#10'edUserQRG3'#4'Left'#2#31#6
-  +'Height'#2#24#3'Top'#3#132#1#5'Width'#2'@'#8'TabOrder'#2#2#4'Text'#6#1'0'#0#0
-  +#5'TEdit'#10'edUserQRG4'#4'Left'#2#31#6'Height'#2#24#3'Top'#3#165#1#5'Width'
-  +#2'@'#8'TabOrder'#2#3#4'Text'#6#1'0'#0#0#5'TEdit'#10'edUserMsg4'#4'Left'#3
-  +#129#1#6'Height'#2#24#3'Top'#2'k'#5'Width'#3#144#0#8'CharCase'#7#11'ecUpperc'
-  +'ase'#9'MaxLength'#2#13#8'OnChange'#7#15'edUserMsgChange'#8'TabOrder'#2#4#0#0
-  +#5'TEdit'#10'edUserMsg5'#4'Left'#3#130#1#6'Height'#2#24#3'Top'#3#140#0#5'Wid'
-  +'th'#3#143#0#8'CharCase'#7#11'ecUppercase'#9'MaxLength'#2#13#8'OnChange'#7#15
-  +'edUserMsgChange'#8'TabOrder'#2#5#0#0#5'TEdit'#10'edUserMsg6'#4'Left'#3#129#1
-  +#6'Height'#2#24#3'Top'#3#173#0#5'Width'#3#144#0#8'CharCase'#7#11'ecUppercase'
-  +#9'MaxLength'#2#13#8'OnChange'#7#15'edUserMsgChange'#8'TabOrder'#2#6#0#0#5'T'
-  +'Edit'#10'edUserMsg7'#4'Left'#3#129#1#6'Height'#2#24#3'Top'#3#206#0#5'Width'
-  +#3#144#0#8'CharCase'#7#11'ecUppercase'#9'MaxLength'#2#13#8'OnChange'#7#15'ed'
-  +'UserMsgChange'#8'TabOrder'#2#7#0#0#5'TEdit'#10'edUserMsg8'#4'Left'#3#129#1#6
-  +'Height'#2#24#3'Top'#3#240#0#5'Width'#3#144#0#8'CharCase'#7#11'ecUppercase'#9
-  +'MaxLength'#2#13#8'OnChange'#7#15'edUserMsgChange'#8'TabOrder'#2#8#0#0#5'TEd'
-  +'it'#10'edUserMsg9'#4'Left'#3#129#1#6'Height'#2#24#3'Top'#3#17#1#5'Width'#3
-  +#144#0#8'CharCase'#7#11'ecUppercase'#9'MaxLength'#2#13#8'OnChange'#7#15'edUs'
-  +'erMsgChange'#8'TabOrder'#2#9#0#0#5'TEdit'#11'edUserMsg10'#4'Left'#3#130#1#6
-  +'Height'#2#24#3'Top'#3'2'#1#5'Width'#3#143#0#8'CharCase'#7#11'ecUppercase'#9
-  +'MaxLength'#2#13#8'OnChange'#7#15'edUserMsgChange'#8'TabOrder'#2#10#0#0#5'TE'
-  +'dit'#11'edUserMsg11'#4'Left'#3#130#1#6'Height'#2#24#3'Top'#3'S'#1#5'Width'#3
-  +#143#0#8'CharCase'#7#11'ecUppercase'#9'MaxLength'#2#13#8'OnChange'#7#15'edUs'
-  +'erMsgChange'#8'TabOrder'#2#11#0#0#5'TEdit'#11'edUserMsg12'#4'Left'#3#130#1#6
-  +'Height'#2#24#3'Top'#3'u'#1#5'Width'#3#143#0#8'CharCase'#7#11'ecUppercase'#9
-  +'MaxLength'#2#13#8'OnChange'#7#15'edUserMsgChange'#8'TabOrder'#2#12#0#0#5'TE'
-  +'dit'#11'edUserMsg13'#4'Left'#3#129#1#6'Height'#2#24#3'Top'#3#151#1#5'Width'
-  +#3#144#0#8'CharCase'#7#11'ecUppercase'#9'MaxLength'#2#13#8'OnChange'#7#15'ed'
-  +'UserMsgChange'#8'TabOrder'#2#13#0#0#0#5'TPage'#5'Page3'#7'Caption'#6#17'Si5'
-  +'70 USB Control'#11'ClientWidth'#3#8#3#12'ClientHeight'#3#203#1#0#6'TLabel'#6
-  +'Label6'#4'Left'#2#12#6'Height'#2#17#3'Top'#2#5#5'Width'#3#192#1#7'Caption'#6
-  ,'BVERY experimental control of Si570 VFO using DG8SAQ USB Interface.'#11'Fon'
-  +'t.Height'#2#243#9'Font.Name'#6#5'Arial'#10'Font.Style'#11#6'fsBold'#0#11'Pa'
-  +'rentColor'#8#10'ParentFont'#8#0#0#6'TLabel'#6'Label8'#4'Left'#2#12#6'Height'
-  +#2'!'#3'Top'#2'E'#5'Width'#3'.'#2#7'Caption'#6#144'VFO Frequency in Hertz.  '
-  +'This will be multipied X4 unless multiplier option is uncheked.'#13#10'For '
-  +'SoftRock SDR devices you should use X4 multiplier!'#11'Font.Height'#2#243#9
-  +'Font.Name'#6#5'Arial'#10'Font.Style'#11#6'fsBold'#0#11'ParentColor'#8#10'Pa'
-  +'rentFont'#8#0#0#6'TLabel'#6'Label4'#4'Left'#2#12#6'Height'#2#17#3'Top'#3#141
-  +#0#5'Width'#3#182#2#7'Caption'#6'pCorrection in Hertz.  This will be added t'
-  +'o QRG before setting Si570.  Use - sign to have a negative correction.'#11
-  +'Font.Height'#2#243#9'Font.Name'#6#5'Arial'#10'Font.Style'#11#6'fsBold'#0#11
-  +'ParentColor'#8#10'ParentFont'#8#0#0#6'TLabel'#6'Label5'#4'Left'#2#12#6'Heig'
-  +'ht'#2#17#3'Top'#3'='#1#5'Width'#3#176#0#7'Caption'#6#26'Indicated QRG KHz: '
-  +' 000000'#11'Font.Height'#2#243#9'Font.Name'#6#5'Arial'#10'Font.Style'#11#6
-  +'fsBold'#0#11'ParentColor'#8#10'ParentFont'#8#0#0#6'TLabel'#6'Label7'#4'Left'
-  +#3#4#1#6'Height'#2#17#3'Top'#3'='#1#5'Width'#3#151#0#7'Caption'#6#22'Si570 Q'
-  +'RG KHz:  000000'#11'Font.Height'#2#243#9'Font.Name'#6#5'Arial'#10'Font.Styl'
-  +'e'#11#6'fsBold'#0#11'ParentColor'#8#10'ParentFont'#8#0#0#6'TLabel'#7'Label6'
-  +'5'#4'Left'#2#12#6'Height'#2'-'#3'Top'#3']'#1#5'Width'#3#211#2#7'Caption'#6
-  +#143'NOTE:  This will only control an Si570 via USB connection.  You must co'
-  +'ntinue'#13#10'to use software such as Rocky or PowerSDR as the radio softwa'
-  +'re!'#11'Font.Height'#2#237#9'Font.Name'#6#5'Arial'#10'Font.Style'#11#6'fsBo'
-  +'ld'#0#11'ParentColor'#8#10'ParentFont'#8#0#0#6'TLabel'#7'Label67'#4'Left'#2
-  +#12#6'Height'#2'-'#3'Top'#3#141#1#5'Width'#3'['#2#7'Caption'#6'@'#13#10'JT65'
-  +'-HF does NOT implement an SDR RX/TX platform at this time.'#11'Font.Height'
-  +#2#237#9'Font.Name'#6#5'Arial'#10'Font.Style'#11#6'fsBold'#0#11'ParentColor'
-  +#8#10'ParentFont'#8#0#0#5'TEdit'#13'editSI570Freq'#4'Left'#2#12#6'Height'#2
-  +#24#3'Top'#2'm'#5'Width'#2'H'#8'TabOrder'#2#0#4'Text'#6#1'0'#0#0#5'TEdit'#19
-  +'editSI570FreqOffset'#4'Left'#2#12#6'Height'#2#24#3'Top'#3#165#0#5'Width'#2
-  +'H'#11'Font.Height'#2#243#9'Font.Name'#6#5'Arial'#10'ParentFont'#8#8'TabOrde'
-  +'r'#2#1#4'Text'#6#1'0'#0#0#7'TButton'#11'btnSetSi570'#4'Left'#2#12#6'Height'
-  +#2#25#3'Top'#3#25#1#5'Width'#2'K'#7'Caption'#6#7'Set QRG'#7'Enabled'#8#11'Fo'
-  +'nt.Height'#2#243#9'Font.Name'#6#5'Arial'#10'Font.Style'#11#6'fsBold'#0#7'On'
-  +'Click'#7#19'editSI570FreqChange'#10'ParentFont'#8#8'TabOrder'#2#4#0#0#9'TCh'
-  +'eckBox'#10'checkSi570'#4'Left'#2#12#6'Height'#2#20#3'Top'#2#29#5'Width'#3
-  +#156#0#7'Caption'#6#21'Enable Si570 Control.'#11'Font.Height'#2#243#9'Font.N'
-  +'ame'#6#5'Arial'#10'Font.Style'#11#6'fsBold'#0#8'OnChange'#7#16'checkSi570Ch'
-  +'ange'#10'ParentFont'#8#8'TabOrder'#2#5#0#0#12'TRadioButton'#12'radioSI570X2'
-  +#4'Left'#2#12#6'Height'#2#20#3'Top'#3#221#0#5'Width'#3#197#0#7'Caption'#6#29
-  +'Multiply Entered Frequency X2'#8'TabOrder'#2#2#0#0#12'TRadioButton'#12'radi'
-  +'oSI570X1'#4'Left'#2#12#6'Height'#2#20#3'Top'#3#245#0#5'Width'#3#197#0#7'Cap'
-  +'tion'#6#29'Multiply Entered Frequency X1'#8'TabOrder'#2#3#0#0#12'TRadioButt'
-  +'on'#12'radioSI570X4'#4'Left'#2#12#6'Height'#2#20#3'Top'#3#197#0#5'Width'#3
-  +#197#0#7'Caption'#6#29'Multiply Entered Frequency X4'#7'Checked'#9#8'TabOrde'
-  +'r'#2#6#7'TabStop'#9#0#0#9'TCheckBox'#10'cbSi570PTT'#4'Left'#3'<'#1#6'Height'
-  +#2#20#3'Top'#3#197#0#5'Width'#3#160#0#7'Caption'#6#21'Use Si570 PTT Control'
-  +#11'Font.Height'#2#243#9'Font.Name'#6#5'Arial'#10'Font.Style'#11#6'fsBold'#0
-  +#8'OnChange'#7#16'cbSi570PTTChange'#10'ParentFont'#8#8'TabOrder'#2#7#0#0#0#5
-  +'TPage'#6'Colors'#7'Caption'#6#6'Colors'#11'ClientWidth'#3#8#3#12'ClientHeig'
-  +'ht'#3#203#1#0#6'TLabel'#7'Label73'#4'Left'#2#12#6'Height'#2'q'#3'Top'#3#167
-  +#0#5'Width'#3#165#2#7'Caption'#12#131#1#0#0'JT65-HF uses color coding to ass'
-  +'ist in picking out receptions that may be of greater interest.'#13#10#13#10
-  +'Messages evaluated as being a CQ will be displayed as in the example for CQ'
-  +' TEXT.'#13#10#13#10'Messages evaluated as being to your callsign  will be d'
-  +'isplayed as in the example for HAS MY CALL.'#13#10#13#10'Messages evaluated'
-  +' as being neither of the above  will be displayed as in the example for ONG'
-  +'OING QSO.'#11'Font.Height'#2#243#9'Font.Name'#6#5'Arial'#10'Font.Style'#11#6
-  +'fsBold'#0#11'ParentColor'#8#10'ParentFont'#8#0#0#5'TEdit'#5'Edit1'#4'Left'#2
+  +'rentFont'#8#0#0#5'TEdit'#13'editSI570Freq'#4'Left'#2#12#6'Height'#2#24#3'To'
+  +'p'#2'm'#5'Width'#2'H'#8'TabOrder'#2#0#4'Text'#6#1'0'#0#0#5'TEdit'#19'editSI'
+  +'570FreqOffset'#4'Left'#2#12#6'Height'#2#24#3'Top'#3#165#0#5'Width'#2'H'#11
+  +'Font.Height'#2#243#9'Font.Name'#6#5'Arial'#10'ParentFont'#8#8'TabOrder'#2#1
+  +#4'Text'#6#1'0'#0#0#7'TButton'#11'btnSetSi570'#4'Left'#2#12#6'Height'#2#25#3
+  +'Top'#3#25#1#5'Width'#2'K'#7'Caption'#6#7'Set QRG'#7'Enabled'#8#11'Font.Heig'
+  +'ht'#2#243#9'Font.Name'#6#5'Arial'#10'Font.Style'#11#6'fsBold'#0#7'OnClick'#7
+  +#19'editSI570FreqChange'#10'ParentFont'#8#8'TabOrder'#2#4#0#0#9'TCheckBox'#10
+  +'checkSi570'#4'Left'#2#12#6'Height'#2#20#3'Top'#2#29#5'Width'#3#156#0#7'Capt'
+  +'ion'#6#21'Enable Si570 Control.'#11'Font.Height'#2#243#9'Font.Name'#6#5'Ari'
+  +'al'#10'Font.Style'#11#6'fsBold'#0#8'OnChange'#7#16'checkSi570Change'#10'Par'
+  +'entFont'#8#8'TabOrder'#2#5#0#0#12'TRadioButton'#12'radioSI570X2'#4'Left'#2
+  +#12#6'Height'#2#20#3'Top'#3#221#0#5'Width'#3#197#0#7'Caption'#6#29'Multiply '
+  +'Entered Frequency X2'#8'TabOrder'#2#2#0#0#12'TRadioButton'#12'radioSI570X1'
+  +#4'Left'#2#12#6'Height'#2#20#3'Top'#3#245#0#5'Width'#3#197#0#7'Caption'#6#29
+  +'Multiply Entered Frequency X1'#8'TabOrder'#2#3#0#0#12'TRadioButton'#12'radi'
+  +'oSI570X4'#4'Left'#2#12#6'Height'#2#20#3'Top'#3#197#0#5'Width'#3#197#0#7'Cap'
+  +'tion'#6#29'Multiply Entered Frequency X4'#7'Checked'#9#8'TabOrder'#2#6#7'Ta'
+  +'bStop'#9#0#0#9'TCheckBox'#10'cbSi570PTT'#4'Left'#3'<'#1#6'Height'#2#20#3'To'
+  +'p'#3#197#0#5'Width'#3#160#0#7'Caption'#6#21'Use Si570 PTT Control'#11'Font.'
+  +'Height'#2#243#9'Font.Name'#6#5'Arial'#10'Font.Style'#11#6'fsBold'#0#8'OnCha'
+  +'nge'#7#16'cbSi570PTTChange'#10'ParentFont'#8#8'TabOrder'#2#7#0#0#0#5'TPage'
+  +#6'Colors'#7'Caption'#6#6'Colors'#11'ClientWidth'#3#8#3#12'ClientHeight'#3
+  +#203#1#0#6'TLabel'#7'Label73'#4'Left'#2#12#6'Height'#2'q'#3'Top'#3#167#0#5'W'
+  +'idth'#3#165#2#7'Caption'#12#131#1#0#0'JT65-HF uses color coding to assist i'
+  +'n picking out receptions that may be of greater interest.'#13#10#13#10'Mess'
+  +'ages evaluated as being a CQ will be displayed as in the example for CQ TEX'
+  +'T.'#13#10#13#10'Messages evaluated as being to your callsign  will be displ'
+  +'ayed as in the example for HAS MY CALL.'#13#10#13#10'Messages evaluated as '
+  +'being neither of the above  will be displayed as in the example for ONGOING'
+  +' QSO.'#11'Font.Height'#2#243#9'Font.Name'#6#5'Arial'#10'Font.Style'#11#6'fs'
+  +'Bold'#0#11'ParentColor'#8#10'ParentFont'#8#0#0#5'TEdit'#5'Edit1'#4'Left'#2
   +#12#6'Height'#2#30#3'Top'#2#13#5'Width'#3#168#0#9'Alignment'#7#8'taCenter'#8
   +'CharCase'#7#11'ecUppercase'#5'Color'#7#6'clLime'#11'Font.Height'#2#237#9'Fo'
   +'nt.Name'#6#11'Courier New'#10'Font.Style'#11#6'fsBold'#0#10'ParentFont'#8#8

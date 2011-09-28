@@ -14,7 +14,7 @@ object Form2: TForm2
   Font.Height = -13
   Font.Name = 'Arial'
   OnCreate = FormCreate
-  LCLVersion = '0.9.28.2'
+  LCLVersion = '0.9.30'
   object Label1: TLabel
     Left = 128
     Height = 17
@@ -256,6 +256,7 @@ object Form2: TForm2
     ShowHidden = False
     ButtonWidth = 23
     NumGlyphs = 0
+    MaxLength = 0
     TabOrder = 10
   end
   object Button1: TButton
