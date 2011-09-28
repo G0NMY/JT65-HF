@@ -1344,7 +1344,7 @@ procedure TForm1.buttonCQClick(Sender: TObject);
 begin
      if (globalData.fullcall <> '') And (cfgvtwo.Form6.edMyGrid.Text <> '') Then
      Begin
-          if AnsiContainsStr(globalData.fullcall,'/') Or AnsiContainsStr(Form1.edHiscall.Text,'/') Then
+          if AnsiContainsStr(globalData.fullcall,'/') Then
           Begin                      
                Form1.edMsg.Text := 'CQ ' + globalData.fullcall;
           End
@@ -2143,8 +2143,6 @@ Var
    isiglevel           : Integer;
 begin
 { TODO : FIX double click message generation with slashed callsign.  It IS NOT working (again) }
-{ TODO : FIX BUG where buttons generate improper message after working with slashed call.
-Example:  Work call/something then click call CQ button.  Message generated is CQ MYCALL not CQ MYCALL MYGRID.  After clicking restore defaults buttons generate propert strings... looks like the error is triggered when a slashed callsign is present in the TX to box.  SQUASH this one with extreme force :) }
      if itemsIn Then
      Begin
           If Form1.chkMultiDecode.Checked Then

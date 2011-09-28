@@ -25,12 +25,12 @@
         <IsVisibleTab Value="True"/>
         <EditorIndex Value="5"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="2467"/>
-        <CursorPos X="26" Y="2490"/>
+        <TopLine Value="2129"/>
+        <CursorPos X="1" Y="2146"/>
         <UsageCount Value="215"/>
         <Bookmarks Count="2">
           <Item0 X="1" Y="466" ID="1"/>
-          <Item1 X="39" Y="2248" ID="0"/>
+          <Item1 X="39" Y="2246" ID="0"/>
         </Bookmarks>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
