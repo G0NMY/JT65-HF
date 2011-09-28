@@ -273,6 +273,7 @@ type
     procedure si570Lowerptt();
     Function  ValidateCallsign(csign : String) : Boolean;
     function  evalGrid(const grid : String) : Boolean;
+    function  SetAudio(auin : Integer; auout : Integer) : Boolean;
 
   private
     { private declarations }
@@ -3354,17 +3355,18 @@ end;
 
 procedure TForm1.initializerCode();
 var
-   paInS, paOutS, foo  : String;
-   i, ifoo, kverr      : Integer;
-   paDefApi            : Integer;
-   paDefApiDevCount    : Integer;
-   vint, tstint        : Integer;
-   painputs, paoutputs : Integer;
-   vstr                : PChar;
-   st                  : TSYSTEMTIME;
-   tstflt              : Double;
-   fname               : String;
-   verUpdate, continue : Boolean;
+   paInS, paOutS, foo   : String;
+   i, ifoo, kverr       : Integer;
+   paDefApi             : Integer;
+   paDefApiDevCount     : Integer;
+   vint, tstint         : Integer;
+   painputs, paoutputs  : Integer;
+   vstr                 : PChar;
+   st                   : TSYSTEMTIME;
+   tstflt               : Double;
+   fname                : String;
+   verUpdate, cont      : Boolean;
+   ain, aout, din, dout : Integer;
 Begin
      kverr := 0;
      while FileExists('KVASD.DAT') do
@@ -4363,237 +4365,63 @@ Begin
           d65.glfftSWisdom := 0;
           dlog.fileDebug('Running without optimal FFT enabled by user request.');
      End;
-     // Setup input device
-     dlog.fileDebug('Setting up ADC.');
-
-     foo := cfgvtwo.Form6.cbAudioIn.Items.Strings[cfgvtwo.Form6.cbAudioIn.ItemIndex];
-     paInParams.channelCount := 2;
-     paInParams.device := StrToInt(foo[1..2]);
-     paInParams.sampleFormat := paInt16;
-     paInParams.suggestedLatency := 1;
-     paInParams.hostApiSpecificStreamInfo := Nil;
-     ppaInParams := @paInParams;
-     // Set rxBuffer index to start of array.
-     adc.d65rxBufferIdx := 0;
-
-     adc.adcT := 0;
-
-     // Set ptr to start of buffer.
-     adc.d65rxBufferPtr := @adc.d65rxBuffer[0];
-
-     // Initialize rx stream.
-     continue := False;
-     paResult := portaudio.Pa_OpenStream(paInStream,ppaInParams,Nil,11025,2048,0,@adc.adcCallback,Pointer(Self));
-     if paResult <> 0 Then
-     Begin
-          // Was unable to open, perhaps the default device will work?
-          continue := false;
-     end
-     else
+     // Setup input/output devices
+     // Translate strings to PA integer device ID for selected and default devices.
+     foo  := cfgvtwo.Form6.cbAudioIn.Items.Strings[cfgvtwo.Form6.cbAudioIn.ItemIndex];
+     ain  := StrToInt(foo[1..2]);
+     foo  := cfgvtwo.Form6.cbAudioOut.Items.Strings[cfgvtwo.Form6.cbAudioOut.ItemIndex];
+     aout := StrToInt(foo[1..2]);
+     din  := portaudio.Pa_GetHostApiInfo(paDefApi)^.defaultInputDevice;
+     dout := portaudio.Pa_GetHostApiInfo(paDefApi)^.defaultOutputDevice;
+     // Call audio setup
+     cont := False;
+     cont := SetAudio(ain, aout);
+     // If failure then attempt to work with default devices.
+     if not cont then
      begin
-          continue := true;
-     end;
-     If continue then
-     begin
-          continue := false;
-          // Start the stream.
-          paResult := portaudio.Pa_StartStream(paInStream);
-          if paResult <> 0 Then
+          if (ain=din) and (aout=dout) then
           Begin
-               // Was unable to start stream, try default input device before bailing.
-               continue := false;
-          End
-          Else
-          Begin
-               continue := True;
+               // Default is already selected.  No need to try again.  Warn user and halt.
+               ShowMessage('Previously selected input and/or output device' + sLineBreak +
+                           'unavailable.  Attempt to use default devices failed' + sLineBreak +
+                           'as well.  Please check that your sound device is' + sLineBreak +
+                           'properly connected and any necessary cable(s) attached.' + sLineBreak + sLineBreak +
+                           'Program will now end.  Please try again after checking' + sLineBreak +
+                           'sound hardware.');
+               halt;
           end;
-     end;
-
-     If not continue then
-     begin
-          // For reasons unkown could not open the selected input device.  Try default
-          // input device and, failing that, terminate program.  Simple check first...
-          // Is the selected device the default?  If so no need to try again.
-          if paInParams.device = portaudio.Pa_GetHostApiInfo(paDefApi)^.defaultInputDevice then
+          cont := false;
+          cont := SetAudio(din, dout);
+          if cont then
           begin
-               // No need to try again, I've already attempted opening default device.
-               foo := 'Sound hardware error!' + sLineBreak + sLineBreak;
-               foo := foo + 'Could not open the previously selected input device.' + sLineBreak +
-                            'Attempt to open default input device also failed.' + sLineBreak +
-                            'Is your sound device plugged in and operational?' + sLineBreak + sLineBreak +
-                            'Please check your hardware and try again.';
-               showmessage(foo);
-               halt;
-          end;
-          // Attempt to open default input device, failing that, terminate.
-          paInParams.device := portaudio.Pa_GetHostApiInfo(paDefApi)^.defaultInputDevice;
-          continue := False;
-          paResult := portaudio.Pa_OpenStream(paInStream,ppaInParams,Nil,11025,2048,0,@adc.adcCallback,Pointer(Self));
-          if paResult <> 0 Then
-          Begin
-               // Was unable to open default device.  All hope is lost.  Terminate.
-               foo := 'Sound hardware error!' + sLineBreak + sLineBreak;
-               foo := foo + 'Could not open the previously selected input device.' + sLineBreak +
-                            'Attempt to open default input device also failed.' + sLineBreak +
-                            'Is your sound device plugged in and operational?' + sLineBreak + sLineBreak +
-                            'Please check your hardware and try again.';
-               showmessage(foo);
-               halt;
+               // Defaults opened, warn user
+               ShowMessage('WARNING! The previously selected input and/or output' + sLineBreak +
+                           'device is unavailable.' + sLineBreak + sLineBreak +
+                           'JT65-HF is currently using the default input and output' + sLineBreak +
+                           'devices.  Please check that your sound device is properly' + sLineBreak +
+                           'connected and any necessary cable(s) attached.' + sLineBreak + sLineBreak +
+                           'THE DEFAULT DEVICES MAY NOT BE THE DEVICE YOU WISH TO USE!');
           end
           else
           begin
-               // Default initialize, attempt to start stream before celebrating.
-               continue := True;
-          end;
-          If continue then
-          begin
-               continue := false;
-               // Start the stream.
-               paResult := portaudio.Pa_StartStream(paInStream);
-               if paResult <> 0 Then
-               Begin
-                    // Was unable to open default device.  All hope is lost.  Terminate.
-                    foo := 'Sound hardware error!' + sLineBreak + sLineBreak;
-                    foo := foo + 'Could not open the previously selected input device.' + sLineBreak +
-                                 'Attempt to open default input device also failed.' + sLineBreak +
-                                 'Is your sound device plugged in and operational?' + sLineBreak + sLineBreak +
-                                 'Please check your hardware and try again.';
-                    showmessage(foo);
-                    halt;
-               End
-               Else
-               Begin
-                    // Default opened and running, show a warning about the situation.
-                    continue := True;
-                    foo := 'Sound hardware error!' + sLineBreak + sLineBreak;
-                    foo := foo + 'Could not open the previously selected input device.' + sLineBreak + sLineBreak +
-                                 'Currently using the DEFAULT input device!  This may' + sLineBreak +
-                                 'not be the device you expect to use.' + sLineBreak + sLineBreak +
-                                 'Please check your hardware/configuration.';
-                    showmessage(foo);
-               end;
-          end;
-     end;
-     // If I make it here, something opened for input, be it the selected or default.  Now repeat for output.
-
-     continue := False;
-     // Setup output device
-     dlog.fileDebug('Setting up DAC.');
-     foo := cfgvtwo.Form6.cbAudioOut.Items.Strings[cfgvtwo.Form6.cbAudioOut.ItemIndex];
-     paOutParams.channelCount := 2;
-     paOutParams.device := StrToInt(foo[1..2]);
-     paOutParams.sampleFormat := paInt16;
-     paOutParams.suggestedLatency := 1;
-     paOutParams.hostApiSpecificStreamInfo := Nil;
-     ppaOutParams := @paOutParams;
-     // Set txBuffer index to start of array.
-     dac.d65txBufferIdx := 0;
-     // Set ptr to start of buffer.
-     dac.d65txBufferPtr := @dac.d65txBuffer[0];
-     dac.dacT := 0;
-     //portaudio.Pa_GetHostApiInfo(paDefApi)^.defaultOutputDevice-2;
-
-     // Initialize tx stream.
-     paResult := portaudio.Pa_OpenStream(paOutStream,Nil,ppaOutParams,11025,2048,0,@dac.dacCallback,Pointer(Self));
-     if paResult <> 0 Then
-     Begin
-          // Selected output device fails, will attempt default before bailing.
-          continue := False;
-     End
-     Else
-     Begin
-          // Open was good, on to start.
-          continue := True;
-     end;
-     if continue then
-     begin
-          // Start the stream.
-          paResult := portaudio.Pa_StartStream(paOutStream);
-          if paResult <> 0 Then
-          Begin
-               // Start stream fails, will attempt default before bailing.
-               continue := false;
-          End
-          else
-          begin
-               // Good to go
-               continue := true;
-          end;
-     end;
-     // Open output fails
-     if not continue then
-     begin
-          // For reasons unkown could not open the selected output device.  Try default
-          // output device and, failing that, terminate program.  Simple check first...
-          // Is the selected device the default?  If so no need to try again.
-          if paOutParams.device = portaudio.Pa_GetHostApiInfo(paDefApi)^.defaultOutputDevice then
-          begin
-               // No need to try again, I've already attempted opening default device.
-               foo := 'Sound hardware error!' + sLineBreak + sLineBreak;
-               foo := foo + 'Could not open the previously selected output device.' + sLineBreak +
-                            'Attempt to open default output device also failed.' + sLineBreak +
-                            'Is your sound device plugged in and operational?' + sLineBreak + sLineBreak +
-                            'Please check your hardware and try again.';
-               showmessage(foo);
+               // Default failed, warn user and halt.
+               ShowMessage('Previously selected input and/or output device' + sLineBreak +
+                           'unavailable.  Attempt to use default devices failed' + sLineBreak +
+                           'as well.  Please check that your sound device is' + sLineBreak +
+                           'properly connected and any necessary cable(s) attached.' + sLineBreak + sLineBreak +
+                           'Program will now end.  Please try again after checking' + sLineBreak +
+                           'sound hardware.');
                halt;
-          end;
-          // Attempt to open default output device, failing that, terminate.
-          paOutParams.device := portaudio.Pa_GetHostApiInfo(paDefApi)^.defaultOutputDevice;
-          continue := False;
-          // Initialize tx stream.
-          paResult := portaudio.Pa_OpenStream(paOutStream,Nil,ppaOutParams,11025,2048,0,@dac.dacCallback,Pointer(Self));
-          if paResult <> 0 Then
-          Begin
-               // Was unable to open default device.  All hope is lost.  Terminate.
-               foo := 'Sound hardware error!' + sLineBreak + sLineBreak;
-               foo := foo + 'Could not open the previously selected output device.' + sLineBreak +
-                            'Attempt to open default output device also failed.' + sLineBreak +
-                            'Is your sound device plugged in and operational?' + sLineBreak + sLineBreak +
-                            'Please check your hardware and try again.';
-               showmessage(foo);
-               halt;
-          End
-          Else
-          Begin
-               // Open was good, on to start.
-               continue := True;
-          end;
-          if continue then
-          begin
-               // Start the stream.
-               paResult := portaudio.Pa_StartStream(paOutStream);
-               if paResult <> 0 Then
-               Begin
-                    // Was unable to open default device.  All hope is lost.  Terminate.
-                    foo := 'Sound hardware error!' + sLineBreak + sLineBreak;
-                    foo := foo + 'Could not open the previously selected outout device.' + sLineBreak +
-                                 'Attempt to open default output device also failed.' + sLineBreak +
-                                 'Is your sound device plugged in and operational?' + sLineBreak + sLineBreak +
-                                 'Please check your hardware and try again.';
-                    showmessage(foo);
-                    halt;
-               End
-               else
-               begin
-                    // Good to go
-                    continue := true;
-                    foo := 'Sound hardware error!' + sLineBreak + sLineBreak;
-                    foo := foo + 'Could not open the previously selected output device.' + sLineBreak + sLineBreak +
-                                 'Currently using the DEFAULT output device!  This may' + sLineBreak +
-                                 'not be the device you expect to use.' + sLineBreak + sLineBreak +
-                                 'Please check your hardware/configuration.';
-                    showmessage(foo);
-               end;
           end;
      end;
 
      // Check callsign and grid for validity.
-     continue := False;
+     cont := False;
      // Verify callsign meets the JT65 protocol requirements.
-     if ValidateCallsign(cfgvtwo.glmycall) then continue := true else continue := false;
+     if ValidateCallsign(cfgvtwo.glmycall) then cont := true else cont := false;
      // Verify grid is a valid 4 or 6 character value
-     if evalGrid(cfgvtwo.Form6.edMyGrid.Text) then continue := true else continue := false;
-     if continue then
+     if evalGrid(cfgvtwo.Form6.edMyGrid.Text) and cont then cont := true else cont := false;
+     if cont then
      begin
           // Call and grid is good, enable TX, RB and PSKR functions as desired by end user.
           Form1.cbEnRB.Enabled := True;
@@ -4653,6 +4481,131 @@ Begin
      Waterfall.OnMouseDown := waterfallMouseDown;
      Waterfall.DoubleBuffered := True;
 End;
+
+function TForm1.SetAudio(auin : Integer; auout : Integer) : Boolean;
+Var
+   cont, ingood, outgood : Boolean;
+Begin
+     ingood  := false;
+     outgood := false;
+     // Setup input device
+     dlog.fileDebug('Setting up ADC/DAC.  ADC:  ' + IntToStr(auin) + ' DAC:  ' + IntToStr(auout));
+     result := false;
+     // Set parameters before call to start
+     paInParams.channelCount := 2;
+     paInParams.device := auin;
+     paInParams.sampleFormat := paInt16;
+     paInParams.suggestedLatency := 1;
+     paInParams.hostApiSpecificStreamInfo := Nil;
+     ppaInParams := @paInParams;
+     // Set rxBuffer index to start of array.
+     adc.d65rxBufferIdx := 0;
+     adc.adcT := 0;
+     // Set ptr to start of buffer.
+     adc.d65rxBufferPtr := @adc.d65rxBuffer[0];
+     // Initialize rx stream.
+     cont := False;
+     paResult := portaudio.Pa_OpenStream(paInStream,ppaInParams,Nil,11025,2048,0,@adc.adcCallback,Pointer(Self));
+     if paResult <> 0 Then
+     Begin
+          // Was unable to open, perhaps the default device will work?
+          cont   := false;
+          result := false;
+          ingood := false;
+     end
+     else
+     begin
+          cont   := true;
+          result := true;
+          ingood := true;
+     end;
+     If cont then
+     begin
+          cont := false;
+          // Start the stream.
+          paResult := portaudio.Pa_StartStream(paInStream);
+          if paResult <> 0 Then
+          Begin
+               // Was unable to start stream, try default input device before bailing.
+               cont   := false;
+               result := false;
+               ingood := false;
+          End
+          Else
+          Begin
+               cont   := True;
+               result := true;
+               ingood := true;
+          end;
+     end;
+     // If input opened properly then on to output
+     if cont then
+     begin
+          cont := False;
+          // Setup output device
+          paOutParams.channelCount := 2;
+          paOutParams.device := auout;
+          paOutParams.sampleFormat := paInt16;
+          paOutParams.suggestedLatency := 1;
+          paOutParams.hostApiSpecificStreamInfo := Nil;
+          ppaOutParams := @paOutParams;
+          // Set txBuffer index to start of array.
+          dac.d65txBufferIdx := 0;
+          // Set ptr to start of buffer.
+          dac.d65txBufferPtr := @dac.d65txBuffer[0];
+          dac.dacT := 0;
+          //portaudio.Pa_GetHostApiInfo(paDefApi)^.defaultOutputDevice-2;
+          // Initialize tx stream.
+          paResult := portaudio.Pa_OpenStream(paOutStream,Nil,ppaOutParams,11025,2048,0,@dac.dacCallback,Pointer(Self));
+          if paResult <> 0 Then
+          Begin
+               // Selected output device fails.
+               cont    := False;
+               result  := false;
+               outgood := false;
+          end
+          Else
+          Begin
+               // Open was good, on to start.
+               cont    := True;
+               result  := True;
+               outgood := True;
+          end;
+          if cont then
+          begin
+               // Start the stream.
+               paResult := portaudio.Pa_StartStream(paOutStream);
+               if paResult <> 0 Then
+               Begin
+                    // Start stream fails.
+                    cont    := false;
+                    result  := false;
+                    outgood := false;
+               End
+               else
+               begin
+                    // Good to go
+                    cont    := true;
+                    result  := true;
+                    outgood := true;
+               end;
+          end;
+     end;
+     if ingood and outgood then
+     begin
+          result := true;
+     end
+     else
+     begin
+          // Attempt to dereference any opened/started streams.
+          paResult := portaudio.Pa_AbortStream(paInStream);
+          paResult := portaudio.Pa_CloseStream(paInStream);
+          paResult := portaudio.Pa_AbortStream(paOutStream);
+          paResult := portaudio.Pa_CloseStream(paOutStream);
+          result := false;
+     end;
+
+end;
 
 function  TForm1.evalGrid(const grid : String) : Boolean;
 var
@@ -5341,6 +5294,7 @@ Var
 Begin
      // Need to change audio input device
      paResult := portaudio.Pa_AbortStream(paInStream);
+     paResult := portaudio.Pa_CloseStream(paInStream);
      foo := cfgvtwo.Form6.cbAudioIn.Items.Strings[cfgvtwo.Form6.cbAudioIn.ItemIndex];
      paInParams.device := StrToInt(foo[1..2]);
      paInParams.sampleFormat := paInt16;
@@ -6272,8 +6226,33 @@ end;
 
 procedure TForm1.oncePerTick();
 Var
-   i    : Integer;
+   i        : Integer;
+   cont : Boolean;
 Begin
+     if not globaldata.canTX then
+     begin
+          // Check callsign and grid for validity.
+          cont := False;
+          // Verify callsign meets the JT65 protocol requirements.
+          if ValidateCallsign(cfgvtwo.glmycall) then cont := true else cont := false;
+          // Verify grid is a valid 4 or 6 character value
+          if evalGrid(cfgvtwo.Form6.edMyGrid.Text) and cont then cont := true else cont := false;
+          if cont then
+          begin
+               btnEngageTX.Enabled := True;
+               cbEnPSKR.Checked := True;
+               cbEnPSKR.Enabled := True;
+          end
+          else
+          begin
+               btnEngageTX.Enabled := False;
+               cbEnRB.Checked := False;
+               cbEnRb.Enabled := False;
+               cbEnPSKR.Checked := False;
+               cbEnPSKR.Enabled := False;
+          end;
+
+     end;
      myCallCheck();
      // Refresh audio level display
      if not primed then updateAudio();
