@@ -23,7 +23,7 @@ object Form1: TForm1
   object Label6: TLabel
     Left = 784
     Height = 15
-    Top = 456
+    Top = 472
     Width = 79
     Caption = 'TX to Call Sign'
     Font.Height = -11
@@ -62,8 +62,8 @@ object Form1: TForm1
     Left = 556
     Height = 17
     Top = 361
-    Width = 311
-    Caption = 'Use buttons below to call CQ and answer callers.'
+    Width = 177
+    Caption = 'Call CQ and answer callers.'
     Font.Height = -13
     Font.Name = 'Arial'
     Font.Style = [fsBold]
@@ -73,9 +73,9 @@ object Form1: TForm1
   object Label15: TLabel
     Left = 556
     Height = 17
-    Top = 406
-    Width = 253
-    Caption = 'Use buttons below when answering CQ.'
+    Top = 416
+    Width = 95
+    Caption = 'Answering CQ.'
     Font.Height = -13
     Font.Name = 'Arial'
     Font.Style = [fsBold]
@@ -178,7 +178,7 @@ object Form1: TForm1
   object Label36: TLabel
     Left = 884
     Height = 15
-    Top = 456
+    Top = 472
     Width = 40
     Caption = 'Rpt (-#)'
     Font.Height = -11
@@ -190,7 +190,7 @@ object Form1: TForm1
   object Label26: TLabel
     Left = 616
     Height = 15
-    Top = 456
+    Top = 472
     Width = 31
     Caption = 'RX DF'
     Font.Height = -11
@@ -202,7 +202,7 @@ object Form1: TForm1
   object Label37: TLabel
     Left = 556
     Height = 15
-    Top = 456
+    Top = 472
     Width = 31
     Caption = 'TX DF'
     Font.Height = -11
@@ -240,7 +240,7 @@ object Form1: TForm1
   object Label13: TLabel
     Left = 556
     Height = 15
-    Top = 533
+    Top = 539
     Width = 104
     Caption = 'Single Decoder BW'
     Font.Height = -11
@@ -250,9 +250,9 @@ object Form1: TForm1
     ParentFont = False
   end
   object Label39: TLabel
-    Left = 697
+    Left = 701
     Height = 15
-    Top = 479
+    Top = 473
     Width = 73
     Caption = 'TX DF = RX DF'
     Font.Color = clRed
@@ -276,10 +276,10 @@ object Form1: TForm1
     ParentFont = False
   end
   object Label19: TLabel
-    Left = 761
+    Left = 685
     Height = 17
     Hint = 'Double click to disable PSKR'
-    Top = 645
+    Top = 646
     Width = 8
     Caption = '0'
     Font.Height = -13
@@ -289,7 +289,7 @@ object Form1: TForm1
     OnDblClick = Label19DblClick
   end
   object Label12: TLabel
-    Left = 829
+    Left = 814
     Height = 17
     Top = 587
     Width = 88
@@ -301,7 +301,7 @@ object Form1: TForm1
     ParentFont = False
   end
   object Label23: TLabel
-    Left = 812
+    Left = 798
     Height = 17
     Top = 647
     Width = 118
@@ -310,10 +310,10 @@ object Form1: TForm1
     PopupMenu = popupQRG
   end
   object Label30: TLabel
-    Left = 761
+    Left = 685
     Height = 17
     Hint = 'Double click to disable RB'
-    Top = 621
+    Top = 622
     Width = 8
     Caption = '0'
     Font.Height = -13
@@ -323,9 +323,9 @@ object Form1: TForm1
     OnDblClick = Label30DblClick
   end
   object Label2: TLabel
-    Left = 733
+    Left = 657
     Height = 15
-    Top = 606
+    Top = 607
     Width = 64
     Caption = 'Reports Sent'
     Font.Height = -11
@@ -352,7 +352,7 @@ object Form1: TForm1
   object edHisCall: TEdit
     Left = 784
     Height = 24
-    Top = 475
+    Top = 491
     Width = 93
     CharCase = ecUppercase
     Font.Height = -13
@@ -393,9 +393,9 @@ object Form1: TForm1
     TabOrder = 3
   end
   object buttonAnswerCQ: TButton
-    Left = 635
+    Left = 556
     Height = 23
-    Top = 426
+    Top = 436
     Width = 104
     Caption = 'Answer CQ'
     Font.Height = -13
@@ -432,9 +432,9 @@ object Form1: TForm1
     TabOrder = 6
   end
   object buttonAckReport2: TButton
-    Left = 748
+    Left = 672
     Height = 23
-    Top = 426
+    Top = 436
     Width = 100
     Caption = 'Send Report'
     Font.Height = -13
@@ -487,10 +487,10 @@ object Form1: TForm1
   end
   object buttonEndQSO2: TButton
     Left = 858
-    Height = 69
-    Top = 380
+    Height = 110
+    Top = 355
     Width = 69
-    Caption = 'Send 73'
+    Caption = 'End QSO'
     Font.Height = -13
     Font.Name = 'Arial'
     Font.Style = [fsBold]
@@ -865,7 +865,7 @@ object Form1: TForm1
   object edSigRep: TEdit
     Left = 884
     Height = 24
-    Top = 475
+    Top = 491
     Width = 45
     Font.Height = -13
     Font.Name = 'Arial'
@@ -888,10 +888,10 @@ object Form1: TForm1
     TabOrder = 19
   end
   object chkAutoTxDF: TCheckBox
-    Left = 677
+    Left = 679
     Height = 19
     Hint = 'If Checked TX and RX DF will always be same.'
-    Top = 478
+    Top = 472
     Width = 20
     Checked = True
     Font.Height = -12
@@ -905,7 +905,7 @@ object Form1: TForm1
   object spinDecoderCF: TSpinEdit
     Left = 616
     Height = 22
-    Top = 475
+    Top = 491
     Width = 55
     Font.Height = -11
     Font.Name = 'Arial'
@@ -919,7 +919,7 @@ object Form1: TForm1
   object spinTXCF: TSpinEdit
     Left = 556
     Height = 22
-    Top = 475
+    Top = 491
     Width = 55
     Font.Height = -11
     Font.Name = 'Arial'
@@ -933,7 +933,7 @@ object Form1: TForm1
   object btnZeroRX: TButton
     Left = 616
     Height = 16
-    Top = 504
+    Top = 520
     Width = 55
     Caption = 'Zero'
     Font.Height = -8
@@ -945,7 +945,7 @@ object Form1: TForm1
   object btnZeroTX: TButton
     Left = 556
     Height = 16
-    Top = 504
+    Top = 520
     Width = 55
     Caption = 'Zero'
     Font.Height = -8
@@ -957,7 +957,7 @@ object Form1: TForm1
   object spinDecoderBW: TSpinEdit
     Left = 595
     Height = 24
-    Top = 550
+    Top = 556
     Width = 18
     Font.Height = -13
     Font.Name = 'Arial'
@@ -969,9 +969,9 @@ object Form1: TForm1
     Value = 4
   end
   object chkNB: TCheckBox
-    Left = 677
+    Left = 679
     Height = 19
-    Top = 554
+    Top = 514
     Width = 84
     Caption = 'Noise Blank'
     Font.Height = -11
@@ -982,9 +982,9 @@ object Form1: TForm1
     TabOrder = 26
   end
   object chkAFC: TCheckBox
-    Left = 677
+    Left = 679
     Height = 19
-    Top = 533
+    Top = 493
     Width = 42
     Caption = 'AFC'
     Font.Height = -11
@@ -1089,7 +1089,7 @@ object Form1: TForm1
   object btnDefaults: TButton
     Left = 784
     Height = 27
-    Top = 541
+    Top = 557
     Width = 146
     Caption = 'Restore Defaults'
     Font.Height = -13
@@ -1100,10 +1100,10 @@ object Form1: TForm1
     TabOrder = 32
   end
   object editManQRG: TEdit
-    Left = 812
+    Left = 784
     Height = 37
     Top = 606
-    Width = 118
+    Width = 146
     Alignment = taCenter
     Font.Height = -24
     Font.Name = 'Arial'
@@ -1117,7 +1117,7 @@ object Form1: TForm1
   object btnLogQSO: TButton
     Left = 784
     Height = 32
-    Top = 504
+    Top = 520
     Width = 146
     Caption = 'Log QSO'
     Font.Height = -13
@@ -1128,18 +1128,18 @@ object Form1: TForm1
     TabOrder = 34
   end
   object cbEnRB: TCheckBox
-    Left = 650
+    Left = 556
     Height = 20
-    Top = 619
+    Top = 620
     Width = 82
     Caption = 'Enable RB'
     OnChange = cbEnRBChange
     TabOrder = 35
   end
   object cbEnPSKR: TCheckBox
-    Left = 650
+    Left = 556
     Height = 20
-    Top = 643
+    Top = 644
     Width = 100
     Caption = 'Enable PSKR'
     OnClick = cbEnPSKRClick
@@ -1148,7 +1148,7 @@ object Form1: TForm1
   object Edit2: TEdit
     Left = 556
     Height = 24
-    Top = 550
+    Top = 556
     Width = 40
     Font.Height = -13
     Font.Name = 'Arial'
@@ -1173,6 +1173,24 @@ object Form1: TForm1
     ParentFont = False
     TabOrder = 38
   end
+  object Bevel1: TBevel
+    Left = 556
+    Height = 3
+    Top = 408
+    Width = 292
+  end
+  object Bevel2: TBevel
+    Left = 556
+    Height = 3
+    Top = 355
+    Width = 292
+  end
+  object Bevel3: TBevel
+    Left = 556
+    Height = 3
+    Top = 464
+    Width = 292
+  end
   object Timer1: TTimer
     Interval = 220
     OnTimer = Timer1Timer
@@ -1196,7 +1214,7 @@ object Form1: TForm1
         Value = '0'
       end    
       item
-        Name = 'multirange'
+        Name = 'singlerange'
         Value = '1000'
       end    
       item
