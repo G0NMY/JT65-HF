@@ -1620,8 +1620,8 @@ begin
           cfg.StoredValue['grid']         := cfgvtwo.Form6.edMyGrid.Text;
           cfg.StoredValue['txCF'] := IntToStr(Form1.spinTXCF.Value);
           cfg.StoredValue['rxCF'] := IntToStr(Form1.spinDecoderCF.Value);
-          cfg.StoredValue['soundin']      := IntToStr(cfgvtwo.Form6.cbAudioIn.ItemIndex);
-          cfg.StoredValue['soundout']     := IntToStr(cfgvtwo.Form6.cbAudioOut.ItemIndex);
+          cfg.StoredValue['soundin']      := IntToStr(paInParams.device);
+          cfg.StoredValue['soundout']     := IntToStr(paOutParams.device);
           cfg.StoredValue['ldgain']       := IntToStr(Form1.TrackBar1.Position);
           cfg.StoredValue['rdgain']       := IntToStr(Form1.TrackBar2.Position);
           cfg.StoredValue['samfacin']     := cfgvtwo.Form6.edRXSRCor.Text;
@@ -1866,8 +1866,8 @@ begin
           while (portAudio.Pa_IsStreamActive(paInStream) > 0) or (portAudio.Pa_IsStreamActive(paOutStream) > 0) Do
           Begin
                application.ProcessMessages;
-               if portAudio.Pa_IsStreamActive(paInStream) > 0 Then portAudio.Pa_StopStream(paInStream);
-               if portAudio.Pa_IsStreamActive(paOutStream) > 0 Then portAudio.Pa_StopStream(paOutStream);
+               if portAudio.Pa_IsStreamActive(paInStream) > 0 Then portAudio.Pa_AbortStream(paInStream);
+               if portAudio.Pa_IsStreamActive(paOutStream) > 0 Then portAudio.Pa_AbortStream(paOutStream);
                sleep(1000);
                inc(termcount);
                if termcount > 9 then break;
@@ -4168,7 +4168,7 @@ Begin
      if cfg.StoredValue['useRB'] = 'yes' Then cfgvtwo.Form6.cbUseRB.Checked := True else cfgvtwo.Form6.cbUseRB.Checked := False;
      cfgvtwo.Form6.editPSKRAntenna.Text := cfg.StoredValue['pskrAntenna'];
      if cfg.StoredValue['optFFT'] = 'on' Then cfgvtwo.Form6.chkNoOptFFT.Checked := False else cfgvtwo.Form6.chkNoOptFFT.Checked := True;
-     if cfg.StoredValue['useAltPTT'] = 'yes' Then cfgvtwo.Form6.cbUseAltPTT.Checked else cfgvtwo.Form6.cbUseAltPTT.Checked := False;
+     if cfg.StoredValue['useAltPTT'] = 'yes' Then cfgvtwo.Form6.cbUseAltPTT.Checked := True else cfgvtwo.Form6.cbUseAltPTT.Checked := False;
      if cfg.StoredValue['useHRDPTT'] = 'yes' Then cfgvtwo.Form6.chkHRDPTT.Checked := True else cfgvtwo.Form6.chkHRDPTT.Checked := False;
      if cfg.StoredValue['useCATTxDF'] = 'yes' Then cfgvtwo.Form6.chkTxDFVFO.Checked := True else cfgvtwo.Form6.chkTxDFVFO.Checked := False;
 
@@ -4490,8 +4490,8 @@ Begin
      outgood := false;
      // Setup input device
      dlog.fileDebug('Setting up ADC/DAC.  ADC:  ' + IntToStr(auin) + ' DAC:  ' + IntToStr(auout));
-     result := false;
      // Set parameters before call to start
+     // Input
      paInParams.channelCount := 2;
      paInParams.device := auin;
      paInParams.sampleFormat := paInt16;
@@ -4503,12 +4503,26 @@ Begin
      adc.adcT := 0;
      // Set ptr to start of buffer.
      adc.d65rxBufferPtr := @adc.d65rxBuffer[0];
-     // Initialize rx stream.
+     // output
+     paOutParams.channelCount := 2;
+     paOutParams.device := auout;
+     paOutParams.sampleFormat := paInt16;
+     paOutParams.suggestedLatency := 1;
+     paOutParams.hostApiSpecificStreamInfo := Nil;
+     ppaOutParams := @paOutParams;
+     // Set txBuffer index to start of array.
+     dac.d65txBufferIdx := 0;
+     // Set ptr to start of buffer.
+     dac.d65txBufferPtr := @dac.d65txBuffer[0];
+     dac.dacT := 0;
+     // Attempt to open selected devices, both must pass open/start to continue.
+     result := false;
      cont := False;
+     // Initialize rx stream.
      paResult := portaudio.Pa_OpenStream(paInStream,ppaInParams,Nil,11025,2048,0,@adc.adcCallback,Pointer(Self));
      if paResult <> 0 Then
      Begin
-          // Was unable to open, perhaps the default device will work?
+          // Was unable to open.
           cont   := false;
           result := false;
           ingood := false;
@@ -4526,7 +4540,7 @@ Begin
           paResult := portaudio.Pa_StartStream(paInStream);
           if paResult <> 0 Then
           Begin
-               // Was unable to start stream, try default input device before bailing.
+               // Was unable to start stream.
                cont   := false;
                result := false;
                ingood := false;
@@ -4542,19 +4556,6 @@ Begin
      if cont then
      begin
           cont := False;
-          // Setup output device
-          paOutParams.channelCount := 2;
-          paOutParams.device := auout;
-          paOutParams.sampleFormat := paInt16;
-          paOutParams.suggestedLatency := 1;
-          paOutParams.hostApiSpecificStreamInfo := Nil;
-          ppaOutParams := @paOutParams;
-          // Set txBuffer index to start of array.
-          dac.d65txBufferIdx := 0;
-          // Set ptr to start of buffer.
-          dac.d65txBufferPtr := @dac.d65txBuffer[0];
-          dac.dacT := 0;
-          //portaudio.Pa_GetHostApiInfo(paDefApi)^.defaultOutputDevice-2;
           // Initialize tx stream.
           paResult := portaudio.Pa_OpenStream(paOutStream,Nil,ppaOutParams,11025,2048,0,@dac.dacCallback,Pointer(Self));
           if paResult <> 0 Then
@@ -5290,72 +5291,39 @@ End;
 
 procedure TForm1.audioChange();
 Var
-   foo : String;
+   foo       : String;
+   pin, pout : Integer;
+   ain, aout : Integer;
 Begin
+     // Preserve former in/out devices in case switch fails.
+     pin  := paInParams.device;
+     pout := paOutParams.device;
+     // Stop timer while changing over
+     timer1.Enabled := false;
      // Need to change audio input device
      paResult := portaudio.Pa_AbortStream(paInStream);
      paResult := portaudio.Pa_CloseStream(paInStream);
      foo := cfgvtwo.Form6.cbAudioIn.Items.Strings[cfgvtwo.Form6.cbAudioIn.ItemIndex];
-     paInParams.device := StrToInt(foo[1..2]);
-     paInParams.sampleFormat := paInt16;
-     paInParams.suggestedLatency := 1;
-     paInParams.hostApiSpecificStreamInfo := Nil;
-     ppaInParams := @paInParams;
-     adc.d65rxBufferIdx := 0;
-     //madc.d65rxBufferIdx := 0;
-
-     adc.adcT := 0;
-     //madc.adcT := 0;
-
-     paInParams.channelCount := 2;
-     paResult := portaudio.Pa_OpenStream(paInStream,ppaInParams,Nil,11025,2048,0,@adc.adcCallback,Pointer(Self));
-     //if paResult <> 0 Then
-     //Begin
-          //paInParams.channelCount := 1;
-          //paResult := portaudio.Pa_OpenStream(paInStream,ppaInParams,Nil,11025,2048,0,@madc.adcCallback,Pointer(Self));
-     //end;
-     if paResult = 0 Then
-     Begin
-          paResult := portaudio.Pa_StartStream(paInStream);
-     end
-     else
-     begin
-          ShowMessage('Unable to open audio device properly.  Please select another then restart program.');
-     end;
-
+     ain := StrToInt(foo[1..2]);
      // Need to change audio output device
      paResult := portaudio.Pa_AbortStream(paOutStream);
      paResult := portaudio.Pa_CloseStream(paOutStream);
-
      foo := cfgvtwo.Form6.cbAudioOut.Items.Strings[cfgvtwo.Form6.cbAudioOut.ItemIndex];
-     paOutParams.device := StrToInt(foo[1..2]);
-     paOutParams.sampleFormat := paInt16;
-     paOutParams.suggestedLatency := 1;
-     paOutParams.hostApiSpecificStreamInfo := Nil;
-     ppaOutParams := @paOutParams;
-     dac.d65txBufferIdx := 0;
-     //mdac.d65txBufferIdx := 0;
-
-     dErrCount := 0;
-     adCount := 0;
-     dac.dacT := 0;
-     //mdac.dacT := 0;
-
-     paOutParams.channelCount := 2;
-     paResult := portaudio.Pa_OpenStream(paOutStream,Nil,ppaOutParams,11025,2048,0,@dac.dacCallback,Pointer(Self));
-     //if paResult <> 0 Then
-     //Begin
-          //paOutParams.channelCount := 1;
-          //paResult := portaudio.Pa_OpenStream(paOutStream,Nil,ppaOutParams,11025,2048,0,@mdac.dacCallback,Pointer(Self));
-     //End;
-     if paresult = 0 Then
-     Begin
-          paResult := portaudio.Pa_StartStream(paOutStream);
-     End
-     Else
-     Begin
-          ShowMessage('Unable to open audio device properly.  Please select another then restart program.');
-     End;
+     aout := StrToInt(foo[1..2]);
+     if not SetAudio(ain, aout) then
+     begin
+          // Failed to open new devices, notify and attempt to return to former devices.
+          ShowMessage('The audio device(s) selected failed to open.' + sLineBreak + sLineBreak +
+                      'Attempting to re-open previously selected devices.');
+          if not SetAudio(pin, pout) then
+          begin
+               // Failed to revert.  Hopeless situation.
+               ShowMessage('The audio device(s) selected failed to open.' + sLineBreak + sLineBreak +
+                           'Attempt to re-open previously selected devices.' + sLineBreak +
+                           'failed.  Program must exit.');
+               halt;
+          end;
+     end;
      cfgvtwo.gld65AudioChange := False;
 End;
 
