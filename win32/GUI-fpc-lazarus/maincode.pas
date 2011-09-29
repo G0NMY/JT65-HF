@@ -1,6 +1,6 @@
 unit maincode;
 //
-// Copyright (c) 2008,2009 J C Large - W6CQZ
+// Copyright (c) 2008,2009,2010,2011 J C Large - W6CQZ
 //
 //
 // JT65-HF is the legal property of its developer.
@@ -29,8 +29,8 @@ uses
   Classes, SysUtils, LResources, Forms, Controls, Graphics, Dialogs,
   StdCtrls, CTypes, StrUtils, Math, portaudio, ExtCtrls, ComCtrls, Spin,
   DateUtils, encode65, parseCallSign, globalData, XMLPropStorage, adc,
-  dac, ClipBrd, dlog, rawdec, cfgvtwo, guiConfig, verHolder, PSKReporter,
-  catControl, Menus, synaser, rbc, log, diagout, synautil, waterfall, d65,
+  dac, ClipBrd, dlog, rawdec, cfgvtwo, guiConfig, verHolder,
+  catControl, Menus, synaser, log, diagout, synautil, waterfall, d65,
   spectrum, {$IFDEF WIN32}windows, {$ENDIF}{$IFDEF LINUX}unix, {$ENDIF}
   {$IFDEF DARWIN}unix, {$ENDIF} about, spot, valobject;
 
@@ -258,7 +258,7 @@ type
     procedure updateSR();
     procedure genTX1();
     procedure genTX2();
-    procedure rbThreadCheck();
+    //procedure rbThreadCheck();
     procedure myCallCheck();
     procedure txControls();
     procedure processNewMinute(st : TSystemTime);
@@ -271,7 +271,7 @@ type
     function  BuildLocalString (station_callsign, my_gridsquare, programid, programversion, my_antenna : String) : WideString;
     function  isSigRep(rep : String) : Boolean;
     function  utcTime : TSYSTEMTIME;
-    procedure addToRBC(i, m : Integer);
+    //procedure addToRBC(i, m : Integer);
     procedure NewaddToRBC(i , m : Integer);
     procedure rbcCheck();
     procedure updateList(callsign : String);
@@ -366,7 +366,7 @@ type
      haveRXSRerr, haveTXSRerr   : Boolean;
      rxsrs, txsrs, lastSRerr    : String;
      preTXCF, preRXCF           : Integer;
-     pskrStats                  : PSKReporter.REPORTER_STATISTICS;
+     //pskrStats                  : PSKReporter.REPORTER_STATISTICS;
      audioAve1, audioAve2       : Integer;
      sopQRG, eopQRG             : Double;
      tsopQRG, teopQRG, tqrg     : String; // Start/end/current period QRG as string
@@ -1721,7 +1721,6 @@ begin
                inc(kverr);
                if kverr > 10000 then break;
           end;
-          { TODO Save/restore Single decoder BW and Multi-decoder bin resolution }
           // Update configuration settings.
           cfg.StoredValue['call']         := UpperCase(cfgvtwo.glmycall);
           cfg.StoredValue['pfx']          := IntToStr(cfgvtwo.Form6.comboPrefix.ItemIndex);
@@ -1776,12 +1775,8 @@ begin
           if cfgvtwo.Form6.cbUseAltPTT.Checked Then cfg.StoredValue['useAltPTT'] := 'yes' else cfg.StoredValue['useAltPTT'] := 'no';
           if cfgvtwo.Form6.chkHRDPTT.Checked Then cfg.StoredValue['useHRDPTT'] := 'yes' else cfg.StoredValue['useHRDPTT'] := 'no';
           cfg.StoredValue['specVGain'] := IntToStr(spinGain.Value);
-
-          {TODO This is the connection to the multiple bin spacing}
-          cfg.StoredValue['binspace'] := '100';
-          {TODO This is the connection to the single decoder BW}
-          cfg.StoredValue['singleRange'] := Edit2.Text;
-
+          cfg.StoredValue['binspace'] := IntToStr(spinDecoderBin.Value);
+          cfg.StoredValue['singleRange'] := IntToStr(spinDecoderBW.Value);
           cfg.StoredValue['cqColor'] := IntToStr(cfgvtwo.Form6.ComboBox1.ItemIndex);
           cfg.StoredValue['callColor'] := IntToStr(cfgvtwo.Form6.ComboBox2.ItemIndex);
           cfg.StoredValue['qsoColor'] := IntToStr(cfgvtwo.Form6.ComboBox3.ItemIndex);
@@ -1911,21 +1906,23 @@ begin
                if getPTTMethod() = 'PTT' Then lowerPTT();
                diagout.Form3.ListBox1.Items.Add('Closed PTT Port');
           end;
-          if globalData.rbLoggedIn Then
-          Begin
-               diagout.Form3.ListBox1.Items.Add('Closing RB');
-               cfgvtwo.glrbcLogout := True;
-               sleep(1000);
-          end;
-          termcount := 0;
-          While rbc.glrbActive Do
-          Begin
-               application.ProcessMessages;
-               sleep(1000);
-               inc(termcount);
-               if termcount > 9 then break;
-          end;
-          diagout.Form3.ListBox1.Items.Add('Closed RB');
+
+          //if globalData.rbLoggedIn Then
+          //Begin
+               //diagout.Form3.ListBox1.Items.Add('Closing RB');
+               //cfgvtwo.glrbcLogout := True;
+               //sleep(1000);
+          //end;
+          //termcount := 0;
+          //While rbc.glrbActive Do
+          //Begin
+               //application.ProcessMessages;
+               //sleep(1000);
+               //inc(termcount);
+               //if termcount > 9 then break;
+          //end;
+          //diagout.Form3.ListBox1.Items.Add('Closed RB');
+
           diagout.Form3.ListBox1.Items.Add('Terminating RB Thread');
           rbThread.Suspend;
           diagout.Form3.ListBox1.Items.Add('Terminated RB Thread');
@@ -1991,16 +1988,17 @@ begin
           portaudio.Pa_Terminate();
           diagout.Form3.ListBox1.Items.Add('Terminated PortAudio');
 
-          if cfgvtwo.Form6.cbUsePSKReporter.Checked Then
-          Begin
-               diagout.Form3.ListBox1.Items.Add('Cleaning up PSK Reporter Interface');
-               PSKReporter.ReporterUninitialize;
-               diagout.Form3.ListBox1.Items.Add('Cleaned up PSK Reporter Interface');
-          end
-          else
-          begin
-               PSKReporter.ReporterUninitialize;
-          end;
+          //if cfgvtwo.Form6.cbUsePSKReporter.Checked Then
+          //Begin
+               //diagout.Form3.ListBox1.Items.Add('Cleaning up PSK Reporter Interface');
+               //PSKReporter.ReporterUninitialize;
+               //diagout.Form3.ListBox1.Items.Add('Cleaned up PSK Reporter Interface');
+          //end
+          //else
+          //begin
+               //PSKReporter.ReporterUninitialize;
+          //end;
+
           diagout.Form3.ListBox1.Items.Add('Releasing waterfall');
           Waterfall.Free;
           diagout.Form3.ListBox1.Items.Add('Released waterfall');
@@ -2045,7 +2043,6 @@ begin
           begin
                // i holds index to data in d65.gld65decodes to spot
                // m holds mode as integer 65 or 4
-               {TODO eopQRG now needs to be an integer value in Hz, not a float }
                // OK.. rather than try to convert everything to the new 2.0 QRG handler I have placed the necessary variable for eopQRG into teopWRG
                // as string for conversion to integer with mval.evalQRG
                //function evalQRG(const qrg : String; const mode : string; var qrgk : Double; var qrghz : Integer; var asciiqrg : String) : Boolean;
@@ -2096,70 +2093,70 @@ begin
 end;
 
 
-procedure Tform1.addToRBC(i , m : Integer);
-Var
-   ii : Integer;
-begin
-     If cfgvtwo.Form6.cbUseRB.Checked Then
-     Begin
-          // Clear rb pass-through array of processed entries.
-          for ii := 0 to 499 do
-          begin
-               if rbc.glrbReports[ii].rbProcessed Then
-               Begin
-                    rbc.glrbReports[ii].rbCached    := False;
-                    rbc.glrbReports[ii].rbCharSync  := '';
-                    rbc.glrbReports[ii].rbDecoded   := '';
-                    rbc.glrbReports[ii].rbDeltaFreq := '';
-                    rbc.glrbReports[ii].rbDeltaTime := '';
-                    rbc.glrbReports[ii].rbFrequency := '';
-                    rbc.glrbReports[ii].rbNumSync   := '';
-                    rbc.glrbReports[ii].rbSigLevel  := '';
-                    rbc.glrbReports[ii].rbSigW      := '';
-                    rbc.glrbReports[ii].rbTimeStamp := '';
-                    rbc.glrbReports[ii].rbProcessed := True;
-                    rbc.glrbReports[ii].rbMode      := 0;
-               end;
-          end;
-          ii := 0;
-          while ii < 500 do
-          begin
-               if rbc.glrbReports[ii].rbProcessed Then
-               Begin
-                    if (eopQRG=sopQRG) And (Form1.editManQRG.Text<>'0') Then
-                    Begin
-                         if m=65 then
-                         Begin
-                              // If rbProcessed then safe to overwrite previous contents
-                              rbc.glrbReports[ii].rbTimeStamp := d65.gld65decodes[i].dtTimeStamp;
-                              rbc.glrbReports[ii].rbNumSync   := d65.gld65decodes[i].dtNumSync;
-                              rbc.glrbReports[ii].rbSigLevel  := d65.gld65decodes[i].dtSigLevel;
-                              rbc.glrbReports[ii].rbDeltaTime := d65.gld65decodes[i].dtDeltaTime;
-                              rbc.glrbReports[ii].rbDeltaFreq := d65.gld65decodes[i].dtDeltaFreq;
-                              rbc.glrbReports[ii].rbSigW      := d65.gld65decodes[i].dtSigW;
-                              rbc.glrbReports[ii].rbCharSync  := d65.gld65decodes[i].dtCharSync;
-                              rbc.glrbReports[ii].rbDecoded   := d65.gld65decodes[i].dtDecoded;
-                              rbc.glrbReports[ii].rbFrequency := FloatToStr(eopQRG/1000);
-                              rbc.glrbReports[ii].rbMode      := m;
-                              rbc.glrbReports[ii].rbProcessed := False;
-                              rbc.glrbReports[ii].rbCached    := False;
-                         End;
-                    End
-                    Else
-                    Begin
-                         dlog.FileDebug('RB Report discarded Start/End QRG not same.');
-                    End;
-                    d65.gld65decodes[i].dtProcessed := True;
-                    ii := 501;
-               End;
-               inc(ii);
-          end;
-     End
-     Else
-     Begin
-          d65.gld65decodes[i].dtProcessed := True;
-     End;
-end;
+//procedure Tform1.addToRBC(i , m : Integer);
+//Var
+//   ii : Integer;
+//begin
+//     If cfgvtwo.Form6.cbUseRB.Checked Then
+//     Begin
+//          // Clear rb pass-through array of processed entries.
+//          for ii := 0 to 499 do
+//          begin
+//               if rbc.glrbReports[ii].rbProcessed Then
+//               Begin
+//                    rbc.glrbReports[ii].rbCached    := False;
+//                    rbc.glrbReports[ii].rbCharSync  := '';
+//                    rbc.glrbReports[ii].rbDecoded   := '';
+//                    rbc.glrbReports[ii].rbDeltaFreq := '';
+//                    rbc.glrbReports[ii].rbDeltaTime := '';
+//                    rbc.glrbReports[ii].rbFrequency := '';
+//                    rbc.glrbReports[ii].rbNumSync   := '';
+//                    rbc.glrbReports[ii].rbSigLevel  := '';
+//                    rbc.glrbReports[ii].rbSigW      := '';
+//                    rbc.glrbReports[ii].rbTimeStamp := '';
+//                    rbc.glrbReports[ii].rbProcessed := True;
+//                    rbc.glrbReports[ii].rbMode      := 0;
+//               end;
+//          end;
+//          ii := 0;
+//          while ii < 500 do
+//          begin
+//               if rbc.glrbReports[ii].rbProcessed Then
+//               Begin
+//                    if (eopQRG=sopQRG) And (Form1.editManQRG.Text<>'0') Then
+//                    Begin
+//                         if m=65 then
+//                         Begin
+//                              // If rbProcessed then safe to overwrite previous contents
+//                              rbc.glrbReports[ii].rbTimeStamp := d65.gld65decodes[i].dtTimeStamp;
+//                              rbc.glrbReports[ii].rbNumSync   := d65.gld65decodes[i].dtNumSync;
+//                              rbc.glrbReports[ii].rbSigLevel  := d65.gld65decodes[i].dtSigLevel;
+//                              rbc.glrbReports[ii].rbDeltaTime := d65.gld65decodes[i].dtDeltaTime;
+//                              rbc.glrbReports[ii].rbDeltaFreq := d65.gld65decodes[i].dtDeltaFreq;
+//                              rbc.glrbReports[ii].rbSigW      := d65.gld65decodes[i].dtSigW;
+//                              rbc.glrbReports[ii].rbCharSync  := d65.gld65decodes[i].dtCharSync;
+//                              rbc.glrbReports[ii].rbDecoded   := d65.gld65decodes[i].dtDecoded;
+//                              rbc.glrbReports[ii].rbFrequency := FloatToStr(eopQRG/1000);
+//                              rbc.glrbReports[ii].rbMode      := m;
+//                              rbc.glrbReports[ii].rbProcessed := False;
+//                              rbc.glrbReports[ii].rbCached    := False;
+//                         End;
+//                    End
+//                    Else
+//                    Begin
+//                         dlog.FileDebug('RB Report discarded Start/End QRG not same.');
+//                    End;
+//                    d65.gld65decodes[i].dtProcessed := True;
+//                    ii := 501;
+//               End;
+//               inc(ii);
+//          end;
+//     End
+//     Else
+//     Begin
+//          d65.gld65decodes[i].dtProcessed := True;
+//     End;
+//end;
 
 procedure TForm1.FormCreate(Sender: TObject);
 Var
@@ -2799,10 +2796,7 @@ begin
      qsoETime := ss;
      log.Form2.edLogETime.Text := qsoETime;
      log.Form2.edLogSReport.Text := edSigRep.Text;
-     fqrg := 0.0;
-     sqrg := '0';
-     fqrg := StrToFloat(cfgvtwo.Form6.rigQRG.Text);
-     fqrg := fqrg/1000000;
+     fqrg := globalData.iqrg / 1000000;
      sqrg := FloatToStr(fqrg);
      log.Form2.edLogFrequency.Text := sqrg;
      log.logmycall := globalData.fullcall;
@@ -3390,16 +3384,16 @@ end;
 
 procedure TForm1.rbcCheck();
 Var
-   floatvar     : Single;
-   intvar       : Integer;
+   //floatvar     : Single;
+   //intvar       : Integer;
    foo          : String;
 begin
-     floatvar := 0;
-     If TryStrToFloat(Form1.editManQRG.Text, floatvar) Then
-     Begin
-          intvar := trunc(floatvar);
-          If parseCallSign.valQRG(intvar) Then rbc.glrbQRG := Form1.editManQRG.Text else rbc.glrbQRG := '0';
-     End;
+     //floatvar := 0;
+     //If TryStrToFloat(Form1.editManQRG.Text, floatvar) Then
+     //Begin
+          //intvar := trunc(floatvar);
+          //If parseCallSign.valQRG(intvar) Then rbc.glrbQRG := Form1.editManQRG.Text else rbc.glrbQRG := '0';
+     //End;
      // Update form title with rb info.
      If cfgvtwo.Form6.cbUseRB.Checked Then
      Begin
@@ -3526,18 +3520,20 @@ Begin
      Begin
           nextMinute := st.Minute+1;
      End;
+
      // Setup rbstats
-     i := 0;
-     while i < 500 do
-     begin
-          rbsHeardList[i].callsign := '';
-          rbsHeardList[i].count := 0;
-          rbc.glrbsLastCall[i] := '';
-          inc(i);
-     end;
-     rbc.glrbsSentCount := 0;
+     //i := 0;
+     //while i < 500 do
+     //begin
+     //     rbsHeardList[i].callsign := '';
+     //     rbsHeardList[i].count := 0;
+     //     rbc.glrbsLastCall[i] := '';
+     //     inc(i);
+     //end;
+     //rbc.glrbsSentCount := 0;
      //globalData.rbID := '1';
-     rbc.glrbCallsign := TrimLeft(TrimRight(cfgvtwo.Form6.editPSKRCall.Text)) + '-1';
+     //rbc.glrbCallsign := TrimLeft(TrimRight(cfgvtwo.Form6.editPSKRCall.Text)) + '-1';
+
      // Init PA.  If this doesn't work there's no reason to continue.
      PaResult := portaudio.Pa_Initialize();
      If PaResult <> 0 Then ShowMessage('Fatal Error.  Could not initialize portaudio.');
@@ -3925,9 +3921,8 @@ Begin
      tstint := 0;
      if TryStrToInt(cfg.StoredValue['txCF'],tstint) Then Form1.spinTXCF.Value := tstint else Form1.spinTXCF.Value := 0;
      tstint := 0;
-     {TODO This is the connection to the single decoder bandwidth cfg.StoredValue['singlerange'] as index to spinedit value }
-     Form1.spinDecoderBW.Value := 3;
-     Form1.Edit2.Text := '100';
+     if TryStrToInt(cfg.StoredValue['singlerange'],tstint) Then Form1.spinDecoderBW.value := tstint else Form1.spinDecoderBW.Value := 3;
+     spinDecoderBWChange(spinDecoderBW);
      tstint := 0;
      if TryStrToInt(cfg.StoredValue['soundin'],tstint) Then cfgvtwo.Form6.cbAudioIn.ItemIndex := tstint else cfgvtwo.Form6.cbAudioIn.ItemIndex := 0;
      tstint := 0;
@@ -4271,9 +4266,9 @@ Begin
      Form1.MenuItem26.Caption := cfg.StoredValue['usrMsg9'];
      Form1.MenuItem27.Caption := cfg.StoredValue['usrMsg10'];
      tstint := 0;
-     {TODO This is the connection to the multi decoder bin spacing cfg.StoredValue['binSpace']}
-     d65.glbinspace := 100;
-
+     tstint := 0;
+     if TryStrToInt(cfg.StoredValue['binSpace'],tstint) Then Form1.spinDecoderBin.value := tstint else Form1.spinDecoderBin.Value := 3;
+     spinDecoderBinChange(spinDecoderBin);
      if cfg.StoredValue['smooth'] = 'on' Then Form1.cbSmooth.Checked := True else Form1.cbSmooth.Checked := False;
      if Form1.cbSmooth.Checked Then spectrum.specSmooth := True else spectrum.specSmooth := False;
      if cfg.StoredValue['restoreMulti'] = 'on' Then cfgvtwo.Form6.cbRestoreMulti.Checked := True else cfgvtwo.Form6.cbRestoreMulti.Checked := False;
@@ -4500,12 +4495,12 @@ Begin
           if cfgvtwo.Form6.cbUsePSKReporter.Checked Then
           Begin
                // Initialize PSK Reporter DLL
-               If PSKReporter.ReporterInitialize('report.pskreporter.info','4739') = 0 Then pskrstat := 1 else pskrstat := 0;
+               //If PSKReporter.ReporterInitialize('report.pskreporter.info','4739') = 0 Then pskrstat := 1 else pskrstat := 0;
                Form1.cbEnPSKR.Checked := True;
-          End
-          Else
-          Begin
-               Form1.cbEnPSKR.Checked := False;
+          //End
+          //Else
+          //Begin
+               //Form1.cbEnPSKR.Checked := False;
           end;
 
           if cfgvtwo.Form6.cbUseRB.Checked then Form1.cbEnRB.Checked := True else Form1.cbEnRB.Checked := False;
@@ -5385,44 +5380,44 @@ Begin
      cfgvtwo.gld65AudioChange := False;
 End;
 
-procedure TForm1.rbThreadCheck();
-Var
-   ts     : TDateTime;
-   tscalc : Double;
-   i      : Integer;
-Begin
-     ts := Now;
-     If rbc.glrbActive Then
-     Begin
-          // Compare timestamp in ts to globalData.rbEnterTS and if difference
-          // is greater than 90 seconds I will need to assume rbc thread has
-          // gone astray.
-          tscalc := SecondSpan(ts,rbc.glrbEnterTS);
-          If tscalc > 90 Then
-          Begin
-               // rb thread was started at least 90 seconds ago and is, seemingly,
-               // stuck.  Now the question is what to do about it.  Perhaps the
-               // most solid method will be to suspend its thread, terminate the
-               // thread, dispose of the thread and re-create it.  If that doesn't
-               // clear it I don't know what else will. ;)
-               rbThread.Suspend;
-               rbThread.Terminate;
-               rbThread.Destroy;
-               // This is probably undesirable, but, for now, I am going to clear
-               // the entire rbReports array to prevent an invalid entry in the
-               // structure from triggering a slow speed loop.  i.e. rb hangs,
-               // it's terminated then hangs again on restarting due to something
-               // in the rbReports array being processed again.
-               for i := 0 to 499 do
-               Begin
-                    rbc.glrbReports[i].rbProcessed := True;
-               End;
-               rbThread := rbcThread.Create(False);
-               rbc.glrbActive := False;
-               dlog.fileDebug('RBC Thread was reinitialized due to detection of lockup.');
-          End;
-     End;
-End;
+//procedure TForm1.rbThreadCheck();
+//Var
+//   ts     : TDateTime;
+//   tscalc : Double;
+//   i      : Integer;
+//Begin
+//     ts := Now;
+//     If rbc.glrbActive Then
+//     Begin
+//          // Compare timestamp in ts to globalData.rbEnterTS and if difference
+//          // is greater than 90 seconds I will need to assume rbc thread has
+//          // gone astray.
+//          tscalc := SecondSpan(ts,rbc.glrbEnterTS);
+//          If tscalc > 90 Then
+//          Begin
+//               // rb thread was started at least 90 seconds ago and is, seemingly,
+//               // stuck.  Now the question is what to do about it.  Perhaps the
+//               // most solid method will be to suspend its thread, terminate the
+//               // thread, dispose of the thread and re-create it.  If that doesn't
+//               // clear it I don't know what else will. ;)
+//               rbThread.Suspend;
+//               rbThread.Terminate;
+//               rbThread.Destroy;
+//               // This is probably undesirable, but, for now, I am going to clear
+//               // the entire rbReports array to prevent an invalid entry in the
+//               // structure from triggering a slow speed loop.  i.e. rb hangs,
+//               // it's terminated then hangs again on restarting due to something
+//               // in the rbReports array being processed again.
+//               for i := 0 to 499 do
+//               Begin
+//                    rbc.glrbReports[i].rbProcessed := True;
+//               End;
+//               rbThread := rbcThread.Create(False);
+//               rbc.glrbActive := False;
+//               dlog.fileDebug('RBC Thread was reinitialized due to detection of lockup.');
+//          End;
+//     End;
+//End;
 
 procedure TForm1.myCallCheck();
 Begin
@@ -6037,7 +6032,7 @@ End;
 
 procedure TForm1.processOncePerSecond(st : TSystemTime);
 Var
-   i    : Integer;
+   //i    : Integer;
    foo  : String;
    ffoo : Double;
 Begin
@@ -6057,20 +6052,21 @@ Begin
      Form1.MenuItem26.Caption := cfgvtwo.Form6.edUserMsg12.Text;
      Form1.MenuItem27.Caption := cfgvtwo.Form6.edUserMsg13.Text;
      // PSKR Check
-     if cfgvtwo.Form6.cbUsePSKReporter.Checked Then
-     Begin
-          if pskrstat = 0 Then
-          Begin
-               Form1.Timer1.Enabled := False;
-               If PSKReporter.ReporterInitialize('report.pskreporter.info','4739') = 0 Then pskrstat := 1 else pskrstat := 0;
-               Form1.Timer1.Enabled := True;
-          End;
-     End;
-     if cfgvtwo.Form6.cbUsePSKReporter.Checked and not primed Then PSKReporter.ReporterTickle;
-     If cfgvtwo.Form6.cbUsePSKReporter.Checked and not primed Then
-     Begin
-          If PSKReporter.ReporterGetStatistics(pskrStats,SizeOf(pskrStats)) = 0 Then Label19.Caption := IntToStr(pskrStats.callsigns_sent);
-     End;
+     //if cfgvtwo.Form6.cbUsePSKReporter.Checked Then
+     //Begin
+     //     if pskrstat = 0 Then
+     //    Begin
+     //          Form1.Timer1.Enabled := False;
+     //          If PSKReporter.ReporterInitialize('report.pskreporter.info','4739') = 0 Then pskrstat := 1 else pskrstat := 0;
+     //          Form1.Timer1.Enabled := True;
+     //     End;
+     //End;
+     //if cfgvtwo.Form6.cbUsePSKReporter.Checked and not primed Then PSKReporter.ReporterTickle;
+     //If cfgvtwo.Form6.cbUsePSKReporter.Checked and not primed Then
+     //Begin
+     //     If PSKReporter.ReporterGetStatistics(pskrStats,SizeOf(pskrStats)) = 0 Then Label19.Caption := IntToStr(pskrStats.callsigns_sent);
+     //End;
+     if cfgvtwo.Form6.cbUsePSKReporter.Checked Then Label19.Caption := rb.pskrCount;
      if cfgvtwo.Form6.cbUsePSKReporter.Checked Then Form1.Label19.Visible := True else Form1.Label19.Visible := False;
      // RB Check
      If cfgvtwo.Form6.cbUseRB.Checked Then Label30.Caption := rb.rbCount;
@@ -6108,29 +6104,29 @@ Begin
      displayAudio(audioAve1, audioAve2);
      if Form1.chkMultiDecode.Checked Then watchMulti := False;
      // Update rbstats once per minute at second = 30
-     If st.Second = 30 Then
-     Begin
-          // Process the calls heard list
-          for i := 0 to 499 do
-          Begin
-               if Length(rbc.glrbsLastCall[i]) > 0 Then
-               Begin
-                    updateList(rbc.glrbsLastCall[i]);
-                    rbc.glrbsLastCall[i] := '';
-               End;
-          End;
-          // Now update the calls heard string grid
-          cfgvtwo.Form6.sgCallsHeard.RowCount := 1;
-          for i := 0 to 499 do
-          begin
-               if rbsHeardList[i].count > 0 Then
-               Begin
-                    cfgvtwo.Form6.sgCallsHeard.InsertColRow(False,1);
-                    cfgvtwo.Form6.sgCallsHeard.Cells[0,1] := rbsHeardList[i].callsign;
-                    cfgvtwo.Form6.sgCallsHeard.Cells[1,1] := IntToStr(rbsHeardList[i].count);
-               End;
-          end;
-     end;
+     //If st.Second = 30 Then
+     //Begin
+     //     // Process the calls heard list
+     //     for i := 0 to 499 do
+     //     Begin
+     //          if Length(rbc.glrbsLastCall[i]) > 0 Then
+     //          Begin
+     //               updateList(rbc.glrbsLastCall[i]);
+     //               rbc.glrbsLastCall[i] := '';
+     //          End;
+     //     End;
+     //     // Now update the calls heard string grid
+     //     cfgvtwo.Form6.sgCallsHeard.RowCount := 1;
+     //     for i := 0 to 499 do
+     //     begin
+     //          if rbsHeardList[i].count > 0 Then
+     //          Begin
+     //               cfgvtwo.Form6.sgCallsHeard.InsertColRow(False,1);
+     //               cfgvtwo.Form6.sgCallsHeard.Cells[0,1] := rbsHeardList[i].callsign;
+     //               cfgvtwo.Form6.sgCallsHeard.Cells[1,1] := IntToStr(rbsHeardList[i].count);
+     //          End;
+     //     end;
+     //end;
      // Update clock display
      lastSecond := st.Second;
      foo := Format('%2.2D',[st.Year]);
@@ -6159,20 +6155,6 @@ Begin
      // rbc control
      // Check whether to enable/disable chkRBenable
      if not primed then rbcCheck();
-     // check for dispatching rb thread every two seconds.
-     If cfgvtwo.Form6.cbUseRB.Checked Then
-     Begin
-          If (st.Second mod 2 = 0) And not d65.glinProg Then
-          Begin
-               doRB := False;
-               i := 0;
-               for i := 0 to 499 do
-               begin
-                    if not rbc.glrbReports[i].rbProcessed then doRB := True;
-               end;
-               if doRB Then mnrbcReport := True;
-          End;
-     End;
      // If rb Enabled (and not Offline Only) then ping RB server every
      // other minute at second = 55 to keep rb logged in.
      if st.Second = 55 Then
@@ -6183,23 +6165,6 @@ Begin
                rbcPing := True;
           End;
      end;
-     // Offer to send cached rb reports if rb online and logged in.  Only make this offer once
-     // per program run.
-     // TODO reinstate this once I've confirmed new cache uploader works.
-     //if globalData.rbRunOnce And Form1.chkRBenable.Checked And globalData.rbLoggedIn Then
-     //Begin
-          //If FileExists('rbcache.txt') Then
-          //Begin
-               //Form1.lbNotices.Items[3] := 'Have cached RB Data.  Click line to send';
-               //globalData.rbRunOnce := False;
-          //End
-          //Else
-          //Begin
-               //globalData.rbRunOnce := False;
-          //End;
-     //End;
-     // Check for RB thread error conditon.
-     if not primed then rbThreadCheck();
      // Post rx/tx SR error to log output
 end;
 
@@ -6259,7 +6224,7 @@ Begin
                begin
                     addToDisplay(i,65);
                     if not reDecode then NewAddToRBC(i,65);
-                    if not reDecode Then addToRBC(i,65);
+                    //if not reDecode Then addToRBC(i,65);
                     d65.gld65decodes[i].dtCharSync  := '';
                     d65.gld65decodes[i].dtDecoded   := '';
                     d65.gld65decodes[i].dtDeltaFreq := '';
@@ -6399,28 +6364,28 @@ initialization
   // rbc runs in its own thread and will send reports (if user ebables) at 3
   // and 33 seconds.  The thread will be triggered at each time interval and
   // suspended once rbc.rbcActive is False.
-  rbc.glrbActive := False;
+  //rbc.glrbActive := False;
   globalData.rbCacheOnly := False;
-  rbc.glrbAlwaysSave := False;
+  //rbc.glrbAlwaysSave := False;
   // Initialize rbRecords array
-  for mnlooper := 0 to 499 do
-  begin
-       rbc.glrbReports[mnlooper].rbTimeStamp := '';
-       rbc.glrbReports[mnlooper].rbNumSync   := '';
-       rbc.glrbReports[mnlooper].rbSigLevel  := '';
-       rbc.glrbReports[mnlooper].rbDeltaTime := '';
-       rbc.glrbReports[mnlooper].rbDeltaFreq := '';
-       rbc.glrbReports[mnlooper].rbSigW      := '';
-       rbc.glrbReports[mnlooper].rbCharSync  := '';
-       rbc.glrbReports[mnlooper].rbDecoded   := '';
-       rbc.glrbReports[mnlooper].rbFrequency := '';
-       rbc.glrbReports[mnlooper].rbProcessed := True;
-       rbc.glrbReports[mnlooper].rbCached    := False;
-  end;
-  for mnlooper := 0 to 499 do
-  begin
-       rbc.glrbsLastCall[mnlooper] := '';
-  end;
+  //for mnlooper := 0 to 499 do
+  //begin
+  //     rbc.glrbReports[mnlooper].rbTimeStamp := '';
+  //     rbc.glrbReports[mnlooper].rbNumSync   := '';
+  //     rbc.glrbReports[mnlooper].rbSigLevel  := '';
+  //     rbc.glrbReports[mnlooper].rbDeltaTime := '';
+  //     rbc.glrbReports[mnlooper].rbDeltaFreq := '';
+  //     rbc.glrbReports[mnlooper].rbSigW      := '';
+  //     rbc.glrbReports[mnlooper].rbCharSync  := '';
+  //     rbc.glrbReports[mnlooper].rbDecoded   := '';
+  //     rbc.glrbReports[mnlooper].rbFrequency := '';
+  //     rbc.glrbReports[mnlooper].rbProcessed := True;
+  //     rbc.glrbReports[mnlooper].rbCached    := False;
+  //end;
+  //for mnlooper := 0 to 499 do
+  //begin
+  //     rbc.glrbsLastCall[mnlooper] := '';
+  //end;
   // The decoder runs in its own thread and will process the rxBuffer any time
   // globalData.d65doDecodePass = True.  I also need to define whether I want to do
   // multi-decode, the low..high multi-decode range and the step size or, for
@@ -6523,7 +6488,7 @@ initialization
   lastMsg := '';
   curMsg := '';
   cfgvtwo.glautoSR := False;
-  rbc.glrbNoInet := True;
+  //rbc.glrbNoInet := True;
   rbRunOnce := True;
   thisTX := '';
   lastTX := '';
