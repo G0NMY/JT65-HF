@@ -258,7 +258,6 @@ type
     procedure updateSR();
     procedure genTX1();
     procedure genTX2();
-    //procedure rbThreadCheck();
     procedure myCallCheck();
     procedure txControls();
     procedure processNewMinute(st : TSystemTime);
@@ -271,8 +270,7 @@ type
     function  BuildLocalString (station_callsign, my_gridsquare, programid, programversion, my_antenna : String) : WideString;
     function  isSigRep(rep : String) : Boolean;
     function  utcTime : TSYSTEMTIME;
-    //procedure addToRBC(i, m : Integer);
-    procedure NewaddToRBC(i , m : Integer);
+    procedure addToRBC(i , m : Integer);
     procedure rbcCheck();
     procedure updateList(callsign : String);
     procedure WaterfallMouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
@@ -366,7 +364,6 @@ type
      haveRXSRerr, haveTXSRerr   : Boolean;
      rxsrs, txsrs, lastSRerr    : String;
      preTXCF, preRXCF           : Integer;
-     //pskrStats                  : PSKReporter.REPORTER_STATISTICS;
      audioAve1, audioAve2       : Integer;
      sopQRG, eopQRG             : Double;
      tsopQRG, teopQRG, tqrg     : String; // Start/end/current period QRG as string
@@ -507,91 +504,6 @@ begin
                'my_antenna' + #0 + my_antenna + #0 + #0;
 end;
 
-//procedure rbcThread.Execute;
-//begin
-//     while not Terminated and not Suspended and not rbc.glrbActive do
-//     begin
-//          Try
-//             // Working on case where a failed RB transaction sets rbCacheOnly thus
-//             // leaving the RB in cache mode forever.
-//             if globalData.rbCacheOnly Then
-//             Begin
-//                  // rbCacheOnly is set, but, should it be?
-//                  if not cfgvtwo.Form6.cbNoInet.Checked And cfgvtwo.Form6.cbUseRB.Checked Then globalData.rbCacheOnly := False;
-//                  if cfgvtwo.Form6.cbNoInet.Checked And cfgvtwo.Form6.cbUseRB.Checked Then globalData.rbCacheOnly := True;
-//             End;
-//             // Check to see if glrbNoInet needs to be set/unset.
-//             rbc.glrbNoInet := True;
-//             if cfgvtwo.Form6.cbUseRB.Checked Then rbc.glrbNoInet := False;
-//             if Length(TrimLeft(TrimRight(cfgvtwo.Form6.editPSKRCall.Text)))>0 Then
-//             Begin
-//                  If (mnrbcReport) And (not rbc.glrbActive) Then
-//                  Begin
-//                       if globalData.debugOn Then rbc.glrbCallsign := TrimLeft(TrimRight(cfgvtwo.Form6.editPSKRCall.Text)) + '-2' else rbc.glrbCallsign := TrimLeft(TrimRight(cfgvtwo.Form6.editPSKRCall.Text)) + '-1';
-//                       rb.myCall := TrimLeft(TrimRight(cfgvtwo.Form6.editPSKRCall.Text));
-//                       rb.myGrid := TrimLeft(TrimRight(cfgvtwo.Form6.edMyGrid.Text));
-//                       rb.myQRG  := globalData.iqrg;
-//                       rb.useRB  := True;
-//                       rbc.glrbGrid := TrimLeft(TrimRight(cfgvtwo.Form6.edMyGrid.Text));
-//                       rbc.glrbQRG := Form1.editManQRG.Text;
-//                       rbc.glrbActive := True;
-//                       rbc.processRB();
-//                       mnrbcReport := False;
-//                  end;
-//                  if (cfgvtwo.glrbcLogin) And (not globalData.rbLoggedIn) And (not rbc.glrbActive) Then
-//                  Begin
-//                       rb.myCall := TrimLeft(TrimRight(cfgvtwo.Form6.editPSKRCall.Text));
-//                       rb.myGrid := TrimLeft(TrimRight(cfgvtwo.Form6.edMyGrid.Text));
-//                       rb.myQRG  := globalData.iqrg;
-//
-//                       if globalData.debugOn Then rbc.glrbCallsign := TrimLeft(TrimRight(cfgvtwo.Form6.editPSKRCall.Text)) + '-2' else rbc.glrbCallsign := TrimLeft(TrimRight(cfgvtwo.Form6.editPSKRCall.Text)) + '-1';
-//                       rbc.glrbQRG := Form1.editManQRG.Text;
-//                       rbc.glrbGrid := TrimLeft(TrimRight(cfgvtwo.Form6.edMyGrid.Text));
-//                       rbc.glrbActive := True;
-//                       rbc.doLogin();
-//                       cfgvtwo.glrbcLogin := False;
-//                  End;
-//                  if (cfgvtwo.glrbcLogout) And (globalData.rbLoggedIn) And (not rbc.glrbActive) Then
-//                  Begin
-//                       rb.myCall := TrimLeft(TrimRight(cfgvtwo.Form6.editPSKRCall.Text));
-//                       rb.myGrid := TrimLeft(TrimRight(cfgvtwo.Form6.edMyGrid.Text));
-//                       rb.myQRG  := globalData.iqrg;
-//
-//                       if globalData.debugOn Then rbc.glrbCallsign := TrimLeft(TrimRight(cfgvtwo.Form6.editPSKRCall.Text)) + '-2' else rbc.glrbCallsign := TrimLeft(TrimRight(cfgvtwo.Form6.editPSKRCall.Text)) + '-1';
-//                       rbc.glrbQRG := Form1.editManQRG.Text;
-//                       rbc.glrbGrid := TrimLeft(TrimRight(cfgvtwo.Form6.edMyGrid.Text));
-//                       rbc.glrbActive := True;
-//                       rbc.doLogout();
-//                       cfgvtwo.glrbcLogout := False;
-//                  End;
-//                  if (rbcPing) And (not rbc.glrbActive) Then
-//                  Begin
-//                       rb.myCall := TrimLeft(TrimRight(cfgvtwo.Form6.editPSKRCall.Text));
-//                       rb.myGrid := TrimLeft(TrimRight(cfgvtwo.Form6.edMyGrid.Text));
-//                       rb.myQRG  := globalData.iqrg;
-//
-//                       if globalData.debugOn Then rbc.glrbCallsign := TrimLeft(TrimRight(cfgvtwo.Form6.editPSKRCall.Text)) + '-2' else rbc.glrbCallsign := TrimLeft(TrimRight(cfgvtwo.Form6.editPSKRCall.Text)) + '-1';
-//                       rbc.glrbQRG := Form1.editManQRG.Text;
-//                       rbc.glrbGrid := TrimLeft(TrimRight(cfgvtwo.Form6.edMyGrid.Text));
-//                       rbc.glrbActive := True;
-//                       rbc.doLogin();
-//                       rbcPing := False;
-//                  End;
-//                  if (rbcCache) And (not rbc.glrbActive) Then
-//                  Begin
-//                       // TODO Reinstate following once cache uploader is verified.
-//                       //rbc.sendCached();
-//                       rbcCache := False;
-//                  End;
-//             End;
-//          Except
-//             dlog.fileDebug('Exception in rbc thread');
-//          end;
-//          Sleep(100);
-//     end;
-//end;
-
-// Re-coding this, it's a nightmare.
 procedure rbcThread.Execute;
 Var
    qrgk : Double;
@@ -605,6 +517,8 @@ begin
           eqrg := 0;
           qrgk := 0.0;
           tfoo := '';
+          {TODO Change LAX to something more picky}
+          {TODO Enable/Test PSKR code }
           if mval.evalQRG(globalData.strqrg, 'LAX', qrgk, eQRG, tfoo) Then globalData.iqrg := eqrg else globalData.iqrg := 0;
           if eQRG > 0 then
           Begin
@@ -618,7 +532,10 @@ begin
                if (rb.useRB) and (not rb.rbOn) and (not rb.busy) then globalData.rbLoggedIn := rb.loginRB;
                //if (rb.usePSKR) and (not rb.pskrOn) and (not rb.busy) then rb.loginPSKR;
                // Check to see if I need a logout cycle
-               //if (not rb.useRB) and (rb.rbOn) and (not rb.busy) then rb.logoutRB;
+               if (not rb.useRB) and (rb.rbOn) and (not rb.busy) then
+               begin
+                    rb.logoutRB;
+               end;
                //if (not rb.usePSKR) and (rb.pskrOn) and (not rb.busy) then rb.logoutPSKR;
                if (rbcPing) And (not rb.busy) Then globalData.rbLoggedIn := rb.loginRB;
                if rbcPing then rbcPing := False;
@@ -1684,9 +1601,10 @@ procedure TForm1.editManQRGChange(Sender: TObject);
 begin
      if globalData.rbLoggedIn Then
      Begin
-          rb.useRB := False;
           // Update QRG variables
           doCat := True;
+          // Force RB to run an update to reflect new QRG
+          globalData.rbLoggedIn := rb.logoutRB;
      End;
 end;
 
@@ -1907,22 +1825,12 @@ begin
                diagout.Form3.ListBox1.Items.Add('Closed PTT Port');
           end;
 
-          //if globalData.rbLoggedIn Then
-          //Begin
-               //diagout.Form3.ListBox1.Items.Add('Closing RB');
-               //cfgvtwo.glrbcLogout := True;
-               //sleep(1000);
-          //end;
-          //termcount := 0;
-          //While rbc.glrbActive Do
-          //Begin
-               //application.ProcessMessages;
-               //sleep(1000);
-               //inc(termcount);
-               //if termcount > 9 then break;
-          //end;
-          //diagout.Form3.ListBox1.Items.Add('Closed RB');
-
+          if globalData.rbLoggedIn Then
+          Begin
+               diagout.Form3.ListBox1.Items.Add('Closing RB');
+               rb.logoutRB;
+               diagout.Form3.ListBox1.Items.Add('Closed RB');
+          end;
           diagout.Form3.ListBox1.Items.Add('Terminating RB Thread');
           rbThread.Suspend;
           diagout.Form3.ListBox1.Items.Add('Terminated RB Thread');
@@ -1988,16 +1896,12 @@ begin
           portaudio.Pa_Terminate();
           diagout.Form3.ListBox1.Items.Add('Terminated PortAudio');
 
-          //if cfgvtwo.Form6.cbUsePSKReporter.Checked Then
-          //Begin
-               //diagout.Form3.ListBox1.Items.Add('Cleaning up PSK Reporter Interface');
-               //PSKReporter.ReporterUninitialize;
-               //diagout.Form3.ListBox1.Items.Add('Cleaned up PSK Reporter Interface');
-          //end
-          //else
-          //begin
-               //PSKReporter.ReporterUninitialize;
-          //end;
+          if cfgvtwo.Form6.cbUsePSKReporter.Checked Then
+          Begin
+               diagout.Form3.ListBox1.Items.Add('Closing PSK Reporter');
+               rb.logoutPSKR;
+               diagout.Form3.ListBox1.Items.Add('Closed PSK Reporter');
+          end;
 
           diagout.Form3.ListBox1.Items.Add('Releasing waterfall');
           Waterfall.Free;
@@ -2012,7 +1916,7 @@ begin
 end;
 
 // New style (2.0) RB code
-procedure Tform1.NewaddToRBC(i , m : Integer);
+procedure Tform1.addToRBC(i , m : Integer);
 Var
    srec : spot.spotRecord;
    eqrg : Integer;
@@ -2092,78 +1996,12 @@ begin
      End;
 end;
 
-
-//procedure Tform1.addToRBC(i , m : Integer);
-//Var
-//   ii : Integer;
-//begin
-//     If cfgvtwo.Form6.cbUseRB.Checked Then
-//     Begin
-//          // Clear rb pass-through array of processed entries.
-//          for ii := 0 to 499 do
-//          begin
-//               if rbc.glrbReports[ii].rbProcessed Then
-//               Begin
-//                    rbc.glrbReports[ii].rbCached    := False;
-//                    rbc.glrbReports[ii].rbCharSync  := '';
-//                    rbc.glrbReports[ii].rbDecoded   := '';
-//                    rbc.glrbReports[ii].rbDeltaFreq := '';
-//                    rbc.glrbReports[ii].rbDeltaTime := '';
-//                    rbc.glrbReports[ii].rbFrequency := '';
-//                    rbc.glrbReports[ii].rbNumSync   := '';
-//                    rbc.glrbReports[ii].rbSigLevel  := '';
-//                    rbc.glrbReports[ii].rbSigW      := '';
-//                    rbc.glrbReports[ii].rbTimeStamp := '';
-//                    rbc.glrbReports[ii].rbProcessed := True;
-//                    rbc.glrbReports[ii].rbMode      := 0;
-//               end;
-//          end;
-//          ii := 0;
-//          while ii < 500 do
-//          begin
-//               if rbc.glrbReports[ii].rbProcessed Then
-//               Begin
-//                    if (eopQRG=sopQRG) And (Form1.editManQRG.Text<>'0') Then
-//                    Begin
-//                         if m=65 then
-//                         Begin
-//                              // If rbProcessed then safe to overwrite previous contents
-//                              rbc.glrbReports[ii].rbTimeStamp := d65.gld65decodes[i].dtTimeStamp;
-//                              rbc.glrbReports[ii].rbNumSync   := d65.gld65decodes[i].dtNumSync;
-//                              rbc.glrbReports[ii].rbSigLevel  := d65.gld65decodes[i].dtSigLevel;
-//                              rbc.glrbReports[ii].rbDeltaTime := d65.gld65decodes[i].dtDeltaTime;
-//                              rbc.glrbReports[ii].rbDeltaFreq := d65.gld65decodes[i].dtDeltaFreq;
-//                              rbc.glrbReports[ii].rbSigW      := d65.gld65decodes[i].dtSigW;
-//                              rbc.glrbReports[ii].rbCharSync  := d65.gld65decodes[i].dtCharSync;
-//                              rbc.glrbReports[ii].rbDecoded   := d65.gld65decodes[i].dtDecoded;
-//                              rbc.glrbReports[ii].rbFrequency := FloatToStr(eopQRG/1000);
-//                              rbc.glrbReports[ii].rbMode      := m;
-//                              rbc.glrbReports[ii].rbProcessed := False;
-//                              rbc.glrbReports[ii].rbCached    := False;
-//                         End;
-//                    End
-//                    Else
-//                    Begin
-//                         dlog.FileDebug('RB Report discarded Start/End QRG not same.');
-//                    End;
-//                    d65.gld65decodes[i].dtProcessed := True;
-//                    ii := 501;
-//               End;
-//               inc(ii);
-//          end;
-//     End
-//     Else
-//     Begin
-//          d65.gld65decodes[i].dtProcessed := True;
-//     End;
-//end;
-
 procedure TForm1.FormCreate(Sender: TObject);
 Var
-   //fname, fna  : String;
    fname       : String;
    pfname      : PChar;
 begin
+     {TODO Review this block}
      //if globalData.debugOn Then fna := 'D' else fna := '';
      cfgError := True;
      Try
@@ -3918,8 +3756,10 @@ Begin
      cfgvtwo.Form6.edMyGrid.Text := cfg.StoredValue['grid'];
      tstint := 0;
      if TryStrToInt(cfg.StoredValue['rxCF'],tstint) Then Form1.spinDecoderCF.Value := tstint else Form1.spinDecoderCF.Value := 0;
+     spinDecoderCFChange(spinDecoderCF);
      tstint := 0;
      if TryStrToInt(cfg.StoredValue['txCF'],tstint) Then Form1.spinTXCF.Value := tstint else Form1.spinTXCF.Value := 0;
+     spinTXCFChange(spinTXCF);
      tstint := 0;
      if TryStrToInt(cfg.StoredValue['singlerange'],tstint) Then Form1.spinDecoderBW.value := tstint else Form1.spinDecoderBW.Value := 3;
      spinDecoderBWChange(spinDecoderBW);
@@ -6223,8 +6063,7 @@ Begin
                if (not d65.gld65decodes[i].dtProcessed) And (not d65.gld65decodes[i].dtDisplayed) Then
                begin
                     addToDisplay(i,65);
-                    if not reDecode then NewAddToRBC(i,65);
-                    //if not reDecode Then addToRBC(i,65);
+                    if not reDecode then addToRBC(i,65);
                     d65.gld65decodes[i].dtCharSync  := '';
                     d65.gld65decodes[i].dtDecoded   := '';
                     d65.gld65decodes[i].dtDeltaFreq := '';

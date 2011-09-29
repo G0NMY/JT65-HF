@@ -1185,17 +1185,9 @@ implementation
     function TSpot.loginRB : Boolean;
     var
        url      : String;
-       foo      : String;
-       b        : Boolean;
-       tfoo     : String;
     Begin
          prRBError    := '';
          prBusy       := True;
-
-         tfoo := prMyCall;
-         tfoo := prMyGrid;
-         tfoo := IntToStr(prMyQRG);
-
          url          := 'http://jt65.w6cqz.org/rb.php?func=LI&callsign=' + prMyCall + '&grid=' + prMyGrid + '&qrg=' + IntToStr(prMyQRG) + '&rbversion=' + prVersion;
          prhttp.Clear;
          prhttp.Timeout := 10000;  // 10K ms = 10 s
@@ -1226,16 +1218,6 @@ implementation
                  //If TrimLeft(TrimRight(rbResult.Text)) = 'BAD MODE' Then prRBOn := false;
                  //If TrimLeft(TrimRight(rbResult.Text)) = 'NO'       Then prRBOn := false;
                  prRBError := TrimLeft(TrimRight(rbresult.Text));
-                 tfoo := rbResult.Text;
-                 sleep(1);
-                 if prRBOn then
-                 begin
-                      sleep(1);
-                 end
-                 else
-                 begin
-                      sleep(1);
-                 end;
             end;
          Except
             prRBError := 'EXCEPTION';
@@ -1251,7 +1233,6 @@ implementation
        url      : String;
        band     : String;
        go       : Boolean;
-       foo      : String;
     Begin
          prBusy       := True;
          band := '';
@@ -1277,8 +1258,8 @@ implementation
                       // Messages RB login can return:
                       // QSL - All good, logged out.
                       // NO - Indicates logout failed. (Probably RB Server busy)
-                      If TrimLeft(TrimRight(rbResult.Text)) = 'QSL' Then prRBOn := false;
-                      If TrimLeft(TrimRight(rbResult.Text)) = 'NO'  Then prRBOn := true;
+                      If TrimLeft(TrimRight(rbResult.Text[1..3])) = 'QSL' Then prRBOn := false;
+                      If TrimLeft(TrimRight(rbResult.Text[1..2])) = 'NO'  Then prRBOn := true;
                       prRBError := TrimLeft(TrimRight(rbresult.Text));
                  end;
               Except
@@ -1293,7 +1274,6 @@ implementation
               prRBOn    := false;
               result    := false;
          end;
-         foo := prRBError;
          result := true;
          prBusy := False;
     end;
@@ -1318,8 +1298,8 @@ implementation
        callheard : String;
        gridheard : String;
        band      : String;
-       debugf    : TextFile;
-       fname     : String;
+       //debugf    : TextFile;
+       //fname     : String;
        pskrerr   : WideString;
        pskrrep   : WideString;
        pskrloc   : WideString;
