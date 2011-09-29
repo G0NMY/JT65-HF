@@ -62,69 +62,69 @@ LazarusResources.Add('TForm1','FORMDATA',[
   +'t'#3#240#2#6'Height'#2#23#3'Top'#3#248#0#5'Width'#2'G'#7'Caption'#6#6'TX OF'
   +'F'#10'Font.Color'#7#5'clRed'#11'Font.Height'#2#237#9'Font.Name'#6#5'Arial'
   +#10'Font.Style'#11#6'fsBold'#0#11'ParentColor'#8#10'ParentFont'#8#0#0#6'TLab'
-  +'el'#7'Label13'#4'Left'#3','#2#6'Height'#2#15#3'Top'#3#27#2#5'Width'#2'h'#7
-  +'Caption'#6#17'Single Decoder BW'#11'Font.Height'#2#245#9'Font.Name'#6#5'Ari'
-  +'al'#10'Font.Style'#11#6'fsBold'#0#11'ParentColor'#8#10'ParentFont'#8#0#0#6
-  ,'TLabel'#7'Label39'#4'Left'#3#189#2#6'Height'#2#15#3'Top'#3#217#1#5'Width'#2
-  +'I'#7'Caption'#6#13'TX DF = RX DF'#10'Font.Color'#7#5'clRed'#11'Font.Height'
-  +#2#245#9'Font.Name'#6#5'Arial'#10'Font.Style'#11#6'fsBold'#0#11'ParentColor'
-  +#8#10'ParentFont'#8#7'OnClick'#7#12'Label39Click'#0#0#6'TLabel'#7'Label38'#4
-  +'Left'#3#177#0#6'Height'#2#15#3'Top'#3#210#0#5'Width'#3'('#1#7'Caption'#6':L'
-  +'eft click waterfall to set TX CF, Right click sets RX CF.'#11'Font.Height'#2
-  +#245#9'Font.Name'#6#5'Arial'#10'Font.Style'#11#6'fsBold'#0#11'ParentColor'#8
-  +#10'ParentFont'#8#0#0#6'TLabel'#7'Label19'#4'Left'#3#173#2#6'Height'#2#17#4
-  +'Hint'#6#28'Double click to disable PSKR'#3'Top'#3#134#2#5'Width'#2#8#7'Capt'
-  +'ion'#6#1'0'#11'Font.Height'#2#243#9'Font.Name'#6#5'Arial'#11'ParentColor'#8
-  +#10'ParentFont'#8#10'OnDblClick'#7#15'Label19DblClick'#0#0#6'TLabel'#7'Label'
-  +'12'#4'Left'#3'.'#3#6'Height'#2#17#3'Top'#3'K'#2#5'Width'#2'X'#7'Caption'#6
-  +#12'Dial QRG KHz'#11'Font.Height'#2#243#9'Font.Name'#6#5'Arial'#10'Font.Styl'
-  +'e'#11#6'fsBold'#0#11'ParentColor'#8#10'ParentFont'#8#0#0#6'TLabel'#7'Label2'
-  +'3'#4'Left'#3#30#3#6'Height'#2#17#3'Top'#3#135#2#5'Width'#2'v'#7'Caption'#6
-  +#20'Right Click for Menu'#11'ParentColor'#8#9'PopupMenu'#7#8'popupQRG'#0#0#6
-  +'TLabel'#7'Label30'#4'Left'#3#173#2#6'Height'#2#17#4'Hint'#6#26'Double click'
-  +' to disable RB'#3'Top'#3'n'#2#5'Width'#2#8#7'Caption'#6#1'0'#11'Font.Height'
-  +#2#243#9'Font.Name'#6#5'Arial'#11'ParentColor'#8#10'ParentFont'#8#10'OnDblCl'
-  +'ick'#7#15'Label30DblClick'#0#0#6'TLabel'#6'Label2'#4'Left'#3#145#2#6'Height'
-  +#2#15#3'Top'#3'_'#2#5'Width'#2'@'#7'Caption'#6#12'Reports Sent'#11'Font.Heig'
-  +'ht'#2#245#9'Font.Name'#6#5'Arial'#11'ParentColor'#8#10'ParentFont'#8#0#0#5
-  +'TEdit'#5'edMsg'#4'Left'#3','#2#6'Height'#2#24#4'Hint'#6#22'Double click to '
-  +'clear.'#3'Top'#3'F'#1#5'Width'#3#191#0#8'CharCase'#7#11'ecUppercase'#11'Fon'
-  +'t.Height'#2#243#9'Font.Name'#6#5'Arial'#10'Font.Style'#11#6'fsBold'#0#9'Max'
-  +'Length'#2#22#10'OnDblClick'#7#13'edMsgDblClick'#10'ParentFont'#8#8'ReadOnly'
-  +#9#8'TabOrder'#2#0#0#0#5'TEdit'#9'edHisCall'#4'Left'#3#16#3#6'Height'#2#24#3
-  +'Top'#3#235#1#5'Width'#2']'#8'CharCase'#7#11'ecUppercase'#11'Font.Height'#2
+  +'el'#7'Label13'#4'Left'#3','#2#6'Height'#2#15#3'Top'#3#27#2#5'Width'#2'7'#7
+  +'Caption'#6#9'Single BW'#11'Font.Height'#2#245#9'Font.Name'#6#5'Arial'#10'Fo'
+  +'nt.Style'#11#6'fsBold'#0#11'ParentColor'#8#10'ParentFont'#8#0#0#6'TLabel'#7
+  ,'Label39'#4'Left'#3#189#2#6'Height'#2#15#3'Top'#3#217#1#5'Width'#2'I'#7'Capt'
+  +'ion'#6#13'TX DF = RX DF'#10'Font.Color'#7#5'clRed'#11'Font.Height'#2#245#9
+  +'Font.Name'#6#5'Arial'#10'Font.Style'#11#6'fsBold'#0#11'ParentColor'#8#10'Pa'
+  +'rentFont'#8#7'OnClick'#7#12'Label39Click'#0#0#6'TLabel'#7'Label38'#4'Left'#3
+  +#177#0#6'Height'#2#15#3'Top'#3#210#0#5'Width'#3'('#1#7'Caption'#6':Left clic'
+  +'k waterfall to set TX CF, Right click sets RX CF.'#11'Font.Height'#2#245#9
+  +'Font.Name'#6#5'Arial'#10'Font.Style'#11#6'fsBold'#0#11'ParentColor'#8#10'Pa'
+  +'rentFont'#8#0#0#6'TLabel'#7'Label19'#4'Left'#3#173#2#6'Height'#2#17#4'Hint'
+  +#6#28'Double click to disable PSKR'#3'Top'#3#134#2#5'Width'#2#8#7'Caption'#6
+  +#1'0'#11'Font.Height'#2#243#9'Font.Name'#6#5'Arial'#11'ParentColor'#8#10'Par'
+  +'entFont'#8#10'OnDblClick'#7#15'Label19DblClick'#0#0#6'TLabel'#7'Label12'#4
+  +'Left'#3'.'#3#6'Height'#2#17#3'Top'#3'K'#2#5'Width'#2'X'#7'Caption'#6#12'Dia'
+  +'l QRG KHz'#11'Font.Height'#2#243#9'Font.Name'#6#5'Arial'#10'Font.Style'#11#6
+  +'fsBold'#0#11'ParentColor'#8#10'ParentFont'#8#0#0#6'TLabel'#7'Label23'#4'Lef'
+  +'t'#3#30#3#6'Height'#2#17#3'Top'#3#135#2#5'Width'#2'v'#7'Caption'#6#20'Right'
+  +' Click for Menu'#11'ParentColor'#8#9'PopupMenu'#7#8'popupQRG'#0#0#6'TLabel'
+  +#7'Label30'#4'Left'#3#173#2#6'Height'#2#17#4'Hint'#6#26'Double click to disa'
+  +'ble RB'#3'Top'#3'n'#2#5'Width'#2#8#7'Caption'#6#1'0'#11'Font.Height'#2#243#9
+  +'Font.Name'#6#5'Arial'#11'ParentColor'#8#10'ParentFont'#8#10'OnDblClick'#7#15
+  +'Label30DblClick'#0#0#6'TLabel'#6'Label2'#4'Left'#3#145#2#6'Height'#2#15#3'T'
+  +'op'#3'_'#2#5'Width'#2'@'#7'Caption'#6#12'Reports Sent'#11'Font.Height'#2#245
+  +#9'Font.Name'#6#5'Arial'#11'ParentColor'#8#10'ParentFont'#8#0#0#5'TEdit'#5'e'
+  +'dMsg'#4'Left'#3','#2#6'Height'#2#24#4'Hint'#6#22'Double click to clear.'#3
+  +'Top'#3'F'#1#5'Width'#3#191#0#8'CharCase'#7#11'ecUppercase'#11'Font.Height'#2
   +#243#9'Font.Name'#6#5'Arial'#10'Font.Style'#11#6'fsBold'#0#9'MaxLength'#2#22
-  +#10'OnDblClick'#7#17'edHisCallDblClick'#10'ParentFont'#8#8'TabOrder'#2#1#0#0
-  +#5'TEdit'#9'edHisGrid'#4'Left'#3#192#0#6'Height'#2#24#3'Top'#2'@'#5'Width'#2
-  +'V'#8'CharCase'#7#11'ecUppercase'#7'Enabled'#8#11'Font.Height'#2#243#9'Font.'
+  +#10'OnDblClick'#7#13'edMsgDblClick'#10'ParentFont'#8#8'ReadOnly'#9#8'TabOrde'
+  +'r'#2#0#0#0#5'TEdit'#9'edHisCall'#4'Left'#3#16#3#6'Height'#2#24#3'Top'#3#235
+  +#1#5'Width'#2']'#8'CharCase'#7#11'ecUppercase'#11'Font.Height'#2#243#9'Font.'
   +'Name'#6#5'Arial'#10'Font.Style'#11#6'fsBold'#0#9'MaxLength'#2#22#10'OnDblCl'
-  +'ick'#7#17'edHisGridDblClick'#10'ParentFont'#8#8'TabOrder'#2#2#7'Visible'#8#0
-  +#0#7'TButton'#8'buttonCQ'#4'Left'#3','#2#6'Height'#2#23#3'Top'#3'|'#1#5'Widt'
-  +'h'#2'H'#7'Caption'#6#7'Call CQ'#11'Font.Height'#2#243#9'Font.Name'#6#5'Aria'
-  +'l'#10'Font.Style'#11#6'fsBold'#0#7'OnClick'#7#13'buttonCQClick'#10'ParentFo'
-  +'nt'#8#8'TabOrder'#2#3#0#0#7'TButton'#14'buttonAnswerCQ'#4'Left'#3','#2#6'He'
-  +'ight'#2#23#3'Top'#3#180#1#5'Width'#2'h'#7'Caption'#6#9'Answer CQ'#11'Font.H'
+  +'ick'#7#17'edHisCallDblClick'#10'ParentFont'#8#8'TabOrder'#2#1#0#0#5'TEdit'#9
+  +'edHisGrid'#4'Left'#3#192#0#6'Height'#2#24#3'Top'#2'@'#5'Width'#2'V'#8'CharC'
+  +'ase'#7#11'ecUppercase'#7'Enabled'#8#11'Font.Height'#2#243#9'Font.Name'#6#5
+  +'Arial'#10'Font.Style'#11#6'fsBold'#0#9'MaxLength'#2#22#10'OnDblClick'#7#17
+  +'edHisGridDblClick'#10'ParentFont'#8#8'TabOrder'#2#2#7'Visible'#8#0#0#7'TBut'
+  +'ton'#8'buttonCQ'#4'Left'#3','#2#6'Height'#2#23#3'Top'#3'|'#1#5'Width'#2'H'#7
+  +'Caption'#6#7'Call CQ'#11'Font.Height'#2#243#9'Font.Name'#6#5'Arial'#10'Font'
+  +'.Style'#11#6'fsBold'#0#7'OnClick'#7#13'buttonCQClick'#10'ParentFont'#8#8'Ta'
+  +'bOrder'#2#3#0#0#7'TButton'#14'buttonAnswerCQ'#4'Left'#3','#2#6'Height'#2#23
+  +#3'Top'#3#180#1#5'Width'#2'h'#7'Caption'#6#9'Answer CQ'#11'Font.Height'#2#243
+  +#9'Font.Name'#6#5'Arial'#10'Font.Style'#11#6'fsBold'#0#7'OnClick'#7#19'butto'
+  +'nAnswerCQClick'#10'ParentFont'#8#8'TabOrder'#2#4#0#0#7'TButton'#16'buttonSe'
+  +'ndReport'#4'Left'#3'{'#2#6'Height'#2#23#3'Top'#3'|'#1#5'Width'#2'h'#7'Capti'
+  +'on'#6#13'Answer Caller'#11'Font.Height'#2#243#9'Font.Name'#6#5'Arial'#10'Fo'
+  +'nt.Style'#11#6'fsBold'#0#7'OnClick'#7#21'buttonSendReportClick'#10'ParentFo'
+  +'nt'#8#8'TabOrder'#2#5#0#0#7'TButton'#16'buttonAckReport1'#4'Left'#3#236#2#6
+  +'Height'#2#23#3'Top'#3'|'#1#5'Width'#2'd'#7'Caption'#6#8'Send RRR'#11'Font.H'
   +'eight'#2#243#9'Font.Name'#6#5'Arial'#10'Font.Style'#11#6'fsBold'#0#7'OnClic'
-  +'k'#7#19'buttonAnswerCQClick'#10'ParentFont'#8#8'TabOrder'#2#4#0#0#7'TButton'
-  +#16'buttonSendReport'#4'Left'#3'{'#2#6'Height'#2#23#3'Top'#3'|'#1#5'Width'#2
-  +'h'#7'Caption'#6#13'Answer Caller'#11'Font.Height'#2#243#9'Font.Name'#6#5'Ar'
-  +'ial'#10'Font.Style'#11#6'fsBold'#0#7'OnClick'#7#21'buttonSendReportClick'#10
-  +'ParentFont'#8#8'TabOrder'#2#5#0#0#7'TButton'#16'buttonAckReport1'#4'Left'#3
-  +#236#2#6'Height'#2#23#3'Top'#3'|'#1#5'Width'#2'd'#7'Caption'#6#8'Send RRR'#11
-  +'Font.Height'#2#243#9'Font.Name'#6#5'Arial'#10'Font.Style'#11#6'fsBold'#0#7
-  +'OnClick'#7#21'buttonAckReport1Click'#10'ParentFont'#8#8'TabOrder'#2#6#0#0#7
-  +'TButton'#16'buttonAckReport2'#4'Left'#3#160#2#6'Height'#2#23#3'Top'#3#180#1
-  +#5'Width'#2'd'#7'Caption'#6#11'Send Report'#11'Font.Height'#2#243#9'Font.Nam'
-  +'e'#6#5'Arial'#10'Font.Style'#11#6'fsBold'#0#7'OnClick'#7#21'buttonAckReport'
-  +'2Click'#10'ParentFont'#8#8'TabOrder'#2#7#0#0#7'TButton'#9'btnHaltTx'#4'Left'
-  +#3'Q'#3#6'Height'#2#23#3'Top'#3#16#1#5'Width'#2'P'#7'Caption'#6#7'Halt TX'#7
-  +'Enabled'#8#11'Font.Height'#2#241#9'Font.Name'#6#5'Arial'#10'Font.Style'#11#6
-  +'fsBold'#0#7'OnClick'#7#14'btnHaltTxClick'#10'ParentFont'#8#8'TabOrder'#2#8#0
-  +#0#7'TButton'#11'btnEngageTx'#4'Left'#3#240#2#6'Height'#2#23#3'Top'#3#16#1#5
-  +'Width'#2'^'#7'Caption'#6#9'Enable TX'#7'Enabled'#8#11'Font.Height'#2#241#9
-  +'Font.Name'#6#5'Arial'#10'Font.Style'#11#6'fsBold'#0#7'OnClick'#7#16'btnEnga'
-  +'geTxClick'#10'ParentFont'#8#8'TabOrder'#2#9#0#0#7'TButton'#15'buttonClearLi'
-  +'st'#4'Left'#2#4#6'Height'#2#25#3'Top'#3#127#2#5'Width'#2'l'#7'Caption'#6#13
+  +'k'#7#21'buttonAckReport1Click'#10'ParentFont'#8#8'TabOrder'#2#6#0#0#7'TButt'
+  +'on'#16'buttonAckReport2'#4'Left'#3#160#2#6'Height'#2#23#3'Top'#3#180#1#5'Wi'
+  +'dth'#2'd'#7'Caption'#6#11'Send Report'#11'Font.Height'#2#243#9'Font.Name'#6
+  +#5'Arial'#10'Font.Style'#11#6'fsBold'#0#7'OnClick'#7#21'buttonAckReport2Clic'
+  +'k'#10'ParentFont'#8#8'TabOrder'#2#7#0#0#7'TButton'#9'btnHaltTx'#4'Left'#3'Q'
+  +#3#6'Height'#2#23#3'Top'#3#16#1#5'Width'#2'P'#7'Caption'#6#7'Halt TX'#7'Enab'
+  +'led'#8#11'Font.Height'#2#241#9'Font.Name'#6#5'Arial'#10'Font.Style'#11#6'fs'
+  +'Bold'#0#7'OnClick'#7#14'btnHaltTxClick'#10'ParentFont'#8#8'TabOrder'#2#8#0#0
+  +#7'TButton'#11'btnEngageTx'#4'Left'#3#240#2#6'Height'#2#23#3'Top'#3#16#1#5'W'
+  +'idth'#2'^'#7'Caption'#6#9'Enable TX'#7'Enabled'#8#11'Font.Height'#2#241#9'F'
+  +'ont.Name'#6#5'Arial'#10'Font.Style'#11#6'fsBold'#0#7'OnClick'#7#16'btnEngag'
+  +'eTxClick'#10'ParentFont'#8#8'TabOrder'#2#9#0#0#7'TButton'#15'buttonClearLis'
+  +'t'#4'Left'#2#4#6'Height'#2#25#3'Top'#3#127#2#5'Width'#2'l'#7'Caption'#6#13
   +'Clear Decodes'#11'Font.Height'#2#243#9'Font.Name'#6#5'Arial'#10'Font.Style'
   +#11#6'fsBold'#0#7'OnClick'#7#20'buttonClearListClick'#10'ParentFont'#8#8'Tab'
   +'Order'#2#10#0#0#7'TButton'#13'buttonEndQSO2'#4'Left'#3'Z'#3#6'Height'#2'n'#3
@@ -298,94 +298,104 @@ LazarusResources.Add('TForm1','FORMDATA',[
   +'Edit2'#4'Left'#3','#2#6'Height'#2#24#3'Top'#3','#2#5'Width'#2'('#11'Font.He'
   +'ight'#2#243#9'Font.Name'#6#5'Arial'#10'Font.Style'#11#6'fsBold'#0#9'MaxLeng'
   +'th'#2#3#10'ParentFont'#8#8'ReadOnly'#9#7'TabStop'#8#8'TabOrder'#2'%'#4'Text'
-  +#6#3'100'#0#0#7'TButton'#11'btnReDecode'#4'Left'#3#181#1#6'Height'#2#25#3'To'
-  +'p'#3#127#2#5'Width'#2's'#7'Caption'#6#12'Decode Again'#11'Font.Height'#2#243
+  +#6#3'100'#0#0#7'TButton'#11'btnReDecode'#4'Left'#3#144#0#6'Height'#2#25#3'To'
+  +'p'#3'~'#2#5'Width'#2's'#7'Caption'#6#12'Decode Again'#11'Font.Height'#2#243
   +#9'Font.Name'#6#5'Arial'#10'Font.Style'#11#6'fsBold'#0#7'OnClick'#7#16'btnRe'
   +'DecodeClick'#10'ParentFont'#8#8'TabOrder'#2'&'#0#0#6'TBevel'#6'Bevel1'#4'Le'
   +'ft'#3','#2#6'Height'#2#3#3'Top'#3#152#1#5'Width'#3'$'#1#0#0#6'TBevel'#6'Bev'
   +'el2'#4'Left'#3','#2#6'Height'#2#3#3'Top'#3'c'#1#5'Width'#3'$'#1#0#0#6'TBeve'
   +'l'#6'Bevel3'#4'Left'#3','#2#6'Height'#2#3#3'Top'#3#208#1#5'Width'#3'$'#1#0#0
-  +#6'TTimer'#6'Timer1'#8'Interval'#3#220#0#7'OnTimer'#7#11'Timer1Timer'#4'left'
-  +#3#136#2#3'top'#2'8'#0#0#15'TXMLPropStorage'#3'cfg'#12'StoredValues'#14#1#4
-  +'Name'#6#4'call'#0#1#4'Name'#6#4'grid'#0#1#4'Name'#6#4'txCF'#5'Value'#6#1'0'
-  +#0#1#4'Name'#6#4'rxCF'#5'Value'#6#1'0'#0#1#4'Name'#6#11'singlerange'#5'Value'
-  +#6#4'1000'#0#1#4'Name'#6#7'soundin'#5'Value'#6#1'0'#0#1#4'Name'#6#8'soundout'
-  +#5'Value'#6#1'0'#0#1#4'Name'#6#6'ldgain'#5'Value'#6#1'0'#0#1#4'Name'#6#6'rdg'
-  +'ain'#5'Value'#6#1'0'#0#1#4'Name'#6#8'samfacin'#5'Value'#6#1'1'#0#1#4'Name'#6
-  +#9'samfacout'#5'Value'#6#1'1'#0#1#4'Name'#6#9'audiochan'#5'Value'#6#1'0'#0#1
-  +#4'Name'#6#6'autoSR'#5'Value'#6#1'0'#0#1#4'Name'#6#7'pttPort'#5'Value'#6#4'N'
-  +'one'#0#1#4'Name'#6#7'catPort'#5'Value'#6#4'None'#0#1#4'Name'#6#3'afc'#5'Val'
-  +'ue'#6#1'0'#0#1#4'Name'#6#10'noiseblank'#5'Value'#6#1'0'#0#1#4'Name'#6#10'br'
-  +'ightness'#5'Value'#6#1'0'#0#1#4'Name'#6#8'contrast'#5'Value'#6#1'0'#0#1#4'N'
-  +'ame'#6#8'colormap'#5'Value'#6#1'0'#0#1#4'Name'#6#9'specspeed'#5'Value'#6#1
-  +'0'#0#1#4'Name'#6#7'version'#5'Value'#6#3'A13'#0#1#4'Name'#6#10'txWatchDog'#5
-  +'Value'#6#1'1'#0#1#4'Name'#6#14'multiQSOToggle'#5'Value'#6#1'1'#0#1#4'Name'#6
-  +#16'multiQSOWatchDog'#5'Value'#6#1'1'#0#1#4'Name'#6#7'saveCSV'#5'Value'#6#1
-  ,'1'#0#1#4'Name'#6#7'csvPath'#0#1#4'Name'#6#7'adiPath'#0#1#4'Name'#6#9'hamlib'
-  +'Rig'#5'Value'#6#1'0'#0#1#4'Name'#6#11'hamlibSpeed'#5'Value'#6#4'9600'#0#1#4
-  +'Name'#6#15'hamlibHandshake'#5'Value'#6#4'None'#0#1#4'Name'#6#11'hamlibDBits'
-  +#5'Value'#6#1'8'#0#1#4'Name'#6#12'hamlibParity'#5'Value'#6#4'None'#0#1#4'Nam'
-  +'e'#6#11'hamlibSBits'#5'Value'#6#1'1'#0#1#4'Name'#6#9'hamLibRTS'#5'Value'#6#5
-  +'Unset'#0#1#4'Name'#6#9'hamlibDTR'#5'Value'#6#5'Unset'#0#1#4'Name'#6#9'hamli'
-  +'bCIV'#5'Value'#6#2'5E'#0#1#4'Name'#6#5'catBy'#5'Value'#6#4'none'#0#1#4'Name'
-  +#6#7'usePSKR'#5'Value'#6#2'no'#0#1#4'Name'#6#5'useRB'#5'Value'#6#2'no'#0#1#4
-  +'Name'#6#11'pskrAntenna'#0#1#4'Name'#6#8'pskrCall'#0#1#4'Name'#6#6'optFFT'#5
-  +'Value'#6#2'on'#0#1#4'Name'#6#9'useAltPTT'#5'Value'#6#2'no'#0#1#4'Name'#6#9
-  +'useHRDPTT'#5'Value'#6#2'no'#0#1#4'Name'#6#8'userQRG1'#5'Value'#6#1'0'#0#1#4
-  +'Name'#6#8'userQRG2'#5'Value'#6#1'0'#0#1#4'Name'#6#8'userQRG3'#5'Value'#6#1
-  +'0'#0#1#4'Name'#6#8'userQRG4'#5'Value'#6#1'0'#0#1#4'Name'#6#7'usrMsg1'#0#1#4
-  +'Name'#6#7'usrMsg2'#0#1#4'Name'#6#7'usrMsg3'#0#1#4'Name'#6#7'usrMsg4'#0#1#4
-  +'Name'#6#7'usrMsg5'#0#1#4'Name'#6#7'usrMsg6'#0#1#4'Name'#6#7'usrMsg7'#0#1#4
-  +'Name'#6#7'usrMsg8'#0#1#4'Name'#6#7'usrMsg9'#0#1#4'Name'#6#8'usrMsg10'#0#1#4
-  +'Name'#6#6'smooth'#5'Value'#6#2'on'#0#1#4'Name'#6#12'restoreMulti'#5'Value'#6
-  +#2'on'#0#1#4'Name'#6#9'specVGain'#5'Value'#6#1'0'#0#1#4'Name'#6#8'binspace'#5
-  +'Value'#6#1'3'#0#1#4'Name'#6#7'cqColor'#5'Value'#6#1'8'#0#1#4'Name'#6#9'call'
-  +'Color'#5'Value'#6#1'7'#0#1#4'Name'#6#8'qsoColor'#5'Value'#6#1'6'#0#1#4'Name'
-  +#6#3'pfx'#5'Value'#6#1'0'#0#1#4'Name'#6#3'sfx'#5'Value'#6#1'0'#0#1#4'Name'#6
-  +#8'si570mul'#5'Value'#6#1'4'#0#1#4'Name'#6#8'si570cor'#5'Value'#6#1'0'#0#1#4
-  +'Name'#6#8'si570qrg'#5'Value'#6#1'0'#0#1#4'Name'#6#8'si570ptt'#5'Value'#6#1
-  +'n'#0#1#4'Name'#6#7'useCWID'#5'Value'#6#1'0'#0#1#4'Name'#6#10'useCATTxDF'#5
-  +'Value'#6#2'no'#0#1#4'Name'#6#10'enAutoQSY1'#5'Value'#6#2'no'#0#1#4'Name'#6
-  +#10'enAutoQSY2'#5'Value'#6#2'no'#0#1#4'Name'#6#10'enAutoQSY3'#5'Value'#6#2'n'
-  +'o'#0#1#4'Name'#6#10'enAutoQSY4'#5'Value'#6#2'no'#0#1#4'Name'#6#10'enAutoQSY'
-  +'5'#5'Value'#6#2'no'#0#1#4'Name'#6#11'autoQSYUTC1'#5'Value'#6#4'0000'#0#1#4
-  +'Name'#6#11'autoQSYUTC2'#5'Value'#6#4'0000'#0#1#4'Name'#6#11'autoQSYUTC3'#5
-  +'Value'#6#4'0000'#0#1#4'Name'#6#11'autoQSYUTC4'#5'Value'#6#4'0000'#0#1#4'Nam'
-  +'e'#6#11'autoQSYUTC5'#5'Value'#6#4'0000'#0#1#4'Name'#6#11'autoQSYQRG1'#5'Val'
-  +'ue'#6#8'14076000'#0#1#4'Name'#6#11'autoQSYQRG2'#5'Value'#6#8'14076000'#0#1#4
-  +'Name'#6#11'autoQSYQRG3'#5'Value'#6#8'14076000'#0#1#4'Name'#6#11'autoQSYQRG4'
-  +#5'Value'#6#8'14076000'#0#1#4'Name'#6#11'autoQSYQRG5'#5'Value'#6#8'14076000'
-  +#0#1#4'Name'#6#10'autoQSYAT1'#5'Value'#6#2'no'#0#1#4'Name'#6#10'autoQSYAT2'#5
-  +'Value'#6#2'no'#0#1#4'Name'#6#10'autoQSYAT3'#5'Value'#6#2'no'#0#1#4'Name'#6
-  +#10'autoQSYAT4'#5'Value'#6#2'no'#0#1#4'Name'#6#10'autoQSYAT5'#5'Value'#6#2'n'
-  +'o'#0#1#4'Name'#6#10'hrdAddress'#5'Value'#6#9'localhost'#0#1#4'Name'#6#7'hrd'
-  +'Port'#5'Value'#6#4'7809'#0#0#8'FileName'#6#11'station.xml'#4'left'#3#176#2#3
-  +'top'#2'8'#0#0#10'TPopupMenu'#8'popupQRG'#4'left'#3'('#2#3'top'#2'8'#0#9'TMe'
-  +'nuItem'#10'MenuItem12'#7'Caption'#6#4'1838'#7'OnClick'#7#15'MenuItemHandler'
-  +#0#0#9'TMenuItem'#9'MenuItem1'#7'Caption'#6#4'3576'#9'RadioItem'#9#7'OnClick'
-  +#7#15'MenuItemHandler'#0#0#9'TMenuItem'#9'MenuItem2'#7'Caption'#6#4'7039'#9
-  +'RadioItem'#9#7'OnClick'#7#15'MenuItemHandler'#0#0#9'TMenuItem'#9'MenuItem3'
-  +#7'Caption'#6#4'7076'#9'RadioItem'#9#7'OnClick'#7#15'MenuItemHandler'#0#0#9
-  +'TMenuItem'#9'MenuItem4'#7'Caption'#6#5'10139'#9'RadioItem'#9#7'OnClick'#7#15
-  +'MenuItemHandler'#0#0#9'TMenuItem'#9'MenuItem5'#7'Caption'#6#5'10147'#9'Radi'
-  +'oItem'#9#7'OnClick'#7#15'MenuItemHandler'#0#0#9'TMenuItem'#9'MenuItem6'#7'C'
-  +'aption'#6#5'14076'#9'RadioItem'#9#7'OnClick'#7#15'MenuItemHandler'#0#0#9'TM'
-  +'enuItem'#9'MenuItem7'#7'Caption'#6#5'18102'#9'RadioItem'#9#7'OnClick'#7#15
-  +'MenuItemHandler'#0#0#9'TMenuItem'#9'MenuItem8'#7'Caption'#6#5'18106'#9'Radi'
-  +'oItem'#9#7'OnClick'#7#15'MenuItemHandler'#0#0#9'TMenuItem'#9'MenuItem9'#7'C'
-  +'aption'#6#5'21076'#9'RadioItem'#9#7'OnClick'#7#15'MenuItemHandler'#0#0#9'TM'
-  +'enuItem'#10'MenuItem10'#7'Caption'#6#5'24920'#9'RadioItem'#9#7'OnClick'#7#15
-  +'MenuItemHandler'#0#0#9'TMenuItem'#10'MenuItem11'#7'Caption'#6#5'28076'#9'Ra'
-  +'dioItem'#9#7'OnClick'#7#15'MenuItemHandler'#0#0#9'TMenuItem'#10'MenuItem22'
-  +#7'Caption'#6#14'User Defined 1'#7'OnClick'#7#15'MenuItemHandler'#0#0#9'TMen'
-  +'uItem'#10'MenuItem23'#7'Caption'#6#14'User Defined 2'#7'OnClick'#7#15'MenuI'
-  +'temHandler'#0#0#9'TMenuItem'#10'MenuItem28'#7'Caption'#6#14'User Defined 3'
-  +#7'OnClick'#7#15'MenuItemHandler'#0#0#9'TMenuItem'#10'MenuItem29'#7'Caption'
-  +#6#14'User Defined 4'#7'OnClick'#7#15'MenuItemHandler'#0#0#0#10'TPopupMenu'#9
+  +#5'TEdit'#5'Edit3'#4'Left'#3#144#2#6'Height'#2#24#3'Top'#3','#2#5'Width'#2'('
+  +#11'Font.Height'#2#243#9'Font.Name'#6#5'Arial'#10'Font.Style'#11#6'fsBold'#0
+  +#9'MaxLength'#2#3#10'ParentFont'#8#8'ReadOnly'#9#7'TabStop'#8#8'TabOrder'#2
+  +''''#4'Text'#6#3'100'#0#0#9'TSpinEdit'#14'spinDecoderBin'#4'Left'#3#183#2#6
+  +'Height'#2#24#3'Top'#3','#2#5'Width'#2#18#11'Font.Height'#2#243#9'Font.Name'
+  +#6#5'Arial'#8'MaxValue'#2#4#8'MinValue'#2#1#8'OnChange'#7#20'spinDecoderBinC'
+  +'hange'#10'ParentFont'#8#8'TabOrder'#2'('#5'Value'#2#4#0#0#6'TLabel'#7'Label'
+  +'18'#4'Left'#3#144#2#6'Height'#2#15#3'Top'#3#27#2#5'Width'#2'Z'#7'Caption'#6
+  +#16'Multi Resolution'#11'Font.Height'#2#245#9'Font.Name'#6#5'Arial'#10'Font.'
+  +'Style'#11#6'fsBold'#0#11'ParentColor'#8#10'ParentFont'#8#0#0#6'TTimer'#6'Ti'
+  +'mer1'#8'Interval'#3#220#0#7'OnTimer'#7#11'Timer1Timer'#4'left'#3#136#2#3'to'
+  +'p'#2'8'#0#0#15'TXMLPropStorage'#3'cfg'#12'StoredValues'#14#1#4'Name'#6#4'ca'
+  +'ll'#0#1#4'Name'#6#4'grid'#0#1#4'Name'#6#4'txCF'#5'Value'#6#1'0'#0#1#4'Name'
+  +#6#4'rxCF'#5'Value'#6#1'0'#0#1#4'Name'#6#11'singlerange'#5'Value'#6#4'1000'#0
+  +#1#4'Name'#6#7'soundin'#5'Value'#6#1'0'#0#1#4'Name'#6#8'soundout'#5'Value'#6
+  +#1'0'#0#1#4'Name'#6#6'ldgain'#5'Value'#6#1'0'#0#1#4'Name'#6#6'rdgain'#5'Valu'
+  ,'e'#6#1'0'#0#1#4'Name'#6#8'samfacin'#5'Value'#6#1'1'#0#1#4'Name'#6#9'samfaco'
+  +'ut'#5'Value'#6#1'1'#0#1#4'Name'#6#9'audiochan'#5'Value'#6#1'0'#0#1#4'Name'#6
+  +#6'autoSR'#5'Value'#6#1'0'#0#1#4'Name'#6#7'pttPort'#5'Value'#6#4'None'#0#1#4
+  +'Name'#6#7'catPort'#5'Value'#6#4'None'#0#1#4'Name'#6#3'afc'#5'Value'#6#1'0'#0
+  +#1#4'Name'#6#10'noiseblank'#5'Value'#6#1'0'#0#1#4'Name'#6#10'brightness'#5'V'
+  +'alue'#6#1'0'#0#1#4'Name'#6#8'contrast'#5'Value'#6#1'0'#0#1#4'Name'#6#8'colo'
+  +'rmap'#5'Value'#6#1'0'#0#1#4'Name'#6#9'specspeed'#5'Value'#6#1'0'#0#1#4'Name'
+  +#6#7'version'#5'Value'#6#3'A13'#0#1#4'Name'#6#10'txWatchDog'#5'Value'#6#1'1'
+  +#0#1#4'Name'#6#14'multiQSOToggle'#5'Value'#6#1'1'#0#1#4'Name'#6#16'multiQSOW'
+  +'atchDog'#5'Value'#6#1'1'#0#1#4'Name'#6#7'saveCSV'#5'Value'#6#1'1'#0#1#4'Nam'
+  +'e'#6#7'csvPath'#0#1#4'Name'#6#7'adiPath'#0#1#4'Name'#6#9'hamlibRig'#5'Value'
+  +#6#1'0'#0#1#4'Name'#6#11'hamlibSpeed'#5'Value'#6#4'9600'#0#1#4'Name'#6#15'ha'
+  +'mlibHandshake'#5'Value'#6#4'None'#0#1#4'Name'#6#11'hamlibDBits'#5'Value'#6#1
+  +'8'#0#1#4'Name'#6#12'hamlibParity'#5'Value'#6#4'None'#0#1#4'Name'#6#11'hamli'
+  +'bSBits'#5'Value'#6#1'1'#0#1#4'Name'#6#9'hamLibRTS'#5'Value'#6#5'Unset'#0#1#4
+  +'Name'#6#9'hamlibDTR'#5'Value'#6#5'Unset'#0#1#4'Name'#6#9'hamlibCIV'#5'Value'
+  +#6#2'5E'#0#1#4'Name'#6#5'catBy'#5'Value'#6#4'none'#0#1#4'Name'#6#7'usePSKR'#5
+  +'Value'#6#2'no'#0#1#4'Name'#6#5'useRB'#5'Value'#6#2'no'#0#1#4'Name'#6#11'psk'
+  +'rAntenna'#0#1#4'Name'#6#8'pskrCall'#0#1#4'Name'#6#6'optFFT'#5'Value'#6#2'on'
+  +#0#1#4'Name'#6#9'useAltPTT'#5'Value'#6#2'no'#0#1#4'Name'#6#9'useHRDPTT'#5'Va'
+  +'lue'#6#2'no'#0#1#4'Name'#6#8'userQRG1'#5'Value'#6#1'0'#0#1#4'Name'#6#8'user'
+  +'QRG2'#5'Value'#6#1'0'#0#1#4'Name'#6#8'userQRG3'#5'Value'#6#1'0'#0#1#4'Name'
+  +#6#8'userQRG4'#5'Value'#6#1'0'#0#1#4'Name'#6#7'usrMsg1'#0#1#4'Name'#6#7'usrM'
+  +'sg2'#0#1#4'Name'#6#7'usrMsg3'#0#1#4'Name'#6#7'usrMsg4'#0#1#4'Name'#6#7'usrM'
+  +'sg5'#0#1#4'Name'#6#7'usrMsg6'#0#1#4'Name'#6#7'usrMsg7'#0#1#4'Name'#6#7'usrM'
+  +'sg8'#0#1#4'Name'#6#7'usrMsg9'#0#1#4'Name'#6#8'usrMsg10'#0#1#4'Name'#6#6'smo'
+  +'oth'#5'Value'#6#2'on'#0#1#4'Name'#6#12'restoreMulti'#5'Value'#6#2'on'#0#1#4
+  +'Name'#6#9'specVGain'#5'Value'#6#1'0'#0#1#4'Name'#6#8'binspace'#5'Value'#6#1
+  +'3'#0#1#4'Name'#6#7'cqColor'#5'Value'#6#1'8'#0#1#4'Name'#6#9'callColor'#5'Va'
+  +'lue'#6#1'7'#0#1#4'Name'#6#8'qsoColor'#5'Value'#6#1'6'#0#1#4'Name'#6#3'pfx'#5
+  +'Value'#6#1'0'#0#1#4'Name'#6#3'sfx'#5'Value'#6#1'0'#0#1#4'Name'#6#8'si570mul'
+  +#5'Value'#6#1'4'#0#1#4'Name'#6#8'si570cor'#5'Value'#6#1'0'#0#1#4'Name'#6#8's'
+  +'i570qrg'#5'Value'#6#1'0'#0#1#4'Name'#6#8'si570ptt'#5'Value'#6#1'n'#0#1#4'Na'
+  +'me'#6#7'useCWID'#5'Value'#6#1'0'#0#1#4'Name'#6#10'useCATTxDF'#5'Value'#6#2
+  +'no'#0#1#4'Name'#6#10'enAutoQSY1'#5'Value'#6#2'no'#0#1#4'Name'#6#10'enAutoQS'
+  +'Y2'#5'Value'#6#2'no'#0#1#4'Name'#6#10'enAutoQSY3'#5'Value'#6#2'no'#0#1#4'Na'
+  +'me'#6#10'enAutoQSY4'#5'Value'#6#2'no'#0#1#4'Name'#6#10'enAutoQSY5'#5'Value'
+  +#6#2'no'#0#1#4'Name'#6#11'autoQSYUTC1'#5'Value'#6#4'0000'#0#1#4'Name'#6#11'a'
+  +'utoQSYUTC2'#5'Value'#6#4'0000'#0#1#4'Name'#6#11'autoQSYUTC3'#5'Value'#6#4'0'
+  +'000'#0#1#4'Name'#6#11'autoQSYUTC4'#5'Value'#6#4'0000'#0#1#4'Name'#6#11'auto'
+  +'QSYUTC5'#5'Value'#6#4'0000'#0#1#4'Name'#6#11'autoQSYQRG1'#5'Value'#6#8'1407'
+  +'6000'#0#1#4'Name'#6#11'autoQSYQRG2'#5'Value'#6#8'14076000'#0#1#4'Name'#6#11
+  +'autoQSYQRG3'#5'Value'#6#8'14076000'#0#1#4'Name'#6#11'autoQSYQRG4'#5'Value'#6
+  +#8'14076000'#0#1#4'Name'#6#11'autoQSYQRG5'#5'Value'#6#8'14076000'#0#1#4'Name'
+  +#6#10'autoQSYAT1'#5'Value'#6#2'no'#0#1#4'Name'#6#10'autoQSYAT2'#5'Value'#6#2
+  +'no'#0#1#4'Name'#6#10'autoQSYAT3'#5'Value'#6#2'no'#0#1#4'Name'#6#10'autoQSYA'
+  +'T4'#5'Value'#6#2'no'#0#1#4'Name'#6#10'autoQSYAT5'#5'Value'#6#2'no'#0#1#4'Na'
+  +'me'#6#10'hrdAddress'#5'Value'#6#9'localhost'#0#1#4'Name'#6#7'hrdPort'#5'Val'
+  +'ue'#6#4'7809'#0#0#8'FileName'#6#11'station.xml'#4'left'#3#176#2#3'top'#2'8'
+  +#0#0#10'TPopupMenu'#8'popupQRG'#4'left'#3'('#2#3'top'#2'8'#0#9'TMenuItem'#10
+  +'MenuItem12'#7'Caption'#6#4'1838'#7'OnClick'#7#15'MenuItemHandler'#0#0#9'TMe'
+  +'nuItem'#9'MenuItem1'#7'Caption'#6#4'3576'#9'RadioItem'#9#7'OnClick'#7#15'Me'
+  +'nuItemHandler'#0#0#9'TMenuItem'#9'MenuItem2'#7'Caption'#6#4'7039'#9'RadioIt'
+  +'em'#9#7'OnClick'#7#15'MenuItemHandler'#0#0#9'TMenuItem'#9'MenuItem3'#7'Capt'
+  +'ion'#6#4'7076'#9'RadioItem'#9#7'OnClick'#7#15'MenuItemHandler'#0#0#9'TMenuI'
+  +'tem'#9'MenuItem4'#7'Caption'#6#5'10139'#9'RadioItem'#9#7'OnClick'#7#15'Menu'
+  +'ItemHandler'#0#0#9'TMenuItem'#9'MenuItem5'#7'Caption'#6#5'10147'#9'RadioIte'
+  +'m'#9#7'OnClick'#7#15'MenuItemHandler'#0#0#9'TMenuItem'#9'MenuItem6'#7'Capti'
+  +'on'#6#5'14076'#9'RadioItem'#9#7'OnClick'#7#15'MenuItemHandler'#0#0#9'TMenuI'
+  +'tem'#9'MenuItem7'#7'Caption'#6#5'18102'#9'RadioItem'#9#7'OnClick'#7#15'Menu'
+  +'ItemHandler'#0#0#9'TMenuItem'#9'MenuItem8'#7'Caption'#6#5'18106'#9'RadioIte'
+  +'m'#9#7'OnClick'#7#15'MenuItemHandler'#0#0#9'TMenuItem'#9'MenuItem9'#7'Capti'
+  +'on'#6#5'21076'#9'RadioItem'#9#7'OnClick'#7#15'MenuItemHandler'#0#0#9'TMenuI'
+  +'tem'#10'MenuItem10'#7'Caption'#6#5'24920'#9'RadioItem'#9#7'OnClick'#7#15'Me'
+  ,'nuItemHandler'#0#0#9'TMenuItem'#10'MenuItem11'#7'Caption'#6#5'28076'#9'Radi'
+  +'oItem'#9#7'OnClick'#7#15'MenuItemHandler'#0#0#9'TMenuItem'#10'MenuItem22'#7
+  +'Caption'#6#14'User Defined 1'#7'OnClick'#7#15'MenuItemHandler'#0#0#9'TMenuI'
+  +'tem'#10'MenuItem23'#7'Caption'#6#14'User Defined 2'#7'OnClick'#7#15'MenuIte'
+  +'mHandler'#0#0#9'TMenuItem'#10'MenuItem28'#7'Caption'#6#14'User Defined 3'#7
+  +'OnClick'#7#15'MenuItemHandler'#0#0#9'TMenuItem'#10'MenuItem29'#7'Caption'#6
+  +#14'User Defined 4'#7'OnClick'#7#15'MenuItemHandler'#0#0#0#10'TPopupMenu'#9
   +'popupMsgs'#4'left'#3'X'#2#3'top'#2'8'#0#9'TMenuItem'#10'MenuItem13'#7'Capti'
   +'on'#6#13'Short-hand RO'#7'OnClick'#7#15'MenuItemHandler'#0#0#9'TMenuItem'#10
   +'MenuItem14'#7'Caption'#6#14'Short-hand RRR'#7'OnClick'#7#15'MenuItemHandler'
-  ,#0#0#9'TMenuItem'#10'MenuItem15'#7'Caption'#6#13'Short-hand 73'#7'OnClick'#7
+  +#0#0#9'TMenuItem'#10'MenuItem15'#7'Caption'#6#13'Short-hand 73'#7'OnClick'#7
   +#15'MenuItemHandler'#0#0#9'TMenuItem'#10'MenuItem16'#7'Caption'#6#9'New Item'
   +'5'#7'OnClick'#7#15'MenuItemHandler'#0#0#9'TMenuItem'#10'MenuItem17'#7'Capti'
   +'on'#6#9'New Item6'#7'OnClick'#7#15'MenuItemHandler'#0#0#9'TMenuItem'#10'Men'

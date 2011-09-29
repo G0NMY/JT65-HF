@@ -69,6 +69,7 @@ type
     chkNB: TCheckBox;
     edFreeText: TEdit;
     Edit2: TEdit;
+    Edit3 : TEdit ;
     editManQRG: TEdit;
     edSigRep: TEdit;
     edMsg: TEdit;
@@ -85,6 +86,7 @@ type
     Label15: TLabel;
     Label16: TLabel;
     Label17: TLabel;
+    Label18 : TLabel ;
     Label19: TLabel;
     Label2: TLabel;
     Label20: TLabel;
@@ -165,6 +167,7 @@ type
     rbUseLeft: TRadioButton;
     rbUseRight: TRadioButton;
     spinDecoderBW: TSpinEdit;
+    spinDecoderBin : TSpinEdit ;
     spinDecoderCF: TSpinEdit;
     SpinEdit1: TSpinEdit;
     spinGain: TSpinEdit;
@@ -223,6 +226,7 @@ type
     procedure menuTXLogClick(Sender: TObject);
     procedure rbFreeMsgChange(Sender: TObject);
     procedure spinDecoderBWChange(Sender: TObject);
+    procedure spinDecoderBinChange(Sender: TObject);
     procedure SpinEdit1Change(Sender: TObject);
     procedure spinGainChange(Sender: TObject);
     procedure spinTXCFChange(Sender: TObject);
@@ -1284,13 +1288,20 @@ Begin
           d65.glMouseDF := Form1.spinDecoderCF.Value;
           if d65.glMouseDF > 1000 then d65.glMouseDF := 1000;
           if d65.glMouseDF < -1000 then d65.glMouseDF := -1000;
+          // Single bin spacing
           if spinDecoderBW.Value = 1 Then d65.glDFTolerance := 20;
           if spinDecoderBW.Value = 2 Then d65.glDFTolerance := 50;
           if spinDecoderBW.Value = 3 Then d65.glDFTolerance := 100;
           if spinDecoderBW.Value = 4 Then d65.glDFTolerance := 200;
-          d65.glbinspace := 100;
+          // Multi Bin spacing
+          if spinDecoderBin.Value = 1 Then d65.glbinspace := 20;
+          if spinDecoderBin.Value = 2 Then d65.glbinspace := 50;
+          if spinDecoderBin.Value = 3 Then d65.glbinspace := 100;
+          if spinDecoderBin.Value = 4 Then d65.glbinspace := 200;
+
           if d65.glDFTolerance > 200 then d65.glDFTolerance := 200;
           if d65.glDFTolerance < 20 then d65.glDFTolerance := 20;
+
           If Form1.chkNB.Checked then d65.glNblank := 1 Else d65.glNblank := 0;
           d65.glNshift := 0;
           if Form1.chkAFC.Checked then d65.glNafc := 1 Else d65.glNafc := 0;
@@ -1316,6 +1327,7 @@ begin
      Form1.spinTXCF.Value := 0;
      Form1.spinDecoderCF.Value := 0;
      Form1.spinDecoderBW.Value := 3;
+     Form1.spinDecoderBin.Value := 3;
      Form1.rbGenMsg.Checked := True;
      Form1.chkAutoTxDF.Checked := True;
      Form1.chkEnTX.Checked := False;
@@ -1547,6 +1559,24 @@ begin
      if spinDecoderBW.Value = 2 Then edit2.Text := '50';
      if spinDecoderBW.Value = 3 Then edit2.Text := '100';
      if spinDecoderBW.Value = 4 Then edit2.Text := '200';
+
+     if spinDecoderBW.Value = 1 Then d65.glDFTolerance := 20;
+     if spinDecoderBW.Value = 2 Then d65.glDFTolerance := 50;
+     if spinDecoderBW.Value = 3 Then d65.glDFTolerance := 100;
+     if spinDecoderBW.Value = 4 Then d65.glDFTolerance := 200;
+end;
+
+procedure TForm1.spinDecoderBinChange(Sender: TObject);
+begin
+     if spinDecoderBin.Value = 1 Then edit3.Text := '20';
+     if spinDecoderBin.Value = 2 Then edit3.Text := '50';
+     if spinDecoderBin.Value = 3 Then edit3.Text := '100';
+     if spinDecoderBin.Value = 4 Then edit3.Text := '200';
+
+     if spinDecoderBin.Value = 1 Then d65.glbinspace := 20;
+     if spinDecoderBin.Value = 2 Then d65.glbinspace := 50;
+     if spinDecoderBin.Value = 3 Then d65.glbinspace := 100;
+     if spinDecoderBin.Value = 4 Then d65.glbinspace := 200;
 end;
 
 procedure TForm1.SpinEdit1Change(Sender: TObject);
@@ -2828,13 +2858,21 @@ begin
                d65.glMouseDF := Form1.spinDecoderCF.Value;
                if d65.glMouseDF > 1000 then d65.glMouseDF := 1000;
                if d65.glMouseDF < -1000 then d65.glMouseDF := -1000;
+               // Single bin spacing
                if spinDecoderBW.Value = 1 Then d65.glDFTolerance := 20;
                if spinDecoderBW.Value = 2 Then d65.glDFTolerance := 50;
                if spinDecoderBW.Value = 3 Then d65.glDFTolerance := 100;
                if spinDecoderBW.Value = 4 Then d65.glDFTolerance := 200;
+
+               // Multi bin spacing
+               if spinDecoderBin.Value = 1 Then d65.glbinspace := 20;
+               if spinDecoderBin.Value = 2 Then d65.glbinspace := 50;
+               if spinDecoderBin.Value = 3 Then d65.glbinspace := 100;
+               if spinDecoderBin.Value = 4 Then d65.glbinspace := 200;
+
                if d65.glDFTolerance > 200 then d65.glDFTolerance := 200;
                if d65.glDFTolerance < 20 then d65.glDFTolerance := 20;
-               d65.glbinspace := 100;
+
                If Form1.chkNB.Checked then d65.glNblank := 1 Else d65.glNblank := 0;
                d65.glNshift := 0;
                if Form1.chkAFC.Checked then d65.glNafc := 1 Else d65.glNafc := 0;
@@ -6035,7 +6073,7 @@ Begin
      End;
      if cfgvtwo.Form6.cbUsePSKReporter.Checked Then Form1.Label19.Visible := True else Form1.Label19.Visible := False;
      // RB Check
-     If cfgvtwo.Form6.cbUseRB.Checked Then Label30.Caption := IntToStr(rbc.glrbsSentCount);
+     If cfgvtwo.Form6.cbUseRB.Checked Then Label30.Caption := rb.rbCount;
      if cfgvtwo.Form6.cbUseRB.Checked Then Form1.Label30.Visible := True else Form1.Label30.Visible := False;
      // Force Rig control read cycle.
      if (st.Second mod 3 = 0) And not primed Then doCAT := True;

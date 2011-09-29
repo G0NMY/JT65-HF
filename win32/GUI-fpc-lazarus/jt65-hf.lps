@@ -25,12 +25,12 @@
         <IsVisibleTab Value="True"/>
         <EditorIndex Value="5"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="716"/>
-        <CursorPos X="4" Y="732"/>
+        <TopLine Value="1560"/>
+        <CursorPos X="60" Y="1578"/>
         <UsageCount Value="215"/>
         <Bookmarks Count="2">
-          <Item0 X="1" Y="473" ID="1"/>
-          <Item1 X="1" Y="1659" ID="0"/>
+          <Item0 X="1" Y="477" ID="1"/>
+          <Item1 X="1" Y="1689" ID="0"/>
         </Bookmarks>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
@@ -307,7 +307,7 @@
         <WindowIndex Value="0"/>
         <TopLine Value="1"/>
         <CursorPos X="28" Y="3"/>
-        <UsageCount Value="159"/>
+        <UsageCount Value="187"/>
         <Loaded Value="True"/>
       </Unit26>
       <Unit27>
@@ -318,7 +318,7 @@
         <WindowIndex Value="0"/>
         <TopLine Value="1"/>
         <CursorPos X="1" Y="1"/>
-        <UsageCount Value="159"/>
+        <UsageCount Value="187"/>
         <Loaded Value="True"/>
       </Unit27>
       <Unit28>
@@ -331,7 +331,7 @@
         <WindowIndex Value="0"/>
         <TopLine Value="1"/>
         <CursorPos X="16" Y="9"/>
-        <UsageCount Value="136"/>
+        <UsageCount Value="164"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
       </Unit28>
@@ -343,7 +343,7 @@
         <WindowIndex Value="0"/>
         <TopLine Value="116"/>
         <CursorPos X="1" Y="152"/>
-        <UsageCount Value="65"/>
+        <UsageCount Value="93"/>
         <Loaded Value="True"/>
       </Unit29>
       <Unit30>
@@ -354,7 +354,7 @@
         <WindowIndex Value="0"/>
         <TopLine Value="71"/>
         <CursorPos X="11" Y="92"/>
-        <UsageCount Value="64"/>
+        <UsageCount Value="92"/>
         <Loaded Value="True"/>
       </Unit30>
       <Unit31>
@@ -363,9 +363,9 @@
         <UnitName Value="spot"/>
         <EditorIndex Value="6"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="1221"/>
-        <CursorPos X="1" Y="1237"/>
-        <UsageCount Value="32"/>
+        <TopLine Value="1365"/>
+        <CursorPos X="1" Y="1385"/>
+        <UsageCount Value="59"/>
         <Loaded Value="True"/>
       </Unit31>
       <Unit32>
@@ -376,7 +376,7 @@
         <WindowIndex Value="0"/>
         <TopLine Value="1124"/>
         <CursorPos X="54" Y="1141"/>
-        <UsageCount Value="32"/>
+        <UsageCount Value="59"/>
         <Loaded Value="True"/>
       </Unit32>
     </Units>
@@ -385,15 +385,11 @@
     </General>
   </ProjectSession>
   <Debugging>
-    <BreakPoints Count="2">
+    <BreakPoints Count="1">
       <Item1>
         <Source Value="spectrum4.pas"/>
         <Line Value="497"/>
       </Item1>
-      <Item2>
-        <Source Value="spot.pas"/>
-        <Line Value="1242"/>
-      </Item2>
     </BreakPoints>
   </Debugging>
 </CONFIG>

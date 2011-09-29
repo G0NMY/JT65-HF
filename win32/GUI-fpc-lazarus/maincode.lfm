@@ -241,8 +241,8 @@ object Form1: TForm1
     Left = 556
     Height = 15
     Top = 539
-    Width = 104
-    Caption = 'Single Decoder BW'
+    Width = 55
+    Caption = 'Single BW'
     Font.Height = -11
     Font.Name = 'Arial'
     Font.Style = [fsBold]
@@ -1161,9 +1161,9 @@ object Form1: TForm1
     Text = '100'
   end
   object btnReDecode: TButton
-    Left = 437
+    Left = 144
     Height = 25
-    Top = 639
+    Top = 638
     Width = 115
     Caption = 'Decode Again'
     Font.Height = -13
@@ -1190,6 +1190,47 @@ object Form1: TForm1
     Height = 3
     Top = 464
     Width = 292
+  end
+  object Edit3: TEdit
+    Left = 656
+    Height = 24
+    Top = 556
+    Width = 40
+    Font.Height = -13
+    Font.Name = 'Arial'
+    Font.Style = [fsBold]
+    MaxLength = 3
+    ParentFont = False
+    ReadOnly = True
+    TabStop = False
+    TabOrder = 39
+    Text = '100'
+  end
+  object spinDecoderBin: TSpinEdit
+    Left = 695
+    Height = 24
+    Top = 556
+    Width = 18
+    Font.Height = -13
+    Font.Name = 'Arial'
+    MaxValue = 4
+    MinValue = 1
+    OnChange = spinDecoderBinChange
+    ParentFont = False
+    TabOrder = 40
+    Value = 4
+  end
+  object Label18: TLabel
+    Left = 656
+    Height = 15
+    Top = 539
+    Width = 90
+    Caption = 'Multi Resolution'
+    Font.Height = -11
+    Font.Name = 'Arial'
+    Font.Style = [fsBold]
+    ParentColor = False
+    ParentFont = False
   end
   object Timer1: TTimer
     Interval = 220
