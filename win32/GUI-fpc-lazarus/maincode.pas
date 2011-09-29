@@ -519,6 +519,7 @@ begin
           tfoo := '';
           {TODO Change LAX to something more picky}
           {TODO Enable/Test PSKR code }
+          {TODO QRG Change is not working right }
           if mval.evalQRG(globalData.strqrg, 'LAX', qrgk, eQRG, tfoo) Then globalData.iqrg := eqrg else globalData.iqrg := 0;
           if eQRG > 0 then
           Begin
@@ -529,7 +530,10 @@ begin
                // Not ready to use the db function for 1.0.8
                rb.useDBF := False;
                // Check to see if I need a login cycle
-               if (rb.useRB) and (not rb.rbOn) and (not rb.busy) then globalData.rbLoggedIn := rb.loginRB;
+               if (rb.useRB) and (not rb.rbOn) and (not rb.busy) then
+               begin
+                    globalData.rbLoggedIn := rb.loginRB;
+               end;
                //if (rb.usePSKR) and (not rb.pskrOn) and (not rb.busy) then rb.loginPSKR;
                // Check to see if I need a logout cycle
                if (not rb.useRB) and (rb.rbOn) and (not rb.busy) then
@@ -537,8 +541,11 @@ begin
                     rb.logoutRB;
                end;
                //if (not rb.usePSKR) and (rb.pskrOn) and (not rb.busy) then rb.logoutPSKR;
-               if (rbcPing) And (not rb.busy) Then globalData.rbLoggedIn := rb.loginRB;
-               if rbcPing then rbcPing := False;
+               if (rbcPing) And (not rb.busy) Then
+               Begin
+                    globalData.rbLoggedIn := rb.loginRB;
+                    rbcPing := False;
+               end;
                // Push spots, this happens even if all the RB/PSKR function is off just
                // to keep the internal data structures up to date.
                if not rb.busy then rb.pushSpots;
@@ -1436,15 +1443,18 @@ begin
      If Form1.cbEnRB.Checked Then cfgvtwo.Form6.cbUseRB.Checked := True else cfgvtwo.Form6.cbUseRB.Checked := False;
      If cfgvtwo.Form6.cbUseRB.Checked And not cfgvtwo.Form6.cbNoInet.Checked Then
      Begin
+          rb.useRB := True;
           cfgvtwo.glrbcLogin := True;
      End
      else
      Begin
+          rb.useRB := False;
           cfgvtwo.glrbcLogout := True;
      End;
      // Handle case of rb having been online but now set to offline mode.
      If (cfgvtwo.Form6.cbNoInet.Checked) And (globalData.rbLoggedIn) Then
      Begin
+          rb.useRB := False;
           cfgvtwo.glrbcLogout := True;
      End;
 end;
@@ -1969,15 +1979,6 @@ begin
                     srec.rbsent   := false;
                     srec.pskrsent := false;
                     srec.dbfsent  := false;
-                    //Timer1.Enabled := False;
-                    //ShowMessage('Adding spot at QRG = ' + teopqrg + ' as int = ' + IntToStr(srec.qrg) + sLineBreak +
-                    //            'Date:  ' + srec.date + sLineBreak +
-                    //            'Sync:  ' + IntToStr(srec.sync) + ' DB:  ' + IntToStr(srec.db) + sLineBreak +
-                    //            'DT:  ' + FormatFloat('#.#',srec.dt) + ' DF:  ' + IntToStr(srec.df) + sLineBreak +
-                    //            'Decoder:  ' + srec.decoder + sLineBreak +
-                    //            'Mode:  ' + srec.mode + sLineBreak +
-                    //            'Exchange:  ' + srec.exchange);
-                    //halt;
                     if rb.addSpot(srec) then d65.gld65decodes[i].dtProcessed := True else d65.gld65decodes[i].dtProcessed := false;
                end
                else
@@ -3287,6 +3288,7 @@ Begin
           showMessage('Configuration file damaged and can not be recovered.');
           Halt;
      End;
+
      //if globalData.debugOn Then showMessage('Debug ON');
      if cfgRecover then ShowMessage('Configuration file erased due to unrecoverable error.  Please reconfigure.');
      dlog.fileDebug('Entering initializer code.');
@@ -5218,6 +5220,7 @@ Begin
           end;
      end;
      cfgvtwo.gld65AudioChange := False;
+     timer1.Enabled := true;
 End;
 
 //procedure TForm1.rbThreadCheck();
