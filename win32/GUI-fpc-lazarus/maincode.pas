@@ -517,13 +517,22 @@ begin
           eqrg := 0;
           qrgk := 0.0;
           tfoo := '';
-          {TODO Change LAX to something more picky}
           {TODO Enable/Test PSKR code }
-          {TODO QRG Change is not working right }
-          if mval.evalQRG(globalData.strqrg, 'LAX', qrgk, eQRG, tfoo) Then globalData.iqrg := eqrg else globalData.iqrg := 0;
+          if mval.evalQRG(globalData.strqrg, 'STRICT', qrgk, eQRG, tfoo) Then globalData.iqrg := eqrg else globalData.iqrg := 0;
           if eQRG > 0 then
           Begin
-               rb.myQRG  := globalData.iqrg;
+               // Checking for QSY
+               if (eQRG <> rb.myQRG) and Form1.cbEnRB.Checked and (not rb.busy) then
+               begin
+                    // QRG has changed, update RB status.
+                    rb.myQRG := eQRG;
+                    globalData.rbLoggedIn := rb.logoutRB;
+                    sleep(100);
+                    globalData.rbLoggedIn := rb.loginRB;
+                    sleep(100);
+                    //dlog.fileDebug('Updated RB QRG to:  ' + IntToStr(eQRG) + ' Hz');
+               end;
+               rb.myQRG  := eQRG;
                // Set status for RB/PSKR use
                if Form1.cbEnRB.Checked Then rb.useRB  := True else rb.useRB := False;
                if Form1.cbEnPSKR.Checked Then rb.usePSKR := True else rb.usePSKR := False;
@@ -533,12 +542,14 @@ begin
                if (rb.useRB) and (not rb.rbOn) and (not rb.busy) then
                begin
                     globalData.rbLoggedIn := rb.loginRB;
+                    sleep(100);
                end;
                //if (rb.usePSKR) and (not rb.pskrOn) and (not rb.busy) then rb.loginPSKR;
                // Check to see if I need a logout cycle
                if (not rb.useRB) and (rb.rbOn) and (not rb.busy) then
                begin
-                    rb.logoutRB;
+                    globalData.rbLoggedIn := rb.logoutRB;
+                    sleep(100);
                end;
                //if (not rb.usePSKR) and (rb.pskrOn) and (not rb.busy) then rb.logoutPSKR;
                if (rbcPing) And (not rb.busy) Then
@@ -1441,22 +1452,6 @@ end;
 procedure TForm1.cbEnRBChange(Sender: TObject);
 begin
      If Form1.cbEnRB.Checked Then cfgvtwo.Form6.cbUseRB.Checked := True else cfgvtwo.Form6.cbUseRB.Checked := False;
-     If cfgvtwo.Form6.cbUseRB.Checked And not cfgvtwo.Form6.cbNoInet.Checked Then
-     Begin
-          rb.useRB := True;
-          cfgvtwo.glrbcLogin := True;
-     End
-     else
-     Begin
-          rb.useRB := False;
-          cfgvtwo.glrbcLogout := True;
-     End;
-     // Handle case of rb having been online but now set to offline mode.
-     If (cfgvtwo.Form6.cbNoInet.Checked) And (globalData.rbLoggedIn) Then
-     Begin
-          rb.useRB := False;
-          cfgvtwo.glrbcLogout := True;
-     End;
 end;
 
 procedure TForm1.cbSmoothChange(Sender: TObject);
@@ -1609,13 +1604,8 @@ end;
 
 procedure TForm1.editManQRGChange(Sender: TObject);
 begin
-     if globalData.rbLoggedIn Then
-     Begin
-          // Update QRG variables
-          doCat := True;
-          // Force RB to run an update to reflect new QRG
-          globalData.rbLoggedIn := rb.logoutRB;
-     End;
+     // Update QRG variables
+     doCat := True;
 end;
 
 procedure TForm1.edMsgDblClick(Sender: TObject);
@@ -5223,45 +5213,6 @@ Begin
      timer1.Enabled := true;
 End;
 
-//procedure TForm1.rbThreadCheck();
-//Var
-//   ts     : TDateTime;
-//   tscalc : Double;
-//   i      : Integer;
-//Begin
-//     ts := Now;
-//     If rbc.glrbActive Then
-//     Begin
-//          // Compare timestamp in ts to globalData.rbEnterTS and if difference
-//          // is greater than 90 seconds I will need to assume rbc thread has
-//          // gone astray.
-//          tscalc := SecondSpan(ts,rbc.glrbEnterTS);
-//          If tscalc > 90 Then
-//          Begin
-//               // rb thread was started at least 90 seconds ago and is, seemingly,
-//               // stuck.  Now the question is what to do about it.  Perhaps the
-//               // most solid method will be to suspend its thread, terminate the
-//               // thread, dispose of the thread and re-create it.  If that doesn't
-//               // clear it I don't know what else will. ;)
-//               rbThread.Suspend;
-//               rbThread.Terminate;
-//               rbThread.Destroy;
-//               // This is probably undesirable, but, for now, I am going to clear
-//               // the entire rbReports array to prevent an invalid entry in the
-//               // structure from triggering a slow speed loop.  i.e. rb hangs,
-//               // it's terminated then hangs again on restarting due to something
-//               // in the rbReports array being processed again.
-//               for i := 0 to 499 do
-//               Begin
-//                    rbc.glrbReports[i].rbProcessed := True;
-//               End;
-//               rbThread := rbcThread.Create(False);
-//               rbc.glrbActive := False;
-//               dlog.fileDebug('RBC Thread was reinitialized due to detection of lockup.');
-//          End;
-//     End;
-//End;
-
 procedure TForm1.myCallCheck();
 Begin
      if cfgvtwo.glCallChange Then
@@ -5894,24 +5845,10 @@ Begin
      Form1.MenuItem25.Caption := cfgvtwo.Form6.edUserMsg11.Text;
      Form1.MenuItem26.Caption := cfgvtwo.Form6.edUserMsg12.Text;
      Form1.MenuItem27.Caption := cfgvtwo.Form6.edUserMsg13.Text;
-     // PSKR Check
-     //if cfgvtwo.Form6.cbUsePSKReporter.Checked Then
-     //Begin
-     //     if pskrstat = 0 Then
-     //    Begin
-     //          Form1.Timer1.Enabled := False;
-     //          If PSKReporter.ReporterInitialize('report.pskreporter.info','4739') = 0 Then pskrstat := 1 else pskrstat := 0;
-     //          Form1.Timer1.Enabled := True;
-     //     End;
-     //End;
-     //if cfgvtwo.Form6.cbUsePSKReporter.Checked and not primed Then PSKReporter.ReporterTickle;
-     //If cfgvtwo.Form6.cbUsePSKReporter.Checked and not primed Then
-     //Begin
-     //     If PSKReporter.ReporterGetStatistics(pskrStats,SizeOf(pskrStats)) = 0 Then Label19.Caption := IntToStr(pskrStats.callsigns_sent);
-     //End;
+     // Update PSKR Count
      if cfgvtwo.Form6.cbUsePSKReporter.Checked Then Label19.Caption := rb.pskrCount;
      if cfgvtwo.Form6.cbUsePSKReporter.Checked Then Form1.Label19.Visible := True else Form1.Label19.Visible := False;
-     // RB Check
+     // Update RB Count
      If cfgvtwo.Form6.cbUseRB.Checked Then Label30.Caption := rb.rbCount;
      if cfgvtwo.Form6.cbUseRB.Checked Then Form1.Label30.Visible := True else Form1.Label30.Visible := False;
      // Force Rig control read cycle.
