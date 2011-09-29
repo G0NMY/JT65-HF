@@ -535,16 +535,12 @@ begin
                rb.myQRG  := eQRG;
                // Set status for RB/PSKR use
                if Form1.cbEnRB.Checked Then rb.useRB  := True else rb.useRB := False;
-               if Form1.cbEnPSKR.Checked Then rb.usePSKR := True else rb.usePSKR := False;
-               // Not ready to use the db function for 1.0.8
-               rb.useDBF := False;
                // Check to see if I need a login cycle
                if (rb.useRB) and (not rb.rbOn) and (not rb.busy) then
                begin
                     globalData.rbLoggedIn := rb.loginRB;
                     sleep(100);
                end;
-               //if (rb.usePSKR) and (not rb.pskrOn) and (not rb.busy) then rb.loginPSKR;
                // Check to see if I need a logout cycle
                if (not rb.useRB) and (rb.rbOn) and (not rb.busy) then
                begin
@@ -556,10 +552,34 @@ begin
                Begin
                     globalData.rbLoggedIn := rb.loginRB;
                     rbcPing := False;
+                    sleep(100);
                end;
+
+
+               // Not ready to use the db function for 1.0.8
+               rb.useDBF := False;
+
+               // PSKR work
+               if Form1.cbEnPSKR.Checked Then rb.usePSKR := True else rb.usePSKR := False;
+               if (rb.usePSKR) and (not rb.pskrOn) and (not rb.busy) then
+               begin
+                    rb.loginPSKR;
+                    sleep(100);
+               end;
+               // Check to see if I need a logout cycle
+               if (not rb.usePSKR) and (rb.pskrOn) and (not rb.busy) then
+               begin
+                    rb.logoutPSKR;
+                    sleep(100);
+               end;
+
                // Push spots, this happens even if all the RB/PSKR function is off just
                // to keep the internal data structures up to date.
                if not rb.busy then rb.pushSpots;
+               sleep(100);
+               // Give PSKR some processing time
+               if (not rb.busy) and (rb.usePSKR) then rb.pskrTickle;
+               sleep(100);
           end;
           Sleep(100);
      end;

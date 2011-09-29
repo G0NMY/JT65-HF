@@ -298,8 +298,7 @@ implementation
          pskrstats.callsigns_discarded := 0;
          pskrstats.last_send_time      := 0;
          pskrstats.next_send_time      := 0;
-
-         pskrstat := PSKReporter.ReporterInitialize('report.pskreporter.info','4739');
+         pskrstat := 1;
     End;
 
     Destructor TSpot.endspots;
@@ -1117,8 +1116,11 @@ implementation
 
     function  TSpot.pskrTickle : DWORD;
     begin
-         PSKReporter.ReporterGetStatistics(pskrStats,sizeof(pskrStats));
-         result := PSKReporter.ReporterTickle;
+         If pskrstat = 0 Then
+         Begin
+              PSKReporter.ReporterGetStatistics(pskrStats,sizeof(pskrStats));
+              result := PSKReporter.ReporterTickle;
+         end;
     end;
 
     function  TSpot.RBcountS : String;
@@ -1280,12 +1282,23 @@ implementation
 
     function TSpot.loginPSKR : Boolean;
     Begin
-         result := False;
-         prRBOn := False;
+         pskrstat := PSKReporter.ReporterInitialize('report.pskreporter.info','4739');
+         if pskrstat = 0 then
+         begin
+              result := True;
+              prPSKROn := True;
+         end
+         else
+         begin
+              result := False;
+              prPSKROn := False;
+         end;
     End;
 
     function TSpot.logoutPSKR : Boolean;
     Begin
+         PSKReporter.ReporterUninitialize;
+         pskrStat := 1;
          result := False;
          prPSKROn := False;
     end;
@@ -1298,8 +1311,6 @@ implementation
        callheard : String;
        gridheard : String;
        band      : String;
-       //debugf    : TextFile;
-       //fname     : String;
        pskrerr   : WideString;
        pskrrep   : WideString;
        pskrloc   : WideString;
@@ -1336,35 +1347,31 @@ implementation
                                      // QSL - All good, spot saved.
                                      // NO - Indicates spot failed and safe to retry. (Probably RB Server busy)
                                      // ERR - Indicates RB Server has an issue with the data and not allowed to retry.
-                                     If TrimLeft(TrimRight(rbResult.Text)) = 'QSL' Then resolved := true;
-                                     If TrimLeft(TrimRight(rbResult.Text)) = 'QRG' Then resolved := false;
-                                     If TrimLeft(TrimRight(rbResult.Text)) = 'NO'  Then resolved := false;
-                                     If TrimLeft(TrimRight(rbResult.Text)) = 'ERR' Then resolved := false;
-                                     foo := TrimLeft(TrimRight(rbresult.Text));
+                                     // QRG - Indicates RB Server will no accept the current QRG
+                                     If Length(rbResult.Text) > 1 then
+                                     begin
+                                          If TrimLeft(TrimRight(rbResult.Text)) = 'QSL' Then resolved := true;
+                                          If TrimLeft(TrimRight(rbResult.Text)) = 'QRG' Then resolved := false;
+                                          If TrimLeft(TrimRight(rbResult.Text)) = 'NO'  Then resolved := false;
+                                          If TrimLeft(TrimRight(rbResult.Text)) = 'ERR' Then resolved := false;
+                                          foo := TrimLeft(TrimRight(rbresult.Text));
+                                     end
+                                     else
+                                     begin
+                                          // Unexpected return value from URL call
+                                          foo := 'EXC';
+                                     end;
                                 end
                                 else
                                 begin
-                                     //fname := 'C:\spotdebug.txt';
-                                     //AssignFile(debugf, fname);
-                                     //If FileExists(fname) Then Append(debugf) Else Rewrite(debugf);
-                                     //writeln(debugf,'Exchange:  ' + prSpots[i].exchange);
-                                     //writeLn(debugf,'     URL:  ' + url);
-                                     //writeln(debugf,'  Result:  ' + rbresult.Text);
-                                     //CloseFile(debugf);
-                                     foo := 'EXCEPTION';
+                                     foo := 'EXC';
                                      resolved := False;
                                 end;
                              Except
-                                //fname := 'C:\spotdebug.txt';
-                                //AssignFile(debugf, fname);
-                                //If FileExists(fname) Then Append(debugf) Else Rewrite(debugf);
-                                //writeln(debugf,'Exchange:  ' + prSpots[i].exchange);
-                                //writeLn(debugf,'     URL:  ' + url);
-                                //writeln(debugf,'  Result:  ' + 'Exception code called');
-                                //CloseFile(debugf);
-                                foo := 'EXCEPTION';
+                                foo := 'EXC';
                                 resolved := false;
                              End;
+                             // Wrap up by checking for status of spot and clearing its place in the list as appropriate.
                              if resolved then
                              begin
                                   prSpots[i].rbsent := true;
@@ -1372,38 +1379,26 @@ implementation
                              end
                              else
                              begin
-{ TODO : Pass back error to main code so user can be notified of problem }
-                                  //fname := 'C:\spotdebug.txt';
-                                  //AssignFile(debugf, fname);
-                                  //If FileExists(fname) Then Append(debugf) Else Rewrite(debugf);
-                                  //writeln(debugf,'Exchange:  ' + prSpots[i].exchange);
-                                  //writeLn(debugf,'     URL:  ' + url);
-                                  //writeln(debugf,'  Result:  ' + foo);
-                                  //CloseFile(debugf);
-                                  prSpots[i].rbsent:= true;
-                                  //if foo = 'QRG' then prSpots[i].rbsent       := true;  // RB Server says bad QRG so don't try to send this again...
-                                  //if foo = 'NO' then prSpots[i].rbsent        := true; { TODO : Fix this (Set back to true) once I decide how to better handle retries }
-                                  //if foo = 'EXCEPTION' then prSpots[i].rbsent := true; { TODO : Fix this (Set back to true) once I decide how to better handle retries }
-                                  //if foo = 'ERR' then prSpots[i].rbsent       := true;
-                                  //if foo = 'BADDATA' then prSpots[i].rbsent   := true;  // RB Server doesn't like some of the data (probably big DT) so no resend
+                                  { TODO : Pass back error to main code so user can be notified of problem }
+                                  { TODO : This is a hard fail.. even in the case where a retry is warranted the spot is discarded. }
+                                  //if length(foo) < 2 then foo := 'EXC';
+                                  //prSpots[i].rbsent:= true;
+                                  //if foo[1..3] = 'QRG' then prSpots[i].rbsent := true;  // RB Server says bad QRG so don't try to send this again...
+                                  //if foo[1..2] = 'NO' then prSpots[i].rbsent  := true; { TODO : Fix this (Set back to true) once I decide how to better handle retries }
+                                  //if foo[1..3] = 'EXC' then prSpots[i].rbsent := true; { TODO : Fix this (Set back to true) once I decide how to better handle retries }
+                                  //if foo[1..3] = 'ERR' then prSpots[i].rbsent := true;
+                                  //if foo[1..3] = 'BAD' then prSpots[i].rbsent := true;  // RB Server doesn't like some of the data (probably big DT) so no resend
                                   inc(prRBFail);
                              end;
                         end
                         else
                         begin
                              inc(prRBDiscard);
-                             //fname := 'C:\spotdebug.txt';
-                             //AssignFile(debugf, fname);
-                             //If FileExists(fname) Then Append(debugf) Else Rewrite(debugf);
-                             //     writeln(debugf,'Exchange:  ' + prSpots[i].exchange);
-                             //     writeLn(debugf,'     URL:  ' + url);
-                             //     writeln(debugf,'  Result:  ' + foo);
-                             //CloseFile(debugf);
                              // Excahnge did not parse to something of use or qrg invalid.  Mark it sent so it can be cleared.
                              prSpots[i].rbsent   := true;
                              prSpots[i].pskrsent := true;
                         end;
-                        sleep(50); // Lets not overload the RB server with little or no delay between spot posts.
+                        sleep(100); // Lets not overload the RB server with little or no delay between spot posts.
                    end;
               end;
          end
@@ -1416,7 +1411,7 @@ implementation
          if prUsePSKR then
          begin
               // Do PSKR work
-              pskrstat := 0;
+              // pskrstat is set at PSKR initialization time.
               if pskrstat = 0 then
               begin
                    for i := 0 to 8191 do
@@ -1451,6 +1446,11 @@ implementation
                              end;
                         end;
                    end;
+              end
+              else
+              begin
+                   // PSKR is not available.  Clear the entries needing PSKR service lest the list fills.
+                   for i := 0 to 8191 do if not prSpots[i].pskrsent then prSpots[i].pskrsent := true;
               end;
          end
          else
@@ -1504,7 +1504,7 @@ implementation
          else
          begin
               // Process any spots marked as not sent for DBF lest the array fills with unsent entries. This is only called
-              // when PSKR spotting is not enabled as it is otherwise cleared above.
+              // when DB save is not enabled as it is otherwise cleared above.
               for i := 0 to 8191 do if not prSpots[i].dbfsent then prSpots[i].dbfsent := true;
          end;
          result := true;
