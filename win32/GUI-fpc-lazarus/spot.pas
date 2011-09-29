@@ -242,7 +242,7 @@ implementation
          prRBOn      := False;
          prRBError   := '';
          prPSKROn    := False;
-         prVersion   := '';
+         prVersion   := '200';
          prRBCount   := 0;
          prPRCount   := 0;
          prRBFail    := 0;
@@ -1187,9 +1187,15 @@ implementation
        url      : String;
        foo      : String;
        b        : Boolean;
+       tfoo     : String;
     Begin
          prRBError    := '';
          prBusy       := True;
+
+         tfoo := prMyCall;
+         tfoo := prMyGrid;
+         tfoo := IntToStr(prMyQRG);
+
          url          := 'http://jt65.w6cqz.org/rb.php?func=LI&callsign=' + prMyCall + '&grid=' + prMyGrid + '&qrg=' + IntToStr(prMyQRG) + '&rbversion=' + prVersion;
          prhttp.Clear;
          prhttp.Timeout := 10000;  // 10K ms = 10 s
@@ -1212,13 +1218,24 @@ implementation
                  // BAD GRID - Invalid Grid value, fix before trying again.
                  // BAD CALL - RB Call too short/long, fix before trying again.
                  // BAD MODE - RB Mode not 65A or 4B, fix before trying again.
+                 prRBOn := False;
                  If TrimLeft(TrimRight(rbResult.Text)) = 'QSL'      Then prRBOn := true;
-                 If TrimLeft(TrimRight(rbResult.Text)) = 'BAD QRG'  Then prRBOn := false;
-                 If TrimLeft(TrimRight(rbResult.Text)) = 'BAD GRID' Then prRBOn := false;
-                 If TrimLeft(TrimRight(rbResult.Text)) = 'BAD CALL' Then prRBOn := false;
-                 If TrimLeft(TrimRight(rbResult.Text)) = 'BAD MODE' Then prRBOn := false;
-                 If TrimLeft(TrimRight(rbResult.Text)) = 'NO'       Then prRBOn := false;
+                 //If TrimLeft(TrimRight(rbResult.Text)) = 'BAD QRG'  Then prRBOn := false;
+                 //If TrimLeft(TrimRight(rbResult.Text)) = 'BAD GRID' Then prRBOn := false;
+                 //If TrimLeft(TrimRight(rbResult.Text)) = 'BAD CALL' Then prRBOn := false;
+                 //If TrimLeft(TrimRight(rbResult.Text)) = 'BAD MODE' Then prRBOn := false;
+                 //If TrimLeft(TrimRight(rbResult.Text)) = 'NO'       Then prRBOn := false;
                  prRBError := TrimLeft(TrimRight(rbresult.Text));
+                 tfoo := rbResult.Text;
+                 sleep(1);
+                 if prRBOn then
+                 begin
+                      sleep(1);
+                 end
+                 else
+                 begin
+                      sleep(1);
+                 end;
             end;
          Except
             prRBError := 'EXCEPTION';
@@ -1409,6 +1426,12 @@ implementation
                         sleep(50); // Lets not overload the RB server with little or no delay between spot posts.
                    end;
               end;
+         end
+         else
+         begin
+              // Process any spots marked as not sent for RB lest the array fills with unsent entries. This is only called
+              // when RB spotting is not enabled as it is otherwise cleared above.
+              for i := 0 to 8191 do if not prSpots[i].rbsent then prSpots[i].rbsent := true;
          end;
          if prUsePSKR then
          begin
@@ -1449,6 +1472,12 @@ implementation
                         end;
                    end;
               end;
+         end
+         else
+         begin
+              // Process any spots marked as not sent for PSKR lest the array fills with unsent entries. This is only called
+              // when PSKR spotting is not enabled as it is otherwise cleared above.
+              for i := 0 to 8191 do if not prSpots[i].pskrsent then prSpots[i].pskrsent := true;
          end;
          if prUseDBF then
          begin
@@ -1491,6 +1520,12 @@ implementation
                         end;
                    end;
               end;
+         end
+         else
+         begin
+              // Process any spots marked as not sent for DBF lest the array fills with unsent entries. This is only called
+              // when PSKR spotting is not enabled as it is otherwise cleared above.
+              for i := 0 to 8191 do if not prSpots[i].dbfsent then prSpots[i].dbfsent := true;
          end;
          result := true;
          prBusy := false;

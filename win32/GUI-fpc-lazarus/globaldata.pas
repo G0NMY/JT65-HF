@@ -64,6 +64,7 @@ Var
    audioComputing          : Boolean;
    specNewSpec65           : Boolean;
    gqrg                    : Double;
+   iqrg                    : Integer;
    strqrg                  : String;
    rbLoggedIn              : Boolean;
    rbCacheOnly             : Boolean;

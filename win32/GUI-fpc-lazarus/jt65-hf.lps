@@ -7,7 +7,7 @@
       <Unit0>
         <Filename Value="jt65-hf.lpr"/>
         <IsPartOfProject Value="True"/>
-        <EditorIndex Value="11"/>
+        <EditorIndex Value="12"/>
         <WindowIndex Value="0"/>
         <TopLine Value="15"/>
         <CursorPos X="1" Y="48"/>
@@ -22,14 +22,15 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="maincode"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="5"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="3803"/>
-        <CursorPos X="1" Y="3831"/>
+        <TopLine Value="716"/>
+        <CursorPos X="4" Y="732"/>
         <UsageCount Value="215"/>
         <Bookmarks Count="2">
-          <Item0 X="1" Y="469" ID="1"/>
-          <Item1 X="39" Y="2255" ID="0"/>
+          <Item0 X="1" Y="473" ID="1"/>
+          <Item1 X="1" Y="1659" ID="0"/>
         </Bookmarks>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
@@ -38,7 +39,7 @@
         <Filename Value="portaudio.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="portaudio"/>
-        <EditorIndex Value="7"/>
+        <EditorIndex Value="8"/>
         <WindowIndex Value="0"/>
         <TopLine Value="35"/>
         <CursorPos X="1" Y="35"/>
@@ -74,7 +75,7 @@
         <EditorIndex Value="26"/>
         <WindowIndex Value="0"/>
         <TopLine Value="54"/>
-        <CursorPos X="38" Y="78"/>
+        <CursorPos X="38" Y="67"/>
         <UsageCount Value="215"/>
         <Loaded Value="True"/>
       </Unit5>
@@ -144,7 +145,7 @@
         <ComponentName Value="Form5"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="rawdec"/>
-        <EditorIndex Value="12"/>
+        <EditorIndex Value="13"/>
         <WindowIndex Value="0"/>
         <TopLine Value="1"/>
         <CursorPos X="49" Y="29"/>
@@ -158,7 +159,7 @@
         <ComponentName Value="Form6"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="cfgvtwo"/>
-        <EditorIndex Value="9"/>
+        <EditorIndex Value="10"/>
         <WindowIndex Value="0"/>
         <TopLine Value="909"/>
         <CursorPos X="29" Y="920"/>
@@ -202,8 +203,8 @@
         <UnitName Value="catControl"/>
         <EditorIndex Value="0"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="308"/>
-        <CursorPos X="1" Y="308"/>
+        <TopLine Value="65"/>
+        <CursorPos X="65" Y="72"/>
         <UsageCount Value="266"/>
         <Loaded Value="True"/>
       </Unit17>
@@ -219,7 +220,7 @@
         <Filename Value="rbc.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="rbc"/>
-        <EditorIndex Value="10"/>
+        <EditorIndex Value="11"/>
         <WindowIndex Value="0"/>
         <TopLine Value="853"/>
         <CursorPos X="1" Y="854"/>
@@ -230,7 +231,7 @@
         <Filename Value="adif.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="adif"/>
-        <EditorIndex Value="14"/>
+        <EditorIndex Value="15"/>
         <WindowIndex Value="0"/>
         <TopLine Value="76"/>
         <CursorPos X="25" Y="110"/>
@@ -243,7 +244,7 @@
         <ComponentName Value="Form2"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="log"/>
-        <EditorIndex Value="15"/>
+        <EditorIndex Value="16"/>
         <WindowIndex Value="0"/>
         <TopLine Value="57"/>
         <CursorPos X="1" Y="58"/>
@@ -257,7 +258,7 @@
         <ComponentName Value="Form3"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="diagout"/>
-        <EditorIndex Value="13"/>
+        <EditorIndex Value="14"/>
         <WindowIndex Value="0"/>
         <TopLine Value="1"/>
         <CursorPos X="67" Y="15"/>
@@ -269,7 +270,7 @@
         <Filename Value="fftw_jl.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="fftw_jl"/>
-        <EditorIndex Value="6"/>
+        <EditorIndex Value="7"/>
         <WindowIndex Value="0"/>
         <TopLine Value="24"/>
         <CursorPos X="1" Y="35"/>
@@ -306,7 +307,7 @@
         <WindowIndex Value="0"/>
         <TopLine Value="1"/>
         <CursorPos X="28" Y="3"/>
-        <UsageCount Value="148"/>
+        <UsageCount Value="159"/>
         <Loaded Value="True"/>
       </Unit26>
       <Unit27>
@@ -317,7 +318,7 @@
         <WindowIndex Value="0"/>
         <TopLine Value="1"/>
         <CursorPos X="1" Y="1"/>
-        <UsageCount Value="148"/>
+        <UsageCount Value="159"/>
         <Loaded Value="True"/>
       </Unit27>
       <Unit28>
@@ -326,11 +327,11 @@
         <ComponentName Value="Form4"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="about"/>
-        <EditorIndex Value="8"/>
+        <EditorIndex Value="9"/>
         <WindowIndex Value="0"/>
         <TopLine Value="1"/>
         <CursorPos X="16" Y="9"/>
-        <UsageCount Value="125"/>
+        <UsageCount Value="136"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
       </Unit28>
@@ -342,7 +343,7 @@
         <WindowIndex Value="0"/>
         <TopLine Value="116"/>
         <CursorPos X="1" Y="152"/>
-        <UsageCount Value="54"/>
+        <UsageCount Value="65"/>
         <Loaded Value="True"/>
       </Unit29>
       <Unit30>
@@ -353,30 +354,29 @@
         <WindowIndex Value="0"/>
         <TopLine Value="71"/>
         <CursorPos X="11" Y="92"/>
-        <UsageCount Value="53"/>
+        <UsageCount Value="64"/>
         <Loaded Value="True"/>
       </Unit30>
       <Unit31>
         <Filename Value="spot.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="spot"/>
-        <EditorIndex Value="16"/>
+        <EditorIndex Value="6"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="12"/>
-        <CursorPos X="42" Y="29"/>
-        <UsageCount Value="20"/>
+        <TopLine Value="1221"/>
+        <CursorPos X="1" Y="1237"/>
+        <UsageCount Value="32"/>
         <Loaded Value="True"/>
       </Unit31>
       <Unit32>
         <Filename Value="valobject.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="valobject"/>
-        <IsVisibleTab Value="True"/>
         <EditorIndex Value="17"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="1"/>
-        <CursorPos X="1" Y="1"/>
-        <UsageCount Value="20"/>
+        <TopLine Value="1124"/>
+        <CursorPos X="54" Y="1141"/>
+        <UsageCount Value="32"/>
         <Loaded Value="True"/>
       </Unit32>
     </Units>
@@ -385,11 +385,15 @@
     </General>
   </ProjectSession>
   <Debugging>
-    <BreakPoints Count="1">
+    <BreakPoints Count="2">
       <Item1>
         <Source Value="spectrum4.pas"/>
         <Line Value="497"/>
       </Item1>
+      <Item2>
+        <Source Value="spot.pas"/>
+        <Line Value="1242"/>
+      </Item2>
     </BreakPoints>
   </Debugging>
 </CONFIG>

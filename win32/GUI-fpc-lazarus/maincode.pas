@@ -32,7 +32,7 @@ uses
   dac, ClipBrd, dlog, rawdec, cfgvtwo, guiConfig, verHolder, PSKReporter,
   catControl, Menus, synaser, rbc, log, diagout, synautil, waterfall, d65,
   spectrum, {$IFDEF WIN32}windows, {$ENDIF}{$IFDEF LINUX}unix, {$ENDIF}
-  {$IFDEF DARWIN}unix, {$ENDIF} about;
+  {$IFDEF DARWIN}unix, {$ENDIF} about, spot, valobject;
 
 Const
   JT_DLL = 'jt65.dll';
@@ -268,6 +268,7 @@ type
     function  isSigRep(rep : String) : Boolean;
     function  utcTime : TSYSTEMTIME;
     procedure addToRBC(i, m : Integer);
+    procedure NewaddToRBC(i , m : Integer);
     procedure rbcCheck();
     procedure updateList(callsign : String);
     procedure WaterfallMouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
@@ -364,6 +365,7 @@ type
      pskrStats                  : PSKReporter.REPORTER_STATISTICS;
      audioAve1, audioAve2       : Integer;
      sopQRG, eopQRG             : Double;
+     tsopQRG, teopQRG, tqrg     : String; // Start/end/current period QRG as string
      mnpttSerial                : TBlockSerial;
      doRB                       : Boolean;
      rbsHeardList               : Array[0..499] Of rbHeard;
@@ -389,6 +391,8 @@ type
      txmode                     : Integer;
      reDecode, haveEvenBuffer   : Boolean;
      actionSet                  : Boolean;
+     rb                         : spot.TSpot; // Class variable for new spotting code.
+     mval                       : valobject.TValidator; // Class variable for validator object.  Needed for QRG conversions.
 
 implementation
 
@@ -499,69 +503,124 @@ begin
                'my_antenna' + #0 + my_antenna + #0 + #0;
 end;
 
+//procedure rbcThread.Execute;
+//begin
+//     while not Terminated and not Suspended and not rbc.glrbActive do
+//     begin
+//          Try
+//             // Working on case where a failed RB transaction sets rbCacheOnly thus
+//             // leaving the RB in cache mode forever.
+//             if globalData.rbCacheOnly Then
+//             Begin
+//                  // rbCacheOnly is set, but, should it be?
+//                  if not cfgvtwo.Form6.cbNoInet.Checked And cfgvtwo.Form6.cbUseRB.Checked Then globalData.rbCacheOnly := False;
+//                  if cfgvtwo.Form6.cbNoInet.Checked And cfgvtwo.Form6.cbUseRB.Checked Then globalData.rbCacheOnly := True;
+//             End;
+//             // Check to see if glrbNoInet needs to be set/unset.
+//             rbc.glrbNoInet := True;
+//             if cfgvtwo.Form6.cbUseRB.Checked Then rbc.glrbNoInet := False;
+//             if Length(TrimLeft(TrimRight(cfgvtwo.Form6.editPSKRCall.Text)))>0 Then
+//             Begin
+//                  If (mnrbcReport) And (not rbc.glrbActive) Then
+//                  Begin
+//                       if globalData.debugOn Then rbc.glrbCallsign := TrimLeft(TrimRight(cfgvtwo.Form6.editPSKRCall.Text)) + '-2' else rbc.glrbCallsign := TrimLeft(TrimRight(cfgvtwo.Form6.editPSKRCall.Text)) + '-1';
+//                       rb.myCall := TrimLeft(TrimRight(cfgvtwo.Form6.editPSKRCall.Text));
+//                       rb.myGrid := TrimLeft(TrimRight(cfgvtwo.Form6.edMyGrid.Text));
+//                       rb.myQRG  := globalData.iqrg;
+//                       rb.useRB  := True;
+//                       rbc.glrbGrid := TrimLeft(TrimRight(cfgvtwo.Form6.edMyGrid.Text));
+//                       rbc.glrbQRG := Form1.editManQRG.Text;
+//                       rbc.glrbActive := True;
+//                       rbc.processRB();
+//                       mnrbcReport := False;
+//                  end;
+//                  if (cfgvtwo.glrbcLogin) And (not globalData.rbLoggedIn) And (not rbc.glrbActive) Then
+//                  Begin
+//                       rb.myCall := TrimLeft(TrimRight(cfgvtwo.Form6.editPSKRCall.Text));
+//                       rb.myGrid := TrimLeft(TrimRight(cfgvtwo.Form6.edMyGrid.Text));
+//                       rb.myQRG  := globalData.iqrg;
+//
+//                       if globalData.debugOn Then rbc.glrbCallsign := TrimLeft(TrimRight(cfgvtwo.Form6.editPSKRCall.Text)) + '-2' else rbc.glrbCallsign := TrimLeft(TrimRight(cfgvtwo.Form6.editPSKRCall.Text)) + '-1';
+//                       rbc.glrbQRG := Form1.editManQRG.Text;
+//                       rbc.glrbGrid := TrimLeft(TrimRight(cfgvtwo.Form6.edMyGrid.Text));
+//                       rbc.glrbActive := True;
+//                       rbc.doLogin();
+//                       cfgvtwo.glrbcLogin := False;
+//                  End;
+//                  if (cfgvtwo.glrbcLogout) And (globalData.rbLoggedIn) And (not rbc.glrbActive) Then
+//                  Begin
+//                       rb.myCall := TrimLeft(TrimRight(cfgvtwo.Form6.editPSKRCall.Text));
+//                       rb.myGrid := TrimLeft(TrimRight(cfgvtwo.Form6.edMyGrid.Text));
+//                       rb.myQRG  := globalData.iqrg;
+//
+//                       if globalData.debugOn Then rbc.glrbCallsign := TrimLeft(TrimRight(cfgvtwo.Form6.editPSKRCall.Text)) + '-2' else rbc.glrbCallsign := TrimLeft(TrimRight(cfgvtwo.Form6.editPSKRCall.Text)) + '-1';
+//                       rbc.glrbQRG := Form1.editManQRG.Text;
+//                       rbc.glrbGrid := TrimLeft(TrimRight(cfgvtwo.Form6.edMyGrid.Text));
+//                       rbc.glrbActive := True;
+//                       rbc.doLogout();
+//                       cfgvtwo.glrbcLogout := False;
+//                  End;
+//                  if (rbcPing) And (not rbc.glrbActive) Then
+//                  Begin
+//                       rb.myCall := TrimLeft(TrimRight(cfgvtwo.Form6.editPSKRCall.Text));
+//                       rb.myGrid := TrimLeft(TrimRight(cfgvtwo.Form6.edMyGrid.Text));
+//                       rb.myQRG  := globalData.iqrg;
+//
+//                       if globalData.debugOn Then rbc.glrbCallsign := TrimLeft(TrimRight(cfgvtwo.Form6.editPSKRCall.Text)) + '-2' else rbc.glrbCallsign := TrimLeft(TrimRight(cfgvtwo.Form6.editPSKRCall.Text)) + '-1';
+//                       rbc.glrbQRG := Form1.editManQRG.Text;
+//                       rbc.glrbGrid := TrimLeft(TrimRight(cfgvtwo.Form6.edMyGrid.Text));
+//                       rbc.glrbActive := True;
+//                       rbc.doLogin();
+//                       rbcPing := False;
+//                  End;
+//                  if (rbcCache) And (not rbc.glrbActive) Then
+//                  Begin
+//                       // TODO Reinstate following once cache uploader is verified.
+//                       //rbc.sendCached();
+//                       rbcCache := False;
+//                  End;
+//             End;
+//          Except
+//             dlog.fileDebug('Exception in rbc thread');
+//          end;
+//          Sleep(100);
+//     end;
+//end;
+
+// Re-coding this, it's a nightmare.
 procedure rbcThread.Execute;
+Var
+   qrgk : Double;
+   eQRG : Integer;
+   tfoo : String;
 begin
-     while not Terminated and not Suspended and not rbc.glrbActive do
+     while not Terminated and not Suspended and not rb.busy do
      begin
-          Try
-             // Working on case where a failed RB transaction sets rbCacheOnly thus
-             // leaving the RB in cache mode forever.
-             if globalData.rbCacheOnly Then
-             Begin
-                  // rbCacheOnly is set, but, should it be?
-                  if not cfgvtwo.Form6.cbNoInet.Checked And cfgvtwo.Form6.cbUseRB.Checked Then globalData.rbCacheOnly := False;
-                  if cfgvtwo.Form6.cbNoInet.Checked And cfgvtwo.Form6.cbUseRB.Checked Then globalData.rbCacheOnly := True;
-             End;
-             // Check to see if glrbNoInet needs to be set/unset.
-             rbc.glrbNoInet := True;
-             if cfgvtwo.Form6.cbUseRB.Checked Then rbc.glrbNoInet := False;
-             if Length(TrimLeft(TrimRight(cfgvtwo.Form6.editPSKRCall.Text)))>0 Then
-             Begin
-                  If (mnrbcReport) And (not rbc.glrbActive) Then
-                  Begin
-                       if globalData.debugOn Then rbc.glrbCallsign := TrimLeft(TrimRight(cfgvtwo.Form6.editPSKRCall.Text)) + '-2' else rbc.glrbCallsign := TrimLeft(TrimRight(cfgvtwo.Form6.editPSKRCall.Text)) + '-1';
-                       rbc.glrbGrid := TrimLeft(TrimRight(cfgvtwo.Form6.edMyGrid.Text));
-                       rbc.glrbQRG := Form1.editManQRG.Text;
-                       rbc.glrbActive := True;
-                       rbc.processRB();
-                       mnrbcReport := False;
-                  end;
-                  if (cfgvtwo.glrbcLogin) And (not globalData.rbLoggedIn) And (not rbc.glrbActive) Then
-                  Begin
-                       if globalData.debugOn Then rbc.glrbCallsign := TrimLeft(TrimRight(cfgvtwo.Form6.editPSKRCall.Text)) + '-2' else rbc.glrbCallsign := TrimLeft(TrimRight(cfgvtwo.Form6.editPSKRCall.Text)) + '-1';
-                       rbc.glrbQRG := Form1.editManQRG.Text;
-                       rbc.glrbGrid := TrimLeft(TrimRight(cfgvtwo.Form6.edMyGrid.Text));
-                       rbc.glrbActive := True;
-                       rbc.doLogin();
-                       cfgvtwo.glrbcLogin := False;
-                  End;
-                  if (cfgvtwo.glrbcLogout) And (globalData.rbLoggedIn) And (not rbc.glrbActive) Then
-                  Begin
-                       if globalData.debugOn Then rbc.glrbCallsign := TrimLeft(TrimRight(cfgvtwo.Form6.editPSKRCall.Text)) + '-2' else rbc.glrbCallsign := TrimLeft(TrimRight(cfgvtwo.Form6.editPSKRCall.Text)) + '-1';
-                       rbc.glrbQRG := Form1.editManQRG.Text;
-                       rbc.glrbGrid := TrimLeft(TrimRight(cfgvtwo.Form6.edMyGrid.Text));
-                       rbc.glrbActive := True;
-                       rbc.doLogout();
-                       cfgvtwo.glrbcLogout := False;
-                  End;
-                  if (rbcPing) And (not rbc.glrbActive) Then
-                  Begin
-                       if globalData.debugOn Then rbc.glrbCallsign := TrimLeft(TrimRight(cfgvtwo.Form6.editPSKRCall.Text)) + '-2' else rbc.glrbCallsign := TrimLeft(TrimRight(cfgvtwo.Form6.editPSKRCall.Text)) + '-1';
-                       rbc.glrbQRG := Form1.editManQRG.Text;
-                       rbc.glrbGrid := TrimLeft(TrimRight(cfgvtwo.Form6.edMyGrid.Text));
-                       rbc.glrbActive := True;
-                       rbc.doLogin();
-                       rbcPing := False;
-                  End;
-                  if (rbcCache) And (not rbc.glrbActive) Then
-                  Begin
-                       // TODO Reinstate following once cache uploader is verified.
-                       //rbc.sendCached();
-                       rbcCache := False;
-                  End;
-             End;
-          Except
-             dlog.fileDebug('Exception in rbc thread');
+          rb.myCall := TrimLeft(TrimRight(cfgvtwo.Form6.editPSKRCall.Text));
+          rb.myGrid := TrimLeft(TrimRight(cfgvtwo.Form6.edMyGrid.Text));
+          eqrg := 0;
+          qrgk := 0.0;
+          tfoo := '';
+          if mval.evalQRG(globalData.strqrg, 'LAX', qrgk, eQRG, tfoo) Then globalData.iqrg := eqrg else globalData.iqrg := 0;
+          if eQRG > 0 then
+          Begin
+               rb.myQRG  := globalData.iqrg;
+               // Set status for RB/PSKR use
+               if Form1.cbEnRB.Checked Then rb.useRB  := True else rb.useRB := False;
+               if Form1.cbEnPSKR.Checked Then rb.usePSKR := True else rb.usePSKR := False;
+               // Not ready to use the db function for 1.0.8
+               rb.useDBF := False;
+               // Check to see if I need a login cycle
+               if (rb.useRB) and (not rb.rbOn) and (not rb.busy) then globalData.rbLoggedIn := rb.loginRB;
+               //if (rb.usePSKR) and (not rb.pskrOn) and (not rb.busy) then rb.loginPSKR;
+               // Check to see if I need a logout cycle
+               //if (not rb.useRB) and (rb.rbOn) and (not rb.busy) then rb.logoutRB;
+               //if (not rb.usePSKR) and (rb.pskrOn) and (not rb.busy) then rb.logoutPSKR;
+               if (rbcPing) And (not rb.busy) Then globalData.rbLoggedIn := rb.loginRB;
+               if rbcPing then rbcPing := False;
+               // Push spots, this happens even if all the RB/PSKR function is off just
+               // to keep the internal data structures up to date.
+               if not rb.busy then rb.pushSpots;
           end;
           Sleep(100);
      end;
@@ -569,7 +628,7 @@ end;
 
 procedure decodeThread.Execute;
 Var
-   kverr                         : Integer;
+   kverr : Integer;
 begin
      while not Terminated and not Suspended and not d65.glinprog do
      begin
@@ -670,9 +729,13 @@ Var
    ifoo : Integer;
    foo  : WideString;
    efoo : WideString;
+   tfoo : String;
    tqrg : Double;
    bqrg : Boolean;
 begin
+     // Regardless of CAT method the global variable globalData.strqrg will hold a read QRG value (='0' on error)
+     // This will be of use with the validator class that attempts to parse string floats/integers to something
+     // of reliable use.
      while not Terminated And not Suspended And not catInProgress do
      begin
           Try
@@ -849,6 +912,7 @@ begin
                   if cfgvtwo.glcatBy = 'none' Then
                   Begin
                        tqrg := 0.0;
+                       { TODO This cries out for the QRG conversion routines in validator class }
                        if TryStrToFloat(Form1.editManQRG.Text, tqrg) Then
                        Begin
                             // Need to eval the box and try to determine if it's
@@ -861,21 +925,24 @@ begin
                             Begin
                                  // Eval as Hz
                                  globalData.gqrg := tqrg;
-                                 globalData.strqrg := FloatToStr(tqrg);
+                                 globalData.strqrg := Form1.editManQRG.Text;
+                                 tfoo := globalData.strqrg;
                                  bqrg := True;
                             End;
                             If (tqrg > 460) And (tqrg < 1000000) And not bqrg Then
                             Begin
                                  // Eval as KHz
                                  globalData.gqrg := tqrg*1000;
-                                 globalData.strqrg := FloatToStr(tqrg*1000);
+                                 globalData.strqrg := Form1.editManQRG.Text;
+                                 tfoo := globalData.strqrg;
                                  bqrg := True;
                             End;
                             If (tqrg > 0) And (tqrg < 461) And not bqrg Then
                             Begin
                                  // Eval as MHz
                                  globalData.gqrg := tqrg*1000000;
-                                 globalData.strqrg := FloatToStr(tqrg*1000000);
+                                 globalData.strqrg := Form1.editManQRG.Text;
+                                 tfoo := globalData.strqrg;
                                  bqrg := True;
                             End;
                             If not bqrg Then
@@ -1587,8 +1654,9 @@ procedure TForm1.editManQRGChange(Sender: TObject);
 begin
      if globalData.rbLoggedIn Then
      Begin
-          globalData.rbLoggedIn := False;
-          cfgvtwo.glrbcLogin := True;
+          rb.useRB := False;
+          // Update QRG variables
+          doCat := True;
      End;
 end;
 
@@ -1914,6 +1982,89 @@ begin
           end;
      End;
 end;
+
+// New style (2.0) RB code
+procedure Tform1.NewaddToRBC(i , m : Integer);
+Var
+   srec : spot.spotRecord;
+   eqrg : Integer;
+   qrgk : Double;
+   foo  : String;
+begin
+     // Reworking this to use the new spot code
+     // Using:
+     // function  addSpot(const spot : spotRecord) : Boolean;
+     // Where spotRecord is:
+     // spotRecord = record
+     //   qrg      : Integer;
+     //   date     : String;
+     //   time     : String;
+     //   sync     : Integer;
+     //   db       : Integer;
+     //   dt       : Double;
+     //   df       : Integer;
+     //   decoder  : String;
+     //   exchange : String;
+     //   mode     : String;
+     //   rbsent   : Boolean;
+     //   pskrsent : Boolean;
+     // end;
+     If cfgvtwo.Form6.cbUseRB.Checked Then
+     Begin
+          if eopQRG = sopQRG then
+          begin
+               // i holds index to data in d65.gld65decodes to spot
+               // m holds mode as integer 65 or 4
+               {TODO eopQRG now needs to be an integer value in Hz, not a float }
+               // OK.. rather than try to convert everything to the new 2.0 QRG handler I have placed the necessary variable for eopQRG into teopWRG
+               // as string for conversion to integer with mval.evalQRG
+               //function evalQRG(const qrg : String; const mode : string; var qrgk : Double; var qrghz : Integer; var asciiqrg : String) : Boolean;
+               foo := '';
+               qrgk := 0.0;
+               eQRG := 0;
+               if mval.evalQRG(teopqrg, 'LAX', qrgk, eQRG, foo) Then
+               Begin
+                    globalData.iqrg := eQRG;
+                    srec.qrg      := eQRG;
+                    srec.date     := d65.gld65decodes[i].dtTimeStamp;
+                    srec.time     := '';
+                    srec.sync     := strToInt(d65.gld65decodes[i].dtNumSync);
+                    srec.db       := strToInt(d65.gld65decodes[i].dtSigLevel);
+                    srec.dt       := strToFloat(d65.gld65decodes[i].dtDeltaTime);
+                    srec.df       := strToInt(d65.gld65decodes[i].dtDeltaFreq);
+                    srec.decoder  := d65.gld65decodes[i].dtType;
+                    srec.exchange := d65.gld65decodes[i].dtDecoded;
+                    if m = 65 then srec.mode := '65A';
+                    srec.rbsent   := false;
+                    srec.pskrsent := false;
+                    srec.dbfsent  := false;
+                    //Timer1.Enabled := False;
+                    //ShowMessage('Adding spot at QRG = ' + teopqrg + ' as int = ' + IntToStr(srec.qrg) + sLineBreak +
+                    //            'Date:  ' + srec.date + sLineBreak +
+                    //            'Sync:  ' + IntToStr(srec.sync) + ' DB:  ' + IntToStr(srec.db) + sLineBreak +
+                    //            'DT:  ' + FormatFloat('#.#',srec.dt) + ' DF:  ' + IntToStr(srec.df) + sLineBreak +
+                    //            'Decoder:  ' + srec.decoder + sLineBreak +
+                    //            'Mode:  ' + srec.mode + sLineBreak +
+                    //            'Exchange:  ' + srec.exchange);
+                    //halt;
+                    if rb.addSpot(srec) then d65.gld65decodes[i].dtProcessed := True else d65.gld65decodes[i].dtProcessed := false;
+               end
+               else
+               begin
+                    d65.gld65decodes[i].dtProcessed := True;
+               end;
+          end
+          else
+          begin
+               d65.gld65decodes[i].dtProcessed := True;
+          end;
+     End
+     Else
+     Begin
+          d65.gld65decodes[i].dtProcessed := True;
+     End;
+end;
+
 
 procedure Tform1.addToRBC(i , m : Integer);
 Var
@@ -2757,16 +2908,12 @@ Var
    foo, rpt     : String;
    csvstr       : String;
    wcount       : Integer;
-   word1, word2 : String;
-   word3        : String;
-   lstrQRG       : String;
+   word1, word3 : String;
+   //word2        : String;
    idx, ii      : Integer;
-   tmpdouble1   : Double;
-   tmpdouble2   : Double;
-   mode         : String;
 Begin
-     if globalData.gmode = 65 Then mode := 'JT65A';
-     if globalData.gmode =  4 Then mode := 'JT4B';
+     //if globalData.gmode = 65 Then mode := 'JT65A';
+     //if globalData.gmode =  4 Then mode := 'JT4B';
      csvstr := '';
      rpt := '';
      //                     YYYYMMDDHHMMSS
@@ -2851,13 +2998,13 @@ Begin
           if wcount = 3 Then
           Begin
                word1 := ExtractWord(1,d65.gld65decodes[i].dtDecoded,parseCallSign.WordDelimiter); // CQ or a call sign
-               word2 := ExtractWord(2,d65.gld65decodes[i].dtDecoded,parseCallSign.WordDelimiter); // call sign
+               //word2 := ExtractWord(2,d65.gld65decodes[i].dtDecoded,parseCallSign.WordDelimiter); // call sign
                word3 := ExtractWord(3,d65.gld65decodes[i].dtDecoded,parseCallSign.WordDelimiter); // could be grid or report.
           End
           Else
           Begin
                word1 := '';
-               word2 := '';
+               //word2 := '';
                word3 := '';
           end;
           If wcount > 1 Then
@@ -2870,93 +3017,6 @@ Begin
                          if TrimLeft(TrimRight(word3))[1] = '-' Then log.Form2.edLogRReport.Text := TrimLeft(TrimRight(word3))[1..3];
                     end;
                end;
-          end;
-          // Process for PSKReporter if enabled.
-          if not (sopQRG=eopQRG) and cfgvtwo.Form6.cbUsePSKReporter.Checked Then dlog.fileDebug('End of sequence QRG not same as start QRG. Report discarded.');
-          If (wcount > 1) And cfgvtwo.Form6.cbUsePSKReporter.Checked And (sopQRG=eopQRG) And not reDecode Then
-          Begin
-               if (length(word1)>1) And (length(word2)>2) Then
-               Begin
-                    tmpDouble1 := -1.0;
-                    tmpDouble2 := 0;
-                    if sopQRG > 0.0 Then
-                    Begin
-                         tmpDouble1 := sopQRG;
-                         if tryStrToFloat(TrimLeft(TrimRight(d65.gld65decodes[i].dtDeltaFreq)),tmpDouble2) Then tmpDouble1 := tmpDouble1 + tmpDouble2;
-                    End;
-                    if tmpDouble1 > 0 Then lstrQRG := FloatToStr(tmpDouble1) Else lstrQRG := '0';
-                    If (word1 = 'CQ') or (word1 = 'cq') or (word1 = 'QRZ') or (word1 = 'qrz') or (word1 = 'TEST') or (word1 = 'test') Then
-                    Begin
-                         If parseCallSign.validateCallsign(word2) Then
-                         Begin
-                              // Seems to be a valid call calling CQ.  Word2=Call sign.
-                              // dtTimestamp is like 20100113165400
-                              // d65.gld65decodes[i].dtTimeStamp;
-                              if length(word3)=4 Then
-                              Begin
-                                   if parseCallSign.isGrid(word3) Then
-                                   PSKReporter.ReporterSeenCallsign(BuildRemoteStringGrid(word2,mode,lstrQRG,word3,
-                                                                    d65.gld65decodes[i].dtTimeStamp[1..8],
-                                                                    d65.gld65decodes[i].dtTimeStamp[9..12]),
-                                                                    BuildLocalString(cfgvtwo.Form6.editPSKRCall.Text,
-                                                                    cfgvtwo.Form6.edMyGrid.Text,'JT65-HF',verHolder.verReturn(),
-                                                                    cfgvtwo.Form6.editPSKRAntenna.Text),
-                                                                    PSKReporter.REPORTER_SOURCE_AUTOMATIC)
-                                   else
-                                   PSKReporter.ReporterSeenCallsign(BuildRemoteString(word2,mode,lstrQRG,d65.gld65decodes[i].dtTimeStamp[1..8],
-                                                                    d65.gld65decodes[i].dtTimeStamp[9..12]),
-                                                                    BuildLocalString(cfgvtwo.Form6.editPSKRCall.Text,
-                                                                    cfgvtwo.Form6.edMyGrid.Text,'JT65-HF',verHolder.verReturn(),
-                                                                    cfgvtwo.Form6.editPSKRAntenna.Text),PSKReporter.REPORTER_SOURCE_AUTOMATIC);
-                                   end
-                              else
-                              begin
-                                   PSKReporter.ReporterSeenCallsign(BuildRemoteString(word2,mode,lstrQRG,d65.gld65decodes[i].dtTimeStamp[1..8],
-                                                                                      d65.gld65decodes[i].dtTimeStamp[9..12]),
-                                                                                      BuildLocalString(cfgvtwo.Form6.editPSKRCall.Text,
-                                                                                      cfgvtwo.Form6.edMyGrid.Text,'JT65-HF',verHolder.verReturn(),
-                                                                                      cfgvtwo.Form6.editPSKRAntenna.Text),PSKReporter.REPORTER_SOURCE_AUTOMATIC);
-                              end;
-                         End;
-                    End
-                    Else
-                    Begin
-                         If (Length(word1)>2) And (Length(word2)>2) Then
-                         Begin
-                              If (parseCallSign.validateCallsign(word1)) And (parseCallSign.validateCallsign(word2)) Then
-                              Begin
-                                   // Seems to be a valid call working a valid call.  Word2= TX Call sign.
-                                   if Length(Word3)=4 Then
-                                   Begin
-                                        if parseCallsign.isGrid(word3) Then
-                                        PSKReporter.ReporterSeenCallsign(BuildRemoteStringGrid(word2,mode,lstrQRG,word3,
-                                                                                               d65.gld65decodes[i].dtTimeStamp[1..8],
-                                                                                               d65.gld65decodes[i].dtTimeStamp[9..12]),
-                                                                                               BuildLocalString(cfgvtwo.Form6.editPSKRCall.Text,
-                                                                                               cfgvtwo.Form6.edMyGrid.Text,'JT65-HF',verHolder.verReturn(),
-                                                                                               cfgvtwo.Form6.editPSKRAntenna.Text),
-                                                                                               PSKReporter.REPORTER_SOURCE_AUTOMATIC)
-                                        else
-                                        PSKReporter.ReporterSeenCallsign(BuildRemoteString(word2,mode,lstrQRG,d65.gld65decodes[i].dtTimeStamp[1..8],
-                                                                                           d65.gld65decodes[i].dtTimeStamp[9..12]),
-                                                                                           BuildLocalString(cfgvtwo.Form6.editPSKRCall.Text,
-                                                                                           cfgvtwo.Form6.edMyGrid.Text,'JT65-HF',verHolder.verReturn(),
-                                                                                           cfgvtwo.Form6.editPSKRAntenna.Text),
-                                                                                           PSKReporter.REPORTER_SOURCE_AUTOMATIC);
-                                   end
-                                   else
-                                   begin
-                                        PSKReporter.ReporterSeenCallsign(BuildRemoteString(word2,mode,lstrQRG,d65.gld65decodes[i].dtTimeStamp[1..8],
-                                                                                           d65.gld65decodes[i].dtTimeStamp[9..12]),
-                                                                                           BuildLocalString(cfgvtwo.Form6.editPSKRCall.Text,
-                                                                                           cfgvtwo.Form6.edMyGrid.Text,'JT65-HF',verHolder.verReturn(),
-                                                                                           cfgvtwo.Form6.editPSKRAntenna.Text),
-                                                                                           PSKReporter.REPORTER_SOURCE_AUTOMATIC);
-                                   end;
-                              End;
-                         End;
-                    End;
-               End;
           end;
      end;
 End;
@@ -5537,6 +5597,7 @@ Begin
                     Begin
                          // Get End of Period QRG
                          eopQRG := globalData.gqrg;
+                         teopQRG := globalData.strqrg;
                          // Switch to decoder action
                          thisAction := 4;
                          rxInProgress := False;
@@ -5778,6 +5839,7 @@ Begin
      // Get Start of Period QRG
      actionSet := False;
      sopQRG := globalData.gqrg;
+     tsopQRG := globalData.strqrg;
      rxInProgress := False;
      globalData.txInProgress := False;
      // Paint a start of new period line in the spectrum display.
@@ -6059,7 +6121,7 @@ Begin
      // rbc control
      // Check whether to enable/disable chkRBenable
      if not primed then rbcCheck();
-     // check for dispatching rb thread seconds every two seconds.
+     // check for dispatching rb thread every two seconds.
      If cfgvtwo.Form6.cbUseRB.Checked Then
      Begin
           If (st.Second mod 2 = 0) And not d65.glinProg Then
@@ -6158,6 +6220,7 @@ Begin
                if (not d65.gld65decodes[i].dtProcessed) And (not d65.gld65decodes[i].dtDisplayed) Then
                begin
                     addToDisplay(i,65);
+                    if not reDecode then NewAddToRBC(i,65);
                     if not reDecode Then addToRBC(i,65);
                     d65.gld65decodes[i].dtCharSync  := '';
                     d65.gld65decodes[i].dtDecoded   := '';
@@ -6484,5 +6547,9 @@ initialization
   catControl.catControlcatTxDF := False;
   globalData.hrdcatControlcurrentRig.hrdAlive := False;
   globalData.hrdVersion := 5;
+  // Create spotting class object.
+  rb   := spot.TSpot.create(); // Used even if spotting is disabled
+  mval := valobject.TValidator.create(); // This creates a access point to validation routines needed for new RB code
+
 end.
 

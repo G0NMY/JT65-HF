@@ -607,7 +607,7 @@ Begin
                If TryStrToFloat(hrdresult,qrg) Then
                Begin
                     Result := qrg;
-                    globalData.strqrg := FloatToStr(qrg);
+                    globalData.strqrg := hrdresult;
                end
                else
                Begin
@@ -636,7 +636,7 @@ Begin
                If TryStrToFloat(hrdresult,qrg) Then
                Begin
                     Result := qrg;
-                    globalData.strqrg := FloatToStr(qrg);
+                    globalData.strqrg := hrdresult;
                end
                else
                Begin
@@ -713,7 +713,7 @@ Begin
      If TryStrToFloat(inStrs.Strings[0],qrg) Then
      Begin
           Result := qrg*1000;
-          globalData.strqrg := FloatToStr(qrg*1000);
+          globalData.strqrg := inStrs.Strings[0];
      end
      else
      Begin
@@ -759,7 +759,7 @@ Begin
                If TryStrToFloat(ostat.r1freq, qrg) Then
                Begin
                     Result := qrg;
-                    globalData.strqrg := FloatToStr(qrg);
+                    globalData.strqrg := ostat.r1freq;
                end
                else
                Begin
@@ -773,7 +773,7 @@ Begin
                If TryStrToFloat(ostat.r2freq, qrg) Then
                Begin
                     Result := qrg;
-                    globalData.strqrg := FloatToStr(qrg);
+                    globalData.strqrg := ostat.r2freq;
                end
                else
                Begin
