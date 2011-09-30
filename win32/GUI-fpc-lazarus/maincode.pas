@@ -177,6 +177,7 @@ type
     spinTXCF: TSpinEdit;
     Timer1: TTimer;
     cfg: TXMLPropStorage;
+    Timer2 : TTimer;
     TrackBar1: TTrackBar;
     TrackBar2: TTrackBar;
     Waterfall : TWaterfallControl;
@@ -243,6 +244,7 @@ type
     procedure rbUseMixChange(Sender: TObject);
     procedure spinDecoderCFChange(Sender: TObject);
     procedure Timer1Timer(Sender: TObject);
+    procedure Timer2Timer(Sender : TObject);
     procedure addToDisplay(i, m : Integer);
     procedure TrackBar1Change(Sender: TObject);
     procedure TrackBar2Change(Sender: TObject);
@@ -398,7 +400,7 @@ type
      actionSet                  : Boolean;
      rb                         : spot.TSpot; // Class variable for new spotting code.
      mval                       : valobject.TValidator; // Class variable for validator object.  Needed for QRG conversions.
-     inStandby                  : Boolean;
+     inStandby, enteringQRG     : Boolean;
 
 implementation
 
@@ -705,11 +707,14 @@ begin
      // mval.evalQRG() QRG evaluation/conversion/validate routine to set the float, integer and string variables.
      // The string for QRG returned by CAT control method of choice is in qrg : String
 
-     while not Terminated And not Suspended And not catInProgress do
+     // DO NOT run a rig control cycle if Timer2 is enables as this indicates the user is currently
+     // entering a manual QRG change.
+     while not Terminated And not Suspended And not catInProgress  do
      begin
           Try
              catInProgress := True;
-             If doCAT Then
+
+             If doCAT and not enteringQRG Then
              Begin
                   qrg := '0';
                   if cfgvtwo.glcatBy = 'omni' Then
@@ -1602,10 +1607,38 @@ end;
 
 procedure TForm1.editManQRGChange(Sender: TObject);
 begin
+     enteringQRG := True;
      // Update QRG variables
-     {TODO May have an infinite loop condition here, working on it. }
-     if cfgvtwo.glcatBy = 'none' Then doCat := True;
+     // Now... this gets tricky as I need to allow entry to complete before trying
+     // to validate the QRG.  In the past I've attempted to do this on the fly, but
+     // now I'm using a timer that's triggered upon first change to this field.
+     // Each time the input box changes timer2 will be reset to 0 and enabled to
+     // fire at 3.5 second intervals.  If the timer makes it to 3.5 seconds then, and
+     // only then, the field will be evaluated, validated and, if valid, set the
+     // QRG variables that feed 'up the chain'.
+     if not timer2.Enabled then
+     begin
+          timer2.Enabled := true;
+     end
+     else
+     begin
+          // The disable/enable cycle resets the timer as each character is entered
+          // This allows the input to be completed before the evaluation fires.  The
+          // current delay until evaluation from entry of last character is 3.5 seconds
+          timer2.Enabled := false;
+          timer2.Enabled := true;
+     end;
 end;
+
+procedure TForm1.Timer2Timer(Sender : TObject);
+begin
+     Timer2.Enabled := false;
+     // OK, input was made to the QRG Entry field and seems to be completed so
+     // lets try to validate the field.  Do this by firing a rig control cycle.
+     enteringQRG := False;
+     doCat := True;
+end;
+
 
 procedure TForm1.edMsgDblClick(Sender: TObject);
 begin
@@ -3302,6 +3335,8 @@ var
    verUpdate, cont      : Boolean;
    ain, aout, din, dout : Integer;
 Begin
+     Timer1.Enabled := False;
+     Timer2.Enabled := False;
      kverr := 0;
      while FileExists('KVASD.DAT') do
      begin
@@ -5869,7 +5904,6 @@ procedure TForm1.processOncePerSecond(st : TSystemTime);
 Var
    //i    : Integer;
    foo  : String;
-   ffoo : Double;
 Begin
      // Keep popup menu items in sync
      Form1.MenuItem22.Caption := cfgvtwo.Form6.edUserQRG1.Text;
