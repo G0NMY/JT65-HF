@@ -276,7 +276,7 @@ type
     function  utcTime : TSYSTEMTIME;
     procedure addToRBC(i , m : Integer);
     procedure rbcCheck();
-    procedure updateList(callsign : String);
+    //procedure updateList(callsign : String);
     procedure WaterfallMouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
     procedure addToDisplayTX(exchange : String);
     procedure saveCSV();
@@ -330,8 +330,8 @@ type
      decoderThread              : decodeThread;
      rigThread                  : catThread;
      rbThread                   : rbcThread;
-     rbcPing, mnrbcReport       : Boolean;
-     rbcCache, primed           : Boolean;
+     rbcPing                    : Boolean;
+     primed                     : Boolean;
      txNextPeriod               : Boolean;
      statusChange               : Boolean;
      runOnce                    : Boolean;
@@ -344,7 +344,7 @@ type
      lastAction                 : Integer;  // 1=Init, 2=RX, 3=TX, 4=Decoding, 5=Idle
      thisAction                 : Integer;
      nextAction                 : Integer;
-     sLevel1, sLevel2, sLevelM  : Integer;
+     sLevel1, sLevel2           : Integer;
      smeterIdx                  : Integer;
      txCount                    : Integer;
      bStart, bEnd, rxCount      : Integer;
@@ -372,19 +372,15 @@ type
      sopQRG, eopQRG             : Double;
      tsopQRG, teopQRG, tqrg     : String; // Start/end/current period QRG as string
      mnpttSerial                : TBlockSerial;
-     doRB                       : Boolean;
-     rbsHeardList               : Array[0..499] Of rbHeard;
+     //rbsHeardList               : Array[0..499] Of rbHeard;
      csvEntries                 : Array[0..99] of String;
      qsoSTime, qsoETime         : String;
      qsoSDate                   : String;
      resyncLoop, haveOddBuffer  : Boolean;
      d65doDecodePass            : Boolean;
-     d4doDecodePass             : Boolean;
      catInProgress              : Boolean;
      rxInProgress, doCWID       : Boolean;
      useBuffer                  : Integer;
-     pskrstat                   : Integer;
-     rbRunOnce                  : Boolean;
      d65samfacout               : CTypes.cdouble;
      d65nwave, d65nmsg          : CTypes.cint;
      d65sendingsh               : CTypes.cint;
@@ -522,7 +518,6 @@ begin
           eqrg := 0;
           qrgk := 0.0;
           tfoo := '';
-          {TODO Enable/Test PSKR code }
           if mval.evalQRG(globalData.strqrg, 'STRICT', qrgk, eQRG, tfoo) Then globalData.iqrg := eqrg else globalData.iqrg := 0;
           if eQRG > 0 then
           Begin
@@ -535,7 +530,6 @@ begin
                     sleep(100);
                     globalData.rbLoggedIn := rb.loginRB;
                     sleep(100);
-                    //dlog.fileDebug('Updated RB QRG to:  ' + IntToStr(eQRG) + ' Hz');
                end;
                rb.myQRG  := eQRG;
                // Set status for RB/PSKR use
@@ -559,8 +553,8 @@ begin
                     sleep(100);
                end;
 
-
-               {TODO Starting work on stats database implementation based on work done for future 2.0.0 }
+               // Use internal database system to maintain list of calls heard with
+               // bands heard on and dates first/last heard.
                rb.useDBF := True;
 
                // PSKR work
@@ -863,23 +857,7 @@ begin
 
                   if cfgvtwo.glcatBy = 'commander' Then qrg := catControl.readDXLabs();
 
-                  {TODO Fix Si570 to work with string values versus doubles for QRG }
-                  //if cfgvtwo.glcatBy = 'si57' Then
-                  //Begin
-                       // Si570 is active and has QRG info.
-                       // glsi57QRGi is dial QRG in Hz.
-                       //if cfgvtwo.glsi57QRGi > 999 Then tqrg := cfgvtwo.glsi57QRGi else tqrg := 0.0;
-                       //if tqrg > 0 Then
-                       //Begin
-                       //     globalData.gqrg := tqrg;
-                       //     globalData.strqrg := FloatToStr(tqrg);
-                       //End
-                       //Else
-                       //Begin
-                       //     globalData.gqrg := 0.0;
-                       //     globalData.strqrg := '0.0';
-                       //End;
-                  //End;
+                  if cfgvtwo.glcatBy = 'si57' Then qrg := IntToStr(cfgvtwo.glsi57QRGi);
 
                   if cfgvtwo.glcatBy = 'none' Then qrg := Form1.editManQRG.Text;
 
@@ -909,38 +887,39 @@ begin
      end;
 end;
 
-procedure TForm1.updateList(callsign : String);
-Var
-   i     : integer;
-   found : Boolean;
-Begin
-     found := False;
-     i := 0;
-     while i < 500 do
-     begin
-          if rbsHeardList[i].callsign = callsign Then
-          Begin
-               inc(rbsHeardList[i].count);
-               found := True;
-               i := 501;
-          End;
-          inc(i);
-     end;
-     if not found Then
-     Begin
-          i := 0;
-          while i < 500 do
-          begin
-               if rbsHeardList[i].callsign = '' Then
-               Begin
-                    rbsHeardList[i].callsign := callsign;
-                    rbsHeardList[i].count := 1;
-                    i := 500;
-               End;
-               inc(i);
-          end;
-     End;
-End;
+{TODO rehook this eventually}
+//procedure TForm1.updateList(callsign : String);
+//Var
+//   i     : integer;
+//   found : Boolean;
+//Begin
+//     found := False;
+//     i := 0;
+//     while i < 500 do
+//     begin
+//          if rbsHeardList[i].callsign = callsign Then
+//          Begin
+//               inc(rbsHeardList[i].count);
+//               found := True;
+//               i := 501;
+//          End;
+//          inc(i);
+//     end;
+//     if not found Then
+//     Begin
+//          i := 0;
+//          while i < 500 do
+//          begin
+//               if rbsHeardList[i].callsign = '' Then
+//               Begin
+//                    rbsHeardList[i].callsign := callsign;
+//                    rbsHeardList[i].count := 1;
+//                    i := 500;
+//               End;
+//               inc(i);
+//          end;
+//     End;
+//End;
 
 procedure TForm1.si570Raiseptt();
 Begin
@@ -3281,21 +3260,13 @@ end;
 
 procedure TForm1.rbcCheck();
 Var
-   //floatvar     : Single;
-   //intvar       : Integer;
    foo          : String;
 begin
-     //floatvar := 0;
-     //If TryStrToFloat(Form1.editManQRG.Text, floatvar) Then
-     //Begin
-          //intvar := trunc(floatvar);
-          //If parseCallSign.valQRG(intvar) Then rbc.glrbQRG := Form1.editManQRG.Text else rbc.glrbQRG := '0';
-     //End;
      // Update form title with rb info.
      If cbEnRB.Checked Then
      Begin
-          foo := 'JT65-HF Version ' + verHolder.verReturn() + '  [RB Enabled, online mode.  ';
-          If globalData.rbLoggedIn Then foo := foo + 'Logged In.  QRG = ' + Form1.editManQRG.Text + ' KHz]' Else foo := foo + 'Not Logged In.  QRG = ' + Form1.editManQRG.Text + ' KHz]';
+          foo := 'JT65-HF Version ' + verHolder.verReturn() + '  [RB Enabled, ';
+          If globalData.rbLoggedIn Then foo := foo + 'logged in.  QRG = ' + Form1.editManQRG.Text + ' KHz]' Else foo := foo + 'not logged in.  QRG = ' + Form1.editManQRG.Text + ' KHz]';
           foo := foo + ' [ ' + globalData.fullcall + ' QRV]';
      End
      Else
@@ -3303,9 +3274,6 @@ begin
           foo := 'JT65-HF Version ' + verHolder.verReturn() + '  [ ' + globalData.fullcall + ' QRV]';
      End;
      if Form1.Caption <> foo Then Form1.Caption := foo;
-     // Try to login the RB if it's marked online but not logged in.
-     {TODO I don't think I need this anymore }
-     //If (cfgvtwo.Form6.cbUseRB.Checked) And (not cfgvtwo.Form6.cbNoInet.Checked) And (not globalData.rbLoggedIn) Then cfgvtwo.glrbcLogin := True;
 end;
 
 procedure TForm1.initializerCode();
@@ -3391,7 +3359,6 @@ Begin
      cfgvtwo.glrbcLogin := False;
      cfgvtwo.glrbcLogout := False;
      rbcPing := False;
-     mnrbcReport := False;
      rbThread := rbcThread.Create(False);
      //showmessage('created RB thread');
      //
@@ -5984,13 +5951,8 @@ Begin
      // other minute at second = 55 to keep rb logged in.
      if st.Second = 55 Then
      Begin
-          if odd(st.Minute) Then doRB := True else doRB := False;
-          If cbEnRB.Checked And doRB Then
-          Begin
-               rbcPing := True;
-          End;
+          If cbEnRB.Checked And odd(st.Minute) Then rbcPing := True;
      end;
-     // Post rx/tx SR error to log output
 end;
 
 procedure TForm1.oncePerTick();
@@ -6185,37 +6147,11 @@ end;
 
 initialization
   {$I maincode.lrs}
-  // rbc runs in its own thread and will send reports (if user ebables) at 3
-  // and 33 seconds.  The thread will be triggered at each time interval and
-  // suspended once rbc.rbcActive is False.
-  //rbc.glrbActive := False;
-  globalData.rbCacheOnly := False;
-  //rbc.glrbAlwaysSave := False;
-  // Initialize rbRecords array
-  //for mnlooper := 0 to 499 do
-  //begin
-  //     rbc.glrbReports[mnlooper].rbTimeStamp := '';
-  //     rbc.glrbReports[mnlooper].rbNumSync   := '';
-  //     rbc.glrbReports[mnlooper].rbSigLevel  := '';
-  //     rbc.glrbReports[mnlooper].rbDeltaTime := '';
-  //     rbc.glrbReports[mnlooper].rbDeltaFreq := '';
-  //     rbc.glrbReports[mnlooper].rbSigW      := '';
-  //     rbc.glrbReports[mnlooper].rbCharSync  := '';
-  //     rbc.glrbReports[mnlooper].rbDecoded   := '';
-  //     rbc.glrbReports[mnlooper].rbFrequency := '';
-  //     rbc.glrbReports[mnlooper].rbProcessed := True;
-  //     rbc.glrbReports[mnlooper].rbCached    := False;
-  //end;
-  //for mnlooper := 0 to 499 do
-  //begin
-  //     rbc.glrbsLastCall[mnlooper] := '';
-  //end;
   // The decoder runs in its own thread and will process the rxBuffer any time
   // globalData.d65doDecodePass = True.  I also need to define whether I want to do
   // multi-decode, the low..high multi-decode range and the step size or, for
   // single decode, the center frequency and bandwidth.
   d65doDecodePass := False;
-  d4doDecodePass := False;
   d65.gldecoderPass := 0;
   // Clear the decodes array structure
   for mnlooper := 0 to 49 do
@@ -6243,14 +6179,10 @@ initialization
   End;
   // Initialize rxBuffer and its pointer, rxBuffer holds incoming sample data from PA
   adc.d65rxBufferPtr := @adc.d65rxBuffer[0];  // pointer set to start of rxBuffer
-
   adc.d65rxBufferIdx := 0;
-
   // Initialize txBuffer and its pointer, txBuffer holds outgoing sample data for PA
   dac.d65txBufferPtr := @dac.d65txBuffer[0];  // pointer set to start of txBuffer
-
   dac.d65txBufferIdx := 0;
-
   // Setup PChar type variables.
   d65txmsg := StrAlloc(28);
   d65sending := StrAlloc(28);
@@ -6261,16 +6193,12 @@ initialization
   cfgvtwo.glrbcLogin := False;
   cfgvtwo.glrbcLogout := False;
   rbcPing := False;
-  mnrbcReport := False;
   alreadyHere := False; // Used to detect an overrun of timer servicing loop.
   sLevel1 := 0;
   sLevel2 := 0;
-  sLevelM := 0;
   smeterIdx := 0;
   adc.adcSpecCount := 0;
-
   adc.adcChan := 1;
-
   globalData.specNewSpec65 := False;
   primed       := False; // This is part of the time sync code.
   txPeriod     := 0;     // 0 is even and 1 is odd minutes
@@ -6299,21 +6227,15 @@ initialization
   //
   exchange     := '';
   adc.adcT         := 0;
-
   adc.adcE         := 0;
-
   mnpttOpened    := False;
   firstReport  := True;
   useBuffer := 0;
   adc.adcLDgain := 0;
-
   adc.adcRDgain := 0;
-
   lastMsg := '';
   curMsg := '';
   cfgvtwo.glautoSR := False;
-  //rbc.glrbNoInet := True;
-  rbRunOnce := True;
   thisTX := '';
   lastTX := '';
   txCount := 0;
@@ -6330,7 +6252,6 @@ initialization
   sopQRG := 0.0;
   eopQRG := 0.0;
   cfgvtwo.glcatBy := 'none';
-  doRB := False;
   spectrum.specfftCount := 0;
   spectrum.specSpeed2 := 1;
   spectrum.specSmooth := False;
@@ -6344,7 +6265,6 @@ initialization
   globalData.audioComputing := False;
   resyncLoop := False;
   adc.adcRunning := False;
-
   d65.glnd65firstrun := True;
   d65.glbinspace := 0;
   globalData.debugOn := False;
@@ -6356,7 +6276,6 @@ initialization
   // Create stream for spectrum image
   globalData.specMs65 := TMemoryStream.Create;
   adc.adcECount := 0;
-
   reDecode := False;
   // Clear rewind buffers
   For mnlooper := 0 to 661503 do
@@ -6377,6 +6296,5 @@ initialization
   // Create spotting class object.
   rb   := spot.TSpot.create(); // Used even if spotting is disabled
   mval := valobject.TValidator.create(); // This creates a access point to validation routines needed for new RB code
-
 end.
 
