@@ -416,5 +416,7 @@ LazarusResources.Add('TForm1','FORMDATA',[
   +#0#0#9'TMenuItem'#9'menuHeard'#7'Caption'#6#14'Stations Heard'#7'OnClick'#7
   +#14'menuHeardClick'#0#0#9'TMenuItem'#9'menuTXLog'#7'Caption'#6#12'Transmit L'
   +'og'#7'OnClick'#7#14'menuTXLogClick'#0#0#9'TMenuItem'#9'menuAbout'#7'Caption'
-  +#6#13'About JT65-HF'#7'OnClick'#7#14'menuAboutClick'#0#0#0#0
+  +#6#13'About JT65-HF'#7'OnClick'#7#14'menuAboutClick'#0#0#9'TMenuItem'#10'Men'
+  +'uItem30'#0#0#9'TMenuItem'#10'MenuItem31'#0#0#9'TMenuItem'#7'menuQRX'#7'Capt'
+  +'ion'#6#18'Enter Standby Mode'#7'OnClick'#7#12'menuQRXClick'#0#0#0#0
 ]);

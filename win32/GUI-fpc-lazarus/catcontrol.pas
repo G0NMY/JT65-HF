@@ -49,10 +49,10 @@ Type
      catControlcatTxDF       : Boolean;
 
   procedure hrdrigCAPS();
-  function  readOmni(rig : Integer) : Double;  // rig = 1 or 2.
-  function  readHRDQRG(): Double;
+  function  readOmni(rig : Integer) : String;  // rig = 1 or 2.
+  function  readHRDQRG(): String;
   function  readHRD(_para1:WideString): WideString;
-  function  readDXLabs(): Double;
+  function  readDXLabs(): String;
   function  writeHRD(_para1:WideString): Boolean;
   function  hrdConnected(): Boolean;
   procedure hrdDisconnect();
@@ -584,7 +584,7 @@ Begin
      end;
 end;
 
-function readHRDQRG(): Double;
+function readHRDQRG(): String;
 Var
    qrg                : Double;
    hrdresult          : PWIDECHAR;
@@ -602,23 +602,12 @@ Begin
                hrdresult := '';
                hrdmsg := 'Get Frequency';
                hrdresult := hrdinterface4.HRDInterfaceSendMessage(hrdmsg);
-
-               qrg := 0.0;
-               If TryStrToFloat(hrdresult,qrg) Then
-               Begin
-                    Result := qrg;
-                    globalData.strqrg := hrdresult;
-               end
-               else
-               Begin
-                    Result := 0.0;
-                    globalData.strqrg := '0';
-               end;
+               Result := String(hrdresult);
                hrdinterface4.HRDInterfaceFreeString(hrdresult);
           end
           else
           begin
-               Result := 0.0;
+               Result := '0';
           end;
      end
      else
@@ -631,23 +620,12 @@ Begin
                hrdresult := '';
                hrdmsg := 'Get Frequency';
                hrdresult := hrdinterface5.HRDInterfaceSendMessage(hrdmsg);
-
-               qrg := 0.0;
-               If TryStrToFloat(hrdresult,qrg) Then
-               Begin
-                    Result := qrg;
-                    globalData.strqrg := hrdresult;
-               end
-               else
-               Begin
-                    Result := 0.0;
-                    globalData.strqrg := '0';
-               end;
+               Result := String(hrdresult);
                hrdinterface5.HRDInterfaceFreeString(hrdresult);
           end
           else
           begin
-               Result := 0.0;
+               Result := '0';
           end;
      end;
 End;
@@ -695,43 +673,35 @@ Begin
      end;
 End;
 
-function readDXLabs(): Double;
+function readDXLabs(): String;
 Var
    catProc : TProcess;
    qrg     : Double;
    inStrs  : TStringList;
 Begin
      catProc := TProcess.Create(nil);
-     inStrs := TStringList.Create;
-     catProc.CommandLine := 'hamlib\rig_dde\commander_dde1';
-     catProc.Options := catProc.Options + [poWaitOnExit];
-     catProc.Options := catProc.Options + [poNoConsole];
-     catProc.Options := catProc.Options + [poUsePipes];
-     catProc.Execute;
-     inStrs.LoadFromStream(catProc.Output);
-     qrg := 0.0;
-     If TryStrToFloat(inStrs.Strings[0],qrg) Then
-     Begin
-          Result := qrg*1000;
-          globalData.strqrg := inStrs.Strings[0];
-     end
-     else
-     Begin
-          Result := 0.0;
-          globalData.strqrg := '0';
+     Try
+        inStrs := TStringList.Create;
+        catProc.CommandLine := 'hamlib\rig_dde\commander_dde1';
+        catProc.Options := catProc.Options + [poWaitOnExit];
+        catProc.Options := catProc.Options + [poNoConsole];
+        catProc.Options := catProc.Options + [poUsePipes];
+        catProc.Execute;
+        inStrs.LoadFromStream(catProc.Output);
+        Result := inStrs.Strings[0];
+        inStrs.Free;
+     Except
+        Result := '0';
      end;
-     inStrs.Free;
      catProc.Destroy;
 End;
 
-function readOmni(rig : Integer) : Double;
+function readOmni(rig : Integer) : String;
 Var
    ostat   : omniRec;
    fQRG    : TextFile;
    catProc : TProcess;
-   qrg     : Double;
 Begin
-     Result := 0.0;
      catProc := TProcess.Create(nil);
      catProc.CommandLine := 'hamlib\omnicontrol';
      catProc.Options := catProc.Options + [poWaitOnExit];
@@ -753,39 +723,12 @@ Begin
           readLn(fQRG,ostat.r2freq);
           closeFile(fQRG);
           if FileExists('omniqrg.txt') Then DeleteFile('omniqrg.txt');
-          qrg := 0.0;
-          If (rig=1) And (ostat.r1stat='1-Online') Then
-          Begin
-               If TryStrToFloat(ostat.r1freq, qrg) Then
-               Begin
-                    Result := qrg;
-                    globalData.strqrg := ostat.r1freq;
-               end
-               else
-               Begin
-                    globalData.strqrg := '0';
-                    Result := 0.0;
-               End;
-          End;
-
-          If (rig=2) And (ostat.r2stat='2-Online') Then
-          Begin
-               If TryStrToFloat(ostat.r2freq, qrg) Then
-               Begin
-                    Result := qrg;
-                    globalData.strqrg := ostat.r2freq;
-               end
-               else
-               Begin
-                    globalData.strqrg := '0';
-                    Result := 0.0;
-               End;
-          End;
+          If (rig=1) And (ostat.r1stat='1-Online') Then Result := ostat.r1freq;
+          If (rig=2) And (ostat.r2stat='2-Online') Then Result := ostat.r2freq;
      End
      Else
      Begin
-          globalData.strqrg := '0';
-          Result := 0.0;
+          Result := '0';
      End;
      catProc.Destroy;
 End;

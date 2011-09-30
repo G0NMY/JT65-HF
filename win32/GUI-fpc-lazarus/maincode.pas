@@ -142,6 +142,9 @@ type
     MenuItem29: TMenuItem;
     MenuItem3: TMenuItem;
     menuHeard: TMenuItem;
+    MenuItem30 : TMenuItem ;
+    MenuItem31 : TMenuItem ;
+    menuQRX : TMenuItem ;
     menuSetup: TMenuItem;
     menuRawDecoder: TMenuItem;
     menuRigControl: TMenuItem;
@@ -220,6 +223,7 @@ type
     procedure menuAboutClick(Sender: TObject);
     procedure menuHeardClick(Sender: TObject);
     procedure MenuItemHandler(Sender: TObject);
+    procedure menuQRXClick (Sender : TObject );
     procedure menuRawDecoderClick(Sender: TObject);
     procedure menuRigControlClick(Sender: TObject);
     procedure menuSetupClick(Sender: TObject);
@@ -394,6 +398,7 @@ type
      actionSet                  : Boolean;
      rb                         : spot.TSpot; // Class variable for new spotting code.
      mval                       : valobject.TValidator; // Class variable for validator object.  Needed for QRG conversions.
+     inStandby                  : Boolean;
 
 implementation
 
@@ -689,25 +694,32 @@ Var
    foo  : WideString;
    efoo : WideString;
    tfoo : String;
-   tqrg : Double;
-   bqrg : Boolean;
+   qrg  : String;
+   sqrg : String;
 begin
      // Regardless of CAT method the global variable globalData.strqrg will hold a read QRG value (='0' on error)
      // This will be of use with the validator class that attempts to parse string floats/integers to something
      // of reliable use.
+
+     // Changing this to take the QRG value as it's found by the method of choice, then running it through the
+     // mval.evalQRG() QRG evaluation/conversion/validate routine to set the float, integer and string variables.
+     // The string for QRG returned by CAT control method of choice is in qrg : String
+
      while not Terminated And not Suspended And not catInProgress do
      begin
           Try
              catInProgress := True;
              If doCAT Then
              Begin
+                  qrg := '0';
                   if cfgvtwo.glcatBy = 'omni' Then
                   Begin
                        ifoo := 0;
                        if cfgvtwo.Form6.radioOmni1.Checked Then ifoo := 1;
                        if cfgvtwo.Form6.radioOmni2.Checked Then ifoo := 2;
-                       globalData.gqrg := catControl.readOmni(ifoo);
+                       qrg := catControl.readOmni(ifoo);
                   End;
+
                   if cfgvtwo.glcatBy = 'hrd' Then
                   Begin
                        if cfgvtwo.Form6.rbHRD4.Checked Then globalData.hrdVersion := 4;
@@ -716,7 +728,7 @@ begin
                        if globalData.hrdcatControlcurrentRig.hrdAlive Then
                        Begin
                             cfgvtwo.Form6.groupHRD.Caption := 'HRD Connected to ' + globalData.hrdcatControlcurrentRig.radioName;
-                            globalData.gqrg := catControl.readHRDQRG();
+                            qrg := catControl.readHRDQRG();
 
                             if globalData.hrdcatControlcurrentRig.hasAFGain Then
                             Begin
@@ -843,87 +855,53 @@ begin
                        end
                        else
                        begin
-                            globalData.gqrg := 0.0;
-                            globalData.strqrg := '0';
+                            qrg := '0';
                        end;
                   End;
-                  if cfgvtwo.glcatBy = 'commander' Then
-                  Begin
-                       ifoo := 0;
-                       globalData.gqrg := catControl.readDXLabs();
-                  End;
-                  if cfgvtwo.glcatBy = 'si57' Then
-                  Begin
+
+                  if cfgvtwo.glcatBy = 'commander' Then qrg := catControl.readDXLabs();
+
+                  {TODO Fix Si570 to work with string values versus doubles for QRG }
+                  //if cfgvtwo.glcatBy = 'si57' Then
+                  //Begin
                        // Si570 is active and has QRG info.
                        // glsi57QRGi is dial QRG in Hz.
-                       if cfgvtwo.glsi57QRGi > 999 Then tqrg := cfgvtwo.glsi57QRGi else tqrg := 0.0;
-                       if tqrg > 0 Then
-                       Begin
-                            globalData.gqrg := tqrg;
-                            globalData.strqrg := FloatToStr(tqrg);
-                       End
-                       Else
-                       Begin
-                            globalData.gqrg := 0.0;
-                            globalData.strqrg := '0.0';
-                       End;
-                  End;
-                  if cfgvtwo.glcatBy = 'none' Then
+                       //if cfgvtwo.glsi57QRGi > 999 Then tqrg := cfgvtwo.glsi57QRGi else tqrg := 0.0;
+                       //if tqrg > 0 Then
+                       //Begin
+                       //     globalData.gqrg := tqrg;
+                       //     globalData.strqrg := FloatToStr(tqrg);
+                       //End
+                       //Else
+                       //Begin
+                       //     globalData.gqrg := 0.0;
+                       //     globalData.strqrg := '0.0';
+                       //End;
+                  //End;
+
+                  if cfgvtwo.glcatBy = 'none' Then qrg := Form1.editManQRG.Text;
+
+                  // At this point String(qrg) contains "something" for evalQRG to digest.
+
+                  //evalQRG(const qrg : String; const mode : string; var qrgk : Double; var qrghz : Integer; var asciiqrg : String) : Boolean;
+                  If not mval.evalQRG(qrg, 'LAX', globalData.gqrg, globalData.iqrg, globalData.strqrg) Then
                   Begin
-                       tqrg := 0.0;
-                       { TODO This cries out for the QRG conversion routines in validator class }
-                       if TryStrToFloat(Form1.editManQRG.Text, tqrg) Then
-                       Begin
-                            // Need to eval the box and try to determine if it's
-                            // Hz, KHz or MHz.
-                            // Valid range of MHz 1.8 ... 460 (for now)
-                            // Valid range of KHz 1800 460000
-                            // > 460000 must be Hz.
-                            bqrg := False;
-                            If tqrg > 1000000 Then
-                            Begin
-                                 // Eval as Hz
-                                 globalData.gqrg := tqrg;
-                                 globalData.strqrg := Form1.editManQRG.Text;
-                                 tfoo := globalData.strqrg;
-                                 bqrg := True;
-                            End;
-                            If (tqrg > 460) And (tqrg < 1000000) And not bqrg Then
-                            Begin
-                                 // Eval as KHz
-                                 globalData.gqrg := tqrg*1000;
-                                 globalData.strqrg := Form1.editManQRG.Text;
-                                 tfoo := globalData.strqrg;
-                                 bqrg := True;
-                            End;
-                            If (tqrg > 0) And (tqrg < 461) And not bqrg Then
-                            Begin
-                                 // Eval as MHz
-                                 globalData.gqrg := tqrg*1000000;
-                                 globalData.strqrg := Form1.editManQRG.Text;
-                                 tfoo := globalData.strqrg;
-                                 bqrg := True;
-                            End;
-                            If not bqrg Then
-                            Begin
-                                 // No idea....
-                                 globalData.gqrg := 0.0;
-                                 globalData.strqrg := '0';
-                                 Form1.editManQRG.Text := '0';
-                            End;
-                       End
-                       Else
-                       Begin
-                            globalData.gqrg := 0.0;
-                            globalData.strqrg := '0';
-                       End;
+                       // Failed to convert
+                       globalData.gqrg := 0.0;
+                       globalData.iqrg := 0;
+                       globalData.strqrg := '0';
                   End;
+                  sqrg := globalData.strqrg;
                   cfgvtwo.Form6.rigQRG.Text := globalData.strqrg;
+                  Form1.editManQRG.Text := sqrg;
                   doCAT := False;
              end;
              catInProgress := False;
           except
              dlog.fileDebug('Exception in rig thread');
+             globalData.gqrg := 0.0;
+             globalData.iqrg := 0;
+             globalData.strqrg := '0';
           end;
           sleep(100);
      end;
@@ -1625,7 +1603,8 @@ end;
 procedure TForm1.editManQRGChange(Sender: TObject);
 begin
      // Update QRG variables
-     doCat := True;
+     {TODO May have an infinite loop condition here, working on it. }
+     if cfgvtwo.glcatBy = 'none' Then doCat := True;
 end;
 
 procedure TForm1.edMsgDblClick(Sender: TObject);
@@ -2123,6 +2102,44 @@ Begin
      If Sender=Form1.MenuItem27 Then Form1.edFreeText.Text := cfgvtwo.Form6.edUserMsg13.Text;
 
 End;
+
+procedure TForm1.menuQRXClick(Sender : TObject);
+Var
+   termcount : Integer;
+begin
+     // Places program into standby mode, releases audio devices and waits for
+     // another click here to begin anew as if program was just launched.
+     if inStandby then
+     begin
+          // In standby, start it up again.
+          // Mimic startup as anew
+          runOnce := true;
+          Timer1.Enabled := True;
+          inStandby := False;
+          menuQRX.Caption := 'Enter Standby Mode';
+     end
+     else
+     begin
+          // QRV switch to standby
+          Timer1.Enabled := False;
+          inStandBy := True;
+          menuQRX.Caption := 'Exit Standby Mode';
+          // Shutdown portaudio
+          portAudio.Pa_StopStream(paInStream);
+          portAudio.Pa_StopStream(paOutStream);
+          termcount := 0;
+          while (portAudio.Pa_IsStreamActive(paInStream) > 0) or (portAudio.Pa_IsStreamActive(paOutStream) > 0) Do
+          Begin
+               application.ProcessMessages;
+               if portAudio.Pa_IsStreamActive(paInStream) > 0 Then portAudio.Pa_AbortStream(paInStream);
+               if portAudio.Pa_IsStreamActive(paOutStream) > 0 Then portAudio.Pa_AbortStream(paOutStream);
+               sleep(1000);
+               inc(termcount);
+               if termcount > 9 then break;
+          end;
+          portaudio.Pa_Terminate();
+     end;
+end;
 
 procedure TForm1.menuRawDecoderClick(Sender: TObject);
 begin
@@ -4119,6 +4136,7 @@ Begin
      Form1.MenuItem27.Caption := cfg.StoredValue['usrMsg10'];
      tstint := 0;
      tstint := 0;
+     {TODO CONFIRM this setting is actually restoring, it seems not... }
      if TryStrToInt(cfg.StoredValue['binSpace'],tstint) Then Form1.spinDecoderBin.value := tstint else Form1.spinDecoderBin.Value := 3;
      spinDecoderBinChange(spinDecoderBin);
      if cfg.StoredValue['smooth'] = 'on' Then Form1.cbSmooth.Checked := True else Form1.cbSmooth.Checked := False;
@@ -5133,6 +5151,9 @@ Var
    txdf : CTypes.cint;
    txsr : CTypes.cdouble;
 Begin
+     {TODO Modify this routine such that it looks at the current offset to correct timing then begins TX where the data SHOULD be if timing was perfect.}
+     {TODO This may work better than simply starting late.. it would be no different than the first X seconds being missing due to a fade or QRM/N and}
+     {TODO would not lead to a DT error as is now.}
      // Generate TX samples for a late starting TX Cycle.
      if useBuffer = 0 Then
      Begin
@@ -5876,17 +5897,6 @@ Begin
      // Set manual entry ability.
      if (cfgvtwo.glcatBy = 'none') and not cfgvtwo.glsi57Set Then Form1.editManQRG.Enabled := True else Form1.editManQRG.Enabled := False;
      //if (cfgvtwo.glcatBy = 'none') and not cfgvtwo.glsi57Set Then Form1.Label23.Visible := True else Form1.Label23.Visible := False;
-     // Deal with QRG display
-     if (cfgvtwo.glcatBy = 'none') Then
-     Begin
-          // Manual control (do nothing, I think...)
-     End
-     Else
-     Begin
-          // In this instance some CAT method is in play.
-          ffoo := globalData.gqrg;
-          if ffoo < 100000 Then Form1.editManQRG.Text := '0' Else Form1.editManQRG.Text := FloatToStr(globalData.gqrg/1000);
-     End;
      if Form1.editManQRG.Text = '0' Then
      Begin
           Form1.Label12.Font.Color := clRed;
@@ -5903,6 +5913,7 @@ Begin
      // Update AU Levels display
      displayAudio(audioAve1, audioAve2);
      if Form1.chkMultiDecode.Checked Then watchMulti := False;
+     {TODO Reattach this to new RB Code}
      // Update rbstats once per minute at second = 30
      //If st.Second = 30 Then
      //Begin
@@ -6321,7 +6332,7 @@ initialization
   adc.adcRunning := False;
 
   d65.glnd65firstrun := True;
-  d65.glbinspace := 100;
+  d65.glbinspace := 0;
   globalData.debugOn := False;
   globalData.gmode := 65;
   txmode := globalData.gmode;

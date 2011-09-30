@@ -13,6 +13,9 @@ type
   { TForm3 }
 
   TForm3 = class(TForm)
+    Label1 : TLabel ;
+    Label2 : TLabel ;
+    Label3 : TLabel ;
     ListBox1: TListBox;
     ListBox2: TListBox;
     ListBox3: TListBox;

@@ -1774,5 +1774,13 @@ object Form1: TForm1
       Caption = 'About JT65-HF'
       OnClick = menuAboutClick
     end
+    object MenuItem30: TMenuItem
+    end
+    object MenuItem31: TMenuItem
+    end
+    object menuQRX: TMenuItem
+      Caption = 'Enter Standby Mode'
+      OnClick = menuQRXClick
+    end
   end
 end
