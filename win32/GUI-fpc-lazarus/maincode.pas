@@ -41,9 +41,9 @@ type
   { TForm1 }
 
   TForm1 = class(TForm)
-    Bevel1 : TBevel ;
-    Bevel2 : TBevel ;
-    Bevel3 : TBevel ;
+    Bevel1 : TBevel;
+    Bevel2 : TBevel;
+    Bevel3 : TBevel;
     btnHaltTx: TButton;
     btnEngageTx: TButton;
     btnDefaults: TButton;
@@ -69,7 +69,7 @@ type
     chkNB: TCheckBox;
     edFreeText: TEdit;
     Edit2: TEdit;
-    Edit3 : TEdit ;
+    Edit3 : TEdit;
     editManQRG: TEdit;
     edSigRep: TEdit;
     edMsg: TEdit;
@@ -86,7 +86,7 @@ type
     Label15: TLabel;
     Label16: TLabel;
     Label17: TLabel;
-    Label18 : TLabel ;
+    Label18 : TLabel;
     Label19: TLabel;
     Label2: TLabel;
     Label20: TLabel;
@@ -142,9 +142,9 @@ type
     MenuItem29: TMenuItem;
     MenuItem3: TMenuItem;
     menuHeard: TMenuItem;
-    MenuItem30 : TMenuItem ;
-    MenuItem31 : TMenuItem ;
-    menuQRX : TMenuItem ;
+    MenuItem30 : TMenuItem;
+    MenuItem31 : TMenuItem;
+    menuQRX : TMenuItem;
     menuSetup: TMenuItem;
     menuRawDecoder: TMenuItem;
     menuRigControl: TMenuItem;
@@ -170,7 +170,7 @@ type
     rbUseLeft: TRadioButton;
     rbUseRight: TRadioButton;
     spinDecoderBW: TSpinEdit;
-    spinDecoderBin : TSpinEdit ;
+    spinDecoderBin : TSpinEdit;
     spinDecoderCF: TSpinEdit;
     SpinEdit1: TSpinEdit;
     spinGain: TSpinEdit;
@@ -1423,16 +1423,6 @@ begin
      cfgvtwo.Form6.BringToFront;
 end;
 
-//procedure TForm1.cbEnPSKRClick(Sender: TObject);
-//begin
-     //If Form1.cbEnPSKR.Checked Then cfgvtwo.Form6.cbUsePSKReporter.Checked := True else cfgvtwo.Form6.cbUsePSKReporter.Checked := False;
-//end;
-
-//procedure TForm1.cbEnRBChange(Sender: TObject);
-//begin
-     //If Form1.cbEnRB.Checked Then cfgvtwo.Form6.cbUseRB.Checked := True else cfgvtwo.Form6.cbUseRB.Checked := False;
-//end;
-
 procedure TForm1.cbSmoothChange(Sender: TObject);
 begin
      if Form1.cbSmooth.Checked Then spectrum.specSmooth := True else spectrum.specSmooth := False;
@@ -1923,7 +1913,6 @@ begin
      End;
 end;
 
-// New style (2.0) RB code
 procedure Tform1.addToRBC(i , m : Integer);
 Var
    srec : spot.spotRecord;
@@ -1931,9 +1920,7 @@ Var
    qrgk : Double;
    foo  : String;
 begin
-     // Reworking this to use the new spot code
-     // Using:
-     // function  addSpot(const spot : spotRecord) : Boolean;
+     // function  rb.addSpot(const spot : spotRecord) : Boolean;
      // Where spotRecord is:
      // spotRecord = record
      //   qrg      : Integer;
@@ -2190,10 +2177,6 @@ begin
           If OverItemIndex > -1 Then Clipboard.AsText := Form1.ListBox1.Items[OverItemIndex];
      end;
 end;
-
-
-// Working here for the day... need to overhaul this to correct issues with some valid callsigns
-// being seen as invalid and correct all issues with suffixed/prefixed exchanges.
 
 procedure TForm1.ListBox1DblClick(Sender: TObject);
 Var
@@ -2817,7 +2800,6 @@ Var
    csvstr       : String;
    wcount       : Integer;
    word1, word3 : String;
-   //word2        : String;
    idx, ii      : Integer;
 Begin
      //if globalData.gmode = 65 Then mode := 'JT65A';
@@ -3306,8 +3288,6 @@ Begin
           showMessage('Configuration file damaged and can not be recovered.');
           Halt;
      End;
-
-     //if globalData.debugOn Then showMessage('Debug ON');
      if cfgRecover then ShowMessage('Configuration file erased due to unrecoverable error.  Please reconfigure.');
      dlog.fileDebug('Entering initializer code.');
      // Check dll version.
@@ -3321,7 +3301,6 @@ Begin
           halt;
      End;
      dlog.fileDebug('JT65.dll version check OK.');
-     //showmessage('JT65.dll version check OK.');
 
      // Setup internal database
      rb.logDir := GetAppConfigDir(False);
@@ -3342,25 +3321,17 @@ Begin
      tstflt := 0.0;
      Form1.Caption := 'JT65-HF V' + verHolder.verReturn() + ' (c) 2009,2010 W6CQZ.  Free to use/modify/distribute under GPL 2.0 License.';
      // See comments in procedure code to understand why this is a MUST to use.
-     //showmessage('calling DisableFloatingPointExceptions');
      DisableFloatingPointExceptions();
-     //showmessage('called DisableFloatingPointExceptions');
      // Create the decoder thread with param False so it starts.
-     //showmessage('creating decoder thread');
      d65.glinProg := False;
      decoderThread := decodeThread.Create(False);
-     //showmessage('created decoder thread');
-     // Create the CAT control thread with param True so it starts.
-     //showmessage('creating rig control thread');
+     // Create the CAT control thread with param False so it starts.
      rigThread := catThread.Create(False);
-     //showmessage('created rig control thread');
-     // Create RB thread with param False so it starts.
-     //showmessage('creating RB thread');
      cfgvtwo.glrbcLogin := False;
      cfgvtwo.glrbcLogout := False;
+     // Create the RB thread with param False so it starts.
      rbcPing := False;
      rbThread := rbcThread.Create(False);
-     //showmessage('created RB thread');
      //
      // Initialize various form items to startup values
      //
@@ -3383,19 +3354,6 @@ Begin
           nextMinute := st.Minute+1;
      End;
 
-     // Setup rbstats
-     //i := 0;
-     //while i < 500 do
-     //begin
-     //     rbsHeardList[i].callsign := '';
-     //     rbsHeardList[i].count := 0;
-     //     rbc.glrbsLastCall[i] := '';
-     //     inc(i);
-     //end;
-     //rbc.glrbsSentCount := 0;
-     //globalData.rbID := '1';
-     //rbc.glrbCallsign := TrimLeft(TrimRight(cfgvtwo.Form6.editPSKRCall.Text)) + '-1';
-
      // Init PA.  If this doesn't work there's no reason to continue.
      PaResult := portaudio.Pa_Initialize();
      If PaResult <> 0 Then ShowMessage('Fatal Error.  Could not initialize portaudio.');
@@ -3406,15 +3364,12 @@ Begin
      paDefApi := portaudio.Pa_GetDefaultHostApi();
      if paDefApi >= 0 Then
      Begin
-          //showmessage('portaudio default api retrieved.  Getting device list');
           cfgvtwo.Form6.cbAudioIn.Clear;
           cfgvtwo.Form6.cbAudioOut.Clear;
           paDefApiDevCount := portaudio.Pa_GetHostApiInfo(paDefApi)^.deviceCount;
           i := paDefApiDevCount-1;
-
           // Get a count of input and output devices.  If input OR output
           // device count = 0 then CAN NOT continue as I need both.
-
           painputs  := 0;
           paoutputs := 0;
 
@@ -3494,7 +3449,6 @@ Begin
        if not fileExists(fname) Then
      {$ENDIF}
      Begin
-          //showmessage('Running initial configuration...');
           cfgvtwo.glmustConfig := True;
           // Setup default sane value for config form.
           cfgvtwo.Form6.edMyCall.Clear;
@@ -3752,13 +3706,9 @@ Begin
           cfg.StoredValue['hrdPort'] := cfgvtwo.Form6.hrdPort.Text;
           cfg.Save;
           dlog.fileDebug('Ran initial configuration.');
-          //showmessage('Ran initial configuration...');
      End;
 
      // Read configuration data from XMLpropstorage (cfg.)
-
-     //showmessage('Reading configuration...');
-
      cfgvtwo.glmycall := cfg.StoredValue['call'];
      tstint := 0;
      if TryStrToInt(cfg.storedValue['pfx'],tstint) Then cfgvtwo.Form6.comboPrefix.ItemIndex := tstint else cfgvtwo.Form6.comboPrefix.ItemIndex := 0;
@@ -4242,12 +4192,8 @@ Begin
 
      if cfg.StoredValue['version'] <> verHolder.verReturn() Then verUpdate := True else verUpdate := False;
 
-     //showmessage('Read configuration complete...');
-
      if verUpdate Then
      Begin
-          //showmessage('Review configuration required for update...');
-
           cfgvtwo.glmustConfig := True;
           cfgvtwo.Form6.Show;
           cfgvtwo.Form6.BringToFront;
@@ -4258,17 +4204,11 @@ Begin
           cfg.StoredValue['version'] := verHolder.verReturn();
           cfg.Save;
           dlog.fileDebug('Ran configuration update.');
-
-          //showmessage('Update configuration review complete...');
-
      End;
 
      globalData.mtext := '/Multi%20On%202K%20BW';
 
      //With wisdom comes speed.
-
-     //showmessage('Evaluating optimal FFT data...');
-
      d65.glfftFWisdom := 0;
      d65.glfftSWisdom := 0;
      if not cfgvtwo.Form6.chkNoOptFFT.Checked Then
@@ -4281,7 +4221,6 @@ Begin
                d65.glfftFWisdom := 1;  // Causes measure wisdom to be loaded on first pass of decode65
                d65.glfftSWisdom := 11; // uses measure wisdom (no load/no save) on != first pass of decode65
                dlog.fileDebug('Imported FFTW3 Wisdom.');
-               //showmessage('Imported optimal FFT data...');
           End
           Else
           Begin
@@ -5394,7 +5333,7 @@ Begin
      //
      // Actions for state 5:
      //         None.  Sit back, relax and enjoy the few seconds between
-     //         end of TX and start of next cycle. ;)
+     //         end of TX and start of next cycle.
      //
      //
      // Actions for state 6:
