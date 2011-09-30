@@ -199,8 +199,6 @@ type
     procedure buttonEndQSO1Click(Sender: TObject);
     procedure buttonSendReportClick(Sender: TObject);
     procedure buttonSetupClick(Sender: TObject);
-    procedure cbEnPSKRClick(Sender: TObject);
-    procedure cbEnRBChange(Sender: TObject);
     procedure cbSmoothChange(Sender: TObject);
     procedure chkAFCChange(Sender: TObject);
     procedure chkAutoTxDFChange(Sender: TObject);
@@ -554,7 +552,6 @@ begin
                     globalData.rbLoggedIn := rb.logoutRB;
                     sleep(100);
                end;
-               //if (not rb.usePSKR) and (rb.pskrOn) and (not rb.busy) then rb.logoutPSKR;
                if (rbcPing) And (not rb.busy) Then
                Begin
                     globalData.rbLoggedIn := rb.loginRB;
@@ -563,8 +560,8 @@ begin
                end;
 
 
-               // Not ready to use the db function for 1.0.8
-               rb.useDBF := False;
+               {TODO Starting work on stats database implementation based on work done for future 2.0.0 }
+               rb.useDBF := True;
 
                // PSKR work
                if Form1.cbEnPSKR.Checked Then rb.usePSKR := True else rb.usePSKR := False;
@@ -1447,15 +1444,15 @@ begin
      cfgvtwo.Form6.BringToFront;
 end;
 
-procedure TForm1.cbEnPSKRClick(Sender: TObject);
-begin
-     If Form1.cbEnPSKR.Checked Then cfgvtwo.Form6.cbUsePSKReporter.Checked := True else cfgvtwo.Form6.cbUsePSKReporter.Checked := False;
-end;
+//procedure TForm1.cbEnPSKRClick(Sender: TObject);
+//begin
+     //If Form1.cbEnPSKR.Checked Then cfgvtwo.Form6.cbUsePSKReporter.Checked := True else cfgvtwo.Form6.cbUsePSKReporter.Checked := False;
+//end;
 
-procedure TForm1.cbEnRBChange(Sender: TObject);
-begin
-     If Form1.cbEnRB.Checked Then cfgvtwo.Form6.cbUseRB.Checked := True else cfgvtwo.Form6.cbUseRB.Checked := False;
-end;
+//procedure TForm1.cbEnRBChange(Sender: TObject);
+//begin
+     //If Form1.cbEnRB.Checked Then cfgvtwo.Form6.cbUseRB.Checked := True else cfgvtwo.Form6.cbUseRB.Checked := False;
+//end;
 
 procedure TForm1.cbSmoothChange(Sender: TObject);
 begin
@@ -1701,8 +1698,8 @@ begin
           cfg.StoredValue['csvPath'] := cfgvtwo.Form6.DirectoryEdit1.Directory;
           cfg.StoredValue['adiPath'] := log.Form2.DirectoryEdit1.Directory;
           cfg.StoredValue['catBy'] := cfgvtwo.glcatBy;
-          if cfgvtwo.Form6.cbUsePSKReporter.Checked Then cfg.StoredValue['usePSKR'] := 'yes' else cfg.StoredValue['usePSKR'] := 'no';
-          if cfgvtwo.Form6.cbUseRB.Checked Then cfg.StoredValue['useRB'] := 'yes' else cfg.StoredValue['useRB'] := 'no';
+          if cbEnPSKR.Checked Then cfg.StoredValue['usePSKR'] := 'yes' else cfg.StoredValue['usePSKR'] := 'no';
+          if cbEnRB.Checked Then cfg.StoredValue['useRB'] := 'yes' else cfg.StoredValue['useRB'] := 'no';
           cfg.StoredValue['pskrAntenna'] := cfgvtwo.Form6.editPSKRAntenna.Text;
           cfg.StoredValue['pskrCall'] := cfgvtwo.Form6.editPSKRCall.Text;
           cfg.StoredValue['userQRG1'] := cfgvtwo.Form6.edUserQRG1.Text;
@@ -1928,7 +1925,7 @@ begin
           portaudio.Pa_Terminate();
           diagout.Form3.ListBox1.Items.Add('Terminated PortAudio');
 
-          if cfgvtwo.Form6.cbUsePSKReporter.Checked Then
+          if cbEnPSKR.Checked Then
           Begin
                diagout.Form3.ListBox1.Items.Add('Closing PSK Reporter');
                rb.logoutPSKR;
@@ -1973,7 +1970,7 @@ begin
      //   rbsent   : Boolean;
      //   pskrsent : Boolean;
      // end;
-     If cfgvtwo.Form6.cbUseRB.Checked Then
+     If cbEnRB.Checked Then
      Begin
           if eopQRG = sopQRG then
           begin
@@ -2067,13 +2064,13 @@ end;
 procedure TForm1.Label19DblClick(Sender: TObject);
 begin
      // Disable PSKR reportings
-     cfgvtwo.Form6.cbUsePSKReporter.Checked := False;
+     cbEnPSKR.checked := False;
 end;
 
 procedure TForm1.Label30DblClick(Sender: TObject);
 begin
      // Disbale RB Reportings
-     cfgvtwo.Form6.cbUseRB.Checked := False;
+     cbEnRB.Checked := False;
 end;
 
 procedure TForm1.Label31DblClick(Sender: TObject);
@@ -2103,16 +2100,17 @@ procedure TForm1.MenuItemHandler(Sender: TObject);
 Begin
 
      // QRG Control Items
+     {TODO Reconfigure the preset QRG list.  Drop all WARC band pre-cans.}
      If Sender=Form1.MenuItem1 Then Form1.editManQRG.Text := '3576';
      If Sender=Form1.MenuItem2 Then Form1.editManQRG.Text := '7039';
      If Sender=Form1.MenuItem3 Then Form1.editManQRG.Text := '7076';
-     If Sender=Form1.MenuItem4 Then Form1.editManQRG.Text := '10139';
-     If Sender=Form1.MenuItem5 Then Form1.editManQRG.Text := '10147';
+     If Sender=Form1.MenuItem4 Then Form1.editManQRG.Text := '0';
+     If Sender=Form1.MenuItem5 Then Form1.editManQRG.Text := '0';
      If Sender=Form1.MenuItem6 Then Form1.editManQRG.Text := '14076';
-     If Sender=Form1.MenuItem7 Then Form1.editManQRG.Text := '18102';
-     If Sender=Form1.MenuItem8 Then Form1.editManQRG.Text := '18106';
+     If Sender=Form1.MenuItem7 Then Form1.editManQRG.Text := '0';
+     If Sender=Form1.MenuItem8 Then Form1.editManQRG.Text := '0';
      If Sender=Form1.MenuItem9 Then Form1.editManQRG.Text := '21076';
-     If Sender=Form1.MenuItem10 Then Form1.editManQRG.Text := '24917';
+     If Sender=Form1.MenuItem10 Then Form1.editManQRG.Text := '0';
      If Sender=Form1.MenuItem11 Then Form1.editManQRG.Text := '28076';
      If Sender=Form1.MenuItem12 Then Form1.editManQRG.Text := '1838';
      If Sender=Form1.MenuItem22 Then Form1.editManQRG.Text := cfgvtwo.Form6.edUserQRG1.Text;
@@ -3294,30 +3292,20 @@ begin
           //If parseCallSign.valQRG(intvar) Then rbc.glrbQRG := Form1.editManQRG.Text else rbc.glrbQRG := '0';
      //End;
      // Update form title with rb info.
-     If cfgvtwo.Form6.cbUseRB.Checked Then
+     If cbEnRB.Checked Then
      Begin
-          foo := 'JT65-HF Version ' + verHolder.verReturn() + '  [RB Enabled, ';
-          If cfgvtwo.Form6.cbNoInet.Checked Then foo := foo + ' offline mode.  ' Else foo := foo + ' online mode.  ';
-          If cfgvtwo.Form6.cbNoInet.Checked Then
-          Begin
-               foo := foo + 'QRG = ' + Form1.editManQRG.Text + ' KHz]';
-          End
-          Else
-          Begin
-               If globalData.rbLoggedIn Then
-                  foo := foo + 'Logged In.  QRG = ' + Form1.editManQRG.Text + ' KHz]'
-               Else
-                  foo := foo + 'Not Logged In.  QRG = ' + Form1.editManQRG.Text + ' KHz]';
-          End;
-          foo := foo + ' [de ' + globalData.fullcall + ']';
+          foo := 'JT65-HF Version ' + verHolder.verReturn() + '  [RB Enabled, online mode.  ';
+          If globalData.rbLoggedIn Then foo := foo + 'Logged In.  QRG = ' + Form1.editManQRG.Text + ' KHz]' Else foo := foo + 'Not Logged In.  QRG = ' + Form1.editManQRG.Text + ' KHz]';
+          foo := foo + ' [ ' + globalData.fullcall + ' QRV]';
      End
      Else
      Begin
-          foo := 'JT65-HF Version ' + verHolder.verReturn() + '  [de ' + globalData.fullcall + ']';
+          foo := 'JT65-HF Version ' + verHolder.verReturn() + '  [ ' + globalData.fullcall + ' QRV]';
      End;
      if Form1.Caption <> foo Then Form1.Caption := foo;
      // Try to login the RB if it's marked online but not logged in.
-     If (cfgvtwo.Form6.cbUseRB.Checked) And (not cfgvtwo.Form6.cbNoInet.Checked) And (not globalData.rbLoggedIn) Then cfgvtwo.glrbcLogin := True;
+     {TODO I don't think I need this anymore }
+     //If (cfgvtwo.Form6.cbUseRB.Checked) And (not cfgvtwo.Form6.cbNoInet.Checked) And (not globalData.rbLoggedIn) Then cfgvtwo.glrbcLogin := True;
 end;
 
 procedure TForm1.initializerCode();
@@ -3366,6 +3354,11 @@ Begin
      End;
      dlog.fileDebug('JT65.dll version check OK.');
      //showmessage('JT65.dll version check OK.');
+
+     // Setup internal database
+     rb.logDir := GetAppConfigDir(False);
+     {TODO REMOVE this, it's a temporary test bit }
+     rb.dbToCSV(rb.logdir + 'spots.csv');
 
      // Initialize prefix/suffix support
      encode65.pfxBuild();
@@ -3650,8 +3643,8 @@ Begin
           cfg.StoredValue['qsoColor'] := IntToStr(cfgvtwo.Form6.ComboBox3.ItemIndex);
           cfg.StoredValue['catBy'] := cfgvtwo.glcatBy;
           if cfgvtwo.Form6.editPSKRCall.Text = '' Then cfgvtwo.Form6.editPSKRCall.Text := cfgvtwo.Form6.edMyCall.Text;
-          if cfgvtwo.Form6.cbUsePSKReporter.Checked Then cfg.StoredValue['usePSKR'] := 'yes' else cfg.StoredValue['usePSKR'] := 'no';
-          if cfgvtwo.Form6.cbUseRB.Checked Then cfg.StoredValue['useRB'] := 'yes' else cfg.StoredValue['useRB'] := 'no';
+          if cbEnPSKR.Checked Then cfg.StoredValue['usePSKR'] := 'yes' else cfg.StoredValue['usePSKR'] := 'no';
+          if cbEnRB.Checked Then cfg.StoredValue['useRB'] := 'yes' else cfg.StoredValue['useRB'] := 'no';
           cfg.StoredValue['pskrCall'] := cfgvtwo.Form6.editPSKRCall.Text;
           cfg.StoredValue['pskrAntenna'] := cfgvtwo.Form6.editPSKRAntenna.Text;
           if cfgvtwo.Form6.chkNoOptFFT.Checked Then cfg.StoredValue['optFFT'] := 'off' else cfg.StoredValue['optFFT'] := 'on';
@@ -4132,8 +4125,8 @@ Begin
           cfgvtwo.glcatBy := 'commander';
      End;
      if cfg.StoredValue['pskrCall'] = '' Then cfgvtwo.Form6.editPSKRCall.Text := cfgvtwo.Form6.edMyCall.Text else cfgvtwo.Form6.editPSKRCall.Text := cfg.StoredValue['pskrCall'];
-     if cfg.StoredValue['usePSKR'] = 'yes' Then cfgvtwo.Form6.cbUsePSKReporter.Checked := True else cfgvtwo.Form6.cbUsePSKReporter.Checked := False;
-     if cfg.StoredValue['useRB'] = 'yes' Then cfgvtwo.Form6.cbUseRB.Checked := True else cfgvtwo.Form6.cbUseRB.Checked := False;
+     if cfg.StoredValue['usePSKR'] = 'yes' Then cbEnPSKR.Checked := True else cbEnPSKR.Checked := False;
+     if cfg.StoredValue['useRB'] = 'yes' Then cbEnRB.Checked := True else cbEnRB.Checked := False;
      cfgvtwo.Form6.editPSKRAntenna.Text := cfg.StoredValue['pskrAntenna'];
      if cfg.StoredValue['optFFT'] = 'on' Then cfgvtwo.Form6.chkNoOptFFT.Checked := False else cfgvtwo.Form6.chkNoOptFFT.Checked := True;
      if cfg.StoredValue['useAltPTT'] = 'yes' Then cfgvtwo.Form6.cbUseAltPTT.Checked := True else cfgvtwo.Form6.cbUseAltPTT.Checked := False;
@@ -4171,7 +4164,6 @@ Begin
      Form1.MenuItem27.Caption := cfg.StoredValue['usrMsg10'];
      tstint := 0;
      tstint := 0;
-     {TODO CONFIRM this setting is actually restoring, it seems not... }
      if TryStrToInt(cfg.StoredValue['binSpace'],tstint) Then Form1.spinDecoderBin.value := tstint else Form1.spinDecoderBin.Value := 3;
      spinDecoderBinChange(spinDecoderBin);
      if cfg.StoredValue['smooth'] = 'on' Then Form1.cbSmooth.Checked := True else Form1.cbSmooth.Checked := False;
@@ -4397,18 +4389,6 @@ Begin
           Form1.cbEnRB.Enabled := True;
           Form1.cbEnPSKR.Enabled := True;
           globalData.canTX := True;
-          if cfgvtwo.Form6.cbUsePSKReporter.Checked Then
-          Begin
-               // Initialize PSK Reporter DLL
-               //If PSKReporter.ReporterInitialize('report.pskreporter.info','4739') = 0 Then pskrstat := 1 else pskrstat := 0;
-               Form1.cbEnPSKR.Checked := True;
-          //End
-          //Else
-          //Begin
-               //Form1.cbEnPSKR.Checked := False;
-          end;
-
-          if cfgvtwo.Form6.cbUseRB.Checked then Form1.cbEnRB.Checked := True else Form1.cbEnRB.Checked := False;
      end
      else
      begin
@@ -5921,11 +5901,11 @@ Begin
      Form1.MenuItem26.Caption := cfgvtwo.Form6.edUserMsg12.Text;
      Form1.MenuItem27.Caption := cfgvtwo.Form6.edUserMsg13.Text;
      // Update PSKR Count
-     if cfgvtwo.Form6.cbUsePSKReporter.Checked Then Label19.Caption := rb.pskrCount;
-     if cfgvtwo.Form6.cbUsePSKReporter.Checked Then Form1.Label19.Visible := True else Form1.Label19.Visible := False;
+     if cbEnPSKR.Checked Then Label19.Caption := rb.pskrCount;
+     if cbEnPSKR.Checked Then Form1.Label19.Visible := True else Form1.Label19.Visible := False;
      // Update RB Count
-     If cfgvtwo.Form6.cbUseRB.Checked Then Label30.Caption := rb.rbCount;
-     if cfgvtwo.Form6.cbUseRB.Checked Then Form1.Label30.Visible := True else Form1.Label30.Visible := False;
+     If cbEnRB.Checked Then Label30.Caption := rb.rbCount;
+     if cbEnRB.Checked Then Form1.Label30.Visible := True else Form1.Label30.Visible := False;
      // Force Rig control read cycle.
      if (st.Second mod 3 = 0) And not primed Then doCAT := True;
      // Set manual entry ability.
@@ -6005,7 +5985,7 @@ Begin
      if st.Second = 55 Then
      Begin
           if odd(st.Minute) Then doRB := True else doRB := False;
-          If (cfgvtwo.Form6.cbUseRB.Checked) And (not cfgvtwo.Form6.cbNoInet.Checked) And (doRB) Then
+          If cbEnRB.Checked And doRB Then
           Begin
                rbcPing := True;
           End;

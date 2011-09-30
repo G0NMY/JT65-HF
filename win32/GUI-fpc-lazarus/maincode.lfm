@@ -1133,7 +1133,6 @@ object Form1: TForm1
     Top = 620
     Width = 82
     Caption = 'Enable RB'
-    OnChange = cbEnRBChange
     TabOrder = 35
   end
   object cbEnPSKR: TCheckBox
@@ -1142,7 +1141,6 @@ object Form1: TForm1
     Top = 644
     Width = 100
     Caption = 'Enable PSKR'
-    OnClick = cbEnPSKRClick
     TabOrder = 36
   end
   object Edit2: TEdit

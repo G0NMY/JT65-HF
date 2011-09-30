@@ -27,7 +27,7 @@ interface
 uses
   Classes, SysUtils, LResources, Forms, Controls, Graphics, Dialogs,
   ComCtrls, ExtCtrls, StdCtrls, StrUtils, globalData, CTypes, synaser,
-  EditBtn, Grids, Spin, Si570dev, catControl;
+  EditBtn, Spin, Si570dev, catControl;
 
 Const
     myWordDelims = [' ',','];
@@ -43,10 +43,7 @@ type
     btnClearLog: TButton;
     Button1: TButton;
     buttonTestPTT: TButton;
-    cbNoInet: TCheckBox;
     cbUseAltPTT: TCheckBox;
-    cbUsePSKReporter: TCheckBox;
-    cbUseRB: TCheckBox;
     editPSKRAntenna: TEdit;
     editPSKRCall: TEdit;
     editUserDefinedPort1: TEdit;
@@ -215,7 +212,6 @@ type
     Page1: TPage;
     Page2: TPage;
     Page4: TPage;
-    sgCallsHeard: TStringGrid;
     sliderAFGain: TTrackBar;
     sliderPALevel: TTrackBar;
     sliderRFGain: TTrackBar;
@@ -235,8 +231,6 @@ type
     procedure buttonTestPTTClick(Sender: TObject);
     procedure cbAudioInChange(Sender: TObject);
     procedure cbAudioOutChange(Sender: TObject);
-    procedure cbNoInetChange(Sender: TObject);
-    procedure cbUseRBChange(Sender: TObject);
     procedure cbSi570PTTChange(Sender: TObject);
     procedure checkSi570Change(Sender: TObject);
     procedure chkEnableAutoSRChange(Sender: TObject);
@@ -466,39 +460,6 @@ end;
 procedure TForm6.cbAudioOutChange(Sender: TObject);
 begin
      gld65AudioChange := True;
-end;
-
-procedure TForm6.cbNoInetChange(Sender: TObject);
-begin
-  // If checked setup rbc for cacheonly
-  If cbNoInet.Checked Then
-  Begin
-       globalData.rbCacheOnly := True;
-       If globalData.rbLoggedIn Then glrbcLogout := True;
-  End
-  Else
-  Begin
-       globalData.rbCacheOnly := False;
-       If (cbUseRB.Checked) And (not globalData.rbLoggedIn) Then glrbcLogin := True;
-  End;
-end;
-
-procedure TForm6.cbUseRBChange(Sender: TObject);
-begin
-     If cbUseRB.Checked And not cbNoInet.Checked Then
-     Begin
-          glrbcLogin := True;
-     End
-     else
-     Begin
-          glrbcLogout := True;
-     End;
-
-     // Handle case of rb having been online but now set to offline mode.
-     If (cbNoInet.Checked) And (globalData.rbLoggedIn) Then
-     Begin
-          glrbcLogout := True;
-     End;
 end;
 
 procedure TForm6.cbSi570PTTChange(Sender: TObject);

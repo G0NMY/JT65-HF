@@ -13,6 +13,7 @@ object Form6: TForm6
   Constraints.MinWidth = 800
   OnCreate = FormCreate
   LCLVersion = '0.9.30'
+  Visible = True
   object Notebook1: TNotebook
     Left = 8
     Height = 488
@@ -20,7 +21,7 @@ object Form6: TForm6
     Width = 784
     Font.Height = -13
     Font.Name = 'Arial'
-    PageIndex = 0
+    PageIndex = 3
     ParentFont = False
     TabOrder = 0
     object Page1: TPage
@@ -1058,91 +1059,35 @@ object Form6: TForm6
       ClientWidth = 776
       ClientHeight = 459
       object Label34: TLabel
-        Left = 228
+        Left = 4
         Height = 17
-        Top = 13
+        Top = 7
         Width = 534
         Caption = '[Optional] Call for PSK Reporter or RB.  Suffixed/Prefixed is allowed.  DO NOT add -1 -2 etc.'
         ParentColor = False
       end
       object Label33: TLabel
-        Left = 228
+        Left = 4
         Height = 17
-        Top = 85
+        Top = 65
         Width = 282
         Caption = '[Optional] Antenna Description for PSK Reporter.'
         ParentColor = False
       end
-      object sgCallsHeard: TStringGrid
-        Left = 4
-        Height = 448
-        Top = 5
-        Width = 210
-        AutoAdvance = aaDown
-        ColCount = 2
-        Columns = <        
-          item
-            Title.Alignment = taCenter
-            Title.Caption = 'Call'
-            Width = 128
-          end        
-          item
-            Title.Alignment = taCenter
-            Title.Caption = 'Count'
-            Width = 60
-          end>
-        FixedCols = 0
-        Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goSmoothScroll]
-        RowCount = 1
-        ScrollBars = ssVertical
-        TabOrder = 0
-        TabStop = False
-        TitleFont.Height = -13
-        TitleFont.Name = 'Arial'
-      end
       object editPSKRCall: TEdit
-        Left = 228
+        Left = 4
         Height = 24
-        Top = 37
+        Top = 31
         Width = 112
         CharCase = ecUppercase
-        TabOrder = 1
+        TabOrder = 0
       end
       object editPSKRAntenna: TEdit
-        Left = 228
+        Left = 4
         Height = 24
-        Top = 109
+        Top = 89
         Width = 470
-        TabOrder = 2
-      end
-      object cbNoInet: TCheckBox
-        Left = 228
-        Height = 20
-        Top = 325
-        Width = 178
-        Caption = 'Operate RB in Offline Mode'
-        OnChange = cbNoInetChange
-        TabOrder = 3
-        Visible = False
-      end
-      object cbUsePSKReporter: TCheckBox
-        Left = 228
-        Height = 20
-        Top = 261
-        Width = 219
-        Caption = 'Spot Receptions via PSK Reporter'
-        TabOrder = 4
-        Visible = False
-      end
-      object cbUseRB: TCheckBox
-        Left = 228
-        Height = 20
-        Top = 293
-        Width = 208
-        Caption = 'Spot Receptions via RB Network'
-        OnChange = cbUseRBChange
-        TabOrder = 5
-        Visible = False
+        TabOrder = 1
       end
     end
     object Page5: TPage
@@ -1213,8 +1158,8 @@ object Form6: TForm6
         Left = 3
         Height = 17
         Top = 133
-        Width = 84
-        Caption = '5 - 10139 KHz'
+        Width = 56
+        Caption = '5 - 0 KHz'
         Font.Height = -13
         Font.Name = 'Arial'
         Font.Style = [fsBold]
@@ -1225,8 +1170,8 @@ object Form6: TForm6
         Left = 3
         Height = 17
         Top = 157
-        Width = 84
-        Caption = '6 - 10147 KHz'
+        Width = 56
+        Caption = '6 - 0 KHz'
         Font.Height = -13
         Font.Name = 'Arial'
         Font.Style = [fsBold]
@@ -1249,8 +1194,8 @@ object Form6: TForm6
         Left = 3
         Height = 17
         Top = 205
-        Width = 84
-        Caption = '8 - 18102 KHz'
+        Width = 56
+        Caption = '8 - 0 KHz'
         Font.Height = -13
         Font.Name = 'Arial'
         Font.Style = [fsBold]
@@ -1261,8 +1206,8 @@ object Form6: TForm6
         Left = 3
         Height = 17
         Top = 229
-        Width = 84
-        Caption = '9 - 18106 KHz'
+        Width = 56
+        Caption = '9 - 0 KHz'
         Font.Height = -13
         Font.Name = 'Arial'
         Font.Style = [fsBold]
@@ -1285,8 +1230,8 @@ object Form6: TForm6
         Left = 3
         Height = 17
         Top = 277
-        Width = 90
-        Caption = '11 - 24917 KHz'
+        Width = 62
+        Caption = '11 - 0 KHz'
         Font.Height = -13
         Font.Name = 'Arial'
         Font.Style = [fsBold]

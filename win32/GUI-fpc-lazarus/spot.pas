@@ -462,9 +462,9 @@ implementation
        f2 : SpotIDX;
     begin
          // Creates DB and its index files
-         if not fileExists(prLogDir + '\jt65hf.db') then
+         if not fileExists(prLogDir + 'jt65hf.db') then
          begin
-              fn := prLogDir + '\jt65hf.db';
+              fn := prLogDir + 'jt65hf.db';
               AssignFile(f1, fn);
               Rewrite(f1);
               seek(f1,0);
@@ -501,11 +501,11 @@ implementation
               write(f1,sp);
               CloseFile(f1);
          end;
-         if not fileExists(prLogDir + '\jt65hf.id') then
+         if not fileExists(prLogDir + 'jt65hf.id') then
          begin
               id.id := 0;
               dbCallsign('KC4NGO',id.callsign);
-              fn := prLogDir + '\jt65hf.id';
+              fn := prLogDir + 'jt65hf.id';
               AssignFile(f2, fn);
               Rewrite(f2);
               seek(f2,0);
@@ -541,16 +541,16 @@ implementation
          if go then prDBLock := True;
          if go then
          begin
-              // Lock achieve, export records.
-              if fileExists(prLogDir + '\jt65hf.db') then go := true else go := false;
-              if not (trimleft(trimright(fname)) = '') then foo := fname else foo := prLogDir + '\jt65hfdb.csv';
+              // Lock achieved, export records.
+              if fileExists(prLogDir + 'jt65hf.db') then go := true else go := false;
+              if not (trimleft(trimright(fname)) = '') then foo := fname else foo := prLogDir + 'jt65hfdb.csv';
               if go then
               begin
                    AssignFile(fn, foo);
                    Rewrite(fn);
                    WriteLn(fn,'"ID","Callsign","Grid1","Grid2","Grid3","Grid4","Count","YYYY-MM-DD","HH:MM","YYYY-MM-DD","HH:MM","B160","B80","B40","B30","B20","B17","B15","B12","B10","B6","B2","WB160","WB80","WB40","WB30","WB20","WB17","WB15","WB12","WB10","WB6","WB2"');
                    // Loop the DB and export
-                   AssignFile(f1, prLogDir + '\jt65hf.db');
+                   AssignFile(f1, prLogDir + 'jt65hf.db');
                    Reset(f1);
                    seek(f1,1);  // Skipping record 0 the initial 'dummy' record
                    i := 1;
@@ -620,6 +620,7 @@ implementation
                         if sp.b20 then csv := csv + '"T",' else csv := csv + '"F",';
                         if sp.b17 then csv := csv + '"T",' else csv := csv + '"F",';
                         if sp.b15 then csv := csv + '"T",' else csv := csv + '"F",';
+                        if sp.b12 then csv := csv + '"T",' else csv := csv + '"F",';
                         if sp.b10 then csv := csv + '"T",' else csv := csv + '"F",';
                         if sp.b6 then csv := csv + '"T",' else csv := csv + '"F",';
                         if sp.b2 then csv := csv + '"T",' else csv := csv + '"F",';
@@ -630,6 +631,7 @@ implementation
                         if sp.wb20 then csv := csv + '"T",' else csv := csv + '"F",';
                         if sp.wb17 then csv := csv + '"T",' else csv := csv + '"F",';
                         if sp.wb15 then csv := csv + '"T",' else csv := csv + '"F",';
+                        if sp.wb12 then csv := csv + '"T",' else csv := csv + '"F",';
                         if sp.wb10 then csv := csv + '"T",' else csv := csv + '"F",';
                         if sp.wb6 then csv := csv + '"T",' else csv := csv + '"F",';
                         if sp.wb2 then csv := csv + '"T"' else csv := csv + '"F"';
@@ -877,7 +879,7 @@ implementation
                         end;
                    end;
                    // Record updated.  Lets try to write it back.
-                   fn := prLogDir + '\jt65hf.db';
+                   fn := prLogDir + 'jt65hf.db';
                    AssignFile(f1, fn);
                    Reset(f1);
                    seek(f1,idx);
@@ -961,7 +963,7 @@ implementation
                    // Record ready.  Lets try to write it.
                    // Get to last record
                    idx := 0;
-                   fn := prLogDir + '\jt65hf.db';
+                   fn := prLogDir + 'jt65hf.db';
                    AssignFile(f1, fn);
                    Reset(f1);
                    while not eof(f1) do
@@ -975,7 +977,7 @@ implementation
                    // Update the index file with callsign/idx
                    id.id := idx;
                    dbCallsign(callsign,id.callsign);
-                   fn := prLogDir + '\jt65hf.id';
+                   fn := prLogDir + 'jt65hf.id';
                    AssignFile(f2, fn);
                    Reset(f2);
                    idy := 0;
@@ -1012,7 +1014,7 @@ implementation
          // First attempt to find the callsign in the idx
          idx := 0;
          foo := '';
-         fn := prLogDir + '\jt65hf.id';
+         fn := prLogDir + 'jt65hf.id';
          AssignFile(fidx, fn);
          Reset(fidx);
          seek(fidx,idx);
@@ -1081,7 +1083,7 @@ implementation
          sp.wb6   := False;
          sp.b2    := False;
          sp.wb2   := False;
-         fn := prLogDir + '\jt65hf.db';
+         fn := prLogDir + 'jt65hf.db';
          AssignFile(f1, fn);
          Reset(f1);
          seek(f1,rec);
@@ -1461,7 +1463,7 @@ implementation
          end;
          if prUseDBF then
          begin
-              if not fileExists(prLogDir + '\jt65hf.db') then createDB; // This sets up the tracking DB
+              if not fileExists(prLogDir + 'jt65hf.db') then createDB; // This sets up the tracking DB
               for i := 0 to 8191 do
               begin
                    if not prSpots[i].dbfsent then
