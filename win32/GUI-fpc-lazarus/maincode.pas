@@ -1255,6 +1255,10 @@ begin
      Form1.spinDecoderCF.Value := 0;
      Form1.spinDecoderBW.Value := 3;
      Form1.spinDecoderBin.Value := 3;
+     edit2.Text := '100';
+     d65.glDFTolerance := 100;
+     edit3.Text := '100';
+     d65.glbinspace := 100;
      Form1.rbGenMsg.Checked := True;
      Form1.chkAutoTxDF.Checked := True;
      Form1.chkEnTX.Checked := False;
@@ -2095,7 +2099,7 @@ procedure TForm1.MenuItemHandler(Sender: TObject);
 Begin
 
      // QRG Control Items
-     {TODO Reconfigure the preset QRG list.  Drop all WARC band pre-cans.}
+     {TODO Confirm these are being saved and restored properly.  Both QRG and messages}
      If Sender=Form1.MenuItem1a  Then Form1.editManQRG.Text := '1838';
      If Sender=Form1.MenuItem2a  Then Form1.editManQRG.Text := '3576';
      If Sender=Form1.MenuItem3a  Then Form1.editManQRG.Text := '7039';
@@ -2223,14 +2227,15 @@ Var
    word1, word2, word3 : String;
    txhz, srxp, ss, foo : String;
    wcount, irxp, itxp  : Integer;
-   itxhz, idx, i       : Integer;
+   itxhz, idx          : Integer;
    resolved, doQSO     : Boolean;
    entTXCF, entRXCF    : Integer;
    isiglevel           : Integer;
    localslash, cont    : Boolean;
    remoteslash         : Boolean;
 begin
-{ TODO : FIX double click message generation with slashed callsign.  It IS NOT working (again) }
+     {TODO : FIX double click message generation with slashed callsign.  It IS NOT working (again) }
+     {TODO : Break the message generators out to two functions so I can use with QSO by button as well }
      if itemsIn Then
      Begin
           If Form1.chkMultiDecode.Checked Then
@@ -3943,9 +3948,6 @@ Begin
      if TryStrToInt(cfg.StoredValue['txCF'],tstint) Then Form1.spinTXCF.Value := tstint else Form1.spinTXCF.Value := 0;
      spinTXCFChange(spinTXCF);
      tstint := 0;
-     if TryStrToInt(cfg.StoredValue['singlerange'],tstint) Then Form1.spinDecoderBW.value := tstint else Form1.spinDecoderBW.Value := 3;
-     spinDecoderBWChange(spinDecoderBW);
-     tstint := 0;
      if TryStrToInt(cfg.StoredValue['soundin'],tstint) Then cfgvtwo.Form6.cbAudioIn.ItemIndex := tstint else cfgvtwo.Form6.cbAudioIn.ItemIndex := 0;
      tstint := 0;
      if TryStrToInt(cfg.StoredValue['soundout'],tstint) Then cfgvtwo.Form6.cbAudioOut.ItemIndex := tstint else cfgvtwo.Form6.cbAudioOut.ItemIndex := 0;
@@ -4322,10 +4324,30 @@ Begin
      Form1.MenuItem19b.Caption := cfg.StoredValue['usrMsg16'];
      Form1.MenuItem20b.Caption := cfg.StoredValue['usrMsg17'];
 
-     tstint := 0;
+     // Fixed, restore defaults was the problem.  :)
      tstint := 0;
      if TryStrToInt(cfg.StoredValue['binSpace'],tstint) Then Form1.spinDecoderBin.value := tstint else Form1.spinDecoderBin.Value := 3;
-     spinDecoderBinChange(spinDecoderBin);
+     if spinDecoderBin.Value = 1 Then edit3.Text := '20';
+     if spinDecoderBin.Value = 2 Then edit3.Text := '50';
+     if spinDecoderBin.Value = 3 Then edit3.Text := '100';
+     if spinDecoderBin.Value = 4 Then edit3.Text := '200';
+     if spinDecoderBin.Value = 1 Then d65.glbinspace := 20;
+     if spinDecoderBin.Value = 2 Then d65.glbinspace := 50;
+     if spinDecoderBin.Value = 3 Then d65.glbinspace := 100;
+     if spinDecoderBin.Value = 4 Then d65.glbinspace := 200;
+
+     tstint := 0;
+     if TryStrToInt(cfg.StoredValue['singlerange'],tstint) Then Form1.spinDecoderBW.value := tstint else Form1.spinDecoderBW.Value := 3;
+     if spinDecoderBW.Value = 1 Then edit2.Text := '20';
+     if spinDecoderBW.Value = 2 Then edit2.Text := '50';
+     if spinDecoderBW.Value = 3 Then edit2.Text := '100';
+     if spinDecoderBW.Value = 4 Then edit2.Text := '200';
+
+     if spinDecoderBW.Value = 1 Then d65.glDFTolerance := 20;
+     if spinDecoderBW.Value = 2 Then d65.glDFTolerance := 50;
+     if spinDecoderBW.Value = 3 Then d65.glDFTolerance := 100;
+     if spinDecoderBW.Value = 4 Then d65.glDFTolerance := 200;
+
      if cfg.StoredValue['smooth'] = 'on' Then Form1.cbSmooth.Checked := True else Form1.cbSmooth.Checked := False;
      if Form1.cbSmooth.Checked Then spectrum.specSmooth := True else spectrum.specSmooth := False;
      if cfg.StoredValue['restoreMulti'] = 'on' Then cfgvtwo.Form6.cbRestoreMulti.Checked := True else cfgvtwo.Form6.cbRestoreMulti.Checked := False;
@@ -4777,12 +4799,12 @@ Begin
      // validate then validate the prefix or suffix.
 
      // First of all the string passed in must contain a / character.
-     If (AnsiContainsText(csign,'/') Then cont := true else cont := false;
+     If (AnsiContainsText(csign,'/')) Then cont := true else cont := false;
      If cont then
      begin
           // Break word2 into subword1 and subword2
-          subword1  := ExtractWord(1,csign.['/'];
-          subword2  := ExtractWord(2,csign,['/'];
+          subword1  := ExtractWord(1,csign,['/']);
+          subword2  := ExtractWord(2,csign,['/']);
           cont      := False;
           havepfx  := False;
           havesfx  := False;
