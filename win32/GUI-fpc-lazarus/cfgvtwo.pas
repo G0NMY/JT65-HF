@@ -27,7 +27,7 @@ interface
 uses
   Classes, SysUtils, LResources, Forms, Controls, Graphics, Dialogs,
   ComCtrls, ExtCtrls, StdCtrls, StrUtils, globalData, CTypes, synaser,
-  EditBtn, Spin, Si570dev, catControl;
+  EditBtn, Spin, Si570dev, catControl, valobject;
 
 Const
     myWordDelims = [' ',','];
@@ -47,9 +47,32 @@ type
     editPSKRAntenna: TEdit;
     editPSKRCall: TEdit;
     editUserDefinedPort1: TEdit;
+    edUserMsg14 : TEdit ;
+    edUserMsg15 : TEdit ;
+    edUserMsg16 : TEdit ;
+    edUserMsg17 : TEdit ;
+    edUserMsg18 : TEdit ;
+    edUserMsg19 : TEdit ;
+    edUserMsg20 : TEdit ;
+    edUserQRG10 : TEdit ;
+    edUserQRG11 : TEdit ;
+    edUserQRG12 : TEdit ;
+    edUserQRG13 : TEdit ;
+    edUserQRG5 : TEdit ;
+    edUserQRG6 : TEdit ;
+    edUserQRG7 : TEdit ;
+    edUserQRG8 : TEdit ;
+    edUserQRG9 : TEdit ;
     hrdAddress: TEdit;
     hrdPort: TEdit;
     Label10: TLabel;
+    Label126 : TLabel ;
+    Label127 : TLabel ;
+    Label128 : TLabel ;
+    Label129 : TLabel ;
+    Label130 : TLabel ;
+    Label131 : TLabel ;
+    Label132 : TLabel ;
     Label3: TLabel;
     Label33: TLabel;
     Label34: TLabel;
@@ -61,6 +84,10 @@ type
     Label71: TLabel;
     Label72: TLabel;
     Label73: TLabel;
+    Label74 : TLabel ;
+    Label75 : TLabel ;
+    Label76 : TLabel ;
+    Label77 : TLabel ;
     Label9: TLabel;
     testHRDPTT: TButton;
     setHRDQRG: TButton;
@@ -144,10 +171,8 @@ type
     Label35: TLabel;
     Label36: TLabel;
     Label37: TLabel;
-    Label38: TLabel;
     Label39: TLabel;
     Label4: TLabel;
-    Label40: TLabel;
     Label41: TLabel;
     Label42: TLabel;
     Label43: TLabel;
@@ -278,6 +303,7 @@ var
   glrbcLogout      : Boolean;
   gld65AudioChange : Boolean;
   glcallChange     : Boolean;
+  cfval            : valobject.TValidator; // Class variable for validator object.  Needed for QRG conversions.
 implementation
 
 { TForm6 }
@@ -593,92 +619,34 @@ end;
 
 procedure TForm6.edUserMsgChange(Sender: TObject);
 var
-   vmsg   : Boolean;
-   i, j   : Integer;
-   foo, k : String;
+   foo : String;
+   i   : Integer;
 begin
-     vmsg := True;
-     // Validate user message definition as containing only the allowed
-     // JT65 character set which is;
-     // 0123456789
-     // ABCDEFGHIJKLMNOPQRSTUVWXYZ
-     //  +-./?
-     If Sender=Form6.edUserMsg4 Then
-     Begin
-          j := Length(edUserMsg4.Text);
-          foo := edUserMsg4.Text;
-          k := '4';
-     End;
-     If Sender=Form6.edUserMsg5 Then
-     Begin
-          j := Length(edUserMsg5.Text);
-          foo := edUserMsg5.Text;
-          k := '5';
-     End;
-     If Sender=Form6.edUserMsg6 Then
-     Begin
-          j := Length(edUserMsg6.Text);
-          foo := edUserMsg6.Text;
-          k := '6';
-     End;
-     If Sender=Form6.edUserMsg7 Then
-     Begin
-          j := Length(edUserMsg7.Text);
-          foo := edUserMsg7.Text;
-          k := '7';
-     End;
-     If Sender=Form6.edUserMsg8 Then
-     Begin
-          j := Length(edUserMsg8.Text);
-          foo := edUserMsg8.Text;
-          k := '8';
-     End;
-     If Sender=Form6.edUserMsg9 Then
-     Begin
-          j := Length(edUserMsg9.Text);
-          foo := edUserMsg9.Text;
-          k := '9';
-     End;
-     If Sender=Form6.edUserMsg10 Then
-     Begin
-          j := Length(edUserMsg10.Text);
-          foo := edUserMsg10.Text;
-          k := '10';
-     End;
-     If Sender=Form6.edUserMsg11 Then
-     Begin
-          j := Length(edUserMsg11.Text);
-          foo := edUserMsg11.Text;
-          k := '11';
-     End;
-     If Sender=Form6.edUserMsg12 Then
-     Begin
-          j := Length(edUserMsg12.Text);
-          foo := edUserMsg12.Text;
-          k := '12';
-     End;
-     If Sender=Form6.edUserMsg13 Then
-     Begin
-          j := Length(edUserMsg13.Text);
-          foo := edUserMsg13.Text;
-          k := '13';
-     End;
+     foo := TEdit(Sender).Text;
+     // Replace any bad characters with space
+     for i := 1 to Length(foo) do if not cfval.asciiValidate(Char(foo[i]),'free') then foo[i] := ' ';
+     // Strip leading RRR, RO or 73
+     if (Length(foo)>2) And (foo[1..3] = 'RRR') then
+     begin
+          foo[1] := ' ';
+          foo[2] := ' ';
+          foo[3] := ' ';
+          foo := TrimLeft(TrimRight(Upcase(foo)));
+     end;
+     if (Length(foo)>1) And (foo[1..2] = 'RO')  then
+     begin
+          foo[1] := ' ';
+          foo[2] := ' ';
+          foo := TrimLeft(TrimRight(Upcase(foo)));
+     end;
+     if (Length(foo)>1) And (foo[1..2] = '73')  then
+     begin
+          foo[1] := ' ';
+          foo[2] := ' ';
+          foo := TrimLeft(TrimRight(Upcase(foo)));
+     end;
+     TEdit(Sender).Text := foo;
 
-     For i := 1 To j do
-     Begin
-          case foo[i] of 'A'..'Z','0'..'9',' ','+','-','.','/','?': vmsg := True;
-             else vmsg := False;
-          end;
-     End;
-     if vmsg Then
-        Begin Label40.Caption := 'Message valid';
-        Label40.Visible := False;
-     end
-     else
-     Begin
-          Label40.Caption := 'Message ' + k + ' not valid';
-          Label40.Visible := True;
-     End;
 end;
 
 procedure TForm6.FormCreate(Sender: TObject);
@@ -976,5 +944,6 @@ initialization
   glsi57QRGi      := 0;
   glsi57QRGs      := 0;
   glsi57Set       := False;
+  cfval           := valobject.TValidator.create(); // This creates a access point to validation routines needed for new RB code
 end.
 

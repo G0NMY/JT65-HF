@@ -13,7 +13,6 @@ object Form6: TForm6
   Constraints.MinWidth = 800
   OnCreate = FormCreate
   LCLVersion = '0.9.30'
-  Visible = True
   object Notebook1: TNotebook
     Left = 8
     Height = 488
@@ -1157,9 +1156,9 @@ object Form6: TForm6
       object Label41: TLabel
         Left = 3
         Height = 17
-        Top = 133
-        Width = 56
-        Caption = '5 - 0 KHz'
+        Top = 275
+        Width = 23
+        Caption = '10 -'
         Font.Height = -13
         Font.Name = 'Arial'
         Font.Style = [fsBold]
@@ -1167,11 +1166,11 @@ object Form6: TForm6
         ParentFont = False
       end
       object Label42: TLabel
-        Left = 3
+        Left = 4
         Height = 17
-        Top = 157
-        Width = 56
-        Caption = '6 - 0 KHz'
+        Top = 307
+        Width = 22
+        Caption = '11 -'
         Font.Height = -13
         Font.Name = 'Arial'
         Font.Style = [fsBold]
@@ -1179,11 +1178,11 @@ object Form6: TForm6
         ParentFont = False
       end
       object Label43: TLabel
-        Left = 3
+        Left = 4
         Height = 17
-        Top = 181
+        Top = 135
         Width = 84
-        Caption = '7 - 14076 KHz'
+        Caption = '5 - 14076 KHz'
         Font.Height = -13
         Font.Name = 'Arial'
         Font.Style = [fsBold]
@@ -1193,9 +1192,9 @@ object Form6: TForm6
       object Label44: TLabel
         Left = 3
         Height = 17
-        Top = 205
-        Width = 56
-        Caption = '8 - 0 KHz'
+        Top = 209
+        Width = 16
+        Caption = '8 -'
         Font.Height = -13
         Font.Name = 'Arial'
         Font.Style = [fsBold]
@@ -1205,9 +1204,9 @@ object Form6: TForm6
       object Label45: TLabel
         Left = 3
         Height = 17
-        Top = 229
-        Width = 56
-        Caption = '9 - 0 KHz'
+        Top = 240
+        Width = 16
+        Caption = '9 -'
         Font.Height = -13
         Font.Name = 'Arial'
         Font.Style = [fsBold]
@@ -1217,9 +1216,9 @@ object Form6: TForm6
       object Label46: TLabel
         Left = 3
         Height = 17
-        Top = 253
-        Width = 91
-        Caption = '10 - 21076 KHz'
+        Top = 159
+        Width = 84
+        Caption = '6 - 21076 KHz'
         Font.Height = -13
         Font.Name = 'Arial'
         Font.Style = [fsBold]
@@ -1227,11 +1226,11 @@ object Form6: TForm6
         ParentFont = False
       end
       object Label47: TLabel
-        Left = 3
+        Left = 132
         Height = 17
-        Top = 277
-        Width = 62
-        Caption = '11 - 0 KHz'
+        Top = 37
+        Width = 23
+        Caption = '12 -'
         Font.Height = -13
         Font.Name = 'Arial'
         Font.Style = [fsBold]
@@ -1241,9 +1240,9 @@ object Form6: TForm6
       object Label48: TLabel
         Left = 3
         Height = 17
-        Top = 301
-        Width = 91
-        Caption = '12 - 28076 KHz'
+        Top = 181
+        Width = 84
+        Caption = '7 - 28076 KHz'
         Font.Height = -13
         Font.Name = 'Arial'
         Font.Style = [fsBold]
@@ -1251,9 +1250,9 @@ object Form6: TForm6
         ParentFont = False
       end
       object Label49: TLabel
-        Left = 3
+        Left = 132
         Height = 17
-        Top = 327
+        Top = 72
         Width = 23
         Caption = '13 -'
         Font.Height = -13
@@ -1263,9 +1262,9 @@ object Form6: TForm6
         ParentFont = False
       end
       object Label50: TLabel
-        Left = 3
+        Left = 132
         Height = 17
-        Top = 359
+        Top = 106
         Width = 23
         Caption = '14 -'
         Font.Height = -13
@@ -1275,9 +1274,9 @@ object Form6: TForm6
         ParentFont = False
       end
       object Label51: TLabel
-        Left = 3
+        Left = 132
         Height = 17
-        Top = 391
+        Top = 142
         Width = 23
         Caption = '15 -'
         Font.Height = -13
@@ -1287,9 +1286,9 @@ object Form6: TForm6
         ParentFont = False
       end
       object Label52: TLabel
-        Left = 3
+        Left = 132
         Height = 17
-        Top = 424
+        Top = 176
         Width = 23
         Caption = '16 -'
         Font.Height = -13
@@ -1385,7 +1384,7 @@ object Form6: TForm6
       object Label62: TLabel
         Left = 365
         Height = 17
-        Top = 206
+        Top = 209
         Width = 16
         Caption = '7 -'
         Font.Height = -13
@@ -1467,48 +1466,23 @@ object Form6: TForm6
         ParentFont = False
       end
       object Label20: TLabel
-        Left = 543
-        Height = 145
-        Top = 37
-        Width = 222
-        Caption = 'Message definitions is used for'#13#10'entering free text messages.  You'#13#10'may define up to ten of these'#13#10'each limited to 13 characters and'#13#10'may only contain the 43 characters'#13#10'of the JT65 character set, which is;'#13#10#13#10'0123456789ABCDEFGHIJKLMNO'#13#10'PQRSTUVWXYZ +-./?'
+        Left = 550
+        Height = 97
+        Top = 247
+        Width = 213
+        Caption = 'JT65 Character Set.  If a message'#13#10'contains a character not in this'#13#10'list you can not TX message.'#13#10#13#10'0123456789ABCDEFGHIJKLMNO'#13#10'PQRSTUVWXYZ +-./?'
         Font.Height = -13
         Font.Name = 'Arial'
         Font.Style = [fsBold]
         ParentColor = False
         ParentFont = False
-      end
-      object Label38: TLabel
-        Left = 543
-        Height = 129
-        Top = 191
-        Width = 209
-        Caption = 'Right clicking in the Free Text'#13#10'entry box in the main program'#13#10'screen will present a dialog'#13#10'of these message definitions.'#13#10'Note.  The first 3 fixed entries'#13#10'send the JT65 shorthand'#13#10'sequences and should only be'#13#10'used when absolutely necessary.'
-        Font.Height = -13
-        Font.Name = 'Arial'
-        Font.Style = [fsBold]
-        ParentColor = False
-        ParentFont = False
-      end
-      object Label40: TLabel
-        Left = 208
-        Height = 17
-        Top = 437
-        Width = 105
-        Caption = 'Message validator'
-        Font.Color = clRed
-        Font.Height = -13
-        Font.Name = 'Arial'
-        ParentColor = False
-        ParentFont = False
-        Visible = False
       end
       object Label71: TLabel
-        Left = 543
-        Height = 97
-        Top = 334
+        Left = 550
+        Height = 81
+        Top = 361
         Width = 214
-        Caption = 'Do not begin a free text message'#13#10'with RRR, RO or 73 as it will be'#13#10'sent as shorthand even if you add'#13#10'text to the first ''word'' (RRR, RO,'#13#10'73).  This will be corrected in'#13#10'future versions.'
+        Caption = 'Do not begin a free text message'#13#10'with RRR, RO or 73 as it will be'#13#10'sent as shorthand even if you add'#13#10'text to the first ''word'' (RRR, RO,'#13#10'73).'
         Font.Height = -13
         Font.Name = 'Arial'
         Font.Style = [fsBold]
@@ -1516,11 +1490,11 @@ object Form6: TForm6
         ParentFont = False
       end
       object Label72: TLabel
-        Left = 107
-        Height = 113
-        Top = 37
-        Width = 242
-        Caption = 'Commonly used JT65 dial QRG values'#13#10'have been predefined for the first 12'#13#10'slots.  You may define 4 custom'#13#10'values.  These will be usable when'#13#10'setting QRG from the main program'#13#10'screen by right clicking on the QRG'#13#10'entry box.'
+        Left = 4
+        Height = 97
+        Top = 334
+        Width = 254
+        Caption = 'Commonly used JT65 dial QRG values'#13#10'have been predefined.You may define'#13#10'up to 13 custom values.  These will be'#13#10'usable when setting QRG from the main'#13#10'program screen by right clicking on the'#13#10'QRG entry box.'
         Font.Height = -13
         Font.Name = 'Arial'
         Font.Style = [fsBold]
@@ -1528,33 +1502,33 @@ object Form6: TForm6
         ParentFont = False
       end
       object edUserQRG1: TEdit
-        Left = 31
+        Left = 32
         Height = 24
-        Top = 325
+        Top = 207
         Width = 64
         TabOrder = 0
         Text = '0'
       end
       object edUserQRG2: TEdit
-        Left = 31
+        Left = 32
         Height = 24
-        Top = 357
+        Top = 239
         Width = 64
         TabOrder = 1
         Text = '0'
       end
       object edUserQRG3: TEdit
-        Left = 31
+        Left = 32
         Height = 24
-        Top = 388
+        Top = 272
         Width = 64
         TabOrder = 2
         Text = '0'
       end
       object edUserQRG4: TEdit
-        Left = 31
+        Left = 32
         Height = 24
-        Top = 421
+        Top = 303
         Width = 64
         TabOrder = 3
         Text = '0'
@@ -1658,6 +1632,280 @@ object Form6: TForm6
         MaxLength = 13
         OnChange = edUserMsgChange
         TabOrder = 13
+      end
+      object edUserQRG5: TEdit
+        Left = 171
+        Height = 24
+        Top = 34
+        Width = 64
+        TabOrder = 14
+        Text = '0'
+      end
+      object edUserQRG6: TEdit
+        Left = 171
+        Height = 24
+        Top = 69
+        Width = 64
+        TabOrder = 15
+        Text = '0'
+      end
+      object edUserQRG7: TEdit
+        Left = 171
+        Height = 24
+        Top = 103
+        Width = 64
+        TabOrder = 16
+        Text = '0'
+      end
+      object edUserQRG8: TEdit
+        Left = 171
+        Height = 24
+        Top = 139
+        Width = 64
+        TabOrder = 17
+        Text = '0'
+      end
+      object edUserQRG9: TEdit
+        Left = 171
+        Height = 24
+        Top = 173
+        Width = 64
+        TabOrder = 18
+        Text = '0'
+      end
+      object Label74: TLabel
+        Left = 132
+        Height = 17
+        Top = 210
+        Width = 23
+        Caption = '17 -'
+        Font.Height = -13
+        Font.Name = 'Arial'
+        Font.Style = [fsBold]
+        ParentColor = False
+        ParentFont = False
+      end
+      object edUserQRG10: TEdit
+        Left = 171
+        Height = 24
+        Top = 207
+        Width = 64
+        TabOrder = 19
+        Text = '0'
+      end
+      object Label75: TLabel
+        Left = 132
+        Height = 17
+        Top = 242
+        Width = 23
+        Caption = '18 -'
+        Font.Height = -13
+        Font.Name = 'Arial'
+        Font.Style = [fsBold]
+        ParentColor = False
+        ParentFont = False
+      end
+      object edUserQRG11: TEdit
+        Left = 171
+        Height = 24
+        Top = 239
+        Width = 64
+        TabOrder = 20
+        Text = '0'
+      end
+      object Label76: TLabel
+        Left = 132
+        Height = 17
+        Top = 275
+        Width = 23
+        Caption = '19 -'
+        Font.Height = -13
+        Font.Name = 'Arial'
+        Font.Style = [fsBold]
+        ParentColor = False
+        ParentFont = False
+      end
+      object edUserQRG12: TEdit
+        Left = 171
+        Height = 24
+        Top = 272
+        Width = 64
+        TabOrder = 21
+        Text = '0'
+      end
+      object Label77: TLabel
+        Left = 132
+        Height = 17
+        Top = 306
+        Width = 23
+        Caption = '20 -'
+        Font.Height = -13
+        Font.Name = 'Arial'
+        Font.Style = [fsBold]
+        ParentColor = False
+        ParentFont = False
+      end
+      object edUserQRG13: TEdit
+        Left = 171
+        Height = 24
+        Top = 303
+        Width = 64
+        TabOrder = 22
+        Text = '0'
+      end
+      object edUserMsg14: TEdit
+        Left = 591
+        Height = 24
+        Top = 13
+        Width = 144
+        CharCase = ecUppercase
+        MaxLength = 13
+        OnChange = edUserMsgChange
+        TabOrder = 23
+      end
+      object Label126: TLabel
+        Left = 564
+        Height = 17
+        Top = 15
+        Width = 23
+        Caption = '14 -'
+        Font.Height = -13
+        Font.Name = 'Arial'
+        Font.Style = [fsBold]
+        ParentColor = False
+        ParentFont = False
+      end
+      object edUserMsg15: TEdit
+        Left = 591
+        Height = 24
+        Top = 47
+        Width = 144
+        CharCase = ecUppercase
+        MaxLength = 13
+        OnChange = edUserMsgChange
+        TabOrder = 24
+      end
+      object Label127: TLabel
+        Left = 564
+        Height = 17
+        Top = 49
+        Width = 23
+        Caption = '15 -'
+        Font.Height = -13
+        Font.Name = 'Arial'
+        Font.Style = [fsBold]
+        ParentColor = False
+        ParentFont = False
+      end
+      object edUserMsg16: TEdit
+        Left = 591
+        Height = 24
+        Top = 79
+        Width = 144
+        CharCase = ecUppercase
+        MaxLength = 13
+        OnChange = edUserMsgChange
+        TabOrder = 25
+      end
+      object Label128: TLabel
+        Left = 564
+        Height = 17
+        Top = 81
+        Width = 23
+        Caption = '16 -'
+        Font.Height = -13
+        Font.Name = 'Arial'
+        Font.Style = [fsBold]
+        ParentColor = False
+        ParentFont = False
+      end
+      object edUserMsg17: TEdit
+        Left = 591
+        Height = 24
+        Top = 111
+        Width = 144
+        CharCase = ecUppercase
+        MaxLength = 13
+        OnChange = edUserMsgChange
+        TabOrder = 26
+      end
+      object Label129: TLabel
+        Left = 564
+        Height = 17
+        Top = 113
+        Width = 23
+        Caption = '17 -'
+        Font.Height = -13
+        Font.Name = 'Arial'
+        Font.Style = [fsBold]
+        ParentColor = False
+        ParentFont = False
+      end
+      object edUserMsg18: TEdit
+        Left = 591
+        Height = 24
+        Top = 143
+        Width = 144
+        CharCase = ecUppercase
+        MaxLength = 13
+        OnChange = edUserMsgChange
+        TabOrder = 27
+      end
+      object Label130: TLabel
+        Left = 564
+        Height = 17
+        Top = 145
+        Width = 23
+        Caption = '18 -'
+        Font.Height = -13
+        Font.Name = 'Arial'
+        Font.Style = [fsBold]
+        ParentColor = False
+        ParentFont = False
+      end
+      object edUserMsg19: TEdit
+        Left = 591
+        Height = 24
+        Top = 176
+        Width = 144
+        CharCase = ecUppercase
+        MaxLength = 13
+        OnChange = edUserMsgChange
+        TabOrder = 28
+      end
+      object Label131: TLabel
+        Left = 564
+        Height = 17
+        Top = 178
+        Width = 23
+        Caption = '19 -'
+        Font.Height = -13
+        Font.Name = 'Arial'
+        Font.Style = [fsBold]
+        ParentColor = False
+        ParentFont = False
+      end
+      object edUserMsg20: TEdit
+        Left = 591
+        Height = 24
+        Top = 210
+        Width = 144
+        CharCase = ecUppercase
+        MaxLength = 13
+        OnChange = edUserMsgChange
+        TabOrder = 29
+      end
+      object Label132: TLabel
+        Left = 564
+        Height = 17
+        Top = 212
+        Width = 23
+        Caption = '20 -'
+        Font.Height = -13
+        Font.Name = 'Arial'
+        Font.Style = [fsBold]
+        ParentColor = False
+        ParentFont = False
       end
     end
     object Page3: TPage

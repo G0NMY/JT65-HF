@@ -1605,6 +1605,63 @@ object Form1: TForm1
       item
         Name = 'hrdPort'
         Value = '7809'
+      end    
+      item
+        Name = 'UsrMsg11'
+      end    
+      item
+        Name = 'UsrMsg12'
+      end    
+      item
+        Name = 'UsrMsg13'
+      end    
+      item
+        Name = 'UsrMsg14'
+      end    
+      item
+        Name = 'UsrMsg15'
+      end    
+      item
+        Name = 'UsrMsg16'
+      end    
+      item
+        Name = 'UsrMsg17'
+      end    
+      item
+        Name = 'UserQRG5'
+        Value = '0'
+      end    
+      item
+        Name = 'UserQRG6'
+        Value = '0'
+      end    
+      item
+        Name = 'UserQRG7'
+        Value = '0'
+      end    
+      item
+        Name = 'UserQRG8'
+        Value = '0'
+      end    
+      item
+        Name = 'UserQRG9'
+        Value = '0'
+      end    
+      item
+        Name = 'UserQRG10'
+        Value = '0'
+      end    
+      item
+        Name = 'UserQRG11'
+        Value = '0'
+      end    
+      item
+        Name = 'UserQRG12'
+        Value = '0'
+      end    
+      item
+        Name = 'UserQRG13'
+        Value = '0'
       end>
     FileName = 'station.xml'
     left = 688
@@ -1613,135 +1670,179 @@ object Form1: TForm1
   object popupQRG: TPopupMenu
     left = 552
     top = 56
-    object MenuItem12: TMenuItem
+    object MenuItem1a: TMenuItem
       Caption = '1838'
       OnClick = MenuItemHandler
     end
-    object MenuItem1: TMenuItem
+    object MenuItem2a: TMenuItem
       Caption = '3576'
       RadioItem = True
       OnClick = MenuItemHandler
     end
-    object MenuItem2: TMenuItem
+    object MenuItem3a: TMenuItem
       Caption = '7039'
       RadioItem = True
       OnClick = MenuItemHandler
     end
-    object MenuItem3: TMenuItem
+    object MenuItem4a: TMenuItem
       Caption = '7076'
       RadioItem = True
       OnClick = MenuItemHandler
     end
-    object MenuItem4: TMenuItem
-      Caption = '0'
-      RadioItem = True
-      OnClick = MenuItemHandler
-    end
-    object MenuItem5: TMenuItem
-      Caption = '0'
-      RadioItem = True
-      OnClick = MenuItemHandler
-    end
-    object MenuItem6: TMenuItem
+    object MenuItem5a: TMenuItem
       Caption = '14076'
       RadioItem = True
       OnClick = MenuItemHandler
     end
-    object MenuItem7: TMenuItem
-      Caption = '0'
-      RadioItem = True
-      OnClick = MenuItemHandler
-    end
-    object MenuItem8: TMenuItem
-      Caption = '0'
-      RadioItem = True
-      OnClick = MenuItemHandler
-    end
-    object MenuItem9: TMenuItem
+    object MenuItem6a: TMenuItem
       Caption = '21076'
       RadioItem = True
       OnClick = MenuItemHandler
     end
-    object MenuItem10: TMenuItem
-      Caption = '0'
-      RadioItem = True
-      OnClick = MenuItemHandler
-    end
-    object MenuItem11: TMenuItem
+    object MenuItem7a: TMenuItem
       Caption = '28076'
       RadioItem = True
       OnClick = MenuItemHandler
     end
-    object MenuItem22: TMenuItem
-      Caption = 'User Defined 1'
+    object MenuItem8a: TMenuItem
+      Caption = 'USER DEFINED 1'
+      RadioItem = True
       OnClick = MenuItemHandler
     end
-    object MenuItem23: TMenuItem
-      Caption = 'User Defined 2'
+    object MenuItem9a: TMenuItem
+      Caption = 'USER DEFINED 2'
+      RadioItem = True
       OnClick = MenuItemHandler
     end
-    object MenuItem28: TMenuItem
-      Caption = 'User Defined 3'
+    object MenuItem10a: TMenuItem
+      Caption = 'USER DEFINED 3'
+      RadioItem = True
       OnClick = MenuItemHandler
     end
-    object MenuItem29: TMenuItem
-      Caption = 'User Defined 4'
+    object MenuItem11a: TMenuItem
+      Caption = 'USER DEFINED 4'
+      RadioItem = True
+      OnClick = MenuItemHandler
+    end
+    object MenuItem12a: TMenuItem
+      Caption = 'USER DEFINED 5'
+      RadioItem = True
+      OnClick = MenuItemHandler
+    end
+    object MenuItem13a: TMenuItem
+      Caption = 'USER DEFINED 6'
+      OnClick = MenuItemHandler
+    end
+    object MenuItem14a: TMenuItem
+      Caption = 'USER DEFINED 7'
+      OnClick = MenuItemHandler
+    end
+    object MenuItem15a: TMenuItem
+      Caption = 'USER DEFINED 8'
+      OnClick = MenuItemHandler
+    end
+    object MenuItem16a: TMenuItem
+      Caption = 'USER DEFINED 9'
+      OnClick = MenuItemHandler
+    end
+    object MenuItem17a: TMenuItem
+      Caption = 'USER DEFINED 10'
+      OnClick = MenuItemHandler
+    end
+    object MenuItem18a: TMenuItem
+      Caption = 'USER DEFINED 11'
+      OnClick = MenuItemHandler
+    end
+    object MenuItem19a: TMenuItem
+      Caption = 'USER DEFINED 12'
+      OnClick = MenuItemHandler
+    end
+    object MenuItem20a: TMenuItem
+      Caption = 'USER DEFINED 13'
       OnClick = MenuItemHandler
     end
   end
   object popupMsgs: TPopupMenu
     left = 600
     top = 56
-    object MenuItem13: TMenuItem
+    object MenuItem1b: TMenuItem
       Caption = 'Short-hand RO'
       OnClick = MenuItemHandler
     end
-    object MenuItem14: TMenuItem
+    object MenuItem2b: TMenuItem
       Caption = 'Short-hand RRR'
       OnClick = MenuItemHandler
     end
-    object MenuItem15: TMenuItem
+    object MenuItem3b: TMenuItem
       Caption = 'Short-hand 73'
       OnClick = MenuItemHandler
     end
-    object MenuItem16: TMenuItem
+    object MenuItem4b: TMenuItem
       Caption = 'New Item5'
       OnClick = MenuItemHandler
     end
-    object MenuItem17: TMenuItem
+    object MenuItem5b: TMenuItem
       Caption = 'New Item6'
       OnClick = MenuItemHandler
     end
-    object MenuItem18: TMenuItem
+    object MenuItem6b: TMenuItem
       Caption = 'New Item7'
       OnClick = MenuItemHandler
     end
-    object MenuItem19: TMenuItem
+    object MenuItem7b: TMenuItem
       Caption = 'New Item8'
       OnClick = MenuItemHandler
     end
-    object MenuItem20: TMenuItem
+    object MenuItem8b: TMenuItem
       Caption = 'New Item9'
       OnClick = MenuItemHandler
     end
-    object MenuItem21: TMenuItem
+    object MenuItem9b: TMenuItem
       Caption = 'New Item10'
       OnClick = MenuItemHandler
     end
-    object MenuItem24: TMenuItem
+    object MenuItem10b: TMenuItem
       Caption = 'New Item11'
       OnClick = MenuItemHandler
     end
-    object MenuItem25: TMenuItem
+    object MenuItem11b: TMenuItem
       Caption = 'New Item12'
       OnClick = MenuItemHandler
     end
-    object MenuItem26: TMenuItem
+    object MenuItem12b: TMenuItem
       Caption = 'New Item13'
       OnClick = MenuItemHandler
     end
-    object MenuItem27: TMenuItem
+    object MenuItem13b: TMenuItem
       Caption = 'New Item13'
+      OnClick = MenuItemHandler
+    end
+    object MenuItem14b: TMenuItem
+      Caption = 'New Item14'
+      OnClick = MenuItemHandler
+    end
+    object MenuItem15b: TMenuItem
+      Caption = 'New Item15'
+      OnClick = MenuItemHandler
+    end
+    object MenuItem16b: TMenuItem
+      Caption = 'New Item16'
+      OnClick = MenuItemHandler
+    end
+    object MenuItem17b: TMenuItem
+      Caption = 'New Item17'
+      OnClick = MenuItemHandler
+    end
+    object MenuItem18b: TMenuItem
+      Caption = 'New Item18'
+      OnClick = MenuItemHandler
+    end
+    object MenuItem19b: TMenuItem
+      Caption = 'New Item19'
+      OnClick = MenuItemHandler
+    end
+    object MenuItem20b: TMenuItem
+      Caption = 'New Item20'
       OnClick = MenuItemHandler
     end
   end
