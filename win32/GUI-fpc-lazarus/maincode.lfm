@@ -802,6 +802,7 @@ object Form1: TForm1
       Top = 13
       Width = 38
       MaxValue = 5
+      MinValue = -1
       OnChange = SpinEdit1Change
       TabOrder = 3
       Value = 5
@@ -887,6 +888,7 @@ object Form1: TForm1
     Font.Style = [fsBold]
     ParentFont = False
     TabOrder = 19
+    Visible = False
   end
   object chkAutoTxDF: TCheckBox
     Left = 679
@@ -1230,6 +1232,19 @@ object Form1: TForm1
     Font.Style = [fsBold]
     ParentColor = False
     ParentFont = False
+  end
+  object Label5: TLabel
+    Left = 177
+    Height = 38
+    Top = 32
+    Width = 693
+    Caption = 'Waterfall display is disabled by user request.'
+    Font.Height = -32
+    Font.Name = 'Arial'
+    Font.Style = [fsBold]
+    ParentColor = False
+    ParentFont = False
+    Visible = False
   end
   object Timer1: TTimer
     Interval = 220

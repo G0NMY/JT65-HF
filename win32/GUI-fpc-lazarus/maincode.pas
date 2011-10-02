@@ -109,6 +109,7 @@ type
     Label38: TLabel;
     Label39: TLabel;
     Label4: TLabel;
+    Label5 : TLabel ;
     Label50: TLabel;
     Label6: TLabel;
     Label7: TLabel;
@@ -1502,9 +1503,21 @@ end;
 
 procedure TForm1.SpinEdit1Change(Sender: TObject);
 begin
+     {TODO Change this such that setting spinEdit to -1 turns WF off.}
      if spinEdit1.Value > 5 then spinEdit1.Value := 5;
-     if spinEdit1.Value < 0 then spinEdit1.Value := 0;
+     if spinEdit1.Value < -1 then spinEdit1.Value := -1;
      spectrum.specSpeed2 := Form1.SpinEdit1.Value;
+     // Handle spectrum being off (speed = -1)
+     if spectrum.specSpeed2 < 0 then
+     begin
+          waterfall.Visible := False;
+          Label5.Visible := True;
+     end
+     else
+     begin
+          waterfall.Visible := true;
+          Label5.Visible := false;
+     end;
 end;
 
 procedure TForm1.spinGainChange(Sender: TObject);
