@@ -55,6 +55,7 @@ var
 implementation
 
 { TForm2 }
+{TODO Save/restore comments field between sessions, I tire of typing in my blurb each restart.}
 procedure TForm2.btnLogQSOClick(Sender: TObject);
 Var
    foo, fname   : String;

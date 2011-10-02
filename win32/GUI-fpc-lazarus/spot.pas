@@ -242,7 +242,7 @@ implementation
          prRBOn      := False;
          prRBError   := '';
          prPSKROn    := False;
-         prVersion   := '200';
+         prVersion   := '2000';
          prRBCount   := 0;
          prPRCount   := 0;
          prRBFail    := 0;

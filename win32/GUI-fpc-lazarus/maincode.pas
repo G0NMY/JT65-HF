@@ -216,6 +216,7 @@ type
     procedure chkMultiDecodeChange(Sender: TObject);
     procedure chkNBChange(Sender: TObject);
     procedure cbSpecPalChange(Sender: TObject);
+    procedure edFreeTextChange (Sender : TObject );
     procedure edFreeTextDblClick(Sender: TObject);
     procedure edHisCallDblClick(Sender: TObject);
     procedure edHisGridDblClick(Sender: TObject);
@@ -528,6 +529,9 @@ Var
 begin
      while not Terminated and not Suspended and not rb.busy do
      begin
+          // Since this is a thread all the calls to sleep have no impact on
+          // the main loop/overall timing.  The sleep calls intent is to spread
+          // the load placed upon the RB server a bit.
           rb.myCall := TrimLeft(TrimRight(cfgvtwo.Form6.editPSKRCall.Text));
           rb.myGrid := TrimLeft(TrimRight(cfgvtwo.Form6.edMyGrid.Text));
           eqrg := 0;
@@ -545,6 +549,7 @@ begin
                     sleep(100);
                     globalData.rbLoggedIn := rb.loginRB;
                     sleep(100);
+                    //dlog.fileDebug('RB QSY request.');
                end;
                rb.myQRG  := eQRG;
                // Set status for RB/PSKR use
@@ -553,18 +558,21 @@ begin
                if (rb.useRB) and (not rb.rbOn) and (not rb.busy) then
                begin
                     globalData.rbLoggedIn := rb.loginRB;
+                    //dlog.fileDebug('RB login request.');
                     sleep(100);
                end;
                // Check to see if I need a logout cycle
                if (not rb.useRB) and (rb.rbOn) and (not rb.busy) then
                begin
                     globalData.rbLoggedIn := rb.logoutRB;
+                    //dlog.fileDebug('RB logout request.');
                     sleep(100);
                end;
                if (rbcPing) And (not rb.busy) Then
                Begin
                     globalData.rbLoggedIn := rb.loginRB;
                     rbcPing := False;
+                    //dlog.fileDebug('Refreshed RB login.');
                     sleep(100);
                end;
 
@@ -577,12 +585,14 @@ begin
                if (rb.usePSKR) and (not rb.pskrOn) and (not rb.busy) then
                begin
                     rb.loginPSKR;
+                    //dlog.fileDebug('PSKR login request.');
                     sleep(100);
                end;
                // Check to see if I need a logout cycle
                if (not rb.usePSKR) and (rb.pskrOn) and (not rb.busy) then
                begin
                     rb.logoutPSKR;
+                    //dlog.fileDebug('PSKR logout request.');
                     sleep(100);
                end;
 
@@ -1254,13 +1264,14 @@ begin
      Form1.edSigRep.Clear;
      Form1.edHisGrid.Clear;
      Form1.spinTXCF.Value := 0;
-     Form1.spinDecoderCF.Value := 0;
-     Form1.spinDecoderBW.Value := 3;
-     Form1.spinDecoderBin.Value := 3;
-     edit2.Text := '100';
-     d65.glDFTolerance := 100;
-     edit3.Text := '100';
-     d65.glbinspace := 100;
+     {Excluding single/multi bin spacing from defaults restore}
+     //Form1.spinDecoderCF.Value := 0;
+     //Form1.spinDecoderBW.Value := 3;
+     //Form1.spinDecoderBin.Value := 3;
+     //edit2.Text := '100';
+     //d65.glDFTolerance := 100;
+     //edit3.Text := '100';
+     //d65.glbinspace := 100;
      Form1.rbGenMsg.Checked := True;
      Form1.chkAutoTxDF.Checked := True;
      Form1.chkEnTX.Checked := False;
@@ -1547,6 +1558,11 @@ end;
 procedure TForm1.cbSpecPalChange(Sender: TObject);
 begin
   spectrum.specColorMap := Form1.cbSpecPal.ItemIndex;
+end;
+
+procedure TForm1 .edFreeTextChange (Sender : TObject );
+begin
+     {TODO Connect this to text validation }
 end;
 
 procedure TForm1.WaterFallMouseDown(Sender: TObject; Button: TMouseButton;
