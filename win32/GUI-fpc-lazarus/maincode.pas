@@ -298,6 +298,8 @@ type
     Function  ValidateSlashedCallsign(csign : String) : Boolean;
     function  ValidateGrid(const grid : String) : Boolean;
     function  SetAudio(auin : Integer; auout : Integer) : Boolean;
+    function  genNormalMessage(const exchange : String; var Msg : String; var err : String; var doQSO : Boolean) : Boolean;
+    function  genSlashedMessage(const exchange : String; var Msg : String; var err : String; var doQSO : Boolean) : Boolean;
 
   private
     { private declarations }
@@ -2222,20 +2224,387 @@ begin
      end;
 end;
 
-procedure TForm1.ListBox1DblClick(Sender: TObject);
+function  TForm1.genSlashedMessage(const exchange : String; var Msg : String; var err : String; var doQSO : Boolean) : Boolean;
+Var
+   localslash, cont      : Boolean;
+   remoteslash, resolved : Boolean;
+   word1, word2          : String;
+
+Begin
+     // CQ W6CQZ/4, QRZ W6CQZ/4, SOMECALL W6CQZ/4, W6CQZ/4 -22, W6CQZ/4 R-22, W6CQZ/4 73
+     // OK... The first three forms are of use.  SOMECALL/SOMESUFFIX Calling CQ, QRZ or
+     // another call.  The last 3 are not of use at all... those don't show the callsign
+     // of the TX station.
+     {TODO Fix this}
+     {TODO check for case where the local station callsign is slashes and the remote is slashed, if so bail.  Can't work a slashed call with a slashed call}
+     // Crap.  This just became even more convoluted as after writing the line above I
+     // see this requires 2 resolvers.  One for local callsign being slashed and remote
+     // not and a second for local not being slashed and remote containing slash with
+     // a fail for both being slashed.
+
+     // First check for case of local and remote containing slash, if so fail.  The
+     // JT65 protocol does not allow for both stations having slashed callsigns as
+     // there is no "room" in the bits to hold 2 slashed callsigns.  Reminds me how
+     // This is SUBTLE.  When using pfx or sfx the exchanges have to change to fit
+     // in the pfx/sfx.  For instance, the CQ message replaces the grid value with
+     // pfx/sfx so for example:
+     // CQ KG6CQZ EL98 is a "normal form"
+     // CQ KG6CQZ/4 is a "slashed form", take note the grid is gone - it was replaced by /4
+     // so...
+     // If I attempt to answer a normal form I'd do so as:
+     // KG6CQZ KC4NGO EL88
+     // Where answering a slashed form I'd do so as:
+     // KG6CQZ/4 KC4NGO again dropping the grid value to hold the sfx.
+     // now...
+     // KG6CQZ/4 KC4NGO/5 CAN NOT WORK.  I'm already using the grid "space" to hold the /4 so where exactly does /5 go?
+     // Nowhere.  There are only so many bits in a frame and they're all used by the pair of calls and ONE pfx/sfx, no
+     // home for a second pfx/sfx.
+     // The above would revert to 13 character limit free text yielding an actual TX message of:
+     // KG6CQZ/4 KC4N
+     // This only serves to remind me that I  L O A T H E  the entire pfx/sfx mess.
+
+     // So, first things first.  Test for presence of slashed local callsign, then for a callsign
+     // in the encoded exchange that IS NOT the local callsign with a slash.  If this contition is
+     // detected then the QSO can not be realized.
+
+     localslash := false;
+     remoteslash := false;
+
+     If AnsiContainsText(globalData.fullcall,'/') Then localslash := true else localslash := false;
+
+     // Quick test for CQ callsign/sfx or CQ pfx/callsign then see if I can continue.
+     word1 := ExtractWord(1,exchange,[' ']);
+     word2 := ExtractWord(2,exchange,[' ']);
+     If (word1='QRZ') or (word1='CQ') Then
+     Begin
+          // Non-comprehensive check, but good enough for this stage of evaluation.
+          // Expanding... If call passes non-slashed check the the second word is
+          // either (a) slashed or (b) invalid.  So, if slashed or invalid then it's
+          // not going to happen if (a) local and remote slashed or (b) local not
+          // slashed and word2 not a call.
+          if ValidateCallsign(word2) Then remoteslash := false else remoteslash := true;
+     end;
+
+     // OK... have resolved case of local and remote being slashed (or the second word
+     // not being a callsign with the first being CQ or QRZ.
+
+     // Initial check in so far as it not being a local slashed call trying
+     // to work a remote slashed call.
+     // Now on to all the other permutations allowed in a 2 word decode.
+     // NOTE:  No attempt is made to setup for a "tail in" when dealing
+     // with slashed callsigns.  This may change, but not today.
+     cont := false;
+     // One of the following has to be to continue.
+     if word1 = globalData.fullcall then cont := true;
+     if word1 = 'CQ' then cont := true;
+     if word1 = 'QRZ' then cont := true;
+
+     if cont then
+     begin
+          // Having passed the tests above, one last check for double slashed
+          if localslash and remoteslash then cont := false else cont := true;
+          if cont then
+          begin
+               word1 := ExtractWord(1,exchange,[' ']);
+               word2 := ExtractWord(2,exchange,[' ']);
+               // Check for slash in callsign, if present continue while if not do nothing.
+               // In a 2 word excahnge something has to be a slashed callsign.  Yes... it
+               // is possible that someone is sending CQ AB1CD without a grid or TEST BC2DEF
+               // or any number of other things, but, I can't account for anything other than
+               // properly structured messages here.  The rest is left up to human intervention.
+               If (AnsiContainsText(word1,'/')) Or (AnsiContainsText(word2,'/')) Then
+               Begin
+                    // Testing for a CQ or QRZ message type.
+                    If (word1='QRZ') or (word1='CQ') Then
+                    Begin
+                         If ValidateSlashedCallsign(word2) Then
+                         Begin
+                              Form1.edHisCall.Text := word2;
+                              Form1.edHisGrid.Text := '';
+                              msg := word2 + ' ' + globalData.fullcall;
+                              resolved := True;
+                              doQSO := True;
+                              doCWID := False;
+                         end
+                         else
+                         begin
+                              resolved := False;
+                         end;
+                    End;
+                    // Now looking for my callsign with -##, R-##, RRR or 73
+                    if not resolved then
+                    Begin
+                         // From here on, if not resolved for CQ/QRZ type
+                         // the first word MUST BE the local callsign.
+                         If word1=globalData.fullcall Then
+                         Begin
+                              // Test for case of remote callsign answering local callsign
+                              // with message to TX being remote callsign + signal report.
+                              // NOTE:  This is the only parse point to extract the remote
+                              // callsign.
+                              If ValidateCallsign(word2) Then
+                              Begin
+                                   Form1.edHisCall.Text := word2;
+                                   msg := word2 + ' ' + siglevel;
+                                   resolved := True;
+                                   doCWID := False;
+                                   doQSO := True;
+                              End
+                              Else
+                              Begin
+                                   resolved := False;
+                              End;
+                              // Test for case of an RRR to local callsign
+                              // Proper response is remote callsign + 73 message.
+                              if not resolved then
+                              Begin
+                                   if word2 = 'RRR'Then
+                                   Begin
+                                        {TODO Test for edHisCall being set!}
+                                        msg := edHisCall.Text + ' 73';
+                                        Resolved := True;
+                                        doQSO       := True;
+                                        {TODO Re-attach CW ID to boolean existing in 1.0.8 - The next line references variables only present in 2.0 tree}
+                                        //if guidedconfig.cfg.cwIDall or guidedconfig.cfg.cwIDfree Then ctrl.doCWID := True else ctrl.doCWID := False;
+                                   End
+                                   Else
+                                   Begin
+                                        resolved := False;
+                                   End;
+                              End;
+                              // Test for case of an -## to local callsign
+                              // Proper response is remote callsign + R-##
+                              if not resolved Then
+                              Begin
+                                   if word2[1] = '-' Then
+                                   Begin
+                                        {TODO Test for edHisCall being set!}
+                                        msg := edHisCall.Text + ' R' + siglevel;
+                                        resolved := True;
+                                        doQSO       := True;
+                                        doCWID := False;
+                                   End
+                                   Else
+                                   Begin
+                                        resolved := False;
+                                   End;
+                              End;
+                              // Test for case on an R-## to local callsign
+                              // Proper response is remote callsign + RRR
+                              If not resolved Then
+                              Begin
+                                   if word2[1..2] = 'R-' Then
+                                   Begin
+                                        {TODO Test for edHisCall being set!}
+                                        msg := edHisCall.Text + ' RRR';
+                                        resolved := True;
+                                        doQSO       := True;
+                                        doCWID := False;
+                                   End
+                                   Else
+                                   Begin
+                                        resolved := False;
+                                   End;
+                              End;
+                              // Can't figure this one out.
+                              if not resolved then
+                              begin
+                                   err := 'Can not compute TX message.';
+                                   Resolved := false;
+                                   Form1.edHisCall.Text := '';
+                              end;
+                         End
+                         Else
+                         Begin
+                              // First word is NOT local callsign, no can do.
+                              err := 'Can not compute TX message.';
+                              Resolved := false;
+                              Form1.edHisCall.Text := '';
+                         End;
+                    End;
+               End
+               else
+               begin
+                    // Neither word contains a slash so this isn't a "valid" 2 word exchange.
+                    err := 'Can not compute TX message.';
+                    Resolved := false;
+                    Form1.edHisCall.Text := '';
+               end;
+          end
+          else
+          begin
+               // Both callsign seem to be slashed, no can do.
+               err := 'Can not compute TX message.';
+               Resolved := false;
+               Form1.edHisCall.Text := '';
+          end;
+     end
+     else
+     begin
+          // First word is not CQ, QRZ or local callsign.
+          err := 'Can not compute TX message.';
+          Resolved := false;
+          Form1.edHisCall.Text := '';
+     end;
+     if not resolved then
+     begin
+          msg    := '';
+          doCWID := False;
+          doQSO  := False;
+          result := False;
+     end
+     else
+     begin
+          result := True;
+     end;
+end;
+
+function  TForm1.genNormalMessage(const exchange : String; var Msg : String; var err : String; var doQSO : Boolean) : Boolean;
 Var
    word1, word2, word3 : String;
+   resolved            : Boolean;
+Begin
+     // This is a three word exchange
+     word1 := ExtractWord(1,exchange,[' ']);
+     word2 := ExtractWord(2,exchange,[' ']);
+     word3 := ExtractWord(3,exchange,[' ']);
+     resolved := False;
+     If (word1 = 'CQ') Or (word1 = 'QRZ') Or (word1 = 'CQDX') Then
+     Begin
+          If word2 = 'DX' Then
+          Begin
+               If length(word3)> 2 Then
+               begin
+                    if ValidateCallsign(word3) then Form1.edHisCall.Text := word3 Else Form1.edHisCall.Text := '';
+                    Form1.edHisGrid.Text := '';
+                    resolved := True;
+                    msg      := word3 + ' ' + globalData.fullcall + ' ' + cfgvtwo.Form6.edMyGrid.Text[1..4];
+                    doCWID   := False;
+                    doQSO    := True;
+               end;
+          end
+          else
+          begin
+               if length(word2)>2 Then
+               Begin
+                    if ValidateCallsign(word2) then Form1.edHisCall.Text := word2 Else Form1.edHisCall.Text := '';
+               end
+               else
+               begin
+                    Form1.edHisCall.Text := '';
+               end;
+               if length(word3)>3 Then
+               Begin
+                    if ValidateGrid(word3) then edHisGrid.Text := word3 else edHisGrid.text := '';
+               end
+               else
+               begin
+                    Form1.edHisGrid.Text := '';
+               end;
+               resolved := True;
+               msg      := word2 + ' ' + globalData.fullcall + ' ' + cfgvtwo.Form6.edMyGrid.Text[1..4];
+               doCWID   := False;
+               doQSO    := True;
+          end;
+     End
+     Else
+     Begin
+          If word1 = globalData.fullcall Then
+          Begin
+               // Seems to be a call to me.
+               // word3 could/should be as follows...
+               // Grid, signal report, R signal report, an RRR or a 73
+               resolved := False;
+               if ValidateGrid(word3) And Not resolved Then
+               Begin
+                    // This seems to be a callsign calling me with a grid
+                    // The usual response would be a signal report back
+                    If ValidateCallsign(word2) Then Form1.edHisCall.Text := word2 Else Form1.edHisCall.Text := '';
+                    If ValidateGrid(word3) Then Form1.edHisGrid.Text := word3 Else Form1.edHisGrid.Text := '';
+                    resolved := True;
+                    msg      := word2 + ' ' + globalData.fullcall + ' ' + siglevel;
+                    doCWID   := False;
+                    doQSO    := True;
+               End;
+               if (word3[1] = '-') And not resolved Then
+               Begin
+                    // This seems an -## signal report
+                    // The usual response would be an R-##
+                    If ValidateCallsign(word2) Then Form1.edHisCall.Text := word2 Else Form1.edHisCall.Text := '';
+                    resolved := True;
+                    msg      := word2 + ' ' + globalData.fullcall + ' R' + siglevel;
+                    doCWID   := False;
+                    doQSO    := True;
+               End;
+               if (word3[1..2] = 'R-') And not resolved Then
+               Begin
+                    // This seems an R-## response to my report
+                    // The usual response would be an RRR
+                    If ValidateCallsign(word2) Then Form1.edHisCall.Text := word2 Else Form1.edHisCall.Text := '';
+                    resolved := True;
+                    msg      := word2 + ' ' + globalData.fullcall + ' RRR';
+                    doCWID   := False;
+                    doQSO    := True;
+               End;
+               if (word3 = 'RRR') And not resolved Then
+               Begin
+                    // This is an ack.  The usual response would be 73
+                    If ValidateCallsign(word2) Then Form1.edHisCall.Text := word2 Else Form1.edHisCall.Text := '';
+                    resolved := True;
+                    msg      := word2 + ' ' + globalData.fullcall + ' 73';
+                    {TODO Re-attach CW ID to boolean existing in 1.0.8 - The next line references variables only present in 2.0 tree}
+                    //if guidedconfig.cfg.cwIDall or guidedconfig.cfg.cwIDfree Then ctrl.doCWID := True else ctrl.doCWID := False;
+                    doQSO    := True;
+               End;
+               if (word3 = '73') And not resolved Then
+               Begin
+                    // The usual response to a 73 is a 73
+                    If ValidateCallsign(word2) Then Form1.edHisCall.Text := word2 Else Form1.edHisCall.Text := '';
+                    resolved := True;
+                    msg      := word2 + ' ' + globalData.fullcall + ' 73';
+                    {TODO Re-attach CW ID to boolean existing in 1.0.8 - The next line references variables only present in 2.0 tree}
+                    //if guidedconfig.cfg.cwIDall or guidedconfig.cfg.cwIDfree Then ctrl.doCWID := True else ctrl.doCWID := False;
+                    doQSO    := True;
+               End;
+          End
+          Else
+          Begin
+               // A call to someone else, lets not break into that, but prep to tail in once the existing QSO is complete.
+               If ValidateCallsign(word2) Then Form1.edHisCall.Text := word2 Else Form1.edHisCall.Text := '';
+               If ValidateGrid(word3) Then Form1.edHisGrid.Text := word3 Else Form1.edHisGrid.Text := '';
+               If Length(Form1.edHisCall.Text)>1 Then
+               Begin
+                    resolved := True;
+                    msg      := word2 + ' ' + globalData.fullcall + ' ' + cfgvtwo.Form6.edMyGrid.Text[1..4];
+                    doCWID   := False;
+                    doQSO    := False;
+               End;
+          End;
+     End;
+     if not resolved then
+     begin
+          err := 'Can not compute TX message.';
+          msg    := '';
+          doCWID := False;
+          doQSO  := False;
+          result := False;
+     end
+     else
+     begin
+          Result := True;
+     end;
+end;
+
+procedure TForm1.ListBox1DblClick(Sender: TObject);
+Var
    txhz, srxp, ss, foo : String;
+   txt, efoo           : String;
    wcount, irxp, itxp  : Integer;
    itxhz, idx          : Integer;
    resolved, doQSO     : Boolean;
    entTXCF, entRXCF    : Integer;
    isiglevel           : Integer;
-   localslash, cont    : Boolean;
-   remoteslash         : Boolean;
 begin
-     {TODO : FIX double click message generation with slashed callsign.  It IS NOT working (again) }
-     {TODO : Break the message generators out to two functions so I can use with QSO by button as well }
      if itemsIn Then
      Begin
           If Form1.chkMultiDecode.Checked Then
@@ -2303,373 +2672,35 @@ begin
                txhz := DelSpace1(txhz);
 
                wcount := WordCount(exchange,[' ']);
-               if wcount = 3 Then
-               Begin
-                    // Since I have three words I can potentially work with this...
-                    word1 := ExtractWord(1,exchange,[' ']);
-                    word2 := ExtractWord(2,exchange,[' ']);
-                    word3 := ExtractWord(3,exchange,[' ']);
-                    If (word1 = 'CQ') Or (word1 = 'QRZ') Or (word1 = 'CQDX') Then
-                    Begin
-                         If word2 = 'DX' Then
-                         Begin
-                              If length(word3)> 2 Then
-                              begin
-                                   if ValidateCallsign(word3) then Form1.edHisCall.Text := word3 Else Form1.edHisCall.Text := '';
-                                   Form1.edHisGrid.Text := '';
-                                   resolved := True;
-                                   answeringCQ := True;
-                                   doQSO := True;
-                                   msgToSend := word3 + ' ' + globalData.fullcall + ' ' + cfgvtwo.Form6.edMyGrid.Text[1..4];
-                                   doCWID := False;
-                              end;
-                         end
-                         else
-                         begin
-                              if length(word2)>2 Then
-                              Begin
-                                   if ValidateCallsign(word2) then Form1.edHisCall.Text := word2 Else Form1.edHisCall.Text := '';
-                              end
-                              else
-                              begin
-                                   Form1.edHisCall.Text := '';
-                              end;
-                              if length(word3)>3 Then
-                              Begin
-                                   if ValidateGrid(word3) then edHisGrid.Text := word3 else edHisGrid.text := '';
-                              end
-                              else
-                              begin
-                                   Form1.edHisGrid.Text := '';
-                              end;
-                              resolved    := True;
-                              answeringCQ := True;
-                              doQSO       := True;
-                              msgToSend   := word2 + ' ' + globalData.fullcall + ' ' + cfgvtwo.Form6.edMyGrid.Text[1..4];
-                              doCWID := False;
-                         end;
-                    End
-                    Else
-                    Begin
-                         If word1 = globalData.fullcall Then
-                         Begin
-                              // Seems to be a call to me.
-                              // word3 could/should be as follows...
-                              // Grid, signal report, R signal report, an RRR or a 73
-                              resolved := False;
-                              if ValidateGrid(word3) And Not resolved Then
-                              Begin
-                                   // This seems to be a callsign calling me with a grid
-                                   // The usual response would be a signal report back
-                                   If ValidateCallsign(word2) Then Form1.edHisCall.Text := word2 Else Form1.edHisCall.Text := '';
-                                   If ValidateGrid(word3) Then Form1.edHisGrid.Text := word3 Else Form1.edHisGrid.Text := '';
-                                   resolved    := True;
-                                   answeringCQ := False;
-                                   doQSO       := True;
-                                   msgToSend := word2 + ' ' + globalData.fullcall + ' ' + siglevel;
-                                   doCWID := False;
-                              End;
-                              if (word3[1] = '-') And not resolved Then
-                              Begin
-                                   // This seems an -## signal report
-                                   // The usual response would be an R-##
-                                   If ValidateCallsign(word2) Then Form1.edHisCall.Text := word2 Else Form1.edHisCall.Text := '';
-                                   resolved    := True;
-                                   answeringCQ := False;
-                                   doQSO       := True;
-                                   msgToSend := word2 + ' ' + globalData.fullcall + ' R' + siglevel;
-                                   doCWID := False;
-                              End;
-                              if (word3[1..2] = 'R-') And not resolved Then
-                              Begin
-                                   // This seems an R-## response to my report
-                                   // The usual response would be an RRR
-                                   If ValidateCallsign(word2) Then Form1.edHisCall.Text := word2 Else Form1.edHisCall.Text := '';
-                                   resolved    := True;
-                                   answeringCQ := False;
-                                   doQSO       := True;
-                                   msgToSend := word2 + ' ' + globalData.fullcall + ' RRR';
-                                   doCWID := False;
-                              End;
-                              if (word3 = 'RRR') And not resolved Then
-                              Begin
-                                   // This is an ack.  The usual response would be 73
-                                   If ValidateCallsign(word2) Then Form1.edHisCall.Text := word2 Else Form1.edHisCall.Text := '';
-                                   resolved    := True;
-                                   answeringCQ := False;
-                                   doQSO       := True;
-                                   msgToSend := word2 + ' ' + globalData.fullcall + ' 73';
-                                   {TODO Re-attach CW ID to boolean existing in 1.0.8 - The next line references variables only present in 2.0 tree}
-                                   //if guidedconfig.cfg.cwIDall or guidedconfig.cfg.cwIDfree Then ctrl.doCWID := True else ctrl.doCWID := False;
-                              End;
-                              if (word3 = '73') And not resolved Then
-                              Begin
-                                   // The usual response to a 73 is a 73
-                                   If ValidateCallsign(word2) Then Form1.edHisCall.Text := word2 Else Form1.edHisCall.Text := '';
-                                   resolved    := True;
-                                   answeringCQ := False;
-                                   doQSO       := True;
-                                   msgToSend := word2 + ' ' + globalData.fullcall + ' 73';
-                                   {TODO Re-attach CW ID to boolean existing in 1.0.8 - The next line references variables only present in 2.0 tree}
-                                   //if guidedconfig.cfg.cwIDall or guidedconfig.cfg.cwIDfree Then ctrl.doCWID := True else ctrl.doCWID := False;
-                              End;
-                         End
-                         Else
-                         Begin
-                              // A call to someone else, lets not break into that, but prep to tail in once the existing QSO is complete.
-                              If ValidateCallsign(word2) Then Form1.edHisCall.Text := word2 Else Form1.edHisCall.Text := '';
-                              If ValidateGrid(word3) Then Form1.edHisGrid.Text := word3 Else Form1.edHisGrid.Text := '';
-                              If Length(Form1.edHisCall.Text)>1 Then
-                              Begin
-                                   resolved    := True;
-                                   answeringCQ := False;
-                                   doQSO       := False;
-                                   msgToSend   := word2 + ' ' + globalData.fullcall + ' ' + cfgvtwo.Form6.edMyGrid.Text[1..4];
-                                   doCWID := False;
-                              End;
-                         End;
-                    End;
-               End;
 
-               if wcount = 2 Then
-               Begin
-                    // CQ W6CQZ/4, QRZ W6CQZ/4, SOMECALL W6CQZ/4, W6CQZ/4 -22, W6CQZ/4 R-22, W6CQZ/4 73
-                    // OK... The first three forms are of use.  SOMECALL/SOMESUFFIX Calling CQ, QRZ or
-                    // another call.  The last 3 are not of use at all... those don't show the callsign
-                    // of the TX station.
-                    {TODO Fix this}
-                    {TODO check for case where the local station callsign is slashes and the remote is slashed, if so bail.  Can't work a slashed call with a slashed call}
-                    // Crap.  This just became even more convoluted as after writing the line above I
-                    // see this requires 2 resolvers.  One for local callsign being slashed and remote
-                    // not and a second for local not being slashed and remote containing slash with
-                    // a fail for both being slashed.
-
-                    // First check for case of local and remote containing slash, if so fail.  The
-                    // JT65 protocol does not allow for both stations having slashed callsigns as
-                    // there is no "room" in the bits to hold 2 slashed callsigns.  Reminds me how
-                    // This is SUBTLE.  When using pfx or sfx the exchanges have to change to fit
-                    // in the pfx/sfx.  For instance, the CQ message replaces the grid value with
-                    // pfx/sfx so for example:
-                    // CQ KG6CQZ EL98 is a "normal form"
-                    // CQ KG6CQZ/4 is a "slashed form", take note the grid is gone - it was replaced by /4
-                    // so...
-                    // If I attempt to answer a normal form I'd do so as:
-                    // KG6CQZ KC4NGO EL88
-                    // Where answering a slashed form I'd do so as:
-                    // KG6CQZ/4 KC4NGO again dropping the grid value to hold the sfx.
-                    // now...
-                    // KG6CQZ/4 KC4NGO/5 CAN NOT WORK.  I'm already using the grid "space" to hold the /4 so where exactly does /5 go?
-                    // Nowhere.  There are only so many bits in a frame and they're all used by the pair of calls and ONE pfx/sfx, no
-                    // home for a second pfx/sfx.
-                    // The above would revert to 13 character limit free text yielding an actual TX message of:
-                    // KG6CQZ/4 KC4N
-                    // This only serves to remind me that I  L O A T H E  the entire pfx/sfx mess.
-
-                    // So, first things first.  Test for presence of slashed local callsign, then for a callsign
-                    // in the encoded exchange that IS NOT the local callsign with a slash.  If this contition is
-                    // detected then the QSO can not be realized.
-
-                    localslash := false;
-                    remoteslash := false;
-
-                    If AnsiContainsText(globalData.fullcall,'/') Then localslash := true else localslash := false;
-
-                    // Quick test for CQ callsign/sfx or CQ pfx/callsign then see if I can continue.
-                    word1 := ExtractWord(1,exchange,[' ']);
-                    word2 := ExtractWord(2,exchange,[' ']);
-                    If (word1='QRZ') or (word1='CQ') Then
-                    Begin
-                         // Non-comprehensive check, but good enough for this stage of evaluation.
-                         // Expanding... If call passes non-slashed check the the second word is
-                         // either (a) slashed or (b) invalid.  So, if slashed or invalid then it's
-                         // not going to happen if (a) local and remote slashed or (b) local not
-                         // slashed and word2 not a call.
-                         if ValidateCallsign(word2) Then remoteslash := false else remoteslash := true;
-                    end;
-
-                    // OK... have resolved case of local and remote being slashed (or the second word
-                    // not being a callsign with the first being CQ or QRZ.
-
-                    // Initial check in so far as it not being a local slashed call trying
-                    // to work a remote slashed call.
-                    // Now on to all the other permutations allowed in a 2 word decode.
-                    // NOTE:  No attempt is made to setup for a "tail in" when dealing
-                    // with slashed callsigns.  This may change, but not today.
-                    cont := false;
-                    // One of the following has to be to continue.
-                    if word1 = globalData.fullcall then cont := true;
-                    if word1 = 'CQ' then cont := true;
-                    if word1 = 'QRZ' then cont := true;
-
-                    if cont then
-                    begin
-                         // Having passed the tests above, one last check for double slashed
-                         if localslash and remoteslash then cont := false else cont := true;
-                         if cont then
-                         begin
-                              word1 := ExtractWord(1,exchange,[' ']);
-                              word2 := ExtractWord(2,exchange,[' ']);
-                              // Check for slash in callsign, if present continue while if not do nothing.
-                              // In a 2 word excahnge something has to be a slashed callsign.  Yes... it
-                              // is possible that someone is sending CQ AB1CD without a grid or TEST BC2DEF
-                              // or any number of other things, but, I can't account for anything other than
-                              // properly structured messages here.  The rest is left up to human intervention.
-                              If (AnsiContainsText(word1,'/')) Or (AnsiContainsText(word2,'/')) Then
-                              Begin
-                                   // Testing for a CQ or QRZ message type.
-                                   If (word1='QRZ') or (word1='CQ') Then
-                                   Begin
-                                        If ValidateSlashedCallsign(word2) Then
-                                        Begin
-                                             Form1.edHisCall.Text := word2;
-                                             Form1.edHisGrid.Text := '';
-                                             msgToSend := word2 + ' ' + globalData.fullcall;
-                                             resolved := True;
-                                             doQSO       := True;
-                                             answeringCQ := True;
-                                             doCWID := False;
-                                        end
-                                        else
-                                        begin
-                                             resolved := False;
-                                             exchange := '';
-                                        end;
-                                   End;
-                                   // Now looking for my callsign with -##, R-##, RRR or 73
-                                   if not resolved then
-                                   Begin
-                                        // From here on, if not resolved for CQ/QRZ type
-                                        // the first word MUST BE the local callsign.
-                                        If word1=globalData.fullcall Then
-                                        Begin
-                                             // Test for case of remote callsign answering local callsign
-                                             // with message to TX being remote callsign + signal report.
-                                             // NOTE:  This is the only parse point to extract the remote
-                                             // callsign.
-                                             If ValidateCallsign(word2) Then
-                                             Begin
-                                                  Form1.edHisCall.Text := word2;
-                                                  msgToSend := word2 + ' ' + siglevel;
-                                                  resolved := True;
-                                                  doCWID := False;
-                                             End
-                                             Else
-                                             Begin
-                                                  resolved := False;
-                                             End;
-                                             // Test for case of an RRR to local callsign
-                                             // Proper response is remote callsign + 73 message.
-                                             if not resolved then
-                                             Begin
-                                                  if word2 = 'RRR'Then
-                                                  Begin
-                                                       {TODO Test for edHisCall being set!}
-                                                       msgToSend := edHisCall.Text + ' 73';
-                                                       Resolved := True;
-                                                       doQSO       := True;
-                                                       {TODO Re-attach CW ID to boolean existing in 1.0.8 - The next line references variables only present in 2.0 tree}
-                                                       //if guidedconfig.cfg.cwIDall or guidedconfig.cfg.cwIDfree Then ctrl.doCWID := True else ctrl.doCWID := False;
-                                                  End
-                                                  Else
-                                                  Begin
-                                                       msgToSend := '';
-                                                       exchange := '';
-                                                       resolved := False;
-                                                  End;
-                                             End;
-                                             // Test for case of an -## to local callsign
-                                             // Proper response is remote callsign + R-##
-                                             if not resolved Then
-                                             Begin
-                                                  if word2[1] = '-' Then
-                                                  Begin
-                                                       {TODO Test for edHisCall being set!}
-                                                       msgToSend := edHisCall.Text + ' R' + siglevel;
-                                                       resolved := True;
-                                                       doQSO       := True;
-                                                       doCWID := False;
-                                                  End
-                                                  Else
-                                                  Begin
-                                                       msgToSend := '';
-                                                       exchange := '';
-                                                       resolved := False;
-                                                  End;
-                                             End;
-                                             // Test for case on an R-## to local callsign
-                                             // Proper response is remote callsign + RRR
-                                             If not resolved Then
-                                             Begin
-                                                  if word2[1..2] = 'R-' Then
-                                                  Begin
-                                                       {TODO Test for edHisCall being set!}
-                                                       msgToSend := edHisCall.Text + ' RRR';
-                                                       resolved := True;
-                                                       doQSO       := True;
-                                                       doCWID := False;
-                                                  End
-                                                  Else
-                                                  Begin
-                                                       msgToSend := '';
-                                                       exchange := '';
-                                                       resolved := False;
-                                                  End;
-                                             End;
-                                             // Can't figure this one out.
-                                             if not resolved then
-                                             begin
-                                                  addToDisplayE('Can not compute TX message.');
-                                                  Resolved := false;
-                                                  Form1.edHisCall.Text := '';
-                                                  msgToSend := '';
-                                             end;
-                                        End
-                                        Else
-                                        Begin
-                                             // First word is NOT local callsign, no can do.
-                                             addToDisplayE('Can not compute TX message.');
-                                             Resolved := false;
-                                             Form1.edHisCall.Text := '';
-                                             msgToSend := '';
-                                        End;
-                                   End;
-                              End
-                              else
-                              begin
-                                   // Neither word contains a slash so this isn't a "valid" 2 word exchange.
-                                   addToDisplayE('Can not compute TX message.');
-                                   Resolved := false;
-                                   Form1.edHisCall.Text := '';
-                                   msgToSend := '';
-                              end;
-                         end
-                         else
-                         begin
-                              // Both callsign seem to be slashed, no can do.
-                              addToDisplayE('Can not compute TX message.');
-                              Resolved := false;
-                              Form1.edHisCall.Text := '';
-                              msgToSend := '';
-                         end;
-                    end
-                    else
-                    begin
-                         // First word is not CQ, QRZ or local callsign.
-                         addToDisplayE('Can not compute TX message.');
-                         Resolved := false;
-                         Form1.edHisCall.Text := '';
-                         msgToSend := '';
-                    end;
-               end;
                If (wcount < 2) Or (wcount > 3) Then
                Begin
-                    addToDisplayE('Can not compute TX message.');
                     Resolved := false;
                     Form1.edHisCall.Text := '';
                     msgToSend := '';
                     exchange := '';
                     resolved := False;
+                    efoo     := 'Can not compute TX message';
                End;
+
+               // OK, starting to break this out into two functions - one for "normal" exchanges the other for exchanges with slashed callsign i.e. "abnormal".
+               if wcount = 3 Then
+               Begin
+                    // Call message generator for normal sequences.
+                    txt   := '';
+                    efoo  := '';
+                    doQSO := False;
+                    resolved := genNormalMessage(exchange, txt, efoo, doQSO);
+               End;
+
+               if wcount = 2 Then
+               Begin
+                    txt   := '';
+                    efoo  := '';
+                    doQSO := False;
+                    // Call message generator for slashed sequences.
+                    resolved := genSlashedMessage(exchange, txt, efoo, doQSO);
+               end;
 
                If resolved Then
                Begin
@@ -2698,7 +2729,7 @@ begin
                          Form1.rbTX2.Checked := False;
                          Form1.rbTX1.Checked := True;
                     End;
-                    form1.edMsg.Text := msgToSend;
+                    form1.edMsg.Text := txt;
                     if doQSO Then
                     Begin
                          watchMulti := False;
@@ -2726,6 +2757,11 @@ begin
                          qsoSDate := ss;
                     End;
                End;
+               If not resolved then
+               begin
+                    // Message didn't resolve
+                    addToDisplayE(efoo);
+               end;
           End;
      end;
 end;
