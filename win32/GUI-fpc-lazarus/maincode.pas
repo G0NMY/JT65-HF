@@ -233,6 +233,7 @@ type
     procedure Label22DblClick(Sender: TObject);
     procedure Label30DblClick(Sender: TObject);
     procedure Label31DblClick(Sender: TObject);
+    procedure Label32DblClick (Sender : TObject );
     procedure Label39Click(Sender: TObject);
     procedure menuAboutClick(Sender: TObject);
     procedure menuHeardClick(Sender: TObject);
@@ -2114,6 +2115,12 @@ procedure TForm1.Label31DblClick(Sender: TObject);
 begin
      Form1.spinGain.Value := 0;
      spectrum.specVGain := Form1.spinGain.Value + 7;
+end;
+
+procedure TForm1 .Label32DblClick (Sender : TObject );
+begin
+     // Set DT offset to 0
+     spinDT.Value := 0;
 end;
 
 procedure TForm1.Label39Click(Sender: TObject);
@@ -6377,10 +6384,10 @@ Begin
      // Refresh audio level display
      if not primed then updateAudio();
      // Update spectrum display.
-
      {TODO Trying this to refresh display even while TX is on, may be a bad idea...}
+     // "Special" TX waterfall update
      if globalData.txInProgress and not primed and not globalData.spectrumComputing65 and not d65.glinprog Then Waterfall.Repaint;
-
+     // Normal RX waterfall update
      if not globalData.txInProgress and not primed and not globalData.spectrumComputing65 and not d65.glinProg Then
      Begin
           If globalData.specNewSpec65 Then Waterfall.Repaint;
