@@ -14,6 +14,7 @@
       <Title Value="JT65-HF"/>
       <UseAppBundle Value="False"/>
       <ResourceType Value="res"/>
+      <UseXPManifest Value="True"/>
       <Icon Value="0"/>
     </General>
     <VersionInfo>
@@ -21,7 +22,7 @@
       <AutoIncrementBuild Value="True"/>
       <MajorVersionNr Value="1"/>
       <RevisionNr Value="8"/>
-      <BuildNr Value="8"/>
+      <BuildNr Value="9"/>
       <StringTable FileDescription="Amateur Radio communications using JT65A" LegalCopyright="2009..2010 - J C Large - W6CQZ - GPL 2" ProductVersion="1.0.7.297"/>
     </VersionInfo>
     <BuildModes Count="1">

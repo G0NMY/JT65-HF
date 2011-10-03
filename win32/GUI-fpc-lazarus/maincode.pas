@@ -101,6 +101,7 @@ type
     Label3: TLabel;
     Label30: TLabel;
     Label31: TLabel;
+    Label32 : TLabel ;
     Label33: TLabel;
     Label34: TLabel;
     Label35: TLabel;
@@ -185,6 +186,7 @@ type
     spinDecoderBin : TSpinEdit;
     spinDecoderCF: TSpinEdit;
     SpinEdit1: TSpinEdit;
+    SpinDT : TSpinEdit ;
     spinGain: TSpinEdit;
     spinTXCF: TSpinEdit;
     Timer1: TTimer;
@@ -243,6 +245,7 @@ type
     procedure rbFreeMsgChange(Sender: TObject);
     procedure spinDecoderBWChange(Sender: TObject);
     procedure spinDecoderBinChange(Sender: TObject);
+    procedure SpinDTChange (Sender : TObject );
     procedure SpinEdit1Change(Sender: TObject);
     procedure spinGainChange(Sender: TObject);
     procedure spinTXCFChange(Sender: TObject);
@@ -1501,9 +1504,13 @@ begin
      if spinDecoderBin.Value = 4 Then d65.glbinspace := 200;
 end;
 
+procedure TForm1 .SpinDTChange (Sender : TObject );
+begin
+     {TODO Implement the DT adjustor - a nightmare waiting to happen. :( }
+end;
+
 procedure TForm1.SpinEdit1Change(Sender: TObject);
 begin
-     {TODO Change this such that setting spinEdit to -1 turns WF off.}
      if spinEdit1.Value > 5 then spinEdit1.Value := 5;
      if spinEdit1.Value < -1 then spinEdit1.Value := -1;
      spectrum.specSpeed2 := Form1.SpinEdit1.Value;
@@ -2801,6 +2808,7 @@ Var
    myColor            : TColor;
    myBrush            : TBrush;
    lineCQ, lineMyCall : Boolean;
+   lineWarn           : Boolean;
    foo                : String;
 begin
      lineCQ := False;
@@ -2808,15 +2816,17 @@ begin
      if Index > -1 Then
      Begin
           foo := Form1.ListBox1.Items[Index];
+          if IsWordPresent('WARNING:', foo, parseCallsign.WordDelimiter) Then lineWarn := True else lineWarn := False;
           if IsWordPresent('CQ', foo, parseCallSign.WordDelimiter) Then lineCQ := True;
           if IsWordPresent('QRZ', foo, parseCallSign.WordDelimiter) Then lineCQ := True;
-          if IsWordPresent(globalData.fullcall, foo, parseCallsign.WordDelimiter) Then lineMyCall := True;
+          if IsWordPresent(globalData.fullcall, foo, parseCallsign.WordDelimiter) Then lineMyCall := True else lineMyCall := False;
           myBrush := TBrush.Create;
           with (Control as TListBox).Canvas do
           begin
                myColor := cfgvtwo.glqsoColor;
                if lineCQ Then myColor := cfgvtwo.glcqColor;
                if lineMyCall Then myColor := cfgvtwo.glcallColor;
+               if lineWarn then myColor := clRed;
                myBrush.Style := bsSolid;
                myBrush.Color := myColor;
                Windows.FillRect(handle, ARect, myBrush.Reference.Handle);
@@ -6044,6 +6054,8 @@ procedure TForm1.processNewMinute(st : TSystemTime);
 Var
    i, idx, ifoo : Integer;
 Begin
+     // Warning for DT being offset
+     if spinDT.Value <> 0 Then Form1.addToDisplayE('WARNING: DT offset is not 0');
      // Get Start of Period QRG
      actionSet := False;
      sopQRG := globalData.gqrg;
@@ -6336,6 +6348,7 @@ Var
    i    : Integer;
    cont : Boolean;
 Begin
+     if spinDT.Value <> 0 Then Label32.Font.Color := clRed else Label32.Font.Color := clBlack;
      if not globaldata.canTX then
      begin
           // Check callsign and grid for validity.
@@ -6405,11 +6418,29 @@ Begin
 End;
 
 procedure TForm1.Timer1Timer(Sender: TObject);
+Var
+   ts : TTimeStamp;
+   dt : TDateTime;
+   ms : Comp;
 begin
      // Setup to evaluate where I am in the temporal loop.
      statusChange := False;
-     gst := utcTime();
-     thisSecond := gst.Second;
+     {This is where I need to start grafting in the DT adjustment}
+     if spinDT.Value <> 0 Then
+     Begin
+          // Add spinDT.value to gst.second, taking into account any overflows.
+          ts  := DateTimeToTimeStamp(Now);
+          ms  := TimeStampToMSecs(ts);
+          ms  := ms + spinDT.Value*1000;
+          ts  := MSecsToTimeStamp(ms);
+          dt  := TimeStampToDateTime(ts);
+          DateTimeToSystemTime(dt,gst);
+     end
+     else
+     begin
+          gst := utcTime();
+          thisSecond := gst.Second;
+     end;
      // Runs at program start only
      If runOnce Then
      Begin
