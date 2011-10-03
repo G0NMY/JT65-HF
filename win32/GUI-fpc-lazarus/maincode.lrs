@@ -124,8 +124,8 @@ LazarusResources.Add('TForm1','FORMDATA',[
   +'idth'#2'^'#7'Caption'#6#9'Enable TX'#7'Enabled'#8#11'Font.Height'#2#241#9'F'
   +'ont.Name'#6#5'Arial'#10'Font.Style'#11#6'fsBold'#0#7'OnClick'#7#16'btnEngag'
   +'eTxClick'#10'ParentFont'#8#8'TabOrder'#2#9#0#0#7'TButton'#15'buttonClearLis'
-  +'t'#4'Left'#2#4#6'Height'#2#25#3'Top'#3#127#2#5'Width'#2'l'#7'Caption'#6#13
-  +'Clear Decodes'#11'Font.Height'#2#243#9'Font.Name'#6#5'Arial'#10'Font.Style'
+  +'t'#4'Left'#2#4#6'Height'#2#25#3'Top'#3'|'#2#5'Width'#2'l'#7'Caption'#6#13'C'
+  +'lear Decodes'#11'Font.Height'#2#243#9'Font.Name'#6#5'Arial'#10'Font.Style'
   +#11#6'fsBold'#0#7'OnClick'#7#20'buttonClearListClick'#10'ParentFont'#8#8'Tab'
   +'Order'#2#10#0#0#7'TButton'#13'buttonEndQSO2'#4'Left'#3'X'#3#6'Height'#2'n'#3
   +'Top'#3'c'#1#5'Width'#2'G'#7'Caption'#6#7'Send 73'#11'Font.Height'#2#243#9'F'
@@ -298,7 +298,7 @@ LazarusResources.Add('TForm1','FORMDATA',[
   +#6'Height'#2#24#3'Top'#3','#2#5'Width'#2'('#11'Font.Height'#2#243#9'Font.Nam'
   +'e'#6#5'Arial'#10'Font.Style'#11#6'fsBold'#0#9'MaxLength'#2#3#10'ParentFont'
   +#8#8'ReadOnly'#9#7'TabStop'#8#8'TabOrder'#2'%'#4'Text'#6#3'100'#0#0#7'TButto'
-  +'n'#11'btnReDecode'#4'Left'#3#144#0#6'Height'#2#25#3'Top'#3'~'#2#5'Width'#2
+  +'n'#11'btnReDecode'#4'Left'#3#144#0#6'Height'#2#25#3'Top'#3'|'#2#5'Width'#2
   +'s'#7'Caption'#6#12'Decode Again'#11'Font.Height'#2#243#9'Font.Name'#6#5'Ari'
   +'al'#10'Font.Style'#11#6'fsBold'#0#7'OnClick'#7#16'btnReDecodeClick'#10'Pare'
   +'ntFont'#8#8'TabOrder'#2'&'#0#0#6'TBevel'#6'Bevel1'#4'Left'#3','#2#6'Height'
@@ -319,17 +319,17 @@ LazarusResources.Add('TForm1','FORMDATA',[
   +'isplay is disabled by user request.'#11'Font.Height'#2#224#9'Font.Name'#6#5
   +'Arial'#10'Font.Style'#11#6'fsBold'#0#11'ParentColor'#8#10'ParentFont'#8#7'V'
   +'isible'#8#0#0#9'TSpinEdit'#6'SpinDT'#4'Left'#3'G'#1#6'Height'#2#24#3'Top'#3
-  +#127#2#5'Width'#2'I'#8'MaxValue'#2#5#8'MinValue'#2#251#8'OnChange'#7#12'Spin'
-  +'DTChange'#8'TabOrder'#2')'#0#0#6'TLabel'#7'Label32'#4'Left'#3#152#1#6'Heigh'
-  ,'t'#2#17#3'Top'#3#127#2#5'Width'#2'P'#7'Caption'#6#13'Adjust Timing'#11'Pare'
-  +'ntColor'#8#0#0#6'TTimer'#6'Timer1'#8'Interval'#3#220#0#7'OnTimer'#7#11'Time'
-  +'r1Timer'#4'left'#3#136#2#3'top'#2'8'#0#0#15'TXMLPropStorage'#3'cfg'#12'Stor'
-  +'edValues'#14#1#4'Name'#6#4'call'#0#1#4'Name'#6#4'grid'#0#1#4'Name'#6#4'txCF'
-  +#5'Value'#6#1'0'#0#1#4'Name'#6#4'rxCF'#5'Value'#6#1'0'#0#1#4'Name'#6#11'sing'
-  +'lerange'#5'Value'#6#4'1000'#0#1#4'Name'#6#7'soundin'#5'Value'#6#1'0'#0#1#4
-  +'Name'#6#8'soundout'#5'Value'#6#1'0'#0#1#4'Name'#6#6'ldgain'#5'Value'#6#1'0'
-  +#0#1#4'Name'#6#6'rdgain'#5'Value'#6#1'0'#0#1#4'Name'#6#8'samfacin'#5'Value'#6
-  +#1'1'#0#1#4'Name'#6#9'samfacout'#5'Value'#6#1'1'#0#1#4'Name'#6#9'audiochan'#5
+  +'|'#2#5'Width'#2'I'#8'MaxValue'#2#5#8'MinValue'#2#251#8'OnChange'#7#12'SpinD'
+  +'TChange'#8'TabOrder'#2')'#0#0#6'TLabel'#7'Label32'#4'Left'#3#152#1#6'Height'
+  ,#2#17#3'Top'#3'|'#2#5'Width'#2'P'#7'Caption'#6#13'Adjust Timing'#11'ParentCo'
+  +'lor'#8#0#0#6'TTimer'#6'Timer1'#8'Interval'#3#220#0#7'OnTimer'#7#11'Timer1Ti'
+  +'mer'#4'left'#3#136#2#3'top'#2'8'#0#0#15'TXMLPropStorage'#3'cfg'#12'StoredVa'
+  +'lues'#14#1#4'Name'#6#4'call'#0#1#4'Name'#6#4'grid'#0#1#4'Name'#6#4'txCF'#5
+  +'Value'#6#1'0'#0#1#4'Name'#6#4'rxCF'#5'Value'#6#1'0'#0#1#4'Name'#6#11'single'
+  +'range'#5'Value'#6#4'1000'#0#1#4'Name'#6#7'soundin'#5'Value'#6#1'0'#0#1#4'Na'
+  +'me'#6#8'soundout'#5'Value'#6#1'0'#0#1#4'Name'#6#6'ldgain'#5'Value'#6#1'0'#0
+  +#1#4'Name'#6#6'rdgain'#5'Value'#6#1'0'#0#1#4'Name'#6#8'samfacin'#5'Value'#6#1
+  +'1'#0#1#4'Name'#6#9'samfacout'#5'Value'#6#1'1'#0#1#4'Name'#6#9'audiochan'#5
   +'Value'#6#1'0'#0#1#4'Name'#6#6'autoSR'#5'Value'#6#1'0'#0#1#4'Name'#6#7'pttPo'
   +'rt'#5'Value'#6#4'None'#0#1#4'Name'#6#7'catPort'#5'Value'#6#4'None'#0#1#4'Na'
   +'me'#6#3'afc'#5'Value'#6#1'0'#0#1#4'Name'#6#10'noiseblank'#5'Value'#6#1'0'#0

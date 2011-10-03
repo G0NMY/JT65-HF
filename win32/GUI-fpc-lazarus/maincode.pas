@@ -6377,6 +6377,10 @@ Begin
      // Refresh audio level display
      if not primed then updateAudio();
      // Update spectrum display.
+
+     {TODO Trying this to refresh display even while TX is on, may be a bad idea...}
+     if globalData.txInProgress and not primed and not globalData.spectrumComputing65 and not d65.glinprog Then Waterfall.Repaint;
+
      if not globalData.txInProgress and not primed and not globalData.spectrumComputing65 and not d65.glinProg Then
      Begin
           If globalData.specNewSpec65 Then Waterfall.Repaint;
