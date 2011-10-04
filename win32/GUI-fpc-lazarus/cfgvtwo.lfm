@@ -1529,6 +1529,7 @@ object Form6: TForm6
         Width = 144
         CharCase = ecUppercase
         MaxLength = 13
+        OnChange = edUserMsgChange
         TabOrder = 4
       end
       object edUserMsg5: TEdit
@@ -1538,6 +1539,7 @@ object Form6: TForm6
         Width = 143
         CharCase = ecUppercase
         MaxLength = 13
+        OnChange = edUserMsgChange
         TabOrder = 5
       end
       object edUserMsg6: TEdit
@@ -1547,6 +1549,7 @@ object Form6: TForm6
         Width = 144
         CharCase = ecUppercase
         MaxLength = 13
+        OnChange = edUserMsgChange
         TabOrder = 6
       end
       object edUserMsg7: TEdit
@@ -1556,6 +1559,7 @@ object Form6: TForm6
         Width = 144
         CharCase = ecUppercase
         MaxLength = 13
+        OnChange = edUserMsgChange
         TabOrder = 7
       end
       object edUserMsg8: TEdit
@@ -1565,6 +1569,7 @@ object Form6: TForm6
         Width = 144
         CharCase = ecUppercase
         MaxLength = 13
+        OnChange = edUserMsgChange
         TabOrder = 8
       end
       object edUserMsg9: TEdit
@@ -1574,6 +1579,7 @@ object Form6: TForm6
         Width = 144
         CharCase = ecUppercase
         MaxLength = 13
+        OnChange = edUserMsgChange
         TabOrder = 9
       end
       object edUserMsg10: TEdit
@@ -1583,6 +1589,7 @@ object Form6: TForm6
         Width = 143
         CharCase = ecUppercase
         MaxLength = 13
+        OnChange = edUserMsgChange
         TabOrder = 10
       end
       object edUserMsg11: TEdit
@@ -1592,6 +1599,7 @@ object Form6: TForm6
         Width = 143
         CharCase = ecUppercase
         MaxLength = 13
+        OnChange = edUserMsgChange
         TabOrder = 11
       end
       object edUserMsg12: TEdit
@@ -1601,6 +1609,7 @@ object Form6: TForm6
         Width = 143
         CharCase = ecUppercase
         MaxLength = 13
+        OnChange = edUserMsgChange
         TabOrder = 12
       end
       object edUserMsg13: TEdit
@@ -1610,6 +1619,7 @@ object Form6: TForm6
         Width = 144
         CharCase = ecUppercase
         MaxLength = 13
+        OnChange = edUserMsgChange
         TabOrder = 13
       end
       object edUserQRG5: TEdit
@@ -1739,6 +1749,7 @@ object Form6: TForm6
         Width = 144
         CharCase = ecUppercase
         MaxLength = 13
+        OnChange = edUserMsgChange
         TabOrder = 23
       end
       object Label126: TLabel
@@ -1760,6 +1771,7 @@ object Form6: TForm6
         Width = 144
         CharCase = ecUppercase
         MaxLength = 13
+        OnChange = edUserMsgChange
         TabOrder = 24
       end
       object Label127: TLabel
@@ -1781,6 +1793,7 @@ object Form6: TForm6
         Width = 144
         CharCase = ecUppercase
         MaxLength = 13
+        OnChange = edUserMsgChange
         TabOrder = 25
       end
       object Label128: TLabel
@@ -1802,6 +1815,7 @@ object Form6: TForm6
         Width = 144
         CharCase = ecUppercase
         MaxLength = 13
+        OnChange = edUserMsgChange
         TabOrder = 26
       end
       object Label129: TLabel
@@ -1823,6 +1837,7 @@ object Form6: TForm6
         Width = 144
         CharCase = ecUppercase
         MaxLength = 13
+        OnChange = edUserMsgChange
         TabOrder = 27
       end
       object Label130: TLabel
@@ -1844,6 +1859,7 @@ object Form6: TForm6
         Width = 144
         CharCase = ecUppercase
         MaxLength = 13
+        OnChange = edUserMsgChange
         TabOrder = 28
       end
       object Label131: TLabel
@@ -1865,6 +1881,7 @@ object Form6: TForm6
         Width = 144
         CharCase = ecUppercase
         MaxLength = 13
+        OnChange = edUserMsgChange
         TabOrder = 29
       end
       object Label132: TLabel

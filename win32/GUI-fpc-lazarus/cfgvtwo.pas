@@ -616,6 +616,8 @@ begin
      End;
 end;
 
+{TODO Create validation for user defined QRG values}
+
 procedure TForm6.edUserMsgChange(Sender: TObject);
 var
    foo : String;
