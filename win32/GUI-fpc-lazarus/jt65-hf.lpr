@@ -31,7 +31,7 @@ uses
   adc, samplerate, dac, dlog, rawdec, cfgvtwo, guiConfig, verHolder,
   PSKReporter, catControl, synaser,
   adif, log, diagout, waterfall, d65, hrdinterface5, hrdinterface4, about,
-  madc, mdac , spot , valobject;
+  madc, mdac , spot , valobject ;
 
 {$R *.res}
 

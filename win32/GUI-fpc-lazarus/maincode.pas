@@ -212,7 +212,6 @@ type
     procedure buttonCQClick(Sender: TObject);
     procedure buttonEndQSO1Click(Sender: TObject);
     procedure buttonSendReportClick(Sender: TObject);
-    procedure buttonSetupClick(Sender: TObject);
     procedure cbSmoothChange(Sender: TObject);
     procedure chkAFCChange(Sender: TObject);
     procedure chkAutoTxDFChange(Sender: TObject);
@@ -246,7 +245,6 @@ type
     procedure rbFreeMsgChange(Sender: TObject);
     procedure spinDecoderBWChange(Sender: TObject);
     procedure spinDecoderBinChange(Sender: TObject);
-    procedure SpinDTChange (Sender : TObject );
     procedure SpinEdit1Change(Sender: TObject);
     procedure spinGainChange(Sender: TObject);
     procedure spinTXCFChange(Sender: TObject);
@@ -1451,9 +1449,30 @@ begin
      End;
 end;
 
-procedure TForm1.buttonSetupClick(Sender: TObject);
+//procedure TForm1.buttonSetupClick(Sender: TObject);
+//begin
+//     cfgvtwo.Form6.PageControl1.ActivePage := cfgvtwo.Form6.TabSheet1;
+//     cfgvtwo.Form6.Show;
+//     cfgvtwo.Form6.BringToFront;
+//end;
+
+procedure TForm1.menuHeardClick(Sender: TObject);
 begin
-     cfgvtwo.Form6.Notebook1.ActivePage := 'Station Setup';
+     cfgvtwo.Form6.PageControl1.ActivePage := cfgvtwo.Form6.TabSheet3;
+     cfgvtwo.Form6.Show;
+     cfgvtwo.Form6.BringToFront;
+end;
+
+procedure TForm1.menuRigControlClick(Sender: TObject);
+begin
+     cfgvtwo.Form6.PageControl1.ActivePage := cfgvtwo.Form6.TabSheet2;
+     cfgvtwo.Form6.Show;
+     cfgvtwo.Form6.BringToFront;
+end;
+
+procedure TForm1.menuSetupClick(Sender: TObject);
+begin
+     cfgvtwo.Form6.PageControl1.ActivePage := cfgvtwo.Form6.TabSheet1;
      cfgvtwo.Form6.Show;
      cfgvtwo.Form6.BringToFront;
 end;
@@ -1503,11 +1522,6 @@ begin
      if spinDecoderBin.Value = 2 Then d65.glbinspace := 50;
      if spinDecoderBin.Value = 3 Then d65.glbinspace := 100;
      if spinDecoderBin.Value = 4 Then d65.glbinspace := 200;
-end;
-
-procedure TForm1 .SpinDTChange (Sender : TObject );
-begin
-     {TODO Implement the DT adjustor - a nightmare waiting to happen. :( }
 end;
 
 procedure TForm1.SpinEdit1Change(Sender: TObject);
@@ -1702,6 +1716,15 @@ begin
           cfg.StoredValue['rxCF'] := IntToStr(Form1.spinDecoderCF.Value);
           cfg.StoredValue['soundin']      := IntToStr(paInParams.device);
           cfg.StoredValue['soundout']     := IntToStr(paOutParams.device);
+
+          foo := cfgvtwo.Form6.cbAudioIn.Items.Strings[cfgvtwo.Form6.cbAudioIn.ItemIndex];
+          foo := foo[4..Length(foo)];
+          cfg.StoredValue['LastInput'] := foo;
+
+          foo := cfgvtwo.Form6.cbAudioOut.Items.Strings[cfgvtwo.Form6.cbAudioOut.ItemIndex];
+          foo := foo[4..Length(foo)];
+          cfg.StoredValue['LastOutput'] := foo;
+
           cfg.StoredValue['ldgain']       := IntToStr(Form1.TrackBar1.Position);
           cfg.StoredValue['rdgain']       := IntToStr(Form1.TrackBar2.Position);
           cfg.StoredValue['samfacin']     := cfgvtwo.Form6.edRXSRCor.Text;
@@ -2133,13 +2156,6 @@ begin
      about.Form4.Visible := True;
 end;
 
-procedure TForm1.menuHeardClick(Sender: TObject);
-begin
-     cfgvtwo.Form6.Notebook1.ActivePage := 'Heard List/PSKR Setup/RB Setup';
-     cfgvtwo.Form6.Show;
-     cfgvtwo.Form6.BringToFront;
-end;
-
 procedure TForm1.MenuItemHandler(Sender: TObject);
 Begin
 
@@ -2230,20 +2246,6 @@ end;
 procedure TForm1.menuRawDecoderClick(Sender: TObject);
 begin
      diagout.Form3.Visible := True; // diagout is the raw decoder output form... it was repurposed for this.
-end;
-
-procedure TForm1.menuRigControlClick(Sender: TObject);
-begin
-     cfgvtwo.Form6.Notebook1.ActivePage := 'Rig Control/PTT';
-     cfgvtwo.Form6.Show;
-     cfgvtwo.Form6.BringToFront;
-end;
-
-procedure TForm1.menuSetupClick(Sender: TObject);
-begin
-     cfgvtwo.Form6.Notebook1.ActivePage := 'Station Setup';
-     cfgvtwo.Form6.Show;
-     cfgvtwo.Form6.BringToFront;
 end;
 
 procedure TForm1.menuTXLogClick(Sender: TObject);
@@ -3549,7 +3551,7 @@ var
    vstr                 : PChar;
    st                   : TSYSTEMTIME;
    tstflt               : Double;
-   fname                : String;
+   fname, lasto, lasti  : String;
    verUpdate, cont      : Boolean;
    ain, aout, din, dout : Integer;
 Begin
@@ -4029,10 +4031,86 @@ Begin
      tstint := 0;
      if TryStrToInt(cfg.StoredValue['txCF'],tstint) Then Form1.spinTXCF.Value := tstint else Form1.spinTXCF.Value := 0;
      spinTXCFChange(spinTXCF);
+
+
+     {TODO Save previously selected device name as string and compare in case it has changed.}
+
+     // Last selected in/out devices stored as names of device LESS the leading digits.
+     // These won't be present until the program has been ran and properly close once.
+     // So.. handle it if they're empty strings :)
+     // The string name of a device begins at the 4th character since 1..3 is ##-
+
+     lasto := cfg.StoredValue['LastOutput'];
+     lasti := cfg.StoredValue['LastInput'];
+
      tstint := 0;
-     if TryStrToInt(cfg.StoredValue['soundin'],tstint) Then cfgvtwo.Form6.cbAudioIn.ItemIndex := tstint else cfgvtwo.Form6.cbAudioIn.ItemIndex := 0;
+     if TryStrToInt(cfg.StoredValue['soundin'],tstint) Then
+     Begin
+          // Select default first, this will not be changed if no match found.
+          cfgvtwo.Form6.cbAudioIn.ItemIndex := 0;
+          for i := 0 to cfgvtwo.Form6.cbAudioIn.Items.Count-1 do
+          begin
+               // Look for and select previously saved device if possible.
+               foo := cfgvtwo.Form6.cbAudioIn.Items.Strings[i];
+               if StrToInt(foo[1..2]) = tstint then
+               begin
+                    cfgvtwo.Form6.cbAudioIn.ItemIndex := i;
+                    break;
+               end;
+          end;
+     end
+     else
+     begin
+          cfgvtwo.Form6.cbAudioIn.ItemIndex := 0;
+     end;
+
      tstint := 0;
-     if TryStrToInt(cfg.StoredValue['soundout'],tstint) Then cfgvtwo.Form6.cbAudioOut.ItemIndex := tstint else cfgvtwo.Form6.cbAudioOut.ItemIndex := 0;
+     if TryStrToInt(cfg.StoredValue['soundout'],tstint) Then
+     begin
+          //for i := 0 to cfgvtwo.Form6.cbAudioIn.Items.Count-1 do showmessage('Index:  ' + IntToStr(i) + '  ' + cfgvtwo.Form6.cbAudioIn.Items.Strings[i]);
+          //for i := 0 to cfgvtwo.Form6.cbAudioOut.Items.Count-1 do showmessage('Index:  ' + IntToStr(i) + '  ' + cfgvtwo.Form6.cbAudioOut.Items.Strings[i]);
+
+          // Select default first, this will not be changed if no match found.
+          cfgvtwo.Form6.cbAudioOut.ItemIndex := 0;
+          for i := 0 to cfgvtwo.Form6.cbAudioOut.Items.Count-1 do
+          begin
+               // Look for and select previously saved device if possible.
+               foo := cfgvtwo.Form6.cbAudioOut.Items.Strings[i];
+               if StrToInt(foo[1..2]) = tstint then
+               begin
+                    cfgvtwo.Form6.cbAudioOut.ItemIndex := i;
+                    break;
+               end;
+          end;
+     end
+     else
+     begin
+          cfgvtwo.Form6.cbAudioOut.ItemIndex := 0;
+     end;
+
+     // Test to see if currently selected devices match (string wise) previously selected devices.
+     if length(lasti)>0 then
+     begin
+          // Compare lasti to currently selected input
+          foo := cfgvtwo.Form6.cbAudioIn.Items.Strings[cfgvtwo.Form6.cbAudioIn.ItemIndex];
+          foo := foo[4..Length(foo)];
+          if lasti <> foo then showmessage('The currently selected input device has changed from saved value.' + sLineBreak +
+                                           'Saved:  ' + lasti + sLineBreak +
+                                           'Current:  ' + foo + sLineBreak + sLineBreak +
+                                           'Please check configuration to be sure correct device has been set.');
+     end;
+
+     if length(lasto)>0 then
+     begin
+          // Compare lasto to currently selected output
+          foo := cfgvtwo.Form6.cbAudioOut.Items.Strings[cfgvtwo.Form6.cbAudioOut.ItemIndex];
+          foo := foo[4..Length(foo)];
+          if lasto <> foo then showmessage('The currently selected output device has changed from saved value.' + sLineBreak +
+                                           'Saved:  ' + lasto + sLineBreak +
+                                           'Current:  ' + foo + sLineBreak + sLineBreak +
+                                           'Please check configuration to be sure correct device has been set.');
+     end;
+
      tstint := 0;
      if TryStrToInt(cfg.StoredValue['ldgain'],tstint) Then
      Begin
@@ -4580,12 +4658,15 @@ Begin
           d65.glfftSWisdom := 0;
           dlog.fileDebug('Running without optimal FFT enabled by user request.');
      End;
+
      // Setup input/output devices
      // Translate strings to PA integer device ID for selected and default devices.
      foo  := cfgvtwo.Form6.cbAudioIn.Items.Strings[cfgvtwo.Form6.cbAudioIn.ItemIndex];
      ain  := StrToInt(foo[1..2]);
+
      foo  := cfgvtwo.Form6.cbAudioOut.Items.Strings[cfgvtwo.Form6.cbAudioOut.ItemIndex];
      aout := StrToInt(foo[1..2]);
+
      din  := portaudio.Pa_GetHostApiInfo(paDefApi)^.defaultInputDevice;
      dout := portaudio.Pa_GetHostApiInfo(paDefApi)^.defaultOutputDevice;
      // Call audio setup
@@ -5412,16 +5493,13 @@ Begin
           Begin
                diagout.Form3.ListBox3.Clear;
                doCWID := False;
-               // Add 1s silence between end of JT65 and start of CW ID
+               // Add .25s silence between end of JT65 and start of CW ID
                for mnlooper := mnlooper to mnlooper + 11025 do
                begin
                     dac.d65txBuffer[mnlooper] := 0;
                end;
                // Gen CW ID
-               for i := 0 to 110249 do
-               begin
-                    encode65.e65cwid[i] := 0; // Clear CW ID Buffer
-               end;
+               for i := 0 to length(encode65.e65cwid)-1 do encode65.e65cwid[i] := 0; // Clear CW ID Buffer
                StrPCopy(cwidMsg,UpCase(padRight(globalData.fullcall,22)));
                if txdf < 0 Then
                Begin
@@ -6385,13 +6463,15 @@ Begin
      if not primed then updateAudio();
      // Update spectrum display.
      {TODO Trying this to refresh display even while TX is on, may be a bad idea...}
-     // "Special" TX waterfall update
-     if globalData.txInProgress and not primed and not globalData.spectrumComputing65 and not d65.glinprog Then Waterfall.Repaint;
      // Normal RX waterfall update
      if not globalData.txInProgress and not primed and not globalData.spectrumComputing65 and not d65.glinProg Then
      Begin
           If globalData.specNewSpec65 Then Waterfall.Repaint;
-     End;
+     End
+     else
+     begin
+          Waterfall.Repaint;
+     end;
      // Update RX/TX SR Display
      if not primed Then updateSR();
      // Determine TX Buffer to use

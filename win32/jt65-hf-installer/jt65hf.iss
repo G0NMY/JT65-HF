@@ -4,10 +4,10 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING .ISS SCRIPT FILES!
 
 [Setup]
-AppName=JT65-HF
-AppVerName=JT65-HF 1.0.7
-DefaultDirName={pf}\jt65hf
-DefaultGroupName=JT65-HF
+AppName=JT65-HF-1.0.8
+AppVerName=JT65-HF 1.0.8
+DefaultDirName={pf}\jt65hf108
+DefaultGroupName=JT65-HF-V108
 UninstallDisplayIcon={app}\jt65-hf.exe
 Compression=lzma
 SolidCompression=yes
@@ -28,14 +28,14 @@ Type: files; Name: "{app}\libusb0.dll"
 Type: files; Name: "{app}\PSKReporter.dll"
 Type: files; Name: "{app}\HRDInterface0014.dll"
 Type: files; Name: "{app}\HRDInterface0015.dll"
-Type: files; Name: "{app}\sg-jt65-hf.exe"
+;Type: files; Name: "{app}\sg-jt65-hf.exe"
 Type: files; Name: "{app}\KVASD_g95.exe"
 Type: filesandordirs; Name: "{app}\hamlib"
 Type: filesandordirs; Name: "{app}\optfft"
 
 [Files]
 Source: "jt65-hf.exe"; DestDir: "{app}"
-Source: "sg-jt65-hf.exe"; DestDir: "{app}"
+;Source: "sg-jt65-hf.exe"; DestDir: "{app}"
 Source: "KVASD_g95.EXE"; DestDir: "{app}"
 Source: "jl_libfftw3f-3.dll"; DestDir: "{app}"
 Source: "libfftw3f-3.dll"; DestDir: "{app}"
@@ -47,7 +47,7 @@ Source: "HRDInterface0014.dll"; DestDir: "{app}"
 Source: "HRDInterface0015.dll"; DestDir: "{app}"
 Source: "libusb0.dll"; DestDir: "{app}"
 Source: "gpl-2.0.txt"; DestDir: "{app}"
-Source: "jt65-hf-setup.pdf"; DestDir: "{app}"
+;Source: "jt65-hf-setup.pdf"; DestDir: "{app}"
 Source: "hamlib\*.*"; DestDir: "{app}\hamlib"
 Source: "hamlib\rig_dde\*.*"; DestDir: "{app}\hamlib\rig_dde"
 Source: "optFFT\*.*"; DestDir: "{app}\optFFT"
@@ -58,9 +58,9 @@ Filename: "{app}\optFFT\jt65-hf.exe"; Flags: postinstall; Description: "Setup in
 
 [Icons]
 Name: "{group}\JT65-HF"; Filename: "{app}\jt65-hf.exe"
-Name: "{group}\JTG65-HF Small GUI"; Filename: "{app}\sg-jt65-hf.exe"
+;Name: "{group}\JT65-HF Small GUI"; Filename: "{app}\sg-jt65-hf.exe"
 Name: "{group}\Uninstall JT65-HF"; Filename: "{uninstallexe}"
-Name: "{group}\Documentation"; Filename: "{app}\jt65-hf-setup.pdf"
+;Name: "{group}\Documentation"; Filename: "{app}\jt65-hf-setup.pdf"
 
 [CODE]
 function optFFTCheck(): Boolean;
