@@ -918,7 +918,7 @@ begin
      end;
 end;
 
-{TODO rehook this eventually}
+{TODO [1.0.9] Re-hook this eventually}
 //procedure TForm1.updateList(callsign : String);
 //Var
 //   i     : integer;
@@ -1966,16 +1966,20 @@ begin
           cfg.Save;
           diagout.Form3.ListBox1.Items.Add('Saved configuration');
 
-          {TODO Debug this.. something seems awry}
-          //if mnpttOpened Then
-          //Begin
-          //     diagout.Form3.ListBox1.Items.Add('Closing PTT Port');
-          //     if getPTTMethod() = 'SI5' Then si570Lowerptt();
-          //     if getPTTMethod() = 'HRD' Then hrdLowerPTT();
-          //     if getPTTMethod() = 'ALT' Then altLowerPTT();
-          //     if getPTTMethod() = 'PTT' Then lowerPTT();
-          //     diagout.Form3.ListBox1.Items.Add('Closed PTT Port');
-          //end;
+          {TODO [1.0.9] Debug this.. something seems awry.  Using Try/Except to pass this for 1.0.8}
+          Try
+             if mnpttOpened Then
+             Begin
+                  diagout.Form3.ListBox1.Items.Add('Closing PTT Port');
+                  if getPTTMethod() = 'SI5' Then si570Lowerptt();
+                  if getPTTMethod() = 'HRD' Then hrdLowerPTT();
+                  if getPTTMethod() = 'ALT' Then altLowerPTT();
+                  if getPTTMethod() = 'PTT' Then lowerPTT();
+                  diagout.Form3.ListBox1.Items.Add('Closed PTT Port');
+             end;
+          Except
+             // Nothing needs to be done, this simply allows the code to pass safely on fail.
+          end;
 
           if globalData.rbLoggedIn Then
           Begin
@@ -2887,7 +2891,7 @@ begin
                          efoo     := 'Can not compute TX message';
                     End;
 
-                    {TODO Continue testing result of message parsers for bith 2/3 word forms.}
+                    {TODO [1.0.9 and beyond] Continue testing result of message parsers for bith 2/3 word forms.}
 
                     // Lots of comments.  :)
                     //
@@ -3854,8 +3858,9 @@ Begin
 
      // Setup internal database
      rb.logDir := GetAppConfigDir(False);
-     {TODO REMOVE this, it's a temporary test bit }
-     rb.dbToCSV(rb.logdir + 'spots.csv');
+
+     // Uncomment to dump database at program start.
+     //rb.dbToCSV(rb.logdir + 'spots.csv');
 
      // Initialize prefix/suffix support
      encode65.pfxBuild();
@@ -5024,7 +5029,7 @@ Begin
      end;
      // Create and initialize TWaterfallControl
      Waterfall := TWaterfallControl.Create(Self);
-     Waterfall.Height := 160;
+     Waterfall.Height := 180;
      Waterfall.Width  := 750;
      Waterfall.Top    := 25;
      Waterfall.Left   := 177;
@@ -5719,7 +5724,7 @@ Begin
      // or 538020 samples (262.7 2K buffers).  Raising upper bound to an
      // even 2K multiple gives me 538624 samples or 263 2K buffers.
 
-     {TODO Return the message that will be TX as returned by libJT65.  This not done = not released.}
+     {TODO [1.0.9] No long priority due to strict character validation of input fields.  Return the message that will be TX as returned by libJT65.}
 
      d65sending := StrAlloc(28);
      for i := 0 to 27 do d65sending[i] := ' ';
@@ -5751,13 +5756,6 @@ Begin
                dac.d65txBuffer[mnlooper] := 0;
           end;
           if (paOutParams.channelCount = 2) And (txMode = 65) then encode65.gen65(d65txmsg,@txdf,@dac.d65txBuffer[0],@d65nwave,@d65sendingsh,d65sending,@d65nmsg);
-
-          {TODO Complete work for insuring what displays as TX content matches the exact actual TX message}
-          //Timer1.enabled := False;
-          //ShowMessage(d65sending[0..21]);
-          //Timer1.enabled := True;
-          curmsg := '';
-          curmsg := d65Sending[0..21];
 
           //if txMode =  4 Then  encode65.gen4(d65txmsg,@txdf,@dac.d65txBuffer[0],@d65nwave,@d65sendingsh,d65sending,@d65nmsg);
 
@@ -5875,7 +5873,8 @@ Begin
      {TODO [1.0.9] would not lead to a DT error as is now. Leave this for 1.0.9}
      // Generate TX samples for a late starting TX Cycle.
 
-     {TODO Return the message that will be TX as returned by libJT65.  This not done = not released.}
+     {TODO [1.0.9] No long priority due to strict character validation of input fields.  Return the message that will be TX as returned by libJT65.}
+
      d65sending := StrAlloc(28);
 
      if useBuffer = 0 Then
@@ -6028,8 +6027,6 @@ Begin
      valTX := False;
      if (Length(TrimLeft(TrimRight(Form1.edMsg.Text)))>1) And (useBuffer=0) Then valTx := True;
      if (Length(TrimLeft(TrimRight(Form1.edFreeText.Text)))>1) And (useBuffer=1) Then valTx := True;
-
-     {TODO Rework this to take into account TX inhibit for bad call/grid}
 
      if valTX then
      Begin
@@ -6676,7 +6673,7 @@ Begin
      // Update AU Levels display
      displayAudio(audioAve1, audioAve2);
      if Form1.chkMultiDecode.Checked Then watchMulti := False;
-     {TODO Reattach this to new RB Code}
+     {TODO [1.0.9] Reattach this to new RB Code}
      // Update rbstats once per minute at second = 30
      //If st.Second = 30 Then
      //Begin
@@ -6743,31 +6740,27 @@ Var
    cont : Boolean;
 Begin
      if spinDT.Value <> 0 Then Label32.Font.Color := clRed else Label32.Font.Color := clBlack;
-     if not globaldata.canTX then
-     begin
-          // Check callsign and grid for validity.
-          cont := False;
-          // Verify callsign meets the JT65 protocol requirements.
-          if ValidateCallsign(cfgvtwo.glmycall) then cont := true else cont := false;
-          // Verify grid is a valid 4 or 6 character value
-          if ValidateGrid(cfgvtwo.Form6.edMyGrid.Text) and cont then cont := true else cont := false;
-          if cont then
-          begin
-               btnEngageTX.Enabled := True;
-               cbEnPSKR.Checked := True;
-               cbEnPSKR.Enabled := True;
-          end
-          else
-          begin
-               btnEngageTX.Enabled := False;
-               cbEnRB.Checked := False;
-               cbEnRb.Enabled := False;
-               cbEnPSKR.Checked := False;
-               cbEnPSKR.Enabled := False;
-          end;
 
-     end;
+     // Check for changes to configured callsign since last tick
      myCallCheck();
+
+     // Verify callsign and meets the JT65 and/or RB protocol requirements.
+     if ValidateGrid(cfgvtwo.Form6.edMyGrid.Text) AND (ValidateCallsign(globalData.fullcall) or ValidateSlashedCallsign(globalData.fullcall)) then cont := true else cont := false;
+     if cont then
+     begin
+          // Callsign and Grid is good so RB is fine to be enabled.
+          cbEnPSKR.Enabled := True;
+          cbEnRB.Enabled   := True;
+          globalData.canTX := True;
+     end
+     else
+     begin
+          cbEnPSKR.Enabled := False;
+          cbEnRB.Enabled   := False;
+          cbEnPSKR.Checked := False;
+          cbEnRB.Checked   := False;
+          globalData.canTX := False;
+     end;
      // Refresh audio level display
      if not primed then updateAudio();
      // Update spectrum display.
@@ -6875,7 +6868,7 @@ begin
           diagout.Form3.ListBox1.Items.Add('resync! ' + IntToStr(gst.Second));
           runOnce := True;
           Form1.Timer1.Enabled := True;
-          {TODO Not sure this is the right action to take, but it's a start.}
+          {TODO [1.0.9] Review this based on any 1.0.8 feedback.}
      End
      Else
      Begin
