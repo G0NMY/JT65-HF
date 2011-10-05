@@ -218,7 +218,6 @@ type
     procedure chkMultiDecodeChange(Sender: TObject);
     procedure chkNBChange(Sender: TObject);
     procedure cbSpecPalChange(Sender: TObject);
-    procedure edFreeTextChange (Sender : TObject );
     procedure edFreeTextDblClick(Sender: TObject);
     procedure edFreeTextKeyPress (Sender : TObject ; var Key : char );
     procedure edHisCallDblClick(Sender: TObject);

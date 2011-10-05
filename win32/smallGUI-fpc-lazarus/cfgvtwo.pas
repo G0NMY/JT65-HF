@@ -267,7 +267,11 @@ type
     procedure comboPrefixChange(Sender: TObject);
     procedure editSI570FreqChange(Sender: TObject);
     procedure edMyCallChange(Sender: TObject);
+    procedure edMyCallKeyPress (Sender : TObject ; var Key : char );
+    procedure edMyGridKeyPress (Sender : TObject ; var Key : char );
+    procedure edUserMsg4KeyPress (Sender : TObject ; var Key : char );
     procedure edUserMsgChange(Sender: TObject);
+    procedure edUserQRG13KeyPress (Sender : TObject ; var Key : char );
     procedure FormCreate(Sender: TObject);
     procedure hrdAddressChange(Sender: TObject);
     procedure hrdPortChange(Sender: TObject);
@@ -616,7 +620,44 @@ begin
      End;
 end;
 
-{TODO Create validation for user defined QRG values}
+procedure TForm6.edMyCallKeyPress(Sender : TObject; var Key : char);
+Var
+   i : Integer;
+begin
+     // Filtering input to signal report text box such that it only allows numerics and -
+     i := ord(key);
+     if not (i=8) then
+     begin
+        Key := upcase(key);
+        if not cfval.asciiValidate(Key,'csign') then Key := #0;
+     end;
+end;
+
+procedure TForm6.edMyGridKeyPress(Sender : TObject; var Key : char);
+Var
+   i : Integer;
+begin
+     // Filtering input to signal report text box such that it only allows numerics and -
+     i := ord(key);
+     if not (i=8) then
+     begin
+        Key := upcase(key);
+        if not cfval.asciiValidate(Key,'gsign') then Key := #0;
+     end;
+end;
+
+procedure TForm6.edUserMsg4KeyPress(Sender : TObject; var Key : char);
+Var
+   i : Integer;
+begin
+     // Filtering input to signal report text box such that it only allows numerics and -
+     i := ord(key);
+     if not (i=8) then
+     begin
+        Key := upcase(key);
+        if not cfval.asciiValidate(Key,'free') then Key := #0;
+     end;
+end;
 
 procedure TForm6.edUserMsgChange(Sender: TObject);
 var
@@ -648,6 +689,19 @@ begin
      end;
      TEdit(Sender).Text := foo;
 
+end;
+
+procedure TForm6.edUserQRG13KeyPress(Sender : TObject; var Key : char);
+Var
+   i : Integer;
+begin
+     // Filtering input to signal report text box such that it only allows numerics and -
+     i := ord(key);
+     if not (i=8) then
+     begin
+        Key := upcase(key);
+        if not cfval.asciiValidate(Key,'numeric') then Key := #0;
+     end;
 end;
 
 procedure TForm6.FormCreate(Sender: TObject);

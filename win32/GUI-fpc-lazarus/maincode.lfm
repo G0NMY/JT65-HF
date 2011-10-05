@@ -507,7 +507,6 @@ object Form1: TForm1
     Font.Name = 'Arial'
     Font.Style = [fsBold]
     MaxLength = 13
-    OnChange = edFreeTextChange
     OnDblClick = edFreeTextDblClick
     OnKeyPress = edFreeTextKeyPress
     ParentFont = False

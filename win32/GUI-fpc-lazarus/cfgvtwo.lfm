@@ -13,7 +13,6 @@ object Form6: TForm6
   Constraints.MinWidth = 800
   OnCreate = FormCreate
   LCLVersion = '0.9.30'
-  Visible = True
   object PageControl1: TPageControl
     Left = 8
     Height = 488
@@ -305,7 +304,7 @@ object Form6: TForm6
         ButtonWidth = 23
         NumGlyphs = 0
         MaxLength = 0
-        TabOrder = 13
+        TabOrder = 15
       end
       object cbRestoreMulti: TCheckBox
         Left = 4
@@ -329,7 +328,7 @@ object Form6: TForm6
         )
         OnChange = comboPrefixChange
         Style = csDropDownList
-        TabOrder = 14
+        TabOrder = 13
         TabStop = False
         Text = 'NONE'
       end
@@ -345,7 +344,7 @@ object Form6: TForm6
         )
         OnChange = comboPrefixChange
         Style = csDropDownList
-        TabOrder = 15
+        TabOrder = 14
         TabStop = False
         Text = 'NONE'
       end
@@ -2302,7 +2301,7 @@ object Form6: TForm6
         Font.Name = 'Arial'
         ItemHeight = 0
         ParentFont = False
-        TabOrder = 1
+        TabOrder = 2
         TabStop = False
       end
       object chkNoOptFFT: TCheckBox
@@ -2311,7 +2310,7 @@ object Form6: TForm6
         Top = 434
         Width = 522
         Caption = 'Disable Optimal FFT use.  DO NOT CHECK THIS UNLESS YOU KNOW WHY YOU ARE DOING SO.'
-        TabOrder = 2
+        TabOrder = 1
         TabStop = False
       end
       object btnClearLog: TButton
