@@ -28,15 +28,14 @@ uses
   {$ENDIF}{$ENDIF}
   Interfaces, // this includes the LCL widgetset
   Forms, maincode, portaudio, encode65, globalData, spectrum, cmaps, fftw_jl,
-  adc, samplerate, dac, LResources, dlog, rawdec, cfgvtwo, guiConfig, verHolder,
-  PSKReporter, catControl, Si570Dev, LibUSB, SndTypes, UsbDev, synaser, rbc,
+  adc, samplerate, dac, dlog, rawdec, cfgvtwo, guiConfig, verHolder,
+  PSKReporter, catControl, synaser,
   adif, log, diagout, waterfall, d65, hrdinterface5, hrdinterface4, about,
-  madc, mdac;
+  madc, mdac , spot , valobject ;
 
-{$IFDEF WINDOWS}{$R jt65-hf.rc}{$ENDIF}
+{$R *.res}
 
 begin
-  {$I jt65-hf.lrs}
   Application.Title:='JT65-HF';
   Application.Initialize;
   Application.CreateForm(TForm1, Form1);

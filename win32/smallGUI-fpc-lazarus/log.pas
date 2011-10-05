@@ -55,7 +55,6 @@ var
 implementation
 
 { TForm2 }
-
 procedure TForm2.btnLogQSOClick(Sender: TObject);
 Var
    foo, fname   : String;
@@ -67,7 +66,6 @@ begin
                             edLogRReport.Text,edLogSReport.Text,edLogSTime.Text,
                             edLogETime.Text,edLogPower.Text,edLogDate.Text,edLogComment.Text,
                             logmycall, logmygrid);
-     // TODO Add ifdefs for linux so fname will be correct.
      fname := Form2.DirectoryEdit1.Directory + '\jt65hf_log.adi';
      AssignFile(lfile, fname);
      If FileExists(fname) Then
@@ -78,13 +76,14 @@ begin
      Begin
           rewrite(lfile);
           writeln(lfile,'JT65-HF ADIF Export');
-          writeln(lfile,'<adif_ver:4>2.26');
+          //writeln(lfile,'<adif_ver:4>2.26');
           writeln(lfile,'<eoh>');
-     end
+     end;
      writeln(lfile,foo);
      closeFile(lfile);
      Form2.visible := False;
 end;
+
 
 procedure TForm2.Button1Click(Sender: TObject);
 begin

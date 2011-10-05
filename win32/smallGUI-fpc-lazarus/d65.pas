@@ -289,7 +289,7 @@ Var
    snrxa                         : Array[0..254] Of CTypes.cfloat;
    dtxa                          : Array[0..254] Of CTypes.cfloat;
    bins                          : Array[0..100] Of CTypes.cint;
-   //filtLow, filtHi               : CTypes.cfloat;
+   kverr                         : Integer;
    passcount, passtest, binspace : CTypes.cint;
 begin
      glinprog := True;
@@ -1047,7 +1047,13 @@ begin
                                                                 break;
                                                            end;
                                                       end;
-                                                      if FileExists('KVASD.DAT') Then DeleteFile('KVASD.DAT');
+                                                      kverr := 0;
+                                                      while FileExists('KVASD.DAT') do
+                                                      begin
+                                                           DeleteFile('KVASD.DAT');
+                                                           inc(kverr);
+                                                           if kverr > 10000 then break;
+                                                      end;
                                                  end
                                                  else
                                                  begin

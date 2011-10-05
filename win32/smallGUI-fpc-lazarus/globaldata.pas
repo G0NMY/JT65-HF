@@ -64,6 +64,7 @@ Var
    audioComputing          : Boolean;
    specNewSpec65           : Boolean;
    gqrg                    : Double;
+   iqrg                    : Integer;
    strqrg                  : String;
    rbLoggedIn              : Boolean;
    rbCacheOnly             : Boolean;
@@ -75,6 +76,7 @@ Var
    si570ptt                : Boolean;
    hrdcatControlcurrentRig : hrdrigCAP;
    hrdVersion              : Integer;
+   canTX                   : Boolean;
 
    // The variable list above comprises those variables used in more than two
    // units (inclusive of maincode).  Addition of variables to this list should

@@ -27,7 +27,7 @@ interface
 uses
   Classes, SysUtils, LResources, Forms, Controls, Graphics, Dialogs,
   ComCtrls, ExtCtrls, StdCtrls, StrUtils, globalData, CTypes, synaser,
-  EditBtn, Grids, Spin, Si570dev, catControl;
+  EditBtn, Spin, Si570dev, catControl, valobject;
 
 Const
     myWordDelims = [' ',','];
@@ -39,204 +39,222 @@ type
   { TForm6 }
 
   TForm6 = class(TForm)
-    btnSetSi570: TButton;
-    btnClearLog: TButton;
-    Button1: TButton;
-    buttonTestPTT: TButton;
-    cbNoInet: TCheckBox;
-    cbUseAltPTT: TCheckBox;
-    cbUsePSKReporter: TCheckBox;
-    cbUseRB: TCheckBox;
-    editPSKRAntenna: TEdit;
-    editPSKRCall: TEdit;
-    editUserDefinedPort1: TEdit;
-    hrdAddress: TEdit;
-    hrdPort: TEdit;
-    Label10: TLabel;
-    Label3: TLabel;
-    Label33: TLabel;
-    Label34: TLabel;
-    Label65: TLabel;
-    Label67: TLabel;
-    Label68: TLabel;
-    Label69: TLabel;
-    Label70: TLabel;
-    Label71: TLabel;
-    Label72: TLabel;
-    Label73: TLabel;
-    Label9: TLabel;
-    testHRDPTT: TButton;
-    setHRDQRG: TButton;
-    cbAudioIn: TComboBox;
-    cbAudioOut: TComboBox;
-    cbDisableMultiQSO: TCheckBox;
-    cbMultiAutoEnable: TCheckBox;
-    cbSaveCSV: TCheckBox;
-    cbTXWatchDog: TCheckBox;
-    cbRestoreMulti: TCheckBox;
-    cbSi570PTT: TCheckBox;
-    cbCWID: TCheckBox;
-    cbEnableQSY1: TCheckBox;
-    cbATQSY5: TCheckBox;
-    cbEnableQSY2: TCheckBox;
-    cbEnableQSY3: TCheckBox;
-    cbEnableQSY4: TCheckBox;
-    cbEnableQSY5: TCheckBox;
-    cbATQSY1: TCheckBox;
-    cbATQSY2: TCheckBox;
-    cbATQSY3: TCheckBox;
-    cbATQSY4: TCheckBox;
-    chkHRDPTT: TCheckBox;
-    chkTxDFVFO: TCheckBox;
-    checkSi570: TCheckBox;
-    chkNoOptFFT: TCheckBox;
-    chkUseCommander: TCheckBox;
-    chkUseHRD: TCheckBox;
-    chkUseOmni: TCheckBox;
-    chkEnableAutoSR: TCheckBox;
-    ComboBox1: TComboBox;
-    ComboBox2: TComboBox;
-    ComboBox3: TComboBox;
-    comboSuffix: TComboBox;
-    comboPrefix: TComboBox;
-    DirectoryEdit1: TDirectoryEdit;
-    Edit1: TEdit;
-    Edit2: TEdit;
-    Edit3: TEdit;
-    Edit4: TEdit;
-    edQRGQSY1: TEdit;
-    edQRGQSY2: TEdit;
-    edQRGQSY3: TEdit;
-    edQRGQSY4: TEdit;
-    edQRGQSY5: TEdit;
-    editSI570Freq: TEdit;
-    editSI570FreqOffset: TEdit;
-    edUserMsg10: TEdit;
-    edUserMsg11: TEdit;
-    edUserMsg12: TEdit;
-    edUserMsg13: TEdit;
-    edUserMsg5: TEdit;
-    edUserMsg6: TEdit;
-    edUserMsg7: TEdit;
-    edUserMsg8: TEdit;
-    edUserMsg9: TEdit;
-    edUserQRG1: TEdit;
-    edUserQRG2: TEdit;
-    edUserQRG3: TEdit;
-    edUserQRG4: TEdit;
-    edUserMsg4: TEdit;
-    groupHRD: TGroupBox;
-    Label11: TLabel;
-    Label15: TLabel;
-    Label16: TLabel;
-    Label122: TLabel;
-    Label123: TLabel;
-    Label124: TLabel;
-    Label125: TLabel;
-    Label17: TLabel;
-    Label18: TLabel;
-    Label2: TLabel;
-    Label20: TLabel;
-    Label21: TLabel;
-    Label24: TLabel;
-    Label25: TLabel;
-    Label28: TLabel;
-    Label30: TLabel;
-    Label31: TLabel;
-    Label32: TLabel;
-    Label35: TLabel;
-    Label36: TLabel;
-    Label37: TLabel;
-    Label38: TLabel;
-    Label39: TLabel;
-    Label4: TLabel;
-    Label40: TLabel;
-    Label41: TLabel;
-    Label42: TLabel;
-    Label43: TLabel;
-    Label44: TLabel;
-    Label45: TLabel;
-    Label46: TLabel;
-    Label47: TLabel;
-    Label48: TLabel;
-    Label49: TLabel;
-    Label5: TLabel;
-    Label50: TLabel;
-    Label51: TLabel;
-    Label52: TLabel;
-    Label55: TLabel;
-    Label56: TLabel;
-    Label57: TLabel;
-    Label58: TLabel;
-    Label59: TLabel;
-    Label6: TLabel;
-    Label60: TLabel;
-    Label61: TLabel;
-    Label62: TLabel;
-    Label63: TLabel;
-    Label64: TLabel;
-    Label66: TLabel;
-    Label7: TLabel;
-    Label8: TLabel;
-    OmniGroup: TRadioGroup;
-    Page3: TPage;
-    Page5: TPage;
-    Page6: TPage;
-    Colors: TPage;
-    pbSMeter: TProgressBar;
-    pbAULeft: TProgressBar;
-    pbAURight: TProgressBar;
-    rbHRD4: TRadioButton;
-    rbHRD5: TRadioButton;
-    RadioGroup1: TRadioGroup;
-    RadioGroup2: TRadioGroup;
-    radioOmni1: TRadioButton;
-    radioOmni2: TRadioButton;
-    radioSI570X1: TRadioButton;
-    radioSI570X2: TRadioButton;
-    radioSI570X4: TRadioButton;
-    rigQRG: TEdit;
-    edMyCall: TEdit;
-    edMyGrid: TEdit;
-    edRXSRCor: TEdit;
-    edTXSRCor: TEdit;
-    Label1: TLabel;
-    Label14: TLabel;
-    Label19: TLabel;
-    Label22: TLabel;
-    Label23: TLabel;
-    Label26: TLabel;
-    Label27: TLabel;
-    Label29: TLabel;
-    Label53: TLabel;
-    Label54: TLabel;
-    lbDiagLog: TListBox;
-    Notebook1: TNotebook;
-    Page1: TPage;
-    Page2: TPage;
-    Page4: TPage;
-    sgCallsHeard: TStringGrid;
-    sliderAFGain: TTrackBar;
-    sliderPALevel: TTrackBar;
-    sliderRFGain: TTrackBar;
-    sliderMicGain: TTrackBar;
-    qsyHour1: TSpinEdit;
-    qsyMinute5: TSpinEdit;
-    qsyMinute1: TSpinEdit;
-    qsyHour2: TSpinEdit;
-    qsyMinute2: TSpinEdit;
-    qsyHour3: TSpinEdit;
-    qsyMinute3: TSpinEdit;
-    qsyHour4: TSpinEdit;
-    qsyMinute4: TSpinEdit;
-    qsyHour5: TSpinEdit;
+    btnClearLog : TButton ;
+    btnSetSi570 : TButton ;
+    Button1 : TButton ;
+    buttonTestPTT : TButton ;
+    cbATQSY1 : TCheckBox ;
+    cbATQSY2 : TCheckBox ;
+    cbATQSY3 : TCheckBox ;
+    cbATQSY4 : TCheckBox ;
+    cbATQSY5 : TCheckBox ;
+    cbAudioIn : TComboBox ;
+    cbAudioOut : TComboBox ;
+    cbCWID : TCheckBox ;
+    cbDisableMultiQSO : TCheckBox ;
+    cbEnableQSY1 : TCheckBox ;
+    cbEnableQSY2 : TCheckBox ;
+    cbEnableQSY3 : TCheckBox ;
+    cbEnableQSY4 : TCheckBox ;
+    cbEnableQSY5 : TCheckBox ;
+    cbMultiAutoEnable : TCheckBox ;
+    cbRestoreMulti : TCheckBox ;
+    cbSaveCSV : TCheckBox ;
+    cbSi570PTT : TCheckBox ;
+    cbTXWatchDog : TCheckBox ;
+    cbUseAltPTT : TCheckBox ;
+    checkSi570 : TCheckBox ;
+    chkEnableAutoSR : TCheckBox ;
+    chkHRDPTT : TCheckBox ;
+    chkNoOptFFT : TCheckBox ;
+    chkTxDFVFO : TCheckBox ;
+    chkUseCommander : TCheckBox ;
+    chkUseHRD : TCheckBox ;
+    chkUseOmni : TCheckBox ;
+    ComboBox1 : TComboBox ;
+    ComboBox2 : TComboBox ;
+    ComboBox3 : TComboBox ;
+    comboPrefix : TComboBox ;
+    comboSuffix : TComboBox ;
+    DirectoryEdit1 : TDirectoryEdit ;
+    Edit4 : TEdit ;
+    Edit1 : TEdit ;
+    Edit2 : TEdit ;
+    Edit3 : TEdit ;
+    editPSKRAntenna : TEdit ;
+    editPSKRCall : TEdit ;
+    editSI570Freq : TEdit ;
+    editSI570FreqOffset : TEdit ;
+    editUserDefinedPort1 : TEdit ;
+    edMyCall : TEdit ;
+    edMyGrid : TEdit ;
+    edQRGQSY1 : TEdit ;
+    edQRGQSY2 : TEdit ;
+    edQRGQSY3 : TEdit ;
+    edQRGQSY4 : TEdit ;
+    edQRGQSY5 : TEdit ;
+    edRXSRCor : TEdit ;
+    edTXSRCor : TEdit ;
+    edUserMsg10 : TEdit ;
+    edUserMsg11 : TEdit ;
+    edUserMsg12 : TEdit ;
+    edUserMsg13 : TEdit ;
+    edUserMsg14 : TEdit ;
+    edUserMsg15 : TEdit ;
+    edUserMsg16 : TEdit ;
+    edUserMsg17 : TEdit ;
+    edUserMsg18 : TEdit ;
+    edUserMsg19 : TEdit ;
+    edUserMsg20 : TEdit ;
+    edUserMsg4 : TEdit ;
+    edUserMsg5 : TEdit ;
+    edUserMsg6 : TEdit ;
+    edUserMsg7 : TEdit ;
+    edUserMsg8 : TEdit ;
+    edUserMsg9 : TEdit ;
+    edUserQRG1 : TEdit ;
+    edUserQRG10 : TEdit ;
+    edUserQRG11 : TEdit ;
+    edUserQRG12 : TEdit ;
+    edUserQRG13 : TEdit ;
+    edUserQRG2 : TEdit ;
+    edUserQRG3 : TEdit ;
+    edUserQRG4 : TEdit ;
+    edUserQRG5 : TEdit ;
+    edUserQRG6 : TEdit ;
+    edUserQRG7 : TEdit ;
+    edUserQRG8 : TEdit ;
+    edUserQRG9 : TEdit ;
+    groupHRD : TGroupBox ;
+    hrdAddress : TEdit ;
+    hrdPort : TEdit ;
+    Label10 : TLabel ;
+    Label11 : TLabel ;
+    Label122 : TLabel ;
+    Label123 : TLabel ;
+    Label124 : TLabel ;
+    Label125 : TLabel ;
+    Label126 : TLabel ;
+    Label127 : TLabel ;
+    Label128 : TLabel ;
+    Label129 : TLabel ;
+    Label130 : TLabel ;
+    Label131 : TLabel ;
+    Label132 : TLabel ;
+    Label14 : TLabel ;
+    Label15 : TLabel ;
+    Label16 : TLabel ;
+    Label17 : TLabel ;
+    Label18 : TLabel ;
+    Label19 : TLabel ;
+    Label2 : TLabel ;
+    Label20 : TLabel ;
+    Label21 : TLabel ;
+    Label22 : TLabel ;
+    Label23 : TLabel ;
+    Label24 : TLabel ;
+    Label25 : TLabel ;
+    Label26 : TLabel ;
+    Label27 : TLabel ;
+    Label28 : TLabel ;
+    Label29 : TLabel ;
+    Label3 : TLabel ;
+    Label30 : TLabel ;
+    Label31 : TLabel ;
+    Label32 : TLabel ;
+    Label33 : TLabel ;
+    Label34 : TLabel ;
+    Label35 : TLabel ;
+    Label36 : TLabel ;
+    Label37 : TLabel ;
+    Label39 : TLabel ;
+    Label4 : TLabel ;
+    Label41 : TLabel ;
+    Label42 : TLabel ;
+    Label43 : TLabel ;
+    Label44 : TLabel ;
+    Label45 : TLabel ;
+    Label46 : TLabel ;
+    Label47 : TLabel ;
+    Label48 : TLabel ;
+    Label49 : TLabel ;
+    Label5 : TLabel ;
+    Label50 : TLabel ;
+    Label51 : TLabel ;
+    Label52 : TLabel ;
+    Label53 : TLabel ;
+    Label54 : TLabel ;
+    Label55 : TLabel ;
+    Label56 : TLabel ;
+    Label57 : TLabel ;
+    Label58 : TLabel ;
+    Label59 : TLabel ;
+    Label6 : TLabel ;
+    Label60 : TLabel ;
+    Label61 : TLabel ;
+    Label62 : TLabel ;
+    Label63 : TLabel ;
+    Label64 : TLabel ;
+    Label65 : TLabel ;
+    Label66 : TLabel ;
+    Label67 : TLabel ;
+    Label68 : TLabel ;
+    Label69 : TLabel ;
+    Label7 : TLabel ;
+    Label70 : TLabel ;
+    Label71 : TLabel ;
+    Label72 : TLabel ;
+    Label74 : TLabel ;
+    Label75 : TLabel ;
+    Label76 : TLabel ;
+    Label77 : TLabel ;
+    Label78 : TLabel ;
+    Label8 : TLabel ;
+    Label9 : TLabel ;
+    lbDiagLog : TListBox ;
+    OmniGroup : TRadioGroup ;
+    PageControl1 : TPageControl ;
+    pbAULeft : TProgressBar ;
+    pbAURight : TProgressBar ;
+    pbSMeter : TProgressBar ;
+    qsyHour1 : TSpinEdit ;
+    qsyHour2 : TSpinEdit ;
+    qsyHour3 : TSpinEdit ;
+    qsyHour4 : TSpinEdit ;
+    qsyHour5 : TSpinEdit ;
+    qsyMinute1 : TSpinEdit ;
+    qsyMinute2 : TSpinEdit ;
+    qsyMinute3 : TSpinEdit ;
+    qsyMinute4 : TSpinEdit ;
+    qsyMinute5 : TSpinEdit ;
+    RadioGroup1 : TRadioGroup ;
+    RadioGroup2 : TRadioGroup ;
+    radioOmni1 : TRadioButton ;
+    radioOmni2 : TRadioButton ;
+    radioSI570X1 : TRadioButton ;
+    radioSI570X2 : TRadioButton ;
+    radioSI570X4 : TRadioButton ;
+    rbHRD4 : TRadioButton ;
+    rbHRD5 : TRadioButton ;
+    rigQRG : TEdit ;
+    setHRDQRG : TButton ;
+    sliderAFGain : TTrackBar ;
+    sliderMicGain : TTrackBar ;
+    sliderPALevel : TTrackBar ;
+    sliderRFGain : TTrackBar ;
+    TabSheet1 : TTabSheet ;
+    TabSheet2 : TTabSheet ;
+    TabSheet3 : TTabSheet ;
+    TabSheet4 : TTabSheet ;
+    TabSheet5 : TTabSheet ;
+    TabSheet6 : TTabSheet ;
+    TabSheet7 : TTabSheet ;
+    testHRDPTT : TButton ;
     procedure btnClearLogClick(Sender: TObject);
     procedure Button1Click(Sender: TObject);
     procedure buttonTestPTTClick(Sender: TObject);
     procedure cbAudioInChange(Sender: TObject);
     procedure cbAudioOutChange(Sender: TObject);
-    procedure cbNoInetChange(Sender: TObject);
-    procedure cbUseRBChange(Sender: TObject);
     procedure cbSi570PTTChange(Sender: TObject);
     procedure checkSi570Change(Sender: TObject);
     procedure chkEnableAutoSRChange(Sender: TObject);
@@ -284,6 +302,7 @@ var
   glrbcLogout      : Boolean;
   gld65AudioChange : Boolean;
   glcallChange     : Boolean;
+  cfval            : valobject.TValidator; // Class variable for validator object.  Needed for QRG conversions.
 implementation
 
 { TForm6 }
@@ -468,39 +487,6 @@ begin
      gld65AudioChange := True;
 end;
 
-procedure TForm6.cbNoInetChange(Sender: TObject);
-begin
-  // If checked setup rbc for cacheonly
-  If cbNoInet.Checked Then
-  Begin
-       globalData.rbCacheOnly := True;
-       If globalData.rbLoggedIn Then glrbcLogout := True;
-  End
-  Else
-  Begin
-       globalData.rbCacheOnly := False;
-       If (cbUseRB.Checked) And (not globalData.rbLoggedIn) Then glrbcLogin := True;
-  End;
-end;
-
-procedure TForm6.cbUseRBChange(Sender: TObject);
-begin
-     If cbUseRB.Checked And not cbNoInet.Checked Then
-     Begin
-          glrbcLogin := True;
-     End
-     else
-     Begin
-          glrbcLogout := True;
-     End;
-
-     // Handle case of rb having been online but now set to offline mode.
-     If (cbNoInet.Checked) And (globalData.rbLoggedIn) Then
-     Begin
-          glrbcLogout := True;
-     End;
-end;
-
 procedure TForm6.cbSi570PTTChange(Sender: TObject);
 begin
      if cbSi570PTT.Checked Then globalData.si570ptt := True else globalData.si570ptt := False;
@@ -630,94 +616,38 @@ begin
      End;
 end;
 
+{TODO Create validation for user defined QRG values}
+
 procedure TForm6.edUserMsgChange(Sender: TObject);
 var
-   vmsg   : Boolean;
-   i, j   : Integer;
-   foo, k : String;
+   foo : String;
+   i   : Integer;
 begin
-     vmsg := True;
-     // Validate user message definition as containing only the allowed
-     // JT65 character set which is;
-     // 0123456789
-     // ABCDEFGHIJKLMNOPQRSTUVWXYZ
-     //  +-./?
-     If Sender=Form6.edUserMsg4 Then
-     Begin
-          j := Length(edUserMsg4.Text);
-          foo := edUserMsg4.Text;
-          k := '4';
-     End;
-     If Sender=Form6.edUserMsg5 Then
-     Begin
-          j := Length(edUserMsg5.Text);
-          foo := edUserMsg5.Text;
-          k := '5';
-     End;
-     If Sender=Form6.edUserMsg6 Then
-     Begin
-          j := Length(edUserMsg6.Text);
-          foo := edUserMsg6.Text;
-          k := '6';
-     End;
-     If Sender=Form6.edUserMsg7 Then
-     Begin
-          j := Length(edUserMsg7.Text);
-          foo := edUserMsg7.Text;
-          k := '7';
-     End;
-     If Sender=Form6.edUserMsg8 Then
-     Begin
-          j := Length(edUserMsg8.Text);
-          foo := edUserMsg8.Text;
-          k := '8';
-     End;
-     If Sender=Form6.edUserMsg9 Then
-     Begin
-          j := Length(edUserMsg9.Text);
-          foo := edUserMsg9.Text;
-          k := '9';
-     End;
-     If Sender=Form6.edUserMsg10 Then
-     Begin
-          j := Length(edUserMsg10.Text);
-          foo := edUserMsg10.Text;
-          k := '10';
-     End;
-     If Sender=Form6.edUserMsg11 Then
-     Begin
-          j := Length(edUserMsg11.Text);
-          foo := edUserMsg11.Text;
-          k := '11';
-     End;
-     If Sender=Form6.edUserMsg12 Then
-     Begin
-          j := Length(edUserMsg12.Text);
-          foo := edUserMsg12.Text;
-          k := '12';
-     End;
-     If Sender=Form6.edUserMsg13 Then
-     Begin
-          j := Length(edUserMsg13.Text);
-          foo := edUserMsg13.Text;
-          k := '13';
-     End;
+     foo := TEdit(Sender).Text;
+     // Replace any bad characters with space
+     for i := 1 to Length(foo) do if not cfval.asciiValidate(Char(foo[i]),'free') then foo[i] := ' ';
+     // Strip leading RRR, RO or 73
+     if (Length(foo)>2) And (foo[1..3] = 'RRR') then
+     begin
+          foo[1] := ' ';
+          foo[2] := ' ';
+          foo[3] := ' ';
+          foo := TrimLeft(TrimRight(Upcase(foo)));
+     end;
+     if (Length(foo)>1) And (foo[1..2] = 'RO')  then
+     begin
+          foo[1] := ' ';
+          foo[2] := ' ';
+          foo := TrimLeft(TrimRight(Upcase(foo)));
+     end;
+     if (Length(foo)>1) And (foo[1..2] = '73')  then
+     begin
+          foo[1] := ' ';
+          foo[2] := ' ';
+          foo := TrimLeft(TrimRight(Upcase(foo)));
+     end;
+     TEdit(Sender).Text := foo;
 
-     For i := 1 To j do
-     Begin
-          case foo[i] of 'A'..'Z','0'..'9',' ','+','-','.','/','?': vmsg := True;
-             else vmsg := False;
-          end;
-     End;
-     if vmsg Then
-        Begin Label40.Caption := 'Message valid';
-        Label40.Visible := False;
-     end
-     else
-     Begin
-          Label40.Caption := 'Message ' + k + ' not valid';
-          Label40.Visible := True;
-     End;
 end;
 
 procedure TForm6.FormCreate(Sender: TObject);
@@ -1015,5 +945,6 @@ initialization
   glsi57QRGi      := 0;
   glsi57QRGs      := 0;
   glsi57Set       := False;
+  cfval           := valobject.TValidator.create(); // This creates a access point to validation routines needed for new RB code
 end.
 

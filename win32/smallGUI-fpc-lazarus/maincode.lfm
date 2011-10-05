@@ -1,7 +1,7 @@
 object Form1: TForm1
-  Left = 2
+  Left = 0
   Height = 560
-  Top = 0
+  Top = 9
   Width = 935
   ActiveControl = btnReDecode
   Caption = 'JT65-HF'
@@ -18,12 +18,12 @@ object Form1: TForm1
   OnCreate = FormCreate
   SessionProperties = 'Left;Top'
   ShowHint = True
-  LCLVersion = '0.9.28.2'
+  LCLVersion = '0.9.30'
   Visible = True
   object Label6: TLabel
     Left = 784
     Height = 15
-    Top = 442
+    Top = 443
     Width = 79
     Caption = 'TX to Call Sign'
     Font.Height = -11
@@ -32,38 +32,12 @@ object Form1: TForm1
     ParentColor = False
     ParentFont = False
   end
-  object Label7: TLabel
-    Left = 192
-    Height = 15
-    Top = 40
-    Width = 24
-    Caption = 'Grid'
-    Font.Height = -11
-    Font.Name = 'Arial'
-    Font.Style = [fsBold]
-    ParentColor = False
-    ParentFont = False
-    Visible = False
-  end
-  object Label21: TLabel
-    Left = 5
-    Height = 17
-    Top = 282
-    Width = 481
-    Caption = 'Double click an entry in list to begin a QSO.  Right click copies to clipboard.'
-    Font.Color = clRed
-    Font.Height = -13
-    Font.Name = 'Arial'
-    Font.Style = [fsBold]
-    ParentColor = False
-    ParentFont = False
-  end
   object Label3: TLabel
     Left = 556
     Height = 17
-    Top = 349
-    Width = 311
-    Caption = 'Use buttons below to call CQ and answer callers.'
+    Top = 353
+    Width = 177
+    Caption = 'Call CQ and answer callers.'
     Font.Height = -13
     Font.Name = 'Arial'
     Font.Style = [fsBold]
@@ -73,9 +47,9 @@ object Form1: TForm1
   object Label15: TLabel
     Left = 556
     Height = 17
-    Top = 394
-    Width = 253
-    Caption = 'Use buttons below when answering CQ.'
+    Top = 397
+    Width = 95
+    Caption = 'Answering CQ.'
     Font.Height = -13
     Font.Name = 'Arial'
     Font.Style = [fsBold]
@@ -83,7 +57,7 @@ object Form1: TForm1
     ParentFont = False
   end
   object Label16: TLabel
-    Left = 736
+    Left = 765
     Height = 15
     Top = 210
     Width = 87
@@ -96,7 +70,7 @@ object Form1: TForm1
     ParentFont = False
   end
   object Label24: TLabel
-    Left = 496
+    Left = 556
     Height = 15
     Top = 210
     Width = 110
@@ -178,7 +152,7 @@ object Form1: TForm1
   object Label36: TLabel
     Left = 884
     Height = 15
-    Top = 442
+    Top = 443
     Width = 40
     Caption = 'Rpt (-#)'
     Font.Height = -11
@@ -190,7 +164,7 @@ object Form1: TForm1
   object Label26: TLabel
     Left = 616
     Height = 15
-    Top = 440
+    Top = 443
     Width = 31
     Caption = 'RX DF'
     Font.Height = -11
@@ -202,7 +176,7 @@ object Form1: TForm1
   object Label37: TLabel
     Left = 556
     Height = 15
-    Top = 440
+    Top = 443
     Width = 31
     Caption = 'TX DF'
     Font.Height = -11
@@ -237,22 +211,10 @@ object Form1: TForm1
     ParentColor = False
     ParentFont = False
   end
-  object Label13: TLabel
-    Left = 567
-    Height = 15
-    Top = 518
-    Width = 104
-    Caption = 'Single Decoder BW'
-    Font.Height = -11
-    Font.Name = 'Arial'
-    Font.Style = [fsBold]
-    ParentColor = False
-    ParentFont = False
-  end
   object Label39: TLabel
-    Left = 699
+    Left = 701
     Height = 15
-    Top = 442
+    Top = 443
     Width = 73
     Caption = 'TX DF = RX DF'
     Font.Color = clRed
@@ -263,22 +225,23 @@ object Form1: TForm1
     ParentFont = False
     OnClick = Label39Click
   end
-  object Label38: TLabel
-    Left = 177
-    Height = 15
-    Top = 210
-    Width = 296
-    Caption = 'Left click waterfall to set TX CF, Right click sets RX CF.'
-    Font.Height = -11
+  object Label19: TLabel
+    Left = 671
+    Height = 17
+    Hint = 'Double click to disable PSKR'
+    Top = 187
+    Width = 8
+    Caption = '0'
+    Font.Height = -13
     Font.Name = 'Arial'
-    Font.Style = [fsBold]
     ParentColor = False
     ParentFont = False
+    OnDblClick = Label19DblClick
   end
   object Label12: TLabel
-    Left = 343
+    Left = 672
     Height = 17
-    Top = 512
+    Top = 514
     Width = 88
     Caption = 'Dial QRG KHz'
     Font.Height = -13
@@ -287,11 +250,24 @@ object Form1: TForm1
     ParentColor = False
     ParentFont = False
   end
+  object Label30: TLabel
+    Left = 875
+    Height = 17
+    Hint = 'Double click to disable RB'
+    Top = 187
+    Width = 8
+    Caption = '0'
+    Font.Height = -13
+    Font.Name = 'Arial'
+    ParentColor = False
+    ParentFont = False
+    OnDblClick = Label30DblClick
+  end
   object edMsg: TEdit
     Left = 556
     Height = 24
     Hint = 'Double click to clear.'
-    Top = 319
+    Top = 326
     Width = 191
     CharCase = ecUppercase
     Font.Height = -13
@@ -306,7 +282,7 @@ object Form1: TForm1
   object edHisCall: TEdit
     Left = 784
     Height = 24
-    Top = 461
+    Top = 460
     Width = 93
     CharCase = ecUppercase
     Font.Height = -13
@@ -318,9 +294,9 @@ object Form1: TForm1
     TabOrder = 1
   end
   object edHisGrid: TEdit
-    Left = 192
+    Left = 597
     Height = 24
-    Top = 64
+    Top = 78
     Width = 86
     CharCase = ecUppercase
     Enabled = False
@@ -336,7 +312,7 @@ object Form1: TForm1
   object buttonCQ: TButton
     Left = 556
     Height = 23
-    Top = 368
+    Top = 372
     Width = 72
     Caption = 'Call CQ'
     Font.Height = -13
@@ -347,9 +323,9 @@ object Form1: TForm1
     TabOrder = 3
   end
   object buttonAnswerCQ: TButton
-    Left = 635
+    Left = 556
     Height = 23
-    Top = 414
+    Top = 415
     Width = 104
     Caption = 'Answer CQ'
     Font.Height = -13
@@ -362,7 +338,7 @@ object Form1: TForm1
   object buttonSendReport: TButton
     Left = 635
     Height = 23
-    Top = 368
+    Top = 372
     Width = 104
     Caption = 'Answer Caller'
     Font.Height = -13
@@ -375,7 +351,7 @@ object Form1: TForm1
   object buttonAckReport1: TButton
     Left = 748
     Height = 23
-    Top = 368
+    Top = 372
     Width = 100
     Caption = 'Send RRR'
     Font.Height = -13
@@ -386,9 +362,9 @@ object Form1: TForm1
     TabOrder = 6
   end
   object buttonAckReport2: TButton
-    Left = 748
+    Left = 672
     Height = 23
-    Top = 414
+    Top = 415
     Width = 100
     Caption = 'Send Report'
     Font.Height = -13
@@ -427,23 +403,22 @@ object Form1: TForm1
     TabOrder = 9
   end
   object buttonClearList: TButton
-    Left = 5
-    Height = 25
-    Top = 508
-    Width = 108
+    Left = 297
+    Height = 26
+    Top = 255
+    Width = 104
     Caption = 'Clear Decodes'
     Font.Height = -13
     Font.Name = 'Arial'
-    Font.Style = [fsBold]
     OnClick = buttonClearListClick
     ParentFont = False
     TabOrder = 10
   end
   object buttonEndQSO2: TButton
-    Left = 858
-    Height = 69
-    Top = 368
-    Width = 69
+    Left = 856
+    Height = 85
+    Top = 353
+    Width = 71
     Caption = 'Send 73'
     Font.Height = -13
     Font.Name = 'Arial'
@@ -453,10 +428,10 @@ object Form1: TForm1
     TabOrder = 11
   end
   object ProgressBar3: TProgressBar
-    Left = 827
+    Left = 856
     Height = 15
     Top = 210
-    Width = 102
+    Width = 71
     Max = 533504
     Smooth = True
     Step = 1
@@ -466,20 +441,21 @@ object Form1: TForm1
     Left = 556
     Height = 24
     Hint = 'Right click for menu, double click to clear.'
-    Top = 270
+    Top = 273
     Width = 191
     CharCase = ecUppercase
     Font.Height = -13
     Font.Name = 'Arial'
     Font.Style = [fsBold]
     MaxLength = 13
+    OnChange = edFreeTextChange
     OnDblClick = edFreeTextDblClick
     ParentFont = False
     PopupMenu = popupMsgs
     TabOrder = 13
   end
   object GroupBox1: TGroupBox
-    Left = 5
+    Left = 4
     Height = 278
     Top = 3
     Width = 168
@@ -489,34 +465,10 @@ object Form1: TForm1
     Font.Name = 'Arial'
     ParentFont = False
     TabOrder = 14
-    object Label1: TLabel
-      Left = 11
-      Height = 42
-      Top = 182
-      Width = 137
-      Caption = '16:10:05'
-      Font.Height = -35
-      Font.Name = 'Arial'
-      Font.Style = [fsBold]
-      ParentColor = False
-      ParentFont = False
-    end
-    object Label9: TLabel
-      Left = 17
-      Height = 25
-      Top = 160
-      Width = 124
-      Caption = '2009-Mar-30'
-      Font.Height = -21
-      Font.Name = 'Arial'
-      Font.Style = [fsBold]
-      ParentColor = False
-      ParentFont = False
-    end
     object Label4: TLabel
       Left = 1
       Height = 29
-      Top = 60
+      Top = 57
       Width = 153
       Caption = 'Optimum input level is 0 with'#13#10'only background noise present.'
       ParentColor = False
@@ -524,7 +476,7 @@ object Form1: TForm1
     object Label10: TLabel
       Left = 1
       Height = 15
-      Top = 111
+      Top = 105
       Width = 19
       Caption = 'L: 0'
       ParentColor = False
@@ -532,7 +484,7 @@ object Form1: TForm1
     object Label11: TLabel
       Left = 1
       Height = 15
-      Top = 136
+      Top = 130
       Width = 20
       Caption = 'R: 0'
       ParentColor = False
@@ -540,7 +492,7 @@ object Form1: TForm1
     object Label25: TLabel
       Left = 1
       Height = 15
-      Top = 94
+      Top = 88
       Width = 84
       Caption = 'Digital Audio Gain'
       ParentColor = False
@@ -548,43 +500,15 @@ object Form1: TForm1
     object Label33: TLabel
       Left = 1
       Height = 15
-      Top = -4
+      Top = -5
       Width = 90
       Caption = 'Audio Input Levels'
       ParentColor = False
     end
-    object Label30: TLabel
-      Left = 89
-      Height = 17
-      Hint = 'Double click to disable RB'
-      Top = 221
-      Width = 12
-      Caption = ' 0'
-      Font.Height = -13
-      Font.Name = 'Arial'
-      Font.Style = [fsBold]
-      ParentColor = False
-      ParentFont = False
-      OnDblClick = Label30DblClick
-    end
-    object Label19: TLabel
-      Left = 89
-      Height = 17
-      Hint = 'Double click to disable PSKR'
-      Top = 237
-      Width = 12
-      Caption = ' 0'
-      Font.Height = -13
-      Font.Name = 'Arial'
-      Font.Style = [fsBold]
-      ParentColor = False
-      ParentFont = False
-      OnDblClick = Label19DblClick
-    end
     object pbAu2: TProgressBar
       Left = 1
       Height = 18
-      Top = 40
+      Top = 35
       Width = 100
       Smooth = True
       Step = 1
@@ -594,7 +518,7 @@ object Form1: TForm1
     object rbUseLeft: TRadioButton
       Left = 106
       Height = 19
-      Top = 16
+      Top = 13
       Width = 36
       Caption = '-21'
       Checked = True
@@ -603,13 +527,13 @@ object Form1: TForm1
       Font.Style = [fsBold]
       OnChange = rbUseMixChange
       ParentFont = False
-      State = cbChecked
       TabOrder = 1
+      TabStop = True
     end
     object rbUseRight: TRadioButton
       Left = 106
       Height = 19
-      Top = 40
+      Top = 35
       Width = 36
       Caption = '-21'
       Font.Height = -11
@@ -618,12 +542,11 @@ object Form1: TForm1
       OnChange = rbUseMixChange
       ParentFont = False
       TabOrder = 2
-      TabStop = False
     end
     object TrackBar1: TTrackBar
       Left = 37
       Height = 20
-      Top = 111
+      Top = 105
       Width = 120
       Max = 6
       Min = -6
@@ -635,7 +558,7 @@ object Form1: TForm1
     object TrackBar2: TTrackBar
       Left = 37
       Height = 20
-      Top = 136
+      Top = 130
       Width = 120
       Max = 6
       Min = -6
@@ -647,36 +570,133 @@ object Form1: TForm1
     object pbAU1: TProgressBar
       Left = 2
       Height = 18
-      Top = 16
+      Top = 13
       Width = 100
       Smooth = True
       Step = 1
       TabOrder = 5
       BarShowText = True
     end
-    object cbEnRB: TCheckBox
+    object SpinDT: TSpinEdit
       Left = 2
-      Height = 19
-      Top = 221
-      Width = 69
-      Caption = 'Enable RB'
-      OnChange = cbEnRBChange
+      Height = 22
+      Top = 152
+      Width = 61
+      MaxValue = 5
+      MinValue = -5
       TabOrder = 6
     end
-    object cbEnPSKR: TCheckBox
+    object Label32: TLabel
+      Left = 67
+      Height = 15
+      Top = 152
+      Width = 65
+      Caption = 'Adjust Timing'
+      ParentColor = False
+      OnDblClick = Label32DblClick
+    end
+    object Edit2: TEdit
+      Left = 2
+      Height = 24
+      Top = 177
+      Width = 40
+      Font.Height = -13
+      Font.Name = 'Arial'
+      Font.Style = [fsBold]
+      MaxLength = 3
+      ParentFont = False
+      ReadOnly = True
+      TabStop = False
+      TabOrder = 7
+      Text = '100'
+    end
+    object Label13: TLabel
+      Left = 67
+      Height = 15
+      Top = 177
+      Width = 55
+      Caption = 'Single BW'
+      Font.Height = -11
+      Font.Name = 'Arial'
+      Font.Style = [fsBold]
+      ParentColor = False
+      ParentFont = False
+    end
+    object spinDecoderBW: TSpinEdit
+      Left = 41
+      Height = 24
+      Top = 177
+      Width = 22
+      Font.Height = -13
+      Font.Name = 'Arial'
+      MaxValue = 4
+      MinValue = 1
+      OnChange = spinDecoderBWChange
+      ParentFont = False
+      TabOrder = 8
+      Value = 4
+    end
+    object Edit3: TEdit
+      Left = 2
+      Height = 24
+      Top = 206
+      Width = 40
+      Font.Height = -13
+      Font.Name = 'Arial'
+      Font.Style = [fsBold]
+      MaxLength = 3
+      ParentFont = False
+      ReadOnly = True
+      TabStop = False
+      TabOrder = 9
+      Text = '100'
+    end
+    object spinDecoderBin: TSpinEdit
+      Left = 41
+      Height = 24
+      Top = 206
+      Width = 22
+      Font.Height = -13
+      Font.Name = 'Arial'
+      MaxValue = 4
+      MinValue = 1
+      OnChange = spinDecoderBinChange
+      ParentFont = False
+      TabOrder = 10
+      Value = 4
+    end
+    object Label18: TLabel
+      Left = 67
+      Height = 15
+      Top = 206
+      Width = 90
+      Caption = 'Multi Resolution'
+      Font.Height = -11
+      Font.Name = 'Arial'
+      Font.Style = [fsBold]
+      ParentColor = False
+      ParentFont = False
+    end
+    object chkMultiDecode: TCheckBox
       Left = 2
       Height = 19
-      Top = 237
-      Width = 82
-      Caption = 'Enable PSKR'
-      OnClick = cbEnPSKRClick
-      TabOrder = 7
+      Top = 235
+      Width = 136
+      Caption = 'Enable Multi-decoder'
+      Checked = True
+      Font.Height = -11
+      Font.Name = 'Arial'
+      Font.Style = [fsBold]
+      OnChange = chkMultiDecodeChange
+      ParentFont = False
+      State = cbChecked
+      TabOrder = 11
     end
   end
   object GroupBox4: TGroupBox
     Left = 176
     Height = 57
-    Top = 224
+    Top = 191
     Width = 376
     ClientHeight = 39
     ClientWidth = 372
@@ -802,6 +822,7 @@ object Form1: TForm1
       Top = 13
       Width = 38
       MaxValue = 5
+      MinValue = -1
       OnChange = SpinEdit1Change
       TabOrder = 3
       Value = 5
@@ -833,7 +854,7 @@ object Form1: TForm1
   end
   object ListBox1: TListBox
     Left = 4
-    Height = 181
+    Height = 211
     Top = 325
     Width = 548
     Font.Height = -19
@@ -866,7 +887,7 @@ object Form1: TForm1
   object edSigRep: TEdit
     Left = 884
     Height = 24
-    Top = 461
+    Top = 460
     Width = 45
     Font.Height = -13
     Font.Name = 'Arial'
@@ -876,9 +897,9 @@ object Form1: TForm1
     TabOrder = 18
   end
   object chkEnTX: TCheckBox
-    Left = 288
+    Left = 635
     Height = 19
-    Top = 72
+    Top = 117
     Width = 48
     Caption = 'EATX'
     Enabled = False
@@ -887,12 +908,13 @@ object Form1: TForm1
     Font.Style = [fsBold]
     ParentFont = False
     TabOrder = 19
+    Visible = False
   end
   object chkAutoTxDF: TCheckBox
-    Left = 677
+    Left = 679
     Height = 19
     Hint = 'If Checked TX and RX DF will always be same.'
-    Top = 440
+    Top = 443
     Width = 20
     Checked = True
     Font.Height = -12
@@ -906,7 +928,7 @@ object Form1: TForm1
   object spinDecoderCF: TSpinEdit
     Left = 616
     Height = 22
-    Top = 459
+    Top = 461
     Width = 55
     Font.Height = -11
     Font.Name = 'Arial'
@@ -920,7 +942,7 @@ object Form1: TForm1
   object spinTXCF: TSpinEdit
     Left = 556
     Height = 22
-    Top = 459
+    Top = 461
     Width = 55
     Font.Height = -11
     Font.Name = 'Arial'
@@ -934,7 +956,7 @@ object Form1: TForm1
   object btnZeroRX: TButton
     Left = 616
     Height = 16
-    Top = 488
+    Top = 487
     Width = 55
     Caption = 'Zero'
     Font.Height = -8
@@ -946,7 +968,7 @@ object Form1: TForm1
   object btnZeroTX: TButton
     Left = 556
     Height = 16
-    Top = 488
+    Top = 487
     Width = 55
     Caption = 'Zero'
     Font.Height = -8
@@ -955,24 +977,10 @@ object Form1: TForm1
     ParentFont = False
     TabOrder = 24
   end
-  object spinDecoderBW: TSpinEdit
-    Left = 716
-    Height = 24
-    Top = 514
-    Width = 18
-    Font.Height = -13
-    Font.Name = 'Arial'
-    MaxValue = 4
-    MinValue = 1
-    OnChange = spinDecoderBWChange
-    ParentFont = False
-    TabOrder = 25
-    Value = 4
-  end
   object chkNB: TCheckBox
-    Left = 677
+    Left = 679
     Height = 19
-    Top = 477
+    Top = 484
     Width = 84
     Caption = 'Noise Blank'
     Font.Height = -11
@@ -980,12 +988,12 @@ object Form1: TForm1
     Font.Style = [fsBold]
     OnChange = chkNBChange
     ParentFont = False
-    TabOrder = 26
+    TabOrder = 25
   end
   object chkAFC: TCheckBox
-    Left = 677
+    Left = 679
     Height = 19
-    Top = 458
+    Top = 463
     Width = 42
     Caption = 'AFC'
     Font.Height = -11
@@ -993,22 +1001,7 @@ object Form1: TForm1
     Font.Style = [fsBold]
     OnChange = chkAFCChange
     ParentFont = False
-    TabOrder = 27
-  end
-  object chkMultiDecode: TCheckBox
-    Left = 677
-    Height = 19
-    Top = 496
-    Width = 86
-    Caption = 'Enable Multi'
-    Checked = True
-    Font.Height = -11
-    Font.Name = 'Arial'
-    Font.Style = [fsBold]
-    OnChange = chkMultiDecodeChange
-    ParentFont = False
-    State = cbChecked
-    TabOrder = 28
+    TabOrder = 26
   end
   object RadioGroup1: TRadioGroup
     Left = 752
@@ -1027,7 +1020,7 @@ object Form1: TForm1
     ClientHeight = 31
     ClientWidth = 173
     Columns = 2
-    TabOrder = 29
+    TabOrder = 27
     object rbTX1: TRadioButton
       Left = 6
       Height = 19
@@ -1041,8 +1034,8 @@ object Form1: TForm1
       Font.Style = [fsBold]
       OnChange = rbFirstChange
       ParentFont = False
-      State = cbChecked
       TabOrder = 0
+      TabStop = True
     end
     object rbTX2: TRadioButton
       Left = 89
@@ -1056,13 +1049,12 @@ object Form1: TForm1
       OnChange = rbFirstChange
       ParentFont = False
       TabOrder = 1
-      TabStop = False
     end
   end
   object rbFreeMsg: TRadioButton
     Left = 556
     Height = 20
-    Top = 248
+    Top = 249
     Width = 167
     Caption = 'TX Text (13 Characters)'
     Font.Height = -13
@@ -1070,13 +1062,12 @@ object Form1: TForm1
     Font.Style = [fsBold]
     OnChange = rbFreeMsgChange
     ParentFont = False
-    TabOrder = 30
-    TabStop = False
+    TabOrder = 28
   end
   object rbGenMsg: TRadioButton
     Left = 556
     Height = 20
-    Top = 296
+    Top = 302
     Width = 108
     Caption = 'TX Generated'
     Checked = True
@@ -1086,83 +1077,131 @@ object Form1: TForm1
     Font.Style = [fsBold]
     OnChange = rbFreeMsgChange
     ParentFont = False
-    State = cbChecked
-    TabOrder = 31
+    TabOrder = 29
+    TabStop = True
   end
   object btnDefaults: TButton
-    Left = 784
-    Height = 24
-    Top = 514
-    Width = 146
-    Caption = 'Restore Defaults'
+    Left = 807
+    Height = 26
+    Top = 510
+    Width = 120
+    Caption = 'Default Settings'
     Font.Height = -13
     Font.Name = 'Arial'
-    Font.Style = [fsBold]
     OnClick = btnDefaultsClick
     ParentFont = False
-    TabOrder = 32
+    TabOrder = 30
   end
   object editManQRG: TEdit
-    Left = 434
-    Height = 24
-    Top = 508
-    Width = 118
+    Left = 556
+    Height = 27
+    Top = 509
+    Width = 112
     Alignment = taCenter
-    Font.Height = -13
+    Font.Height = -16
     Font.Name = 'Arial'
     Font.Style = [fsBold]
     OnChange = editManQRGChange
     ParentFont = False
     PopupMenu = popupQRG
-    TabOrder = 33
+    TabOrder = 31
     Text = '0'
   end
   object btnLogQSO: TButton
-    Left = 784
-    Height = 24
-    Top = 488
-    Width = 146
+    Left = 444
+    Height = 26
+    Top = 255
+    Width = 88
     Caption = 'Log QSO'
     Font.Height = -13
     Font.Name = 'Arial'
-    Font.Style = [fsBold]
     OnClick = btnLogQSOClick
     ParentFont = False
+    TabOrder = 32
+  end
+  object cbEnRB: TCheckBox
+    Left = 776
+    Height = 20
+    Top = 187
+    Width = 82
+    Caption = 'Enable RB'
+    TabOrder = 33
+  end
+  object cbEnPSKR: TCheckBox
+    Left = 560
+    Height = 20
+    Top = 187
+    Width = 100
+    Caption = 'Enable PSKR'
     TabOrder = 34
   end
-  object Edit2: TEdit
-    Left = 677
-    Height = 24
-    Top = 514
-    Width = 40
-    Font.Height = -13
-    Font.Name = 'Arial'
-    Font.Style = [fsBold]
-    MaxLength = 3
-    ParentFont = False
-    ReadOnly = True
-    TabStop = False
-    TabOrder = 35
-    Text = '100'
-  end
   object btnReDecode: TButton
-    Left = 120
-    Height = 25
-    Top = 508
-    Width = 115
+    Left = 176
+    Height = 26
+    Top = 255
+    Width = 100
     Caption = 'Decode Again'
     Font.Height = -13
     Font.Name = 'Arial'
-    Font.Style = [fsBold]
     OnClick = btnReDecodeClick
     ParentFont = False
-    TabOrder = 36
+    TabOrder = 35
+  end
+  object Label5: TLabel
+    Left = 177
+    Height = 38
+    Top = 32
+    Width = 693
+    Caption = 'Waterfall display is disabled by user request.'
+    Font.Height = -32
+    Font.Name = 'Arial'
+    Font.Style = [fsBold]
+    ParentColor = False
+    ParentFont = False
+    Visible = False
+  end
+  object Label9: TLabel
+    Left = 177
+    Height = 25
+    Top = 77
+    Width = 124
+    Caption = '2009-Mar-30'
+    Font.Height = -21
+    Font.Name = 'Arial'
+    Font.Style = [fsBold]
+    ParentColor = False
+    ParentFont = False
+  end
+  object Label1: TLabel
+    Left = 320
+    Height = 25
+    Top = 77
+    Width = 87
+    Caption = '16:10:05'
+    Font.Height = -21
+    Font.Name = 'Arial'
+    Font.Style = [fsBold]
+    ParentColor = False
+    ParentFont = False
+  end
+  object Label2: TLabel
+    Left = 4
+    Height = 17
+    Top = 283
+    Width = 416
+    Caption = 'Double click a decoded line to generate message and begin QSO'
+    Font.Color = clRed
+    Font.Height = -13
+    Font.Name = 'Arial'
+    Font.Style = [fsBold]
+    ParentColor = False
+    ParentFont = False
   end
   object Timer1: TTimer
     Interval = 220
     OnTimer = Timer1Timer
-    left = 648
-    top = 56
+    left = 840
+    top = 128
   end
   object cfg: TXMLPropStorage
     StoredValues = <    
@@ -1181,7 +1220,7 @@ object Form1: TForm1
         Value = '0'
       end    
       item
-        Name = 'multirange'
+        Name = 'singlerange'
         Value = '1000'
       end    
       item
@@ -1533,149 +1572,259 @@ object Form1: TForm1
       item
         Name = 'hrdPort'
         Value = '7809'
+      end    
+      item
+        Name = 'UsrMsg11'
+      end    
+      item
+        Name = 'UsrMsg12'
+      end    
+      item
+        Name = 'UsrMsg13'
+      end    
+      item
+        Name = 'UsrMsg14'
+      end    
+      item
+        Name = 'UsrMsg15'
+      end    
+      item
+        Name = 'UsrMsg16'
+      end    
+      item
+        Name = 'UsrMsg17'
+      end    
+      item
+        Name = 'UserQRG5'
+        Value = '0'
+      end    
+      item
+        Name = 'UserQRG6'
+        Value = '0'
+      end    
+      item
+        Name = 'UserQRG7'
+        Value = '0'
+      end    
+      item
+        Name = 'UserQRG8'
+        Value = '0'
+      end    
+      item
+        Name = 'UserQRG9'
+        Value = '0'
+      end    
+      item
+        Name = 'UserQRG10'
+        Value = '0'
+      end    
+      item
+        Name = 'UserQRG11'
+        Value = '0'
+      end    
+      item
+        Name = 'UserQRG12'
+        Value = '0'
+      end    
+      item
+        Name = 'UserQRG13'
+        Value = '0'
+      end    
+      item
+        Name = 'LastInput'
+      end    
+      item
+        Name = 'LastOutput'
+      end    
+      item
+        Name = 'LogComment'
       end>
     FileName = 'station.xml'
-    left = 688
-    top = 56
+    left = 704
+    top = 72
   end
   object popupQRG: TPopupMenu
-    left = 552
-    top = 56
-    object MenuItem12: TMenuItem
+    left = 704
+    top = 128
+    object MenuItem1a: TMenuItem
       Caption = '1838'
       OnClick = MenuItemHandler
     end
-    object MenuItem1: TMenuItem
+    object MenuItem2a: TMenuItem
       Caption = '3576'
       RadioItem = True
       OnClick = MenuItemHandler
     end
-    object MenuItem2: TMenuItem
+    object MenuItem3a: TMenuItem
       Caption = '7039'
       RadioItem = True
       OnClick = MenuItemHandler
     end
-    object MenuItem3: TMenuItem
+    object MenuItem4a: TMenuItem
       Caption = '7076'
       RadioItem = True
       OnClick = MenuItemHandler
     end
-    object MenuItem4: TMenuItem
-      Caption = '10139'
-      RadioItem = True
-      OnClick = MenuItemHandler
-    end
-    object MenuItem5: TMenuItem
-      Caption = '10147'
-      RadioItem = True
-      OnClick = MenuItemHandler
-    end
-    object MenuItem6: TMenuItem
+    object MenuItem5a: TMenuItem
       Caption = '14076'
       RadioItem = True
       OnClick = MenuItemHandler
     end
-    object MenuItem7: TMenuItem
-      Caption = '18102'
-      RadioItem = True
-      OnClick = MenuItemHandler
-    end
-    object MenuItem8: TMenuItem
-      Caption = '18106'
-      RadioItem = True
-      OnClick = MenuItemHandler
-    end
-    object MenuItem9: TMenuItem
+    object MenuItem6a: TMenuItem
       Caption = '21076'
       RadioItem = True
       OnClick = MenuItemHandler
     end
-    object MenuItem10: TMenuItem
-      Caption = '24920'
-      RadioItem = True
-      OnClick = MenuItemHandler
-    end
-    object MenuItem11: TMenuItem
+    object MenuItem7a: TMenuItem
       Caption = '28076'
       RadioItem = True
       OnClick = MenuItemHandler
     end
-    object MenuItem22: TMenuItem
-      Caption = 'User Defined 1'
+    object MenuItem8a: TMenuItem
+      Caption = 'USER DEFINED 1'
+      RadioItem = True
       OnClick = MenuItemHandler
     end
-    object MenuItem23: TMenuItem
-      Caption = 'User Defined 2'
+    object MenuItem9a: TMenuItem
+      Caption = 'USER DEFINED 2'
+      RadioItem = True
       OnClick = MenuItemHandler
     end
-    object MenuItem28: TMenuItem
-      Caption = 'User Defined 3'
+    object MenuItem10a: TMenuItem
+      Caption = 'USER DEFINED 3'
+      RadioItem = True
       OnClick = MenuItemHandler
     end
-    object MenuItem29: TMenuItem
-      Caption = 'User Defined 4'
+    object MenuItem11a: TMenuItem
+      Caption = 'USER DEFINED 4'
+      RadioItem = True
+      OnClick = MenuItemHandler
+    end
+    object MenuItem12a: TMenuItem
+      Caption = 'USER DEFINED 5'
+      RadioItem = True
+      OnClick = MenuItemHandler
+    end
+    object MenuItem13a: TMenuItem
+      Caption = 'USER DEFINED 6'
+      OnClick = MenuItemHandler
+    end
+    object MenuItem14a: TMenuItem
+      Caption = 'USER DEFINED 7'
+      OnClick = MenuItemHandler
+    end
+    object MenuItem15a: TMenuItem
+      Caption = 'USER DEFINED 8'
+      OnClick = MenuItemHandler
+    end
+    object MenuItem16a: TMenuItem
+      Caption = 'USER DEFINED 9'
+      OnClick = MenuItemHandler
+    end
+    object MenuItem17a: TMenuItem
+      Caption = 'USER DEFINED 10'
+      OnClick = MenuItemHandler
+    end
+    object MenuItem18a: TMenuItem
+      Caption = 'USER DEFINED 11'
+      OnClick = MenuItemHandler
+    end
+    object MenuItem19a: TMenuItem
+      Caption = 'USER DEFINED 12'
+      OnClick = MenuItemHandler
+    end
+    object MenuItem20a: TMenuItem
+      Caption = 'USER DEFINED 13'
       OnClick = MenuItemHandler
     end
   end
   object popupMsgs: TPopupMenu
-    left = 600
-    top = 56
-    object MenuItem13: TMenuItem
+    left = 776
+    top = 128
+    object MenuItem1b: TMenuItem
       Caption = 'Short-hand RO'
       OnClick = MenuItemHandler
     end
-    object MenuItem14: TMenuItem
+    object MenuItem2b: TMenuItem
       Caption = 'Short-hand RRR'
       OnClick = MenuItemHandler
     end
-    object MenuItem15: TMenuItem
+    object MenuItem3b: TMenuItem
       Caption = 'Short-hand 73'
       OnClick = MenuItemHandler
     end
-    object MenuItem16: TMenuItem
+    object MenuItem4b: TMenuItem
       Caption = 'New Item5'
       OnClick = MenuItemHandler
     end
-    object MenuItem17: TMenuItem
+    object MenuItem5b: TMenuItem
       Caption = 'New Item6'
       OnClick = MenuItemHandler
     end
-    object MenuItem18: TMenuItem
+    object MenuItem6b: TMenuItem
       Caption = 'New Item7'
       OnClick = MenuItemHandler
     end
-    object MenuItem19: TMenuItem
+    object MenuItem7b: TMenuItem
       Caption = 'New Item8'
       OnClick = MenuItemHandler
     end
-    object MenuItem20: TMenuItem
+    object MenuItem8b: TMenuItem
       Caption = 'New Item9'
       OnClick = MenuItemHandler
     end
-    object MenuItem21: TMenuItem
+    object MenuItem9b: TMenuItem
       Caption = 'New Item10'
       OnClick = MenuItemHandler
     end
-    object MenuItem24: TMenuItem
+    object MenuItem10b: TMenuItem
       Caption = 'New Item11'
       OnClick = MenuItemHandler
     end
-    object MenuItem25: TMenuItem
+    object MenuItem11b: TMenuItem
       Caption = 'New Item12'
       OnClick = MenuItemHandler
     end
-    object MenuItem26: TMenuItem
+    object MenuItem12b: TMenuItem
       Caption = 'New Item13'
       OnClick = MenuItemHandler
     end
-    object MenuItem27: TMenuItem
+    object MenuItem13b: TMenuItem
       Caption = 'New Item13'
+      OnClick = MenuItemHandler
+    end
+    object MenuItem14b: TMenuItem
+      Caption = 'New Item14'
+      OnClick = MenuItemHandler
+    end
+    object MenuItem15b: TMenuItem
+      Caption = 'New Item15'
+      OnClick = MenuItemHandler
+    end
+    object MenuItem16b: TMenuItem
+      Caption = 'New Item16'
+      OnClick = MenuItemHandler
+    end
+    object MenuItem17b: TMenuItem
+      Caption = 'New Item17'
+      OnClick = MenuItemHandler
+    end
+    object MenuItem18b: TMenuItem
+      Caption = 'New Item18'
+      OnClick = MenuItemHandler
+    end
+    object MenuItem19b: TMenuItem
+      Caption = 'New Item19'
+      OnClick = MenuItemHandler
+    end
+    object MenuItem20b: TMenuItem
+      Caption = 'New Item20'
       OnClick = MenuItemHandler
     end
   end
   object MainMenu1: TMainMenu
-    left = 728
-    top = 56
+    left = 776
+    top = 72
     object menuSetup: TMenuItem
       Caption = 'Setup'
       OnClick = menuSetupClick
@@ -1700,5 +1849,20 @@ object Form1: TForm1
       Caption = 'About JT65-HF'
       OnClick = menuAboutClick
     end
+    object MenuItem30: TMenuItem
+    end
+    object MenuItem31: TMenuItem
+    end
+    object menuQRX: TMenuItem
+      Caption = 'Enter Standby Mode'
+      OnClick = menuQRXClick
+    end
+  end
+  object Timer2: TTimer
+    Enabled = False
+    Interval = 3000
+    OnTimer = Timer2Timer
+    left = 840
+    top = 72
   end
 end

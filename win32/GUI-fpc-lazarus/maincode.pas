@@ -22,6 +22,7 @@ unit maincode;
 //
 {$PACKRECORDS C}    (* GCC/Visual C/C++ compatible record packing *)
 {$MODE DELPHI }
+{$H+}
 
 interface
 
@@ -403,7 +404,6 @@ type
      d65sendingsh               : CTypes.cint;
      d65txmsg                   : PChar;
      cwidMsg                    : PChar;
-     d65sending                 : PChar;
      cfgerror, cfgRecover       : Boolean;
      mnHavePrefix, mnHaveSuffix : Boolean;
      txmode                     : Integer;
@@ -5590,6 +5590,7 @@ procedure TForm1.genTX1();
 Var
    txdf, nwave, i : CTypes.cint;
    txsr, freqcw   : CTypes.cdouble;
+   d65sending     : PChar;
 Begin
      // Generate TX samples for a normal TX Cycle.
      // curMsg holds text to TX
@@ -5601,6 +5602,12 @@ Begin
      // flush before lowering PTT) for a total buffer length of 48.8 seconds
      // or 538020 samples (262.7 2K buffers).  Raising upper bound to an
      // even 2K multiple gives me 538624 samples or 263 2K buffers.
+
+     {TODO Return the message that will be TX as returned by libJT65.  This not done = not released.}
+
+     d65sending := StrAlloc(28);
+     for i := 0 to 27 do d65sending[i] := ' ';
+
      if useBuffer = 0 Then
      Begin
           curMsg := UpCase(padRight(Form1.edMsg.Text,22));
@@ -5621,15 +5628,20 @@ Begin
           d65nmsg := 0;
           txsr := 1.0;
           if tryStrToFloat(cfgvtwo.Form6.edTXSRCor.Text,txsr) Then d65samfacout := StrToFloat(cfgvtwo.Form6.edTXSRCor.Text) else d65samfacout := 1.0;
-          // Insert .3 second or 3307 samples of silence
-          // .3 Seconds of prepended silence seems to get the timing right,
-          // at least on my specific system.  Not sure if this will carry
-          // correctly to others.
+          // Insert .3 second or 3307 samples of silence as .3 Seconds of prepended silence seems to get the timing right.
+          // Why .3?  No idea, it was discovered through trial and error in the earliest days of coding JT65-HF.
           for mnlooper := 0 to  3306 do
           begin
                dac.d65txBuffer[mnlooper] := 0;
           end;
           if (paOutParams.channelCount = 2) And (txMode = 65) then encode65.gen65(d65txmsg,@txdf,@dac.d65txBuffer[0],@d65nwave,@d65sendingsh,d65sending,@d65nmsg);
+
+          {TODO Complete work for insuring what displays as TX content matches the exact actual TX message}
+          //Timer1.enabled := False;
+          //ShowMessage(d65sending[0..21]);
+          //Timer1.enabled := True;
+          curmsg := '';
+          curmsg := d65Sending[0..21];
 
           //if txMode =  4 Then  encode65.gen4(d65txmsg,@txdf,@dac.d65txBuffer[0],@d65nwave,@d65sendingsh,d65sending,@d65nmsg);
 
@@ -5639,6 +5651,9 @@ Begin
           // samples or silence...
           //
           mnlooper := d65nwave;
+
+          {TODO Rewrite CW ID, if possible in pascal}
+
           // CW ID Handler
           if doCWID Then
           Begin
@@ -5730,17 +5745,23 @@ Begin
           lastTX := '';
           actionSet := False;
      End;
+     d65sending := StrAlloc(0);
 End;
 
 procedure TForm1.genTX2();
 Var
    txdf : CTypes.cint;
    txsr : CTypes.cdouble;
+   d65sending : PChar;
 Begin
      {TODO Modify this routine such that it looks at the current offset to correct timing then begins TX where the data SHOULD be if timing was perfect.}
      {TODO This may work better than simply starting late.. it would be no different than the first X seconds being missing due to a fade or QRM/N and}
      {TODO would not lead to a DT error as is now. Leave this for 1.0.9}
      // Generate TX samples for a late starting TX Cycle.
+
+     {TODO Return the message that will be TX as returned by libJT65.  This not done = not released.}
+     d65sending := StrAlloc(28);
+
      if useBuffer = 0 Then
      Begin
           curMsg := UpCase(padRight(Form1.edMsg.Text,22));
@@ -5799,6 +5820,7 @@ Begin
           actionSet := False;
           lastTX := '';
      End;
+     d65sending := StrAlloc(0);
 End;
 
 procedure TForm1.audioChange();
@@ -6850,7 +6872,6 @@ initialization
   dac.d65txBufferIdx := 0;
   // Setup PChar type variables.
   d65txmsg := StrAlloc(28);
-  d65sending := StrAlloc(28);
   cwidMsg := StrAlloc(22);
   // Miscelanious operational vars.
   runOnce := True;

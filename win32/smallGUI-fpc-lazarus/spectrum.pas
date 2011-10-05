@@ -322,271 +322,239 @@ Begin
           End;
      End;
      Try
-        doSpec := False;
-        globalData.specNewSpec65 := False;
-        // Copy input
-        for i := 0 to 4095 do
+        if specspeed2 > -1 then
         begin
-             auBuff65[i] := min(32766,max(-32766,dBuffer[i]));
-        end;
-        // Convert integer16 input buffer to floating point for fft use.
-        fac := 2.0/10000;
-        fsum := 0.0;
-        ave := 0.0;
-        d := 0.0;
-        for i := 0 to 4095 do
-        begin
-             srealArray165[i] := 0.5 * 2.0 * auBuff65[i];
-        end;
-        for i := 0 to 4095 do
-        begin
-             fsum := fsum + srealArray165[i];
-        end;
-        ave := fsum/4096.0;
-        for i := 0 to 4095 do
-        begin
-             d := srealArray165[i]-ave;
-             srealArray165[i] := fac * d;
-        end;
-        // Apply the resampler here so the spectrum display is a
-        // touch more accurate if SR correction enabled.
-        if globalData.d65samfacin <> 1.0 Then
-        Begin
-             samratio := 1.0/globalData.d65samfacin;
-             sampconv.data_in  := srealArray165;
-             sampconv.data_out := srealArray65;
-             sampconv.input_frames  := 4096;
-             sampconv.output_frames := 4096;
-             sampconv.src_ratio     := samratio;
-             samplerate.src_simple(@sampconv,2,1);
-        End
-        Else
-        Begin
-             for i := 0 to 4095 do
-             Begin
-                  srealArray65[i] := srealArray165[i];
-             End;
-        End;
-        // Populate FFT input array
-        proceed := True;
-        if fftIn65 = Nil Then
-        Begin
-             dlog.fileDebug('Critical!  fftIn65=Nil at populate');
-             proceed := False;
-        End;
-        if fftOut65 = Nil Then
-        Begin
-             dlog.fileDebug('Critical!  fftOut65=Nil at populate');
-             proceed := False;
-        End;
-        if proceed Then
-        Begin
+             //specspeed2 < 0 = spectrum display off.
+             doSpec := False;
+             globalData.specNewSpec65 := False;
+             // Copy input
+             for i := 0 to 4095 do auBuff65[i] := min(32766,max(-32766,dBuffer[i]));
+             // Convert integer16 input buffer to floating point for fft use.
+             fac := 2.0/10000;
+             fsum := 0.0;
+             ave := 0.0;
+             d := 0.0;
+             for i := 0 to 4095 do srealArray165[i] := 0.5 * 2.0 * auBuff65[i];
+             for i := 0 to 4095 do fsum := fsum + srealArray165[i];
+             ave := fsum/4096.0;
              for i := 0 to 4095 do
              begin
-                  fftIn65[i] := srealArray65[i];
+                  d := srealArray165[i]-ave;
+                  srealArray165[i] := fac * d;
              end;
-             // Clear FFT output array
-             for i := 0 to 2047 do
-             begin
-                  fftOut65[i].re := 0.0;
-                  fftOut65[i].im := 0.0;
-             end;
-             // Compute FFT 4096 FFT
-             p := fftw_plan_dft_1d(4096,fftIn65,fftOut65,[fftw_estimate]);
-             fftw_execute(p);
-             // Accumulate power spectrum
-             for i := 0 to 2047 do
-             begin
-                  ss65[i] := ss65[i] + (power(fftOut65[i].re,2) + power(fftOut65[i].im,2));
-             end;
-             fftw_destroy_plan(p);
-             // FFT Completed.
-             // ss[0..2047] now contains an fft of the power spectrum of the last 4096 samples.
-             //
-             // Compute spectral display line.
-             // ss[0..2047] contains the power density in 2.7 hz steps.
-             inc(specfftCount);
-             if specfftCount >= (5-specSpeed2) Then
+             // Apply the resampler here so the spectrum display is a
+             // touch more accurate if SR correction enabled.
+             if globalData.d65samfacin <> 1.0 Then
              Begin
-                  inc(specfftCount);
-                  if specSmooth Then flat(@ss65[0],@nh,@specfftCount);
-                  // Create spectra line
-                  if nfrange = 2000 Then iadj := 182 + round((nfmid-1500)/df);
-                  if nfrange = 4000 Then iadj := round(nfmid/df - 752.0);
-                  For i := 0 to 749 do
-                  Begin
-                       floatSpectra[i] := (specVGain*ss65[i+iadj])/specfftCount;
-                  End;
-                  //Clear ss[]
-                  for i := 0 to 2047 do
-                  Begin
-                       ss65[i] := 0;
-                  End;
-                  specfftCount := 0;
-                  gamma := 1.3 + 0.01*specContrast;
-                  offset := (specGain+64.0)/2;
-                  // Map float specta pixels to integer
-                  For i := 0 to 749 do
-                  Begin
-                       intVar := 0;
-                       fvar := floatSpectra[i];
-                       if fvar <> 0 Then
-                       Begin
-                            pw1 := 0.01*fvar;
-                            pw2 := gamma;
-                            fvar := 0.0;
-                            fvar := power(pw1,pw2);
-                            fvar := fvar+offset;
-                       End
-                       Else
-                       Begin
-                            fvar := 0.0;
-                       End;
-                       if fvar <> 0 then intVar := trunc(fvar) else intVar := 0;
-                       intVar := min(252,max(0,intVar));
-                       integerSpectra[i] := intVar;
-                  End;
-                  doSpec := True;
-                  for i := 0 to 749 do
-                  Begin
-                       floatSpectra[i] := 0.0;
-                  End;
+                  samratio := 1.0/globalData.d65samfacin;
+                  sampconv.data_in  := srealArray165;
+                  sampconv.data_out := srealArray65;
+                  sampconv.input_frames  := 4096;
+                  sampconv.output_frames := 4096;
+                  sampconv.src_ratio     := samratio;
+                  samplerate.src_simple(@sampconv,2,1);
              End
              Else
              Begin
-                  doSpec := False;
+                  for i := 0 to 4095 do srealArray65[i] := srealArray165[i];
              End;
-             // integerSpectra[0..749] now contains the values ready to convert to rgbSpectra via colorMap()
-             If doSpec Then
-             Begin
-                  // Spectrum types 0..3 need conversion via colorMap()
-                  If specColorMap < 4 Then colorMap(integerSpectra, rgbSpectra);
-                  // Spectrum types 4 is simple single color mapping.
-                  If specColorMap = 4 Then
-                  Begin
-                       // GREEN
-                       for i := 0 to 749 do
-                       Begin
-                            rgbSpectra[i].g := integerSpectra[i];
-                            rgbSpectra[i].r := 0;
-                            rgbSpectra[i].b := 0;
-                       End;
-                  End;
-                  // Now prepend the new spectra to the spectrum rolling off the former
-                  // oldest element.  This is held in specDisplayData :
-                  // Array[0..109][0..749] Of CTypes.cint32  Will use tempSpec1 as
-                  // a copy buffer.
-                  //
-                  // Shift specDisplayData 1 line into tempSpec1 remembering that a
-                  // full spectrum display has 180 lines.  See that I'm copying the
-                  // newest 179 lines (0 to 178) to temp as lines 1 to 179 then
-                  // adding the new line as element 0 yielding again 180 lines.
-                  for i := 0 to 178 do
-                  Begin
-                       specTempSpec1[i+1] := specDisplayData[i];
-                  End;
-                  // Prepend new spectra to copy buffer
-                  specTempSpec1[0] := rgbSpectra;
-                  // Move copy buffer to real buffer
-                  for i := 0 to 179 do
-                  Begin
-                       specDisplayData[i] := specTempSpec1[i];
-                  End;
-                  // Setup BMP Header
-                  bmpH.bfType1         := 'B';
-                  bmpH.bfType2         := 'M';
-                  bmpH.bfSize          := 0;
-                  bmpH.bfReserved1     := 0;
-                  bmpH.bfReserved2     := 0;
-                  bmpH.bfOffBits       := 0;
-                  bmpH.biSize          := 40;
-                  bmpH.biWidth         := 750;
-                  bmpH.biHeight        := 180;
-                  bmpH.biPlanes        := 1;
-                  bmpH.biBitCount      := 24;
-                  bmpH.biCompression   := 0;
-                  bmpH.biSizeImage     := 0;
-                  bmpH.biXPelsPerMeter := 0;
-                  bmpH.biYPelsPerMeter := 0;
-                  bmpH.biClrUsed       := 0;
-                  bmpH.biClrImportant  := 0;
-                  Bytes_Per_Raster := bmpH.biWidth * 3;
-                  If Bytes_Per_Raster Mod 4 = 0 Then Raster_Pad := 0 Else Raster_Pad := 4 - (Bytes_Per_Raster Mod 4);
-                  Bytes_Per_Raster := Bytes_Per_Raster + Raster_Pad;
-                  bmpH.biSizeImage := Bytes_Per_Raster * bmpH.biHeight;
-                  bmpH.bfSize := SizeOf(bmpH) + bmpH.biSizeImage;
-                  bmpH.bfOffbits := SizeOf(bmpH);
-                  // Clear BMP data
-                  for i := 0 to 405359 do
-                  begin
-                       bmpD[i] := 0;
-                  end;
-                  // Build BMP data
-                  z := 0;
-                  for y := 180 downto 1 do
-                  Begin
-                       for x := 0 to 749 do
-                       begin
-                            // BLUE
-                            if (y=180) Or (x=0) Or (x=749) Then
-                            Begin
-                                 bmpD[z] := 0;
-                                 inc(z);
-                                 // GREEN
-                                 bmpD[z] := 0;
-                                 inc(z);
-                                 // RED
-                                 bmpD[z] := 0;
-                                 inc(z);
-                            End
-                            Else
-                            Begin
-                                 bmpD[z] := specDisplayData[y-1][x].b;
-                                 inc(z);
-                                 // GREEN
-                                 bmpD[z] := specDisplayData[y-1][x].g;
-                                 inc(z);
-                                 // RED
-                                 bmpD[z] := specDisplayData[y-1][x].r;
-                                 inc(z);
-                            End;
-                       end;
-                       inc(z);
-                       inc(z);
-                  end;
-                  // Write BMP to memory stream
-                  globalData.specMs65.Position := 0;
-                  z := SizeOf(bmpH);
-                  globalData.specMs65.Write(bmpH,SizeOf(bmpH));
-                  z := SizeOf(bmpD);
-                  globalData.specMs65.Write(bmpD,SizeOf(bmpd));
-                  globalData.specNewSpec65 := True;
-             End
-             Else
-             Begin
-                  globalData.specNewSpec65 := False;
-             End;
-        End
-        Else
-        Begin
-             // Either fftIn or fftOut is Nil.  Attempt to correct this.
+             // Populate FFT input array
+             proceed := True;
              if fftIn65 = Nil Then
              Begin
-                  Inc(specreIn);
-                  fftIn65 := Nil;
-                  fftw_getmem(fftIn65,4096*sizeof(single));
-                  dlog.filedebug('Reallocated fftIn65 (' + IntToStr(specreIn) + ')');
-                  if specreIn >= 5 then RunError(9999);
+                  dlog.fileDebug('Critical!  fftIn65=Nil at populate');
+                  proceed := False;
              End;
              if fftOut65 = Nil Then
              Begin
-                  Inc(specreOut);
-                  fftOut65 := Nil;
-                  fftw_getmem(fftOut65,2048*sizeof(complex_single));
-                  dlog.filedebug('Reallocated fftOut65 (' + IntToStr(specreOut) + ')');
-                  if specreOut >= 5 then RunError(9999);
+                  dlog.fileDebug('Critical!  fftOut65=Nil at populate');
+                  proceed := False;
              End;
-        End;
+             if proceed Then
+             Begin
+                  for i := 0 to 4095 do fftIn65[i] := srealArray65[i];
+                  // Clear FFT output array
+                  for i := 0 to 2047 do
+                  begin
+                       fftOut65[i].re := 0.0;
+                       fftOut65[i].im := 0.0;
+                  end;
+                  // Compute FFT 4096 FFT
+                  p := fftw_plan_dft_1d(4096,fftIn65,fftOut65,[fftw_estimate]);
+                  fftw_execute(p);
+                  // Accumulate power spectrum
+                  for i := 0 to 2047 do ss65[i] := ss65[i] + (power(fftOut65[i].re,2) + power(fftOut65[i].im,2));
+                  fftw_destroy_plan(p);
+                  // FFT Completed.
+                  // ss[0..2047] now contains an fft of the power spectrum of the last 4096 samples.
+                  //
+                  // Compute spectral display line.
+                  // ss[0..2047] contains the power density in 2.7 hz steps.
+                  inc(specfftCount);
+                  if specfftCount >= (5-specSpeed2) Then
+                  Begin
+                       inc(specfftCount);
+                       if specSmooth Then flat(@ss65[0],@nh,@specfftCount);
+                       // Create spectra line
+                       if nfrange = 2000 Then iadj := 182 + round((nfmid-1500)/df);
+                       if nfrange = 4000 Then iadj := round(nfmid/df - 752.0);
+                       For i := 0 to 749 do floatSpectra[i] := (specVGain*ss65[i+iadj])/specfftCount;
+                       //Clear ss[]
+                       for i := 0 to 2047 do ss65[i] := 0;
+                       specfftCount := 0;
+                       gamma := 1.3 + 0.01*specContrast;
+                       offset := (specGain+64.0)/2;
+                       // Map float specta pixels to integer
+                       For i := 0 to 749 do
+                       Begin
+                            intVar := 0;
+                            fvar := floatSpectra[i];
+                            if fvar <> 0 Then
+                            Begin
+                                 pw1 := 0.01*fvar;
+                                 pw2 := gamma;
+                                 fvar := 0.0;
+                                 fvar := power(pw1,pw2);
+                                 fvar := fvar+offset;
+                            End
+                            Else
+                            Begin
+                                 fvar := 0.0;
+                            End;
+                            if fvar <> 0 then intVar := trunc(fvar) else intVar := 0;
+                            intVar := min(252,max(0,intVar));
+                            integerSpectra[i] := intVar;
+                       End;
+                       doSpec := True;
+                       for i := 0 to 749 do floatSpectra[i] := 0.0;
+                  End
+                  Else
+                  Begin
+                       doSpec := False;
+                  End;
+                  // integerSpectra[0..749] now contains the values ready to convert to rgbSpectra via colorMap()
+                  If doSpec Then
+                  Begin
+                       // Spectrum types 0..3 need conversion via colorMap()
+                       If specColorMap < 4 Then colorMap(integerSpectra, rgbSpectra);
+                       // Spectrum types 4 is simple single color mapping.
+                       If specColorMap = 4 Then
+                       Begin
+                            // GREEN
+                            for i := 0 to 749 do
+                            Begin
+                                 rgbSpectra[i].g := integerSpectra[i];
+                                 rgbSpectra[i].r := 0;
+                                 rgbSpectra[i].b := 0;
+                            End;
+                       End;
+                       // Now prepend the new spectra to the spectrum rolling off the former
+                       // oldest element.  This is held in specDisplayData :
+                       // Array[0..109][0..749] Of CTypes.cint32  Will use tempSpec1 as
+                       // a copy buffer.
+                       //
+                       // Shift specDisplayData 1 line into tempSpec1 remembering that a
+                       // full spectrum display has 180 lines.  See that I'm copying the
+                       // newest 179 lines (0 to 178) to temp as lines 1 to 179 then
+                       // adding the new line as element 0 yielding again 180 lines.
+                       for i := 0 to 178 do specTempSpec1[i+1] := specDisplayData[i];
+                       // Prepend new spectra to copy buffer
+                       specTempSpec1[0] := rgbSpectra;
+                       // Move copy buffer to real buffer
+                       for i := 0 to 179 do specDisplayData[i] := specTempSpec1[i];
+                       // Setup BMP Header
+                       bmpH.bfType1         := 'B';
+                       bmpH.bfType2         := 'M';
+                       bmpH.bfSize          := 0;
+                       bmpH.bfReserved1     := 0;
+                       bmpH.bfReserved2     := 0;
+                       bmpH.bfOffBits       := 0;
+                       bmpH.biSize          := 40;
+                       bmpH.biWidth         := 750;
+                       bmpH.biHeight        := 180;
+                       bmpH.biPlanes        := 1;
+                       bmpH.biBitCount      := 24;
+                       bmpH.biCompression   := 0;
+                       bmpH.biSizeImage     := 0;
+                       bmpH.biXPelsPerMeter := 0;
+                       bmpH.biYPelsPerMeter := 0;
+                       bmpH.biClrUsed       := 0;
+                       bmpH.biClrImportant  := 0;
+                       Bytes_Per_Raster := bmpH.biWidth * 3;
+                       If Bytes_Per_Raster Mod 4 = 0 Then Raster_Pad := 0 Else Raster_Pad := 4 - (Bytes_Per_Raster Mod 4);
+                       Bytes_Per_Raster := Bytes_Per_Raster + Raster_Pad;
+                       bmpH.biSizeImage := Bytes_Per_Raster * bmpH.biHeight;
+                       bmpH.bfSize := SizeOf(bmpH) + bmpH.biSizeImage;
+                       bmpH.bfOffbits := SizeOf(bmpH);
+                       // Clear BMP data
+                       for i := 0 to 405359 do bmpD[i] := 0;
+                       // Build BMP data
+                       z := 0;
+                       for y := 180 downto 1 do
+                       Begin
+                            for x := 0 to 749 do
+                            begin
+                                 // BLUE
+                                 if (y=180) Or (x=0) Or (x=749) Then
+                                 Begin
+                                      bmpD[z] := 0;
+                                      inc(z);
+                                      // GREEN
+                                      bmpD[z] := 0;
+                                      inc(z);
+                                      // RED
+                                      bmpD[z] := 0;
+                                      inc(z);
+                                 End
+                                 Else
+                                 Begin
+                                      bmpD[z] := specDisplayData[y-1][x].b;
+                                      inc(z);
+                                      // GREEN
+                                      bmpD[z] := specDisplayData[y-1][x].g;
+                                      inc(z);
+                                      // RED
+                                      bmpD[z] := specDisplayData[y-1][x].r;
+                                      inc(z);
+                                 End;
+                            end;
+                            inc(z); // This is correct (re double inc of z)
+                            inc(z);
+                       end;
+                       // Write BMP to memory stream
+                       globalData.specMs65.Position := 0;
+                       z := SizeOf(bmpH);
+                       globalData.specMs65.Write(bmpH,SizeOf(bmpH));
+                       z := SizeOf(bmpD);
+                       globalData.specMs65.Write(bmpD,SizeOf(bmpd));
+                       globalData.specNewSpec65 := True;
+                  End
+                  Else
+                  Begin
+                       globalData.specNewSpec65 := False;
+                  End;
+             End
+             Else
+             Begin
+                  // Either fftIn or fftOut is Nil.  Attempt to correct this.
+                  if fftIn65 = Nil Then
+                  Begin
+                       Inc(specreIn);
+                       fftIn65 := Nil;
+                       fftw_getmem(fftIn65,4096*sizeof(single));
+                       dlog.filedebug('Reallocated fftIn65 (' + IntToStr(specreIn) + ')');
+                       if specreIn >= 5 then RunError(9999);
+                  End;
+                  if fftOut65 = Nil Then
+                  Begin
+                       Inc(specreOut);
+                       fftOut65 := Nil;
+                       fftw_getmem(fftOut65,2048*sizeof(complex_single));
+                       dlog.filedebug('Reallocated fftOut65 (' + IntToStr(specreOut) + ')');
+                       if specreOut >= 5 then RunError(9999);
+                  End;
+             End;
+        end;
      Except
         dlog.fileDebug('Exception raised in spectrum computation');
         globalData.specNewSpec65 := False;
