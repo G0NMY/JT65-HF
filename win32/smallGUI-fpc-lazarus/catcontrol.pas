@@ -586,7 +586,6 @@ end;
 
 function readHRDQRG(): String;
 Var
-   qrg                : Double;
    hrdresult          : PWIDECHAR;
    hrdmsg             : WideString;
    hrdon              : Boolean;
@@ -676,7 +675,6 @@ End;
 function readDXLabs(): String;
 Var
    catProc : TProcess;
-   qrg     : Double;
    inStrs  : TStringList;
 Begin
      catProc := TProcess.Create(nil);

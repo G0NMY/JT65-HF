@@ -22,7 +22,6 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="maincode"/>
-        <IsVisibleTab Value="True"/>
         <EditorIndex Value="5"/>
         <WindowIndex Value="0"/>
         <TopLine Value="6732"/>
@@ -203,10 +202,11 @@
         <Filename Value="catcontrol.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="catControl"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="0"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="673"/>
-        <CursorPos X="1" Y="692"/>
+        <TopLine Value="678"/>
+        <CursorPos X="1" Y="697"/>
         <UsageCount Value="266"/>
         <Loaded Value="True"/>
       </Unit17>
