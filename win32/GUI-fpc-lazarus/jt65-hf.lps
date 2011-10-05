@@ -22,14 +22,15 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="maincode"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="5"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="1524"/>
-        <CursorPos X="1" Y="1535"/>
+        <TopLine Value="1951"/>
+        <CursorPos X="1" Y="1970"/>
         <UsageCount Value="215"/>
         <Bookmarks Count="2">
           <Item0 X="1" Y="498" ID="1"/>
-          <Item1 X="11" Y="6046" ID="0"/>
+          <Item1 X="11" Y="6039" ID="0"/>
         </Bookmarks>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
@@ -157,11 +158,10 @@
         <ComponentName Value="Form6"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="cfgvtwo"/>
-        <IsVisibleTab Value="True"/>
         <EditorIndex Value="16"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="248"/>
-        <CursorPos X="1" Y="272"/>
+        <TopLine Value="643"/>
+        <CursorPos X="1" Y="662"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
@@ -351,8 +351,8 @@
         <UnitName Value="spot"/>
         <EditorIndex Value="9"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="1252"/>
-        <CursorPos X="1" Y="1256"/>
+        <TopLine Value="1476"/>
+        <CursorPos X="49" Y="1495"/>
         <UsageCount Value="209"/>
         <Loaded Value="True"/>
       </Unit30>

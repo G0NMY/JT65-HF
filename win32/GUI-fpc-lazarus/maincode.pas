@@ -1605,13 +1605,6 @@ begin
   spectrum.specColorMap := Form1.cbSpecPal.ItemIndex;
 end;
 
-procedure TForm1.edFreeTextChange(Sender : TObject);
-begin
-     {TODO Connect this to text validation }
-     // I'd like to do this as done with QRG entry, trigger a wait timer then
-     // validate when entry seems complete.
-end;
-
 procedure TForm1.WaterFallMouseDown(Sender: TObject; Button: TMouseButton;
   Shift: TShiftState; X, Y: Integer);
 Var
@@ -5776,7 +5769,7 @@ Begin
           //
           mnlooper := d65nwave;
 
-          {TODO Rewrite CW ID, if possible in pascal}
+          {TODO [1.0.9] Rewrite CW ID, if possible in pascal}
 
           // CW ID Handler
           if doCWID Then
@@ -5878,9 +5871,9 @@ Var
    txsr : CTypes.cdouble;
    d65sending : PChar;
 Begin
-     {TODO Modify this routine such that it looks at the current offset to correct timing then begins TX where the data SHOULD be if timing was perfect.}
-     {TODO This may work better than simply starting late.. it would be no different than the first X seconds being missing due to a fade or QRM/N and}
-     {TODO would not lead to a DT error as is now. Leave this for 1.0.9}
+     {TODO [1.0.9] Modify this routine such that it looks at the current offset to correct timing then begins TX where the data SHOULD be if timing was perfect.}
+     {TODO [1.0.9] This may work better than simply starting late.. it would be no different than the first X seconds being missing due to a fade or QRM/N and}
+     {TODO [1.0.9] would not lead to a DT error as is now. Leave this for 1.0.9}
      // Generate TX samples for a late starting TX Cycle.
 
      {TODO Return the message that will be TX as returned by libJT65.  This not done = not released.}
