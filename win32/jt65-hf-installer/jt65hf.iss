@@ -9,10 +9,20 @@ AppVerName=JT65-HF 1.0.8
 DefaultDirName={pf}\jt65hf108
 DefaultGroupName=JT65-HF-V108
 UninstallDisplayIcon={app}\jt65-hf.exe
-Compression=lzma
-SolidCompression=yes
+Compression=lzma/Max
+SolidCompression=true
 LicenseFile=license.txt
 OutputDir=.
+AppCopyright=(c)2009...2011 J C Large W6CQZ
+PrivilegesRequired=none
+MinVersion=,5.1.2600
+VersionInfoVersion=1.0.8
+VersionInfoCompany=W6CQZ
+VersionInfoDescription=JT65A for HF
+VersionInfoTextVersion=JT65-HF 1.0.8
+VersionInfoCopyright=(c)2009...2011 J C Large W6CQZ
+VersionInfoProductName=JT65-HF
+VersionInfoProductVersion=1.0.8
 
 [InstallDelete]
 Type: files; Name: "{app}\gpl-2.0.txt"
