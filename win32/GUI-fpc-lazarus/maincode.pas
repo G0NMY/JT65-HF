@@ -5719,7 +5719,7 @@ Begin
      // or 538020 samples (262.7 2K buffers).  Raising upper bound to an
      // even 2K multiple gives me 538624 samples or 263 2K buffers.
 
-     {TODO Return the message that will be TX as returned by libJT65.  This not done = not released.}
+     {TODO [1.0.9] No long priority due to strict character validation of input fields.  Return the message that will be TX as returned by libJT65.}
 
      d65sending := StrAlloc(28);
      for i := 0 to 27 do d65sending[i] := ' ';
@@ -5751,13 +5751,6 @@ Begin
                dac.d65txBuffer[mnlooper] := 0;
           end;
           if (paOutParams.channelCount = 2) And (txMode = 65) then encode65.gen65(d65txmsg,@txdf,@dac.d65txBuffer[0],@d65nwave,@d65sendingsh,d65sending,@d65nmsg);
-
-          {TODO Complete work for insuring what displays as TX content matches the exact actual TX message}
-          //Timer1.enabled := False;
-          //ShowMessage(d65sending[0..21]);
-          //Timer1.enabled := True;
-          curmsg := '';
-          curmsg := d65Sending[0..21];
 
           //if txMode =  4 Then  encode65.gen4(d65txmsg,@txdf,@dac.d65txBuffer[0],@d65nwave,@d65sendingsh,d65sending,@d65nmsg);
 
@@ -5875,7 +5868,8 @@ Begin
      {TODO [1.0.9] would not lead to a DT error as is now. Leave this for 1.0.9}
      // Generate TX samples for a late starting TX Cycle.
 
-     {TODO Return the message that will be TX as returned by libJT65.  This not done = not released.}
+     {TODO [1.0.9] No long priority due to strict character validation of input fields.  Return the message that will be TX as returned by libJT65.}
+
      d65sending := StrAlloc(28);
 
      if useBuffer = 0 Then
@@ -6875,7 +6869,7 @@ begin
           diagout.Form3.ListBox1.Items.Add('resync! ' + IntToStr(gst.Second));
           runOnce := True;
           Form1.Timer1.Enabled := True;
-          {TODO Not sure this is the right action to take, but it's a start.}
+          {TODO [1.0.9] Review this based on any 1.0.8 feedback.}
      End
      Else
      Begin
