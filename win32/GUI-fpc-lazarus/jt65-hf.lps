@@ -25,12 +25,12 @@
         <IsVisibleTab Value="True"/>
         <EditorIndex Value="5"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="2565"/>
-        <CursorPos X="1" Y="2581"/>
+        <TopLine Value="1524"/>
+        <CursorPos X="1" Y="1535"/>
         <UsageCount Value="215"/>
         <Bookmarks Count="2">
-          <Item0 X="1" Y="492" ID="1"/>
-          <Item1 X="11" Y="5962" ID="0"/>
+          <Item0 X="1" Y="498" ID="1"/>
+          <Item1 X="11" Y="6046" ID="0"/>
         </Bookmarks>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
@@ -362,8 +362,8 @@
         <UnitName Value="valobject"/>
         <EditorIndex Value="15"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="952"/>
-        <CursorPos X="38" Y="973"/>
+        <TopLine Value="1102"/>
+        <CursorPos X="1" Y="1137"/>
         <UsageCount Value="209"/>
         <Loaded Value="True"/>
       </Unit31>

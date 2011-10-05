@@ -966,6 +966,7 @@ implementation
         tstArray2 : Array[0..35] Of String;
         tstArray3 : Array[0..36] Of String;
         tstArray4 : Array[0..11] Of String;
+        tstArray5 : Array[0..10] Of String;
    begin
         tstArray1[0] := 'A';
         tstArray1[1] := 'B';
@@ -1098,6 +1099,19 @@ implementation
         tstArray4[10] := '.';
         tstArray4[11] := ',';
 
+        tstArray5[0]  := '0';
+        tstArray5[1]  := '1';
+        tstArray5[2]  := '2';
+        tstArray5[3]  := '3';
+        tstArray5[4]  := '4';
+        tstArray5[5]  := '5';
+        tstArray5[6]  := '6';
+        tstArray5[7]  := '7';
+        tstArray5[8]  := '8';
+        tstArray5[9]  := '9';
+        tstArray5[10] := '-';
+
+
         if mode = 'csign' then
         begin
              If ansiIndexStr(msg,tstArray2)>-1 then result := true else result := false;
@@ -1117,6 +1131,10 @@ implementation
         if mode = 'numeric' then
         begin
              If ansiIndexStr(msg,tstArray4)>-1 then result := true else result := false;
+        end;
+        if mode = 'sig' then
+        begin
+             If ansiIndexStr(msg,tstArray5)>-1 then result := true else result := false;
         end;
    end;
 

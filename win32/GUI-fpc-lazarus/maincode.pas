@@ -220,11 +220,15 @@ type
     procedure cbSpecPalChange(Sender: TObject);
     procedure edFreeTextChange (Sender : TObject );
     procedure edFreeTextDblClick(Sender: TObject);
+    procedure edFreeTextKeyPress (Sender : TObject ; var Key : char );
     procedure edHisCallDblClick(Sender: TObject);
+    procedure edHisCallKeyPress (Sender : TObject ; var Key : char );
     procedure edHisGridDblClick(Sender: TObject);
     procedure editManQRGChange(Sender: TObject);
+    procedure editManQRGKeyPress (Sender : TObject ; var Key : char );
     procedure edMsgDblClick(Sender: TObject);
     procedure edSigRepDblClick(Sender: TObject);
+    procedure edSigRepKeyPress (Sender : TObject ; var Key : char );
     procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
     procedure FormCreate(Sender: TObject);
     procedure Label17DblClick(Sender: TObject);
@@ -245,9 +249,11 @@ type
     procedure rbFreeMsgChange(Sender: TObject);
     procedure spinDecoderBWChange(Sender: TObject);
     procedure spinDecoderBinChange(Sender: TObject);
+    procedure spinDecoderCFKeyPress (Sender : TObject ; var Key : char );
     procedure SpinEdit1Change(Sender: TObject);
     procedure spinGainChange(Sender: TObject);
     procedure spinTXCFChange(Sender: TObject);
+    procedure spinTXCFKeyPress (Sender : TObject ; var Key : char );
     procedure tbBrightChange(Sender: TObject);
     procedure tbContrastChange(Sender: TObject);
     procedure ListBox1DblClick(Sender: TObject);
@@ -1515,6 +1521,19 @@ begin
      if spinDecoderBin.Value = 4 Then d65.glbinspace := 200;
 end;
 
+procedure TForm1 .spinDecoderCFKeyPress (Sender : TObject ; var Key : char );
+Var
+   i : Integer;
+begin
+     // Filtering input to signal report text box such that it only allows numerics and -
+     i := ord(key);
+     if not (i=8) then
+     begin
+        Key := upcase(key);
+        if not mval.asciiValidate(Key,'sig') then Key := #0;
+     end;
+end;
+
 procedure TForm1.SpinEdit1Change(Sender: TObject);
 begin
      if spinEdit1.Value > 5 then spinEdit1.Value := 5;
@@ -1622,10 +1641,36 @@ begin
   Form1.edFreeText.Clear;
 end;
 
+procedure TForm1.edFreeTextKeyPress(Sender : TObject; var Key : char);
+var
+   i : Integer;
+begin
+     // Filtering input to free text box such that it only allows jt65 characters
+     i := ord(key);
+     if not (i=8) then
+     begin
+        Key := upcase(key);
+        if not mval.asciiValidate(Key,'free') then Key := #0;
+     end;
+end;
+
 procedure TForm1.edHisCallDblClick(Sender: TObject);
 begin
   // Clear it
   Form1.edHisCall.Clear;
+end;
+
+procedure TForm1 .edHisCallKeyPress (Sender : TObject ; var Key : char );
+var
+   i : Integer;
+begin
+  // Filtering input to TX to text box such that it only allows jt65 callsign characters
+  i := ord(key);
+  if not (i=8) then
+  begin
+     Key := upcase(key);
+     if not mval.asciiValidate(Key,'csign') then Key := #0;
+  end;
 end;
 
 procedure TForm1.edHisGridDblClick(Sender: TObject);
@@ -1659,6 +1704,20 @@ begin
      end;
 end;
 
+procedure TForm1 .editManQRGKeyPress (Sender : TObject ; var Key : char );
+Var
+   i : Integer;
+begin
+     // Filtering input to QRG text box such that it only allows numerics
+     i := ord(key);
+     if not (i=8) then
+     begin
+        Key := upcase(key);
+        if not mval.asciiValidate(Key,'numeric') then Key := #0;
+     end;
+
+end;
+
 procedure TForm1.Timer2Timer(Sender : TObject);
 begin
      Timer2.Enabled := false;
@@ -1677,6 +1736,19 @@ end;
 procedure TForm1.edSigRepDblClick(Sender: TObject);
 begin
      Form1.edSigRep.Text := '';
+end;
+
+procedure TForm1 .edSigRepKeyPress (Sender : TObject ; var Key : char );
+Var
+   i : Integer;
+begin
+     // Filtering input to signal report text box such that it only allows numerics
+     i := ord(key);
+     if not (i=8) then
+     begin
+        Key := upcase(key);
+        if not mval.asciiValidate(Key,'sig') then Key := #0;
+     end;
 end;
 
 procedure TForm1.FormClose(Sender: TObject; var CloseAction: TCloseAction);
@@ -2823,8 +2895,7 @@ begin
                          efoo     := 'Can not compute TX message';
                     End;
 
-                    {TODO Re-think / Re-code this entire process.  Breaking it into functions is fine, but the logic is still not correct for all situations.}
-                    // Possibly correct now, still testing 10/4/2011.
+                    {TODO Continue testing result of message parsers for bith 2/3 word forms.}
 
                     // Lots of comments.  :)
                     //
@@ -3079,6 +3150,19 @@ begin
      Begin
           form1.spinDecoderCF.Value := form1.spinTXCF.Value;
      End;
+end;
+
+procedure TForm1 .spinTXCFKeyPress (Sender : TObject ; var Key : char );
+Var
+   i : Integer;
+begin
+     // Filtering input to signal report text box such that it only allows numerics and -
+     i := ord(key);
+     if not (i=8) then
+     begin
+        Key := upcase(key);
+        if not mval.asciiValidate(Key,'sig') then Key := #0;
+     end;
 end;
 
 procedure TForm1.tbBrightChange(Sender: TObject);
