@@ -2583,46 +2583,57 @@ Begin
      word2 := ExtractWord(2,exchange,[' ']);
      word3 := ExtractWord(3,exchange,[' ']);
      resolved := False;
-     If (word1 = 'CQ') Or (word1 = 'QRZ') Or (word1 = 'CQDX') Then
+
+     If (word1 = 'CQ') Or (word1 = 'QRZ') Then
      Begin
-          If word2 = 'DX' Then
+          // Callsigns have to be at least 3 characters.
+          if length(word2)>2 Then
           Begin
-               If length(word3)> 2 Then
-               begin
-                    if ValidateCallsign(word3) then Form1.edHisCall.Text := word3 Else Form1.edHisCall.Text := '';
-                    Form1.edHisGrid.Text := '';
+               if ValidateCallsign(word2) then
+               Begin
+                    Form1.edHisCall.Text := word2;
                     resolved := True;
-                    msg      := word3 + ' ' + globalData.fullcall + ' ' + cfgvtwo.Form6.edMyGrid.Text[1..4];
-                    doCWID   := False;
-                    doQSO    := True;
+               End
+               Else
+               Begin
+                    Form1.edHisCall.Text := '';
+                    Resolved := False;
                end;
           end
           else
           begin
-               if length(word2)>2 Then
-               Begin
-                    if ValidateCallsign(word2) then Form1.edHisCall.Text := word2 Else Form1.edHisCall.Text := '';
-               end
-               else
-               begin
-                    Form1.edHisCall.Text := '';
-               end;
-               if length(word3)>3 Then
-               Begin
-                    if ValidateGrid(word3) then edHisGrid.Text := word3 else edHisGrid.text := '';
-               end
-               else
-               begin
-                    Form1.edHisGrid.Text := '';
-               end;
+               Form1.edHisCall.Text := '';
+               Resolved := False;
+          end;
+
+          // No need to check for grid if length < 4 or > 4 or not resolved for callsign above.
+          if (length(word3)>3) And (length(word3)<5) And resolved Then
+          Begin
+               if ValidateGrid(word3) then edHisGrid.Text := word3 else edHisGrid.text := '';
+          end
+          else
+          begin
+               Form1.edHisGrid.Text := '';
+          end;
+
+          if resolved then
+          begin
                resolved := True;
                msg      := word2 + ' ' + globalData.fullcall + ' ' + cfgvtwo.Form6.edMyGrid.Text[1..4];
                doCWID   := False;
                doQSO    := True;
+          end
+          else
+          begin
+               resolved := False;
+               msg := '';
+               doCWID := false;
+               doQSO := false;
           end;
      End
      Else
      Begin
+          // Message is not a CQ or QRZ form, try what's left.
           If word1 = globalData.fullcall Then
           Begin
                // Seems to be a call to me.
@@ -3709,6 +3720,7 @@ var
 Begin
      Timer1.Enabled := False;
      Timer2.Enabled := False;
+
      kverr := 0;
      while FileExists('KVASD.DAT') do
      begin

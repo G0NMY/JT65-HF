@@ -1,7 +1,7 @@
 object Form1: TForm1
-  Left = 0
+  Left = 1
   Height = 560
-  Top = 9
+  Top = 5
   Width = 935
   ActiveControl = btnReDecode
   Caption = 'JT65-HF'
@@ -1173,12 +1173,12 @@ object Form1: TForm1
     ParentFont = False
   end
   object Label1: TLabel
-    Left = 320
-    Height = 25
-    Top = 77
-    Width = 87
+    Left = 474
+    Height = 20
+    Top = 283
+    Width = 67
     Caption = '16:10:05'
-    Font.Height = -21
+    Font.Height = -16
     Font.Name = 'Arial'
     Font.Style = [fsBold]
     ParentColor = False
