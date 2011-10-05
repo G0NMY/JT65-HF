@@ -918,7 +918,7 @@ begin
      end;
 end;
 
-{TODO rehook this eventually}
+{TODO [1.0.9] Re-hook this eventually}
 //procedure TForm1.updateList(callsign : String);
 //Var
 //   i     : integer;
@@ -2887,7 +2887,7 @@ begin
                          efoo     := 'Can not compute TX message';
                     End;
 
-                    {TODO Continue testing result of message parsers for bith 2/3 word forms.}
+                    {TODO [1.0.9 and beyond] Continue testing result of message parsers for bith 2/3 word forms.}
 
                     // Lots of comments.  :)
                     //
@@ -3854,8 +3854,9 @@ Begin
 
      // Setup internal database
      rb.logDir := GetAppConfigDir(False);
-     {TODO REMOVE this, it's a temporary test bit }
-     rb.dbToCSV(rb.logdir + 'spots.csv');
+
+     // Uncomment to dump database at program start.
+     //rb.dbToCSV(rb.logdir + 'spots.csv');
 
      // Initialize prefix/suffix support
      encode65.pfxBuild();
@@ -6670,7 +6671,7 @@ Begin
      // Update AU Levels display
      displayAudio(audioAve1, audioAve2);
      if Form1.chkMultiDecode.Checked Then watchMulti := False;
-     {TODO Reattach this to new RB Code}
+     {TODO [1.0.9] Reattach this to new RB Code}
      // Update rbstats once per minute at second = 30
      //If st.Second = 30 Then
      //Begin
