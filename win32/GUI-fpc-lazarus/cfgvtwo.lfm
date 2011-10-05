@@ -13,6 +13,7 @@ object Form6: TForm6
   Constraints.MinWidth = 800
   OnCreate = FormCreate
   LCLVersion = '0.9.30'
+  Visible = True
   object PageControl1: TPageControl
     Left = 8
     Height = 488
@@ -165,6 +166,7 @@ object Form6: TForm6
         Font.Height = -13
         Font.Name = 'Arial'
         OnChange = edMyCallChange
+        OnKeyPress = edMyCallKeyPress
         ParentFont = False
         TabOrder = 0
       end
@@ -175,6 +177,7 @@ object Form6: TForm6
         Width = 80
         Font.Height = -13
         Font.Name = 'Arial'
+        OnKeyPress = edMyGridKeyPress
         ParentFont = False
         TabOrder = 1
       end
@@ -291,7 +294,7 @@ object Form6: TForm6
         Caption = 'Save text of decodes and transmissions to file.'
         Checked = True
         State = cbChecked
-        TabOrder = 10
+        TabOrder = 12
       end
       object DirectoryEdit1: TDirectoryEdit
         Left = 4
@@ -302,7 +305,7 @@ object Form6: TForm6
         ButtonWidth = 23
         NumGlyphs = 0
         MaxLength = 0
-        TabOrder = 11
+        TabOrder = 13
       end
       object cbRestoreMulti: TCheckBox
         Left = 4
@@ -312,7 +315,7 @@ object Form6: TForm6
         Caption = 'Restore defaults sets Multidecoder On'
         Checked = True
         State = cbChecked
-        TabOrder = 12
+        TabOrder = 10
       end
       object comboPrefix: TComboBox
         Left = 100
@@ -326,7 +329,8 @@ object Form6: TForm6
         )
         OnChange = comboPrefixChange
         Style = csDropDownList
-        TabOrder = 13
+        TabOrder = 14
+        TabStop = False
         Text = 'NONE'
       end
       object comboSuffix: TComboBox
@@ -341,7 +345,8 @@ object Form6: TForm6
         )
         OnChange = comboPrefixChange
         Style = csDropDownList
-        TabOrder = 14
+        TabOrder = 15
+        TabStop = False
         Text = 'NONE'
       end
       object cbCWID: TCheckBox
@@ -350,7 +355,7 @@ object Form6: TForm6
         Top = 353
         Width = 238
         Caption = 'Send CW ID With 73 or Free Text Message'
-        TabOrder = 15
+        TabOrder = 11
       end
     end
     object TabSheet2: TTabSheet
@@ -1495,6 +1500,7 @@ object Form6: TForm6
         Height = 23
         Top = 207
         Width = 64
+        OnKeyPress = edUserQRG13KeyPress
         TabOrder = 0
         Text = '0'
       end
@@ -1503,6 +1509,7 @@ object Form6: TForm6
         Height = 23
         Top = 239
         Width = 64
+        OnKeyPress = edUserQRG13KeyPress
         TabOrder = 1
         Text = '0'
       end
@@ -1511,6 +1518,7 @@ object Form6: TForm6
         Height = 23
         Top = 272
         Width = 64
+        OnKeyPress = edUserQRG13KeyPress
         TabOrder = 2
         Text = '0'
       end
@@ -1519,6 +1527,7 @@ object Form6: TForm6
         Height = 23
         Top = 303
         Width = 64
+        OnKeyPress = edUserQRG13KeyPress
         TabOrder = 3
         Text = '0'
       end
@@ -1530,7 +1539,8 @@ object Form6: TForm6
         CharCase = ecUppercase
         MaxLength = 13
         OnChange = edUserMsgChange
-        TabOrder = 4
+        OnKeyPress = edUserMsg4KeyPress
+        TabOrder = 13
       end
       object edUserMsg5: TEdit
         Left = 386
@@ -1540,7 +1550,8 @@ object Form6: TForm6
         CharCase = ecUppercase
         MaxLength = 13
         OnChange = edUserMsgChange
-        TabOrder = 5
+        OnKeyPress = edUserMsg4KeyPress
+        TabOrder = 14
       end
       object edUserMsg6: TEdit
         Left = 385
@@ -1550,7 +1561,8 @@ object Form6: TForm6
         CharCase = ecUppercase
         MaxLength = 13
         OnChange = edUserMsgChange
-        TabOrder = 6
+        OnKeyPress = edUserMsg4KeyPress
+        TabOrder = 15
       end
       object edUserMsg7: TEdit
         Left = 385
@@ -1560,7 +1572,8 @@ object Form6: TForm6
         CharCase = ecUppercase
         MaxLength = 13
         OnChange = edUserMsgChange
-        TabOrder = 7
+        OnKeyPress = edUserMsg4KeyPress
+        TabOrder = 16
       end
       object edUserMsg8: TEdit
         Left = 385
@@ -1570,7 +1583,8 @@ object Form6: TForm6
         CharCase = ecUppercase
         MaxLength = 13
         OnChange = edUserMsgChange
-        TabOrder = 8
+        OnKeyPress = edUserMsg4KeyPress
+        TabOrder = 17
       end
       object edUserMsg9: TEdit
         Left = 385
@@ -1580,7 +1594,8 @@ object Form6: TForm6
         CharCase = ecUppercase
         MaxLength = 13
         OnChange = edUserMsgChange
-        TabOrder = 9
+        OnKeyPress = edUserMsg4KeyPress
+        TabOrder = 18
       end
       object edUserMsg10: TEdit
         Left = 386
@@ -1590,7 +1605,8 @@ object Form6: TForm6
         CharCase = ecUppercase
         MaxLength = 13
         OnChange = edUserMsgChange
-        TabOrder = 10
+        OnKeyPress = edUserMsg4KeyPress
+        TabOrder = 19
       end
       object edUserMsg11: TEdit
         Left = 386
@@ -1600,7 +1616,8 @@ object Form6: TForm6
         CharCase = ecUppercase
         MaxLength = 13
         OnChange = edUserMsgChange
-        TabOrder = 11
+        OnKeyPress = edUserMsg4KeyPress
+        TabOrder = 20
       end
       object edUserMsg12: TEdit
         Left = 386
@@ -1610,7 +1627,8 @@ object Form6: TForm6
         CharCase = ecUppercase
         MaxLength = 13
         OnChange = edUserMsgChange
-        TabOrder = 12
+        OnKeyPress = edUserMsg4KeyPress
+        TabOrder = 21
       end
       object edUserMsg13: TEdit
         Left = 385
@@ -1620,14 +1638,16 @@ object Form6: TForm6
         CharCase = ecUppercase
         MaxLength = 13
         OnChange = edUserMsgChange
-        TabOrder = 13
+        OnKeyPress = edUserMsg4KeyPress
+        TabOrder = 22
       end
       object edUserQRG5: TEdit
         Left = 171
         Height = 23
         Top = 34
         Width = 64
-        TabOrder = 14
+        OnKeyPress = edUserQRG13KeyPress
+        TabOrder = 4
         Text = '0'
       end
       object edUserQRG6: TEdit
@@ -1635,7 +1655,8 @@ object Form6: TForm6
         Height = 23
         Top = 69
         Width = 64
-        TabOrder = 15
+        OnKeyPress = edUserQRG13KeyPress
+        TabOrder = 5
         Text = '0'
       end
       object edUserQRG7: TEdit
@@ -1643,7 +1664,8 @@ object Form6: TForm6
         Height = 23
         Top = 103
         Width = 64
-        TabOrder = 16
+        OnKeyPress = edUserQRG13KeyPress
+        TabOrder = 6
         Text = '0'
       end
       object edUserQRG8: TEdit
@@ -1651,7 +1673,8 @@ object Form6: TForm6
         Height = 23
         Top = 139
         Width = 64
-        TabOrder = 17
+        OnKeyPress = edUserQRG13KeyPress
+        TabOrder = 7
         Text = '0'
       end
       object edUserQRG9: TEdit
@@ -1659,7 +1682,8 @@ object Form6: TForm6
         Height = 23
         Top = 173
         Width = 64
-        TabOrder = 18
+        OnKeyPress = edUserQRG13KeyPress
+        TabOrder = 8
         Text = '0'
       end
       object Label74: TLabel
@@ -1679,7 +1703,8 @@ object Form6: TForm6
         Height = 23
         Top = 207
         Width = 64
-        TabOrder = 19
+        OnKeyPress = edUserQRG13KeyPress
+        TabOrder = 9
         Text = '0'
       end
       object Label75: TLabel
@@ -1699,7 +1724,8 @@ object Form6: TForm6
         Height = 23
         Top = 239
         Width = 64
-        TabOrder = 20
+        OnKeyPress = edUserQRG13KeyPress
+        TabOrder = 10
         Text = '0'
       end
       object Label76: TLabel
@@ -1719,7 +1745,8 @@ object Form6: TForm6
         Height = 23
         Top = 272
         Width = 64
-        TabOrder = 21
+        OnKeyPress = edUserQRG13KeyPress
+        TabOrder = 11
         Text = '0'
       end
       object Label77: TLabel
@@ -1739,7 +1766,8 @@ object Form6: TForm6
         Height = 23
         Top = 303
         Width = 64
-        TabOrder = 22
+        OnKeyPress = edUserQRG13KeyPress
+        TabOrder = 12
         Text = '0'
       end
       object edUserMsg14: TEdit
@@ -1750,6 +1778,7 @@ object Form6: TForm6
         CharCase = ecUppercase
         MaxLength = 13
         OnChange = edUserMsgChange
+        OnKeyPress = edUserMsg4KeyPress
         TabOrder = 23
       end
       object Label126: TLabel
@@ -1772,6 +1801,7 @@ object Form6: TForm6
         CharCase = ecUppercase
         MaxLength = 13
         OnChange = edUserMsgChange
+        OnKeyPress = edUserMsg4KeyPress
         TabOrder = 24
       end
       object Label127: TLabel
@@ -1794,6 +1824,7 @@ object Form6: TForm6
         CharCase = ecUppercase
         MaxLength = 13
         OnChange = edUserMsgChange
+        OnKeyPress = edUserMsg4KeyPress
         TabOrder = 25
       end
       object Label128: TLabel
@@ -1816,6 +1847,7 @@ object Form6: TForm6
         CharCase = ecUppercase
         MaxLength = 13
         OnChange = edUserMsgChange
+        OnKeyPress = edUserMsg4KeyPress
         TabOrder = 26
       end
       object Label129: TLabel
@@ -1838,6 +1870,7 @@ object Form6: TForm6
         CharCase = ecUppercase
         MaxLength = 13
         OnChange = edUserMsgChange
+        OnKeyPress = edUserMsg4KeyPress
         TabOrder = 27
       end
       object Label130: TLabel
@@ -1860,6 +1893,7 @@ object Form6: TForm6
         CharCase = ecUppercase
         MaxLength = 13
         OnChange = edUserMsgChange
+        OnKeyPress = edUserMsg4KeyPress
         TabOrder = 28
       end
       object Label131: TLabel
@@ -1882,6 +1916,7 @@ object Form6: TForm6
         CharCase = ecUppercase
         MaxLength = 13
         OnChange = edUserMsgChange
+        OnKeyPress = edUserMsg4KeyPress
         TabOrder = 29
       end
       object Label132: TLabel
@@ -1990,7 +2025,8 @@ object Form6: TForm6
         Height = 23
         Top = 109
         Width = 72
-        TabOrder = 0
+        OnKeyPress = edUserQRG13KeyPress
+        TabOrder = 1
         Text = '0'
       end
       object editSI570FreqOffset: TEdit
@@ -2000,8 +2036,9 @@ object Form6: TForm6
         Width = 72
         Font.Height = -13
         Font.Name = 'Arial'
+        OnKeyPress = edUserQRG13KeyPress
         ParentFont = False
-        TabOrder = 1
+        TabOrder = 2
         Text = '0'
       end
       object btnSetSi570: TButton
@@ -2016,7 +2053,7 @@ object Form6: TForm6
         Font.Style = [fsBold]
         OnClick = editSI570FreqChange
         ParentFont = False
-        TabOrder = 2
+        TabOrder = 7
       end
       object checkSi570: TCheckBox
         Left = 12
@@ -2029,7 +2066,7 @@ object Form6: TForm6
         Font.Style = [fsBold]
         OnChange = checkSi570Change
         ParentFont = False
-        TabOrder = 3
+        TabOrder = 0
       end
       object radioSI570X2: TRadioButton
         Left = 12
@@ -2054,7 +2091,7 @@ object Form6: TForm6
         Width = 181
         Caption = 'Multiply Entered Frequency X4'
         Checked = True
-        TabOrder = 6
+        TabOrder = 3
         TabStop = True
       end
       object cbSi570PTT: TCheckBox
@@ -2068,7 +2105,7 @@ object Form6: TForm6
         Font.Style = [fsBold]
         OnChange = cbSi570PTTChange
         ParentFont = False
-        TabOrder = 7
+        TabOrder = 6
       end
     end
     object TabSheet6: TTabSheet
@@ -2100,7 +2137,8 @@ object Form6: TForm6
         Font.Style = [fsBold]
         ParentFont = False
         ReadOnly = True
-        TabOrder = 0
+        TabStop = False
+        TabOrder = 3
         Text = 'CQ TEXT'
       end
       object ComboBox1: TComboBox
@@ -2135,7 +2173,7 @@ object Form6: TForm6
         OnChange = ComboBox1Change
         ParentFont = False
         Style = csDropDownList
-        TabOrder = 1
+        TabOrder = 0
         Text = 'Lime'
       end
       object Edit2: TEdit
@@ -2151,7 +2189,8 @@ object Form6: TForm6
         Font.Style = [fsBold]
         ParentFont = False
         ReadOnly = True
-        TabOrder = 2
+        TabStop = False
+        TabOrder = 4
         Text = 'HAS MY CALL'
       end
       object ComboBox2: TComboBox
@@ -2186,7 +2225,7 @@ object Form6: TForm6
         OnChange = ComboBox2Change
         ParentFont = False
         Style = csDropDownList
-        TabOrder = 3
+        TabOrder = 1
         Text = 'Red'
       end
       object Edit3: TEdit
@@ -2202,7 +2241,8 @@ object Form6: TForm6
         Font.Style = [fsBold]
         ParentFont = False
         ReadOnly = True
-        TabOrder = 4
+        TabStop = False
+        TabOrder = 5
         Text = 'ONGOING QSO'
       end
       object ComboBox3: TComboBox
@@ -2237,7 +2277,7 @@ object Form6: TForm6
         OnChange = ComboBox3Change
         ParentFont = False
         Style = csDropDownList
-        TabOrder = 5
+        TabOrder = 2
         Text = 'Silver'
       end
     end
@@ -2262,7 +2302,8 @@ object Form6: TForm6
         Font.Name = 'Arial'
         ItemHeight = 0
         ParentFont = False
-        TabOrder = 0
+        TabOrder = 1
+        TabStop = False
       end
       object chkNoOptFFT: TCheckBox
         Left = 4
@@ -2270,7 +2311,8 @@ object Form6: TForm6
         Top = 434
         Width = 522
         Caption = 'Disable Optimal FFT use.  DO NOT CHECK THIS UNLESS YOU KNOW WHY YOU ARE DOING SO.'
-        TabOrder = 1
+        TabOrder = 2
+        TabStop = False
       end
       object btnClearLog: TButton
         Left = 689
@@ -2279,7 +2321,7 @@ object Form6: TForm6
         Width = 75
         Caption = 'Clear Log'
         OnClick = btnClearLogClick
-        TabOrder = 2
+        TabOrder = 0
       end
     end
   end
