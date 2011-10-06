@@ -5029,7 +5029,7 @@ Begin
      end;
      // Create and initialize TWaterfallControl
      Waterfall := TWaterfallControl.Create(Self);
-     Waterfall.Height := 180;
+     Waterfall.Height := 160;
      Waterfall.Width  := 750;
      Waterfall.Top    := 25;
      Waterfall.Left   := 177;
