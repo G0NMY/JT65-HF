@@ -2817,8 +2817,11 @@ begin
           // Correct issue where TX was previously enabled for a double clicked message,
           // then user double clicks another message that generates a TX message but
           // should not have TX enabled (a tail in type).  To correct this is simple...
-          // always set chkEnTX.checked = false coming into here.
+          // always set chkEnTX.checked = false and generated msg edMsg.Text to Nil and
+          // call txControls()
           chkEnTX.Enabled := False;
+          edMsg.Text := '';
+          txControls();
 
           idx := Form1.ListBox1.ItemIndex;
           if idx > -1 Then
