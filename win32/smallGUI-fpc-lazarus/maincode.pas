@@ -6783,6 +6783,12 @@ Begin
      txControls();
      // Give some indication if multi is off
      if Form1.chkMultiDecode.Checked Then Form1.chkMultiDecode.Font.Color := clBlack else Form1.chkMultiDecode.Font.Color := clRed;
+     // If TX is enabled and waterfall is disabled then enable waterfall.
+     if chkEnTX.Checked and (SpinEdit1.Value < 0) Then
+     begin
+          SpinEdit1.Value := 0;
+          SpinEdit1Change(SpinEdit1)
+     end;
      // Display any decodes that may have been returned from the decoder thread.
      // Only run this block if decoder thread is inactive.
      If not d65.glinProg and d65.gld65HaveDecodes Then
