@@ -2814,6 +2814,12 @@ begin
                entRXCF := Form1.spinDecoderCF.Value;
           End;
 
+          // Correct issue where TX was previously enabled for a double clicked message,
+          // then user double clicks another message that generates a TX message but
+          // should not have TX enabled (a tail in type).  To correct this is simple...
+          // always set chkEnTX.checked = false coming into here.
+          chkEnTX.Enabled := False;
+
           idx := Form1.ListBox1.ItemIndex;
           if idx > -1 Then
           Begin
