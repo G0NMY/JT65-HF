@@ -1428,7 +1428,7 @@ implementation
                              if parseExchange(prSpots[i].exchange, callheard, gridheard) and prVal.evalIQRG(prSpots[i].qrg,'LAX',band) then
                              begin
                                   // Init was good, lets do some work
-                                  pskrloc := BuildLocalString(prMyCall,prMyGrid,'JT65-HF','200',prInfo);
+                                  pskrloc := BuildLocalString(prMyCall,prMyGrid,'JT65-HF','1.0.8',prInfo);
                                   If not (gridheard='NILL') then
                                   begin
                                        pskrrep := BuildRemoteStringGrid(callheard,'JT65',IntToStr(prSpots[i].qrg),gridHeard,prSpots[i].date[1..8],prSpots[i].date[9..12]+'00');

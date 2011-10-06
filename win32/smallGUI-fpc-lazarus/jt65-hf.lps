@@ -22,11 +22,10 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="maincode"/>
-        <IsVisibleTab Value="True"/>
         <EditorIndex Value="5"/>
         <WindowIndex Value="0"/>
         <TopLine Value="6768"/>
-        <CursorPos X="1" Y="6792"/>
+        <CursorPos X="44" Y="6778"/>
         <UsageCount Value="215"/>
         <Bookmarks Count="2">
           <Item0 X="1" Y="485" ID="1"/>
@@ -349,10 +348,11 @@
         <Filename Value="spot.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="spot"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="9"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="1252"/>
-        <CursorPos X="1" Y="1256"/>
+        <TopLine Value="1423"/>
+        <CursorPos X="1" Y="1432"/>
         <UsageCount Value="209"/>
         <Loaded Value="True"/>
       </Unit30>
