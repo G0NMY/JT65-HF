@@ -1661,7 +1661,7 @@ begin
   if not (i=8) then
   begin
      Key := upcase(key);
-     if not mval.asciiValidate(Key,'csign') then Key := #0;
+     if not mval.asciiValidate(Key,'xcsign') then Key := #0;
   end;
 end;
 
