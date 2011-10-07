@@ -40,6 +40,7 @@ Type: files; Name: "{app}\HRDInterface0014.dll"
 Type: files; Name: "{app}\HRDInterface0015.dll"
 Type: files; Name: "{app}\sg-jt65-hf.exe"
 Type: files; Name: "{app}\KVASD_g95.exe"
+Type: files; Name: "{app}\jt65repair.exe"
 Type: filesandordirs; Name: "{app}\hamlib"
 Type: filesandordirs; Name: "{app}\optfft"
 
@@ -58,6 +59,7 @@ Source: "HRDInterface0015.dll"; DestDir: "{app}"
 Source: "libusb0.dll"; DestDir: "{app}"
 Source: "gpl-2.0.txt"; DestDir: "{app}"
 Source: "jt65-hf-setup.pdf"; DestDir: "{app}"
+Source: "jt65repair.exe"; DestDir: "{app}"
 Source: "hamlib\*.*"; DestDir: "{app}\hamlib"
 Source: "hamlib\rig_dde\*.*"; DestDir: "{app}\hamlib\rig_dde"
 Source: "optFFT\*.*"; DestDir: "{app}\optFFT"
@@ -69,6 +71,7 @@ Filename: "{app}\optFFT\jt65-hf.exe"; Flags: postinstall; Description: "Setup in
 [Icons]
 Name: "{group}\JT65-HF"; Filename: "{app}\jt65-hf.exe"
 Name: "{group}\JT65-HF Small GUI"; Filename: "{app}\sg-jt65-hf.exe"
+Name: "{group}\JT65-HF Configuration Repair"; Filename: "{app}\jt65repair.exe"
 Name: "{group}\Uninstall JT65-HF"; Filename: "{uninstallexe}"
 Name: "{group}\Documentation"; Filename: "{app}\jt65-hf-setup.pdf"
 

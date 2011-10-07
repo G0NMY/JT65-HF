@@ -1334,41 +1334,57 @@ end;
 
 procedure TForm1.buttonAckReport1Click(Sender: TObject);
 begin
-     if (globalData.fullcall <> '') And (Form1.edHisCall.Text <> '') Then
+     // Test for both callsigns having /
+     If Ansicontainstext(globalData.fullcall,'/') And AnsiContainsText(Form1.edHisCall.Text,'/') Then
      Begin
-          if AnsiContainsStr(globalData.fullcall,'/') Or AnsiContainsStr(Form1.edHiscall.Text,'/') Then
+          Form1.edMsg.Text := Form1.edHisCall.Text + '';
+     end
+     else
+     begin
+          if (globalData.fullcall <> '') And (Form1.edHisCall.Text <> '') Then
           Begin
-               Form1.edMsg.Text := Form1.edHisCall.Text + ' RRR';
-          End
-          Else
-          Begin
-               Form1.edMsg.Text := Form1.edHisCall.Text + ' ' + globalData.fullcall + ' RRR';
+               if AnsiContainsStr(globalData.fullcall,'/') Or AnsiContainsStr(Form1.edHiscall.Text,'/') Then
+               Begin
+                    Form1.edMsg.Text := Form1.edHisCall.Text + ' RRR';
+               End
+               Else
+               Begin
+                    Form1.edMsg.Text := Form1.edHisCall.Text + ' ' + globalData.fullcall + ' RRR';
+               End;
+               Form1.rbGenMsg.Checked := True;
+               Form1.rbGenMsg.Font.Color := clRed;
+               Form1.rbFreeMsg.Font.Color  := clBlack;
+               useBuffer := 0;
+               doCWID := False;
           End;
-          Form1.rbGenMsg.Checked := True;
-          Form1.rbGenMsg.Font.Color := clRed;
-          Form1.rbFreeMsg.Font.Color  := clBlack;
-          useBuffer := 0;
-          doCWID := False;
-     End;
+     end;
 end;
 
 procedure TForm1.buttonAckReport2Click(Sender: TObject);
 begin
-     if (globalData.fullcall <> '') And (Form1.edHisCall.Text <> '') Then
+     // Test for both callsigns having /
+     If Ansicontainstext(globalData.fullcall,'/') And AnsiContainsText(Form1.edHisCall.Text,'/') Then
      Begin
-          if AnsiContainsStr(globalData.fullcall,'/') Or AnsiContainsStr(Form1.edHiscall.Text,'/') Then
+          Form1.edMsg.Text := '';
+     end
+     else
+     begin
+          if (globalData.fullcall <> '') And (Form1.edHisCall.Text <> '') Then
           Begin
-               Form1.edMsg.Text := Form1.edHisCall.Text + ' R' + Form1.edSigRep.Text;
-          End
-          Else
-          Begin
-               Form1.edMsg.Text := Form1.edHisCall.Text + ' ' + globalData.fullcall + ' R' + Form1.edSigRep.Text;
-          End;
-          Form1.rbGenMsg.Checked := True;
-          Form1.rbGenMsg.Font.Color := clRed;
-          Form1.rbFreeMsg.Font.Color  := clBlack;
-          useBuffer := 0;
-          doCWID := False;
+               if AnsiContainsStr(globalData.fullcall,'/') Or AnsiContainsStr(Form1.edHiscall.Text,'/') Then
+               Begin
+                    Form1.edMsg.Text := Form1.edHisCall.Text + ' R' + Form1.edSigRep.Text;
+               End
+               Else
+               Begin
+                    Form1.edMsg.Text := Form1.edHisCall.Text + ' ' + globalData.fullcall + ' R' + Form1.edSigRep.Text;
+               End;
+               Form1.rbGenMsg.Checked := True;
+               Form1.rbGenMsg.Font.Color := clRed;
+               Form1.rbFreeMsg.Font.Color  := clBlack;
+               useBuffer := 0;
+               doCWID := False;
+          end;
      end;
 end;
 
@@ -1377,7 +1393,7 @@ begin
      if (globalData.fullcall <> '') And (cfgvtwo.Form6.edMyGrid.Text <> '') Then
      Begin
           if AnsiContainsStr(globalData.fullcall,'/') Then
-          Begin                      
+          Begin
                Form1.edMsg.Text := 'CQ ' + globalData.fullcall;
           End
           Else
@@ -1394,62 +1410,86 @@ end;
 
 procedure TForm1.buttonAnswerCQClick(Sender: TObject);
 begin
-     if (globalData.fullcall <> '') And (cfgvtwo.Form6.edMyGrid.Text <> '') And (Form1.edHisCall.Text <> '') Then
+     // Test for both callsigns having /
+     If Ansicontainstext(globalData.fullcall,'/') And AnsiContainsText(Form1.edHisCall.Text,'/') Then
      Begin
-          if AnsiContainsStr(globalData.fullcall,'/') Or AnsiContainsStr(Form1.edHiscall.Text,'/') Then
+          Form1.edMsg.Text := '';
+     end
+     else
+     begin
+          if (globalData.fullcall <> '') And (cfgvtwo.Form6.edMyGrid.Text <> '') And (Form1.edHisCall.Text <> '') Then
           Begin
-               Form1.edMsg.Text := Form1.edHisCall.Text + ' ' + globalData.fullcall;
-          End
-          Else
-          Begin
-               Form1.edMsg.Text := Form1.edHisCall.Text + ' ' + globalData.fullcall + ' ' + cfgvtwo.Form6.edMyGrid.Text[1..4];
+               if AnsiContainsStr(globalData.fullcall,'/') Or AnsiContainsStr(Form1.edHiscall.Text,'/') Then
+               Begin
+                    Form1.edMsg.Text := Form1.edHisCall.Text + ' ' + globalData.fullcall;
+               End
+               Else
+               Begin
+                    Form1.edMsg.Text := Form1.edHisCall.Text + ' ' + globalData.fullcall + ' ' + cfgvtwo.Form6.edMyGrid.Text[1..4];
+               End;
+               Form1.rbGenMsg.Checked := True;
+               Form1.rbGenMsg.Font.Color := clRed;
+               Form1.rbFreeMsg.Font.Color  := clBlack;
+               useBuffer := 0;
+               doCWID := False;
           End;
-          Form1.rbGenMsg.Checked := True;
-          Form1.rbGenMsg.Font.Color := clRed;
-          Form1.rbFreeMsg.Font.Color  := clBlack;
-          useBuffer := 0;
-          doCWID := False;
-     End;
+     end;
 end;
 
 procedure TForm1.buttonEndQSO1Click(Sender: TObject);
 begin
-     if (globalData.fullcall <> '') And (Form1.edHisCall.Text <> '') Then
+     // Test for both callsigns having /
+     If Ansicontainstext(globalData.fullcall,'/') And AnsiContainsText(Form1.edHisCall.Text,'/') Then
      Begin
-          if AnsiContainsStr(globalData.fullcall,'/') Or AnsiContainsStr(Form1.edHiscall.Text,'/') Then
+          Form1.edMsg.Text := '';
+     end
+     else
+     begin
+          if (globalData.fullcall <> '') And (Form1.edHisCall.Text <> '') Then
           Begin
-               Form1.edMsg.Text := Form1.edHisCall.Text + ' 73';
-          End
-          Else
-          Begin
-               Form1.edMsg.Text := Form1.edHisCall.Text + ' ' + globalData.fullcall + ' 73';
+               if AnsiContainsStr(globalData.fullcall,'/') Or AnsiContainsStr(Form1.edHiscall.Text,'/') Then
+               Begin
+                    Form1.edMsg.Text := Form1.edHisCall.Text + ' 73';
+               End
+               Else
+               Begin
+                    Form1.edMsg.Text := Form1.edHisCall.Text + ' ' + globalData.fullcall + ' 73';
+               End;
+               Form1.rbGenMsg.Checked := True;
+               Form1.rbGenMsg.Font.Color := clRed;
+               Form1.rbFreeMsg.Font.Color  := clBlack;
+               useBuffer := 0;
+               if cfgvtwo.Form6.cbCWID.Checked Then doCWID := True else doCWID := False;
           End;
-          Form1.rbGenMsg.Checked := True;
-          Form1.rbGenMsg.Font.Color := clRed;
-          Form1.rbFreeMsg.Font.Color  := clBlack;
-          useBuffer := 0;
-          if cfgvtwo.Form6.cbCWID.Checked Then doCWID := True else doCWID := False;
-     End;
+     end;
 end;
 
 procedure TForm1.buttonSendReportClick(Sender: TObject);
 begin
-     if (globalData.fullcall <> '') And (Form1.edHisCall.Text <> '') Then
-     Begin
-          if AnsiContainsStr(globalData.fullcall,'/') Or AnsiContainsStr(Form1.edHiscall.Text,'/') Then
+     // Test for both callsigns having /
+     If Ansicontainstext(globalData.fullcall,'/') And AnsiContainsText(Form1.edHisCall.Text,'/') Then
+     begin
+          Form1.edMsg.Text := '';
+     end
+     else
+     begin
+          if (globalData.fullcall <> '') And (Form1.edHisCall.Text <> '') Then
           Begin
-               Form1.edMsg.Text := Form1.edHisCall.Text + Form1.edSigRep.Text;
-          End
-          Else
-          Begin
-               Form1.edMsg.Text := Form1.edHisCall.Text + ' ' + globalData.fullcall + ' ' + Form1.edSigRep.Text;
+               if AnsiContainsStr(globalData.fullcall,'/') Or AnsiContainsStr(Form1.edHiscall.Text,'/') Then
+               Begin
+                    Form1.edMsg.Text := Form1.edHisCall.Text + Form1.edSigRep.Text;
+               End
+               Else
+               Begin
+                    Form1.edMsg.Text := Form1.edHisCall.Text + ' ' + globalData.fullcall + ' ' + Form1.edSigRep.Text;
+               End;
+               Form1.rbGenMsg.Checked := True;
+               Form1.rbGenMsg.Font.Color := clRed;
+               Form1.rbFreeMsg.Font.Color  := clBlack;
+               useBuffer := 0;
+               doCWID := False;
           End;
-          Form1.rbGenMsg.Checked := True;
-          Form1.rbGenMsg.Font.Color := clRed;
-          Form1.rbFreeMsg.Font.Color  := clBlack;
-          useBuffer := 0;
-          doCWID := False;
-     End;
+     end;
 end;
 
 procedure TForm1.menuHeardClick(Sender: TObject);
