@@ -5,45 +5,45 @@ LazarusResources.Add('TForm6','FORMDATA',[
   +' '#3#11'BorderIcons'#11#0#7'Caption'#6#13'Configuration'#12'ClientHeight'#3
   +#30#2#11'ClientWidth'#3' '#3#21'Constraints.MaxHeight'#3#30#2#20'Constraints'
   +'.MaxWidth'#3' '#3#21'Constraints.MinHeight'#3#30#2#20'Constraints.MinWidth'
-  +#3' '#3#8'OnCreate'#7#10'FormCreate'#10'LCLVersion'#6#6'0.9.30'#0#12'TPageCo'
-  +'ntrol'#12'PageControl1'#4'Left'#2#8#6'Height'#3#232#1#3'Top'#2#8#5'Width'#3
-  +#16#3#10'ActivePage'#7#9'TabSheet1'#8'TabIndex'#2#0#8'TabOrder'#2#0#0#9'TTab'
-  +'Sheet'#9'TabSheet1'#7'Caption'#6#13'Station Setup'#12'ClientHeight'#3#204#1
-  +#11'ClientWidth'#3#8#3#0#6'TLabel'#7'Label26'#4'Left'#2#5#6'Height'#2#15#3'T'
-  +'op'#2#6#5'Width'#2'-'#7'Caption'#6#8'Callsign'#11'Font.Height'#2#245#9'Font'
-  +'.Name'#6#5'Arial'#10'Font.Style'#11#6'fsBold'#0#11'ParentColor'#8#10'Parent'
-  +'Font'#8#0#0#6'TLabel'#7'Label27'#4'Left'#2#4#6'Height'#2#15#3'Top'#2':'#5'W'
-  +'idth'#3#223#0#7'Caption'#6'*Grid (4 or 6 Characters).  Required value.'#11
-  +'Font.Height'#2#245#9'Font.Name'#6#5'Arial'#10'Font.Style'#11#6'fsBold'#0#11
-  +'ParentColor'#8#10'ParentFont'#8#0#0#6'TLabel'#7'Label22'#4'Left'#2#4#6'Heig'
-  +'ht'#2#15#3'Top'#2'i'#5'Width'#2'j'#7'Caption'#6#18'Sound Input Device'#11'F'
-  +'ont.Height'#2#245#9'Font.Name'#6#5'Arial'#10'Font.Style'#11#6'fsBold'#0#11
-  +'ParentColor'#8#10'ParentFont'#8#0#0#6'TLabel'#7'Label23'#4'Left'#3';'#1#6'H'
-  +'eight'#2#15#3'Top'#2'i'#5'Width'#2's'#7'Caption'#6#19'Sound Output Device'
-  +#11'Font.Height'#2#245#9'Font.Name'#6#5'Arial'#10'Font.Style'#11#6'fsBold'#0
-  +#11'ParentColor'#8#10'ParentFont'#8#0#0#6'TLabel'#7'Label53'#4'Left'#2#5#6'H'
-  +'eight'#2#15#3'Top'#3#160#0#5'Width'#2'V'#7'Caption'#6#14'RX Sample Rate'#11
-  +'Font.Height'#2#245#9'Font.Name'#6#5'Arial'#10'Font.Style'#11#6'fsBold'#0#11
-  +'ParentColor'#8#10'ParentFont'#8#0#0#6'TLabel'#7'Label54'#4'Left'#2'y'#6'Hei'
-  +'ght'#2#15#3'Top'#3#160#0#5'Width'#2'V'#7'Caption'#6#14'TX Sample Rate'#11'F'
-  +'ont.Height'#2#245#9'Font.Name'#6#5'Arial'#10'Font.Style'#11#6'fsBold'#0#11
-  +'ParentColor'#8#10'ParentFont'#8#0#0#6'TLabel'#7'Label14'#4'Left'#2#5#6'Heig'
-  +'ht'#2'!'#3'Top'#3#203#0#5'Width'#3'~'#2#7'Caption'#6#189'Automatic adjustme'
-  +'nt may cause some initial skewing of spectrum display until SR settles.  Th'
-  +'is is harmless.'#13#10'In most cases it is suggested that Automatic sample '
-  +'rate correction be enabled.'#11'Font.Height'#2#243#9'Font.Name'#6#5'Arial'
-  +#11'ParentColor'#8#10'ParentFont'#8#0#0#6'TLabel'#7'Label29'#4'Left'#2#5#6'H'
-  +'eight'#2#15#3'Top'#3#151#1#5'Width'#3#248#0#7'Caption'#6'/Location of RX/TX'
-  +' history file (JT65hf-log.csv)'#11'Font.Height'#2#245#9'Font.Name'#6#5'Aria'
-  +'l'#10'Font.Style'#11#6'fsBold'#0#11'ParentColor'#8#10'ParentFont'#8#0#0#6'T'
-  +'Label'#7'Label28'#4'Left'#2'd'#6'Height'#2#15#3'Top'#2#6#5'Width'#2'!'#7'Ca'
-  +'ption'#6#6'Prefix'#11'Font.Height'#2#245#9'Font.Name'#6#5'Arial'#10'Font.St'
-  +'yle'#11#6'fsBold'#0#11'ParentColor'#8#10'ParentFont'#8#0#0#6'TLabel'#7'Labe'
-  +'l30'#4'Left'#3#204#0#6'Height'#2#15#3'Top'#2#6#5'Width'#2' '#7'Caption'#6#6
-  +'Suffix'#11'Font.Height'#2#245#9'Font.Name'#6#5'Arial'#10'Font.Style'#11#6'f'
-  +'sBold'#0#11'ParentColor'#8#10'ParentFont'#8#0#0#6'TLabel'#7'Label70'#4'Left'
-  +#3#28#1#6'Height'#2'['#3'Top'#2#6#5'Width'#3#223#1#7'Caption'#12'\'#1#0#0'No'
-  +'te:  Suffix/Prefix is suggested to only be used in situations where'#13#10
+  +#3' '#3#8'OnCreate'#7#10'FormCreate'#10'LCLVersion'#6#6'0.9.30'#7'Visible'#9
+  +#0#12'TPageControl'#12'PageControl1'#4'Left'#2#8#6'Height'#3#232#1#3'Top'#2#8
+  +#5'Width'#3#16#3#10'ActivePage'#7#9'TabSheet3'#8'TabIndex'#2#2#8'TabOrder'#2
+  +#0#0#9'TTabSheet'#9'TabSheet1'#7'Caption'#6#13'Station Setup'#12'ClientHeigh'
+  +'t'#3#204#1#11'ClientWidth'#3#8#3#0#6'TLabel'#7'Label26'#4'Left'#2#5#6'Heigh'
+  +'t'#2#15#3'Top'#2#6#5'Width'#2'-'#7'Caption'#6#8'Callsign'#11'Font.Height'#2
+  +#245#9'Font.Name'#6#5'Arial'#10'Font.Style'#11#6'fsBold'#0#11'ParentColor'#8
+  +#10'ParentFont'#8#0#0#6'TLabel'#7'Label27'#4'Left'#2#4#6'Height'#2#15#3'Top'
+  +#2':'#5'Width'#3#223#0#7'Caption'#6'*Grid (4 or 6 Characters).  Required val'
+  +'ue.'#11'Font.Height'#2#245#9'Font.Name'#6#5'Arial'#10'Font.Style'#11#6'fsBo'
+  +'ld'#0#11'ParentColor'#8#10'ParentFont'#8#0#0#6'TLabel'#7'Label22'#4'Left'#2
+  +#4#6'Height'#2#15#3'Top'#2'i'#5'Width'#2'j'#7'Caption'#6#18'Sound Input Devi'
+  +'ce'#11'Font.Height'#2#245#9'Font.Name'#6#5'Arial'#10'Font.Style'#11#6'fsBol'
+  +'d'#0#11'ParentColor'#8#10'ParentFont'#8#0#0#6'TLabel'#7'Label23'#4'Left'#3
+  +';'#1#6'Height'#2#15#3'Top'#2'i'#5'Width'#2's'#7'Caption'#6#19'Sound Output '
+  +'Device'#11'Font.Height'#2#245#9'Font.Name'#6#5'Arial'#10'Font.Style'#11#6'f'
+  +'sBold'#0#11'ParentColor'#8#10'ParentFont'#8#0#0#6'TLabel'#7'Label53'#4'Left'
+  +#2#5#6'Height'#2#15#3'Top'#3#160#0#5'Width'#2'V'#7'Caption'#6#14'RX Sample R'
+  +'ate'#11'Font.Height'#2#245#9'Font.Name'#6#5'Arial'#10'Font.Style'#11#6'fsBo'
+  +'ld'#0#11'ParentColor'#8#10'ParentFont'#8#0#0#6'TLabel'#7'Label54'#4'Left'#2
+  +'y'#6'Height'#2#15#3'Top'#3#160#0#5'Width'#2'V'#7'Caption'#6#14'TX Sample Ra'
+  +'te'#11'Font.Height'#2#245#9'Font.Name'#6#5'Arial'#10'Font.Style'#11#6'fsBol'
+  +'d'#0#11'ParentColor'#8#10'ParentFont'#8#0#0#6'TLabel'#7'Label14'#4'Left'#2#5
+  +#6'Height'#2'!'#3'Top'#3#203#0#5'Width'#3'~'#2#7'Caption'#6#189'Automatic ad'
+  +'justment may cause some initial skewing of spectrum display until SR settle'
+  +'s.  This is harmless.'#13#10'In most cases it is suggested that Automatic s'
+  +'ample rate correction be enabled.'#11'Font.Height'#2#243#9'Font.Name'#6#5'A'
+  +'rial'#11'ParentColor'#8#10'ParentFont'#8#0#0#6'TLabel'#7'Label29'#4'Left'#2
+  +#5#6'Height'#2#15#3'Top'#3#151#1#5'Width'#3#248#0#7'Caption'#6'/Location of '
+  +'RX/TX history file (JT65hf-log.csv)'#11'Font.Height'#2#245#9'Font.Name'#6#5
+  +'Arial'#10'Font.Style'#11#6'fsBold'#0#11'ParentColor'#8#10'ParentFont'#8#0#0
+  +#6'TLabel'#7'Label28'#4'Left'#2'd'#6'Height'#2#15#3'Top'#2#6#5'Width'#2'!'#7
+  +'Caption'#6#6'Prefix'#11'Font.Height'#2#245#9'Font.Name'#6#5'Arial'#10'Font.'
+  +'Style'#11#6'fsBold'#0#11'ParentColor'#8#10'ParentFont'#8#0#0#6'TLabel'#7'La'
+  +'bel30'#4'Left'#3#204#0#6'Height'#2#15#3'Top'#2#6#5'Width'#2' '#7'Caption'#6
+  +#6'Suffix'#11'Font.Height'#2#245#9'Font.Name'#6#5'Arial'#10'Font.Style'#11#6
+  +'fsBold'#0#11'ParentColor'#8#10'ParentFont'#8#0#0#6'TLabel'#7'Label70'#4'Lef'
+  +'t'#3#28#1#6'Height'#2'['#3'Top'#2#6#5'Width'#3#223#1#7'Caption'#12'\'#1#0#0
+  +'Note:  Suffix/Prefix is suggested to only be used in situations where'#13#10
   +'you have a legal requirement to do so.  You may define a suffix OR'#13#10'a'
   +' prefix but not both.  Suffix/prefix support in the JT65 protocol is a'#13
   +#10'(very) complex issue.  My suggestion is to avoid its use if at all'#13#10
