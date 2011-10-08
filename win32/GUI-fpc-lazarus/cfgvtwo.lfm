@@ -13,14 +13,13 @@ object Form6: TForm6
   Constraints.MinWidth = 800
   OnCreate = FormCreate
   LCLVersion = '0.9.30'
-  Visible = True
   object PageControl1: TPageControl
     Left = 8
     Height = 488
     Top = 8
     Width = 784
-    ActivePage = TabSheet3
-    TabIndex = 2
+    ActivePage = TabSheet1
+    TabIndex = 0
     TabOrder = 0
     object TabSheet1: TTabSheet
       Caption = 'Station Setup'
@@ -1048,7 +1047,7 @@ object Form6: TForm6
       end
     end
     object TabSheet3: TTabSheet
-      Caption = 'Heard List/PSKR Setup/RB Setup'
+      Caption = 'RB and PSKR'
       ClientHeight = 460
       ClientWidth = 776
       object Label34: TLabel

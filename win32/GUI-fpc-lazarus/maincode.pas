@@ -33,7 +33,7 @@ uses
   dac, ClipBrd, dlog, rawdec, cfgvtwo, guiConfig, verHolder,
   catControl, Menus, synaser, log, diagout, synautil, waterfall, d65,
   spectrum, {$IFDEF WIN32}windows, {$ENDIF}{$IFDEF LINUX}unix, {$ENDIF}
-  {$IFDEF DARWIN}unix, {$ENDIF} about, spot, valobject;
+  {$IFDEF DARWIN}unix, {$ENDIF} about, spot, valobject, heard;
 
 Const
   JT_DLL = 'jt65.dll';
@@ -373,7 +373,6 @@ type
      smeterIdx                  : Integer;
      txCount                    : Integer;
      bStart, bEnd, rxCount      : Integer;
-     exchange                   : String;
      TxDirty, TxValid           : Boolean;
      answeringCQ                : Boolean;
      msgToSend                  : String;
@@ -1495,9 +1494,11 @@ end;
 
 procedure TForm1.menuHeardClick(Sender: TObject);
 begin
-     cfgvtwo.Form6.PageControl1.ActivePage := cfgvtwo.Form6.TabSheet3;
-     cfgvtwo.Form6.Show;
-     cfgvtwo.Form6.BringToFront;
+     heard.Form9.Show;
+     heard.Form9.BringToFront;
+     //cfgvtwo.Form6.PageControl1.ActivePage := cfgvtwo.Form6.TabSheet3;
+     //cfgvtwo.Form6.Show;
+     //cfgvtwo.Form6.BringToFront;
 end;
 
 procedure TForm1.menuRigControlClick(Sender: TObject);
@@ -2844,6 +2845,7 @@ procedure TForm1.ListBox1DblClick(Sender: TObject);
 Var
    txhz, srxp, ss, foo : String;
    txt, efoo           : String;
+   exchange            : String;
    wcount, irxp, itxp  : Integer;
    itxhz, idx, i       : Integer;
    resolved, doQSO     : Boolean;
@@ -6669,8 +6671,9 @@ End;
 
 procedure TForm1.processOncePerSecond(st : TSystemTime);
 Var
-   //i    : Integer;
+   i    : Integer;
    foo  : String;
+   sp   : spot.spotDBRec;
 Begin
      // Keep popup menu items in sync
      Form1.MenuItem8a.Caption  := cfgvtwo.Form6.edUserQRG1.Text;
@@ -6790,6 +6793,69 @@ Begin
      if st.Second = 55 Then
      Begin
           If cbEnRB.Checked And odd(st.Minute) Then rbcPing := True;
+     end;
+     // Update RB/PSKR/DB Stats
+     heard.Form9.Label3.Caption := 'RB Reports Sent:  ' + rb.RBcount;
+     heard.Form9.Label4.Caption := 'Discarded:  ' + rb.rbDiscard;
+     heard.Form9.Label5.Caption := 'Rejected:  ' + rb.RBfail;
+     heard.Form9.Label6.Caption := 'PSKR Reports Sent:  ' + IntToStr(rb.pskrCallsSent);
+     heard.Form9.Label7.Caption := 'Buffered:  ' + IntToStr(rb.pskrCallsBuff);
+     heard.Form9.Label8.Caption := 'Discarded:  ' + IntToStr(rb.pskrCallsDisc);
+     heard.Form9.Label23.Caption := 'Stats DB Added:  ' + rb.dbfCount;
+     heard.Form9.Label24.Caption := 'Updates:  ' + rb.dbfUCount;
+     // Check to see if user needs a search completed from the heard unit
+     if heard.pubdoDB Then
+     Begin
+          //Heard unit requesting data for callsign in heard.publuCall
+          i := 0;
+          i := rb.findDB(heard.publuCall);
+          if i > 0 then
+          begin
+               sp := rb.getDBREC(i);
+               for i := 0 to 16 do
+               begin
+                    heard.pubSP.callsign[i] := sp.callsign[i];
+               end;
+               for i := 0 to 6 do
+               begin
+                    heard.pubSP.grid1[i] := sp.grid1[i];
+                    heard.pubSP.grid2[i] := sp.grid2[i];
+                    heard.pubSP.grid3[i] := sp.grid3[i];
+                    heard.pubSP.grid4[i] := sp.grid4[i];
+               end;
+               heard.pubSP.count := sp.count;
+               heard.pubSP.first := sp.first;
+               heard.pubSP.last := sp.last;
+               heard.pubSP.b160 := sp.b160;
+               heard.pubSP.b80 := sp.b80;
+               heard.pubSP.b40 := sp.b40;
+               heard.pubSP.b30 := sp.b30;
+               heard.pubSP.b20 := sp.b20;
+               heard.pubSP.b17 := sp.b17;
+               heard.pubSP.b15 := sp.b15;
+               heard.pubSP.b12 := sp.b12;
+               heard.pubSP.b10 := sp.b10;
+               heard.pubSP.b6 := sp.b6;
+               heard.pubSP.b2 := sp.b2;
+               heard.pubSP.wb160 := sp.wb160;
+               heard.pubSP.wb80 := sp.wb80;
+               heard.pubSP.wb40 := sp.wb40;
+               heard.pubSP.wb30 := sp.wb30;
+               heard.pubSP.wb20 := sp.wb20;
+               heard.pubSP.wb17 := sp.wb17;
+               heard.pubSP.wb15 := sp.wb15;
+               heard.pubSP.wb12 := sp.wb12;
+               heard.pubSP.wb10 := sp.wb10;
+               heard.pubSP.wb6 := sp.wb6;
+               heard.pubSP.wb2 := sp.wb2;
+               heard.pubhaveDB := true;
+               heard.pubfailDB := false;
+          end
+          else
+          begin
+               heard.pubfailDB := true;
+               heard.pubhaveDB := false;
+          end;
      end;
 end;
 
@@ -7085,7 +7151,6 @@ initialization
   //
   // Actions 1=Init, 2=RX, 3=TX, 4=Decode, 5=Idle
   //
-  exchange     := '';
   adc.adcT         := 0;
   adc.adcE         := 0;
   mnpttOpened    := False;

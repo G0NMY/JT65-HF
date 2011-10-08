@@ -33,7 +33,7 @@ uses
 implementation
   function verReturn() : String;
   Begin
-       Result := '1.0.9';
+       Result := '1.0.8.1';
   End;
   function dllReturn() : Integer;
   Begin

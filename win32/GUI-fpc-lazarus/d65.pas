@@ -1274,13 +1274,23 @@ begin
                    decode.bDecoded := ' ';
                    decode.timeStamp := gld65timestamp;
                    foo := ExtractWord(2,gldecOut.Strings[i],CsvDelim);
-                   If not TryStrToFloat(TrimLeft(TrimRight(foo)), decode.deltaFreq) Then decode.deltaFreq := -9999.0;
+                   If not TryStrToFloat(TrimLeft(TrimRight(foo)), decode.deltaFreq) Then
+                   Begin
+                        // Failed conversion... maybe locale uses , for decimal.  Lets try that.
+                        foo := StringReplace(foo,'.',',',[rfReplaceAll]);
+                        If not TryStrToFloat(TrimLeft(TrimRight(foo)), decode.deltaFreq) Then decode.deltaFreq := -9999.0;
+                   end;
                    foo := ExtractWord(3,gldecOut.Strings[i],CsvDelim);
                    If not TryStrToInt(TrimLeft(TrimRight(foo)), decode.numSync) Then decode.numSync := -99;
                    foo := ExtractWord(4,gldecOut.Strings[i],CsvDelim);
                    If not TryStrToInt(TrimLeft(TrimRight(foo)), decode.dsigLevel) Then decode.dsigLevel := -99;
                    foo := ExtractWord(5,gldecOut.Strings[i],CsvDelim);
-                   If not TryStrToFloat(TrimLeft(TrimRight(foo)), decode.deltaTime) Then decode.deltaTime := -99.0;
+                   If not TryStrToFloat(TrimLeft(TrimRight(foo)), decode.deltaTime) Then
+                   begin
+                        // Failed conversion... maybe locale uses , for decimal.  Lets try that.
+                        foo := StringReplace(foo,'.',',',[rfReplaceAll]);
+                        If not TryStrToFloat(TrimLeft(TrimRight(foo)), decode.deltaTime) Then decode.deltaTime := -99.0;
+                   end;
                    foo := ExtractWord(6,gldecOut.Strings[i],CsvDelim);
                    decode.cSync := TrimLeft(TrimRight(foo));
                    foo := ExtractWord(7,gldecOut.Strings[i],CsvDelim);

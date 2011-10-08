@@ -1,20 +1,19 @@
 object Form9: TForm9
-  Left = 1048
+  Left = 6
   Height = 485
-  Top = 164
-  Width = 900
+  Top = 13
+  Width = 700
   BorderIcons = [biSystemMenu, biMinimize]
   Caption = 'Stations Heard'
   ClientHeight = 485
-  ClientWidth = 900
+  ClientWidth = 700
   Constraints.MaxHeight = 485
-  Constraints.MaxWidth = 900
+  Constraints.MaxWidth = 700
   Constraints.MinHeight = 485
-  Constraints.MinWidth = 900
+  Constraints.MinWidth = 700
   Font.Height = -16
   Font.Name = 'Arial'
   LCLVersion = '0.9.30'
-  Visible = True
   object edSearchCallsign: TEdit
     Left = 8
     Height = 26
@@ -43,9 +42,9 @@ object Form9: TForm9
     TabOrder = 2
   end
   object Button2: TButton
-    Left = 8
+    Left = 424
     Height = 25
-    Top = 448
+    Top = 9
     Width = 147
     Caption = 'Clear Heard List'
     OnClick = Button2Click
@@ -429,9 +428,9 @@ object Form9: TForm9
     Visible = False
   end
   object GroupBox1: TGroupBox
-    Left = 336
+    Left = 8
     Height = 113
-    Top = 360
+    Top = 368
     Width = 552
     Caption = 'Spotting Networks and Internal DB Statistics (This session)'
     ClientHeight = 95

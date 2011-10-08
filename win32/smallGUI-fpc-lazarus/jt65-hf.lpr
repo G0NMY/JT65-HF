@@ -31,7 +31,7 @@ uses
   adc, samplerate, dac, dlog, rawdec, cfgvtwo, guiConfig, verHolder,
   PSKReporter, catControl, synaser,
   adif, log, diagout, waterfall, d65, hrdinterface5, hrdinterface4, about,
-  madc, mdac , spot , valobject ;
+  madc, mdac , spot , valobject , heard ;
 
 {$R *.res}
 
@@ -44,6 +44,7 @@ begin
   Application.CreateForm(TForm2, Form2);
   Application.CreateForm(TForm3, Form3);
   Application.CreateForm(TForm4, Form4);
+  Application.CreateForm(TForm9, Form9);
   Application.Run;
 end.
 

@@ -9,7 +9,7 @@
         <IsPartOfProject Value="True"/>
         <EditorIndex Value="18"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="12"/>
+        <TopLine Value="18"/>
         <CursorPos X="1" Y="48"/>
         <UsageCount Value="215"/>
         <Loaded Value="True"/>
@@ -22,15 +22,16 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="maincode"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="5"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="6002"/>
-        <CursorPos X="1" Y="6034"/>
-        <FoldState Value=" T0=VA4~"/>
+        <TopLine Value="3474"/>
+        <CursorPos X="82" Y="3501"/>
+        <FoldState Value=" T0=UA42"/>
         <UsageCount Value="215"/>
         <Bookmarks Count="2">
-          <Item0 X="1" Y="498" ID="1"/>
-          <Item1 X="11" Y="6094" ID="0"/>
+          <Item0 X="1" Y="497" ID="1"/>
+          <Item1 X="21" Y="2861" ID="0"/>
         </Bookmarks>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
@@ -181,11 +182,10 @@
         <Filename Value="verholder.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="verHolder"/>
-        <IsVisibleTab Value="True"/>
         <EditorIndex Value="27"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="6"/>
-        <CursorPos X="24" Y="36"/>
+        <TopLine Value="11"/>
+        <CursorPos X="20" Y="17"/>
         <UsageCount Value="201"/>
         <Loaded Value="True"/>
       </Unit15>
@@ -284,8 +284,8 @@
         <UnitName Value="d65"/>
         <EditorIndex Value="8"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="58"/>
-        <CursorPos X="7" Y="58"/>
+        <TopLine Value="1"/>
+        <CursorPos X="50" Y="4"/>
         <UsageCount Value="202"/>
         <Loaded Value="True"/>
       </Unit24>
@@ -352,8 +352,8 @@
         <UnitName Value="spot"/>
         <EditorIndex Value="10"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="1400"/>
-        <CursorPos X="1" Y="1431"/>
+        <TopLine Value="1408"/>
+        <CursorPos X="99" Y="1431"/>
         <UsageCount Value="209"/>
         <Loaded Value="True"/>
       </Unit30>
@@ -378,8 +378,8 @@
         <EditorIndex Value="6"/>
         <WindowIndex Value="0"/>
         <TopLine Value="1"/>
-        <CursorPos X="41" Y="4"/>
-        <UsageCount Value="20"/>
+        <CursorPos X="14" Y="9"/>
+        <UsageCount Value="32"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
       </Unit32>

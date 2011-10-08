@@ -3,14 +3,14 @@
   <ProjectSession>
     <PathDelim Value="\"/>
     <Version Value="9"/>
-    <Units Count="32">
+    <Units Count="33">
       <Unit0>
         <Filename Value="jt65-hf.lpr"/>
         <IsPartOfProject Value="True"/>
         <EditorIndex Value="17"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="18"/>
-        <CursorPos X="1" Y="47"/>
+        <TopLine Value="17"/>
+        <CursorPos X="1" Y="48"/>
         <UsageCount Value="215"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
@@ -22,11 +22,10 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="maincode"/>
-        <IsVisibleTab Value="True"/>
         <EditorIndex Value="5"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="5056"/>
-        <CursorPos X="15" Y="5087"/>
+        <TopLine Value="539"/>
+        <CursorPos X="21" Y="555"/>
         <UsageCount Value="215"/>
         <Bookmarks Count="2">
           <Item0 X="1" Y="485" ID="1"/>
@@ -50,7 +49,7 @@
         <Filename Value="parsecallsign.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="parseCallSign"/>
-        <EditorIndex Value="27"/>
+        <EditorIndex Value="28"/>
         <WindowIndex Value="0"/>
         <TopLine Value="10"/>
         <CursorPos X="1" Y="33"/>
@@ -102,7 +101,7 @@
         <Filename Value="adc.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="adc"/>
-        <EditorIndex Value="22"/>
+        <EditorIndex Value="23"/>
         <WindowIndex Value="0"/>
         <TopLine Value="180"/>
         <CursorPos X="44" Y="192"/>
@@ -121,7 +120,7 @@
         <Filename Value="dac.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="dac"/>
-        <EditorIndex Value="24"/>
+        <EditorIndex Value="25"/>
         <WindowIndex Value="0"/>
         <TopLine Value="32"/>
         <CursorPos X="1" Y="48"/>
@@ -145,7 +144,7 @@
         <ComponentName Value="Form5"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="rawdec"/>
-        <EditorIndex Value="18"/>
+        <EditorIndex Value="19"/>
         <WindowIndex Value="0"/>
         <TopLine Value="37"/>
         <CursorPos X="3" Y="66"/>
@@ -181,10 +180,11 @@
         <Filename Value="verholder.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="verHolder"/>
-        <EditorIndex Value="26"/>
+        <IsVisibleTab Value="True"/>
+        <EditorIndex Value="27"/>
         <WindowIndex Value="0"/>
         <TopLine Value="9"/>
-        <CursorPos X="24" Y="43"/>
+        <CursorPos X="26" Y="36"/>
         <UsageCount Value="201"/>
         <Loaded Value="True"/>
       </Unit15>
@@ -222,7 +222,7 @@
         <Filename Value="adif.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="adif"/>
-        <EditorIndex Value="20"/>
+        <EditorIndex Value="21"/>
         <WindowIndex Value="0"/>
         <TopLine Value="76"/>
         <CursorPos X="25" Y="110"/>
@@ -235,7 +235,7 @@
         <ComponentName Value="Form2"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="log"/>
-        <EditorIndex Value="21"/>
+        <EditorIndex Value="22"/>
         <WindowIndex Value="0"/>
         <TopLine Value="39"/>
         <CursorPos X="1" Y="58"/>
@@ -248,7 +248,7 @@
         <ComponentName Value="Form3"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="diagout"/>
-        <EditorIndex Value="19"/>
+        <EditorIndex Value="20"/>
         <WindowIndex Value="0"/>
         <TopLine Value="1"/>
         <CursorPos X="1" Y="1"/>
@@ -270,7 +270,7 @@
         <Filename Value="waterfall.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="waterfall"/>
-        <EditorIndex Value="28"/>
+        <EditorIndex Value="29"/>
         <WindowIndex Value="0"/>
         <TopLine Value="37"/>
         <CursorPos X="1" Y="70"/>
@@ -283,8 +283,8 @@
         <UnitName Value="d65"/>
         <EditorIndex Value="7"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="58"/>
-        <CursorPos X="7" Y="58"/>
+        <TopLine Value="1274"/>
+        <CursorPos X="67" Y="1306"/>
         <UsageCount Value="202"/>
         <Loaded Value="True"/>
       </Unit24>
@@ -322,12 +322,13 @@
         <CursorPos X="16" Y="9"/>
         <UsageCount Value="214"/>
         <Loaded Value="True"/>
+        <LoadedDesigner Value="True"/>
       </Unit27>
       <Unit28>
         <Filename Value="madc.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="madc"/>
-        <EditorIndex Value="23"/>
+        <EditorIndex Value="24"/>
         <WindowIndex Value="0"/>
         <TopLine Value="116"/>
         <CursorPos X="1" Y="152"/>
@@ -338,7 +339,7 @@
         <Filename Value="mdac.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="mdac"/>
-        <EditorIndex Value="25"/>
+        <EditorIndex Value="26"/>
         <WindowIndex Value="0"/>
         <TopLine Value="71"/>
         <CursorPos X="11" Y="92"/>
@@ -367,6 +368,18 @@
         <UsageCount Value="209"/>
         <Loaded Value="True"/>
       </Unit31>
+      <Unit32>
+        <Filename Value="heard.pas"/>
+        <IsPartOfProject Value="True"/>
+        <HasResources Value="True"/>
+        <UnitName Value="heard"/>
+        <EditorIndex Value="18"/>
+        <WindowIndex Value="0"/>
+        <TopLine Value="1"/>
+        <CursorPos X="1" Y="1"/>
+        <UsageCount Value="20"/>
+        <Loaded Value="True"/>
+      </Unit32>
     </Units>
     <General>
       <ActiveWindowIndexAtStart Value="0"/>
