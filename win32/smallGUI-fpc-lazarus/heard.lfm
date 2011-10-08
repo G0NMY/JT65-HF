@@ -1,0 +1,516 @@
+object Form9: TForm9
+  Left = 6
+  Height = 485
+  Top = 13
+  Width = 700
+  BorderIcons = [biSystemMenu, biMinimize]
+  Caption = 'Stations Heard'
+  ClientHeight = 485
+  ClientWidth = 700
+  Constraints.MaxHeight = 485
+  Constraints.MaxWidth = 700
+  Constraints.MinHeight = 485
+  Constraints.MinWidth = 700
+  Font.Height = -16
+  Font.Name = 'Arial'
+  LCLVersion = '0.9.30'
+  object edSearchCallsign: TEdit
+    Left = 8
+    Height = 26
+    Top = 8
+    Width = 112
+    TabOrder = 0
+  end
+  object Button1: TButton
+    Left = 128
+    Height = 26
+    Top = 8
+    Width = 171
+    Caption = 'Search For Callsign'
+    OnClick = Button1Click
+    TabOrder = 1
+  end
+  object lbSearchResults: TListBox
+    Left = 8
+    Height = 152
+    Top = 40
+    Width = 382
+    Items.Strings = (
+      ''
+    )
+    ItemHeight = 18
+    TabOrder = 2
+  end
+  object Button2: TButton
+    Left = 424
+    Height = 25
+    Top = 9
+    Width = 147
+    Caption = 'Clear Heard List'
+    OnClick = Button2Click
+    TabOrder = 3
+  end
+  object Label9: TLabel
+    Left = 72
+    Height = 17
+    Top = 200
+    Width = 22
+    Caption = '160'
+    Font.Height = -13
+    Font.Name = 'Arial'
+    Font.Style = [fsBold]
+    ParentColor = False
+    ParentFont = False
+  end
+  object Label10: TLabel
+    Left = 104
+    Height = 17
+    Top = 200
+    Width = 15
+    Caption = '80'
+    Font.Height = -13
+    Font.Name = 'Arial'
+    Font.Style = [fsBold]
+    ParentColor = False
+    ParentFont = False
+  end
+  object Label11: TLabel
+    Left = 132
+    Height = 17
+    Top = 200
+    Width = 15
+    Caption = '40'
+    Font.Height = -13
+    Font.Name = 'Arial'
+    Font.Style = [fsBold]
+    ParentColor = False
+    ParentFont = False
+  end
+  object Label12: TLabel
+    Left = 162
+    Height = 17
+    Top = 200
+    Width = 15
+    Caption = '30'
+    Font.Height = -13
+    Font.Name = 'Arial'
+    Font.Style = [fsBold]
+    ParentColor = False
+    ParentFont = False
+  end
+  object Label13: TLabel
+    Left = 190
+    Height = 17
+    Top = 200
+    Width = 15
+    Caption = '20'
+    Font.Height = -13
+    Font.Name = 'Arial'
+    Font.Style = [fsBold]
+    ParentColor = False
+    ParentFont = False
+  end
+  object Label14: TLabel
+    Left = 220
+    Height = 17
+    Top = 200
+    Width = 15
+    Caption = '17'
+    Font.Height = -13
+    Font.Name = 'Arial'
+    Font.Style = [fsBold]
+    ParentColor = False
+    ParentFont = False
+  end
+  object Label15: TLabel
+    Left = 252
+    Height = 17
+    Top = 200
+    Width = 15
+    Caption = '15'
+    Font.Height = -13
+    Font.Name = 'Arial'
+    Font.Style = [fsBold]
+    ParentColor = False
+    ParentFont = False
+  end
+  object Label16: TLabel
+    Left = 281
+    Height = 17
+    Top = 200
+    Width = 15
+    Caption = '12'
+    Font.Height = -13
+    Font.Name = 'Arial'
+    Font.Style = [fsBold]
+    ParentColor = False
+    ParentFont = False
+  end
+  object Label17: TLabel
+    Left = 311
+    Height = 17
+    Top = 200
+    Width = 15
+    Caption = '10'
+    Font.Height = -13
+    Font.Name = 'Arial'
+    Font.Style = [fsBold]
+    ParentColor = False
+    ParentFont = False
+  end
+  object Label18: TLabel
+    Left = 344
+    Height = 17
+    Top = 200
+    Width = 8
+    Caption = '6'
+    Font.Height = -13
+    Font.Name = 'Arial'
+    Font.Style = [fsBold]
+    ParentColor = False
+    ParentFont = False
+  end
+  object Label19: TLabel
+    Left = 374
+    Height = 17
+    Top = 200
+    Width = 8
+    Caption = '2'
+    Font.Height = -13
+    Font.Name = 'Arial'
+    Font.Style = [fsBold]
+    ParentColor = False
+    ParentFont = False
+  end
+  object Label20: TLabel
+    Left = 24
+    Height = 17
+    Top = 200
+    Width = 34
+    Caption = 'Band'
+    Font.Height = -13
+    Font.Name = 'Arial'
+    Font.Style = [fsBold]
+    ParentColor = False
+    ParentFont = False
+  end
+  object Label21: TLabel
+    Left = 19
+    Height = 17
+    Top = 224
+    Width = 39
+    Caption = 'Heard'
+    Font.Height = -13
+    Font.Name = 'Arial'
+    Font.Style = [fsBold]
+    ParentColor = False
+    ParentFont = False
+  end
+  object Label22: TLabel
+    Left = 8
+    Height = 17
+    Top = 248
+    Width = 50
+    Caption = 'Worked'
+    Font.Height = -13
+    Font.Name = 'Arial'
+    Font.Style = [fsBold]
+    ParentColor = False
+    ParentFont = False
+  end
+  object cb160: TCheckBox
+    Left = 76
+    Height = 19
+    Top = 223
+    Width = 20
+    OnClick = cbClick
+    TabOrder = 15
+    TabStop = False
+  end
+  object cb80: TCheckBox
+    Left = 105
+    Height = 19
+    Top = 223
+    Width = 20
+    OnClick = cbClick
+    TabOrder = 16
+    TabStop = False
+  end
+  object cb40: TCheckBox
+    Left = 133
+    Height = 19
+    Top = 223
+    Width = 20
+    OnClick = cbClick
+    TabOrder = 17
+    TabStop = False
+  end
+  object cb30: TCheckBox
+    Left = 163
+    Height = 19
+    Top = 223
+    Width = 20
+    OnClick = cbClick
+    TabOrder = 18
+    TabStop = False
+  end
+  object cb20: TCheckBox
+    Left = 191
+    Height = 19
+    Top = 223
+    Width = 20
+    OnClick = cbClick
+    TabOrder = 19
+    TabStop = False
+  end
+  object cb17: TCheckBox
+    Left = 221
+    Height = 19
+    Top = 223
+    Width = 20
+    OnClick = cbClick
+    TabOrder = 20
+    TabStop = False
+  end
+  object cb15: TCheckBox
+    Left = 253
+    Height = 19
+    Top = 223
+    Width = 20
+    OnClick = cbClick
+    TabOrder = 21
+    TabStop = False
+  end
+  object cb12: TCheckBox
+    Left = 282
+    Height = 19
+    Top = 223
+    Width = 20
+    OnClick = cbClick
+    TabOrder = 22
+    TabStop = False
+  end
+  object cb10: TCheckBox
+    Left = 312
+    Height = 19
+    Top = 223
+    Width = 20
+    OnClick = cbClick
+    TabOrder = 23
+    TabStop = False
+  end
+  object cb6: TCheckBox
+    Left = 342
+    Height = 19
+    Top = 223
+    Width = 20
+    OnClick = cbClick
+    TabOrder = 24
+    TabStop = False
+  end
+  object cb2: TCheckBox
+    Left = 372
+    Height = 19
+    Top = 223
+    Width = 20
+    OnClick = cbClick
+    TabOrder = 25
+    TabStop = False
+  end
+  object wcb160: TCheckBox
+    Left = 76
+    Height = 19
+    Top = 247
+    Width = 20
+    Enabled = False
+    TabOrder = 14
+    TabStop = False
+  end
+  object wcb80: TCheckBox
+    Left = 105
+    Height = 19
+    Top = 247
+    Width = 20
+    Enabled = False
+    TabOrder = 13
+    TabStop = False
+  end
+  object wcb40: TCheckBox
+    Left = 133
+    Height = 19
+    Top = 247
+    Width = 20
+    Enabled = False
+    TabOrder = 12
+    TabStop = False
+  end
+  object wcb30: TCheckBox
+    Left = 163
+    Height = 19
+    Top = 247
+    Width = 20
+    Enabled = False
+    TabOrder = 11
+    TabStop = False
+  end
+  object wcb20: TCheckBox
+    Left = 191
+    Height = 19
+    Top = 247
+    Width = 20
+    Enabled = False
+    TabOrder = 10
+    TabStop = False
+  end
+  object wcb17: TCheckBox
+    Left = 221
+    Height = 19
+    Top = 247
+    Width = 20
+    Enabled = False
+    TabOrder = 9
+    TabStop = False
+  end
+  object wcb15: TCheckBox
+    Left = 253
+    Height = 19
+    Top = 247
+    Width = 20
+    Enabled = False
+    TabOrder = 8
+    TabStop = False
+  end
+  object wcb12: TCheckBox
+    Left = 282
+    Height = 19
+    Top = 247
+    Width = 20
+    Enabled = False
+    TabOrder = 7
+    TabStop = False
+  end
+  object wcb10: TCheckBox
+    Left = 312
+    Height = 19
+    Top = 247
+    Width = 20
+    Enabled = False
+    TabOrder = 6
+    TabStop = False
+  end
+  object wcb6: TCheckBox
+    Left = 342
+    Height = 19
+    Top = 247
+    Width = 20
+    Enabled = False
+    TabOrder = 5
+    TabStop = False
+  end
+  object wcb2: TCheckBox
+    Left = 372
+    Height = 19
+    Top = 247
+    Width = 20
+    Enabled = False
+    TabOrder = 4
+    TabStop = False
+  end
+  object Button3: TButton
+    Left = 8
+    Height = 25
+    Top = 280
+    Width = 134
+    Caption = 'Update Record'
+    Enabled = False
+    OnClick = Button3Click
+    TabOrder = 26
+    Visible = False
+  end
+  object GroupBox1: TGroupBox
+    Left = 8
+    Height = 113
+    Top = 368
+    Width = 552
+    Caption = 'Spotting Networks and Internal DB Statistics (This session)'
+    ClientHeight = 95
+    ClientWidth = 548
+    Font.Height = -13
+    Font.Name = 'Arial'
+    ParentFont = False
+    TabOrder = 27
+    object Label3: TLabel
+      Left = 28
+      Height = 17
+      Top = 8
+      Width = 111
+      Caption = 'RB Reports Sent:  '
+      ParentColor = False
+    end
+    object Label6: TLabel
+      Left = 6
+      Height = 17
+      Top = 40
+      Width = 129
+      Caption = 'PSKR Reports Sent:  '
+      ParentColor = False
+    end
+    object Label7: TLabel
+      Left = 228
+      Height = 17
+      Top = 40
+      Width = 60
+      Caption = 'Buffered:  '
+      ParentColor = False
+    end
+    object Label8: TLabel
+      Left = 358
+      Height = 17
+      Top = 40
+      Width = 71
+      Caption = 'Discarded:  '
+      ParentColor = False
+    end
+    object Label4: TLabel
+      Left = 214
+      Height = 17
+      Top = 8
+      Width = 71
+      Caption = 'Discarded:  '
+      ParentColor = False
+    end
+    object Label5: TLabel
+      Left = 369
+      Height = 17
+      Top = 8
+      Width = 64
+      Caption = 'Rejected:  '
+      ParentColor = False
+    end
+    object Label24: TLabel
+      Left = 227
+      Height = 17
+      Top = 72
+      Width = 61
+      Caption = 'Updated:  '
+      ParentColor = False
+    end
+    object Label23: TLabel
+      Left = 31
+      Height = 17
+      Top = 72
+      Width = 106
+      Caption = 'Stats DB Added:  '
+      ParentColor = False
+    end
+  end
+  object Button4: TButton
+    Left = 224
+    Height = 25
+    Top = 280
+    Width = 166
+    Caption = 'Export DB To CSV'
+    OnClick = Button4Click
+    TabOrder = 28
+  end
+end
