@@ -3,7 +3,7 @@ GPL Open Source
 
 Files
 
-setup-JT65-HF1081.exe     Latest version, released October 8th, 2011. Scroll down for change log.
+setup-JT65-HF1082.exe     Latest version, released October 8th, 2011. Scroll down for change log.
 
 jt65repair.exe
 
@@ -13,22 +13,35 @@ jt65repair.exe
 
 jt65-hf-setup.pdf
 
-     Documentation for JT65-HF.
+     Documentation for JT65-HF. [Outdated]
 
 readme.txt
 
      What you are reading now.
 
 setup-JT65-HF1070.exe     Previous version.
-setup-JT65-HF1060.exe     Previous version.
 
-You only need the latest full setup file to install or update.  The setup/documentation guide
-is included with the installer.  Version 1080 and beyond also includes the repair utility.
+You only need the latest setup file to install or update.  The setup/documentation guide
+is included with the installer.  Version 1080 and beyond also include the repair utility.
 
 For questions see the JT65-HF support group at: https://groups.google.com/forum/?hl=en#!forum/jt65-hf
 
 
 Change Log
+
+Version 1.0.8.2
+
+Corrected issue with QRG value being (like) 28.076,30 or 28,076.30
+Previous versions correctly handled 28,076.30 but not 28.076,30.
+
+Changed internal order of program startup such that configuration
+and audio device startup is verfied and set before starting decoder,
+RB and rig control threads.  Attempting to avoid a double malfunction
+where both audio startup and rig control have issue.  Won't fix that,
+but, at least, should isolate the two events making debug easier.
+
+Modified message generator to once again handle case of exchange like
+CQ W6cqz [No grid sent and callsign not slashed].
 
 Version 1.0.8.1
 

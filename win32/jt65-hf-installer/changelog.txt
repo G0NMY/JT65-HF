@@ -1,5 +1,19 @@
 Change Log
 
+Version 1.0.8.2
+
+Corrected issue with QRG value being (like) 28.076,30 or 28,076.30
+Previous versions correctly handled 28,076.30 but not 28.076,30.
+
+Changed internal order of program startup such that configuration
+and audio device startup is verfied and set before starting decoder,
+RB and rig control threads.  Attempting to avoid a double malfunction
+where both audio startup and rig control have issue.  Won't fix that,
+but, at least, should isolate the two events making debug easier.
+
+Modified message generator to once again handle case of exchange like
+CQ W6cqz [No grid sent and callsign not slashed].
+
 Version 1.0.8.1
 
 Corrected issue with local settings using , as decimal point leading to

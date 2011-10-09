@@ -2464,21 +2464,23 @@ Begin
      // Now, if cont = true I have something to work with.  If not, it's game over.
      if cont then
      begin
-          // Check for slash in callsign, if present continue while if not do nothing.
-          // In a 2 word excahnge something has to be a slashed callsign.  Yes... it
-          // is possible that someone is sending CQ AB1CD without a grid or TEST BC2DEF
-          // or any number of other things, but, I can't account for anything other than
-          // properly structured messages here.  The rest is left up to human intervention.
-          If (AnsiContainsText(word1,'/')) Or (AnsiContainsText(word2,'/')) Then
+          // Check for slash in callsign (local or remote), if present continue while
+          // if not do nothing.  In a 2 word excahnge something has to be a slashed
+          // callsign.  Yes... it is possible that someone is sending CQ AB1CD without
+          // a grid or TEST BC2DEF or any number of other things, but, I can't account
+          // for anything other than properly structured messages here.  I will resolve
+          // the case of CQ CALLSIGN (no slash), but, the rest is left up to human
+          // intervention.
+          If AnsiContainsText(word1,'/') Or AnsiContainsText(word2,'/') Or AnsiContainsText(globalData.fullcall,'/') Then
           Begin
                // Testing for a CQ, QRZ or message to local callsign with remote callsign
                // present message type.  This (and only this test) gives context from a 2
                // word exchange.  It will set Form1.edHisCall.Text which is necessary to
                // continue for the 2 words exchanges that do not give full context.
 
-               // First test is for CQ or QRZ as the second word MUST be a valid callsign.
-               // I've already checked for case of both local/remote callsigns being slashed,
-               // but, check it one more time just to be 100% sure.
+               // First test is for CQ or QRZ as the first word.  Second word MUST be a valid
+               // callsign.  I've already checked for case of both local/remote callsigns being
+               // slashed, but, check it one more time just to be 100% sure.
                If (word1='QRZ') OR (word1='CQ') Then
                Begin
                     If ValidateSlashedCallsign(word2) OR ValidateCallsign(word2) Then
@@ -2529,8 +2531,11 @@ Begin
                if (not resolved) AND (word1=globalData.fullcall) AND (ValidateSlashedCallsign(word2) OR ValidateCallsign(word2)) Then
                Begin
                     // Have word1 as local user's callsign and a valid callsign in word2
-                    // so there's some context.  :)
+                    // so there's some context.  :)  This is the form of a not slashed
+                    // callsign answering a slashed callsign calling CQ or a slashed
+                    // callsign answering a not slashed callsign calling CQ.
                     // One last check for both calls being slashed.
+                    // Check for both callsigns being slashed
                     if ansicontainstext(word2,'/') then remoteslash := true else remoteslash := false;
                     if localslash and remoteslash then
                     begin
@@ -2541,9 +2546,11 @@ Begin
                          resolved := False;
                          doQSO := False;
                          doCWID := False;
+                         err := 'Can not work with both calls having /.';
                     end
                     else
                     begin
+                         // Generate response
                          Form1.edHisCall.Text := word2;
                          Form1.edHisGrid.Text := '';
                          msg := word2 + ' ' + lsiglevel;
@@ -2658,14 +2665,65 @@ Begin
           else
           begin
                // Neither word contains a slash so this isn't a "valid" 2 word exchange.
-               err := 'Can not compute TX message.';
-               Resolved := false;
-               Form1.edHisCall.Text := '';
-          end;
+               // But, because it's seen too often and can be my fault due to a bug in
+               // JT65-HF [Version before 1.0.8] I need to check for the form CQ CALLSIGN
+               // or QRZ CALLSIGN with no slash in callsign or CALLSIGN CALLSIGN with no
+               // slash in either before I give up.
+               If ((word1='QRZ') OR (word1='CQ')) AND ValidateCallsign(word2) Then
+               Begin
+                    // In case local callsign is not slashed I generate a full 3 word
+                    // response else 2 word response.
+                    if localslash then
+                    begin
+                         // Generate the 2 word response
+                         Form1.edHisCall.Text := word2;
+                         Form1.edHisGrid.Text := '';
+                         msg := word2 + ' ' + globalData.fullcall;
+                         resolved := True;
+                         doQSO := True;
+                         doCWID := False;
+                    end
+                    else
+                    begin
+                         // Since neither call is slashed generate the 3 word response.
+                         Form1.edHisCall.Text := word2;
+                         Form1.edHisGrid.Text := '';
+                         msg := word2 + ' ' + globalData.fullcall + ' ' + cfgvtwo.Form6.edMyGrid.Text[1..4];
+                         resolved := True;
+                         doQSO := True;
+                         doCWID := False;
+                    end;
+               end
+               else
+               begin
+                    // Didn't pass test for CQ/QRZ CALLSIGN form, last check for CALLSIGN CALLSIGN form
+                    if (word1=globalData.fullcall) AND ValidateCallsign(word2) Then
+                    Begin
+                         // This is a callsign callsign form with no slashes anywhere
+                         Form1.edHisCall.Text := word2;
+                         Form1.edHisGrid.Text := '';
+                         msg := word2 + ' ' + globalData.fullcall + ' ' + lsiglevel;
+                         resolved := True;
+                         doQSO := True;
+                         doCWID := False;
+                    end
+                    else
+                    begin
+                         // The parsed callsign is not valid :(
+                         err := 'Can not compute TX message.';
+                         Form1.edHisCall.Text := '';
+                         Form1.edHisGrid.Text := '';
+                         msg := '';
+                         resolved := False;
+                         doQSO := False;
+                         doCWID := False;
+                    end;
+               end;
+          End;
      end
      else
      begin
-          // Both callsign seem to be slashed, no can do.
+          // Word1 is not local callsign, CQ or QRZ.
           err := 'Can not compute TX message.';
           Resolved := false;
           Form1.edHisCall.Text := '';
