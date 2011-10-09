@@ -27,17 +27,23 @@ interface
 uses
   Classes, SysUtils; 
 
-  function verReturn() : String;
-  function dllReturn() : Integer;
+  function verReturn : String;
+  function dllReturn : Integer;
+  function guiSize   : String;
 
 implementation
-  function verReturn() : String;
+  function verReturn : String;
   Begin
-       Result := '1.0.8.1';
+       Result := '1.0.8.2';
   End;
-  function dllReturn() : Integer;
+  function dllReturn : Integer;
   Begin
        Result := 3001;
   end;
+  function guiSize : String;
+  Begin
+       result := 'Normal';
+  end;
+
 end.
 

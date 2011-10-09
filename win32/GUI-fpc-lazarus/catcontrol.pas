@@ -674,8 +674,8 @@ End;
 
 function readDXLabs(): String;
 Var
-   catProc : TProcess;
-   inStrs  : TStringList;
+   catProc  : TProcess;
+   inStrs   : TStringList;
 Begin
      catProc := TProcess.Create(nil);
      Try
@@ -686,6 +686,9 @@ Begin
         catProc.Options := catProc.Options + [poUsePipes];
         catProc.Execute;
         inStrs.LoadFromStream(catProc.Output);
+        // Commander returns string for QRG like:
+        // 28,076.30 or 1,836.00 for locales with thousands = , and decimal = .
+        // 28.076,30 or 1.836,00 for locales with thousands = . and decimal = ,
         Result := inStrs.Strings[0];
         inStrs.Free;
      Except

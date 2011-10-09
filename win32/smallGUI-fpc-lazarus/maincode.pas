@@ -747,6 +747,12 @@ begin
                        qrg := catControl.readOmni(ifoo);
                   End;
 
+                  if cfgvtwo.glcatBy = 'commander' Then qrg := catControl.readDXLabs();
+
+                  if cfgvtwo.glcatBy = 'si57' Then qrg := IntToStr(cfgvtwo.glsi57QRGi);
+
+                  if cfgvtwo.glcatBy = 'none' Then qrg := Form1.editManQRG.Text;
+
                   if cfgvtwo.glcatBy = 'hrd' Then
                   Begin
                        if cfgvtwo.Form6.rbHRD4.Checked Then globalData.hrdVersion := 4;
@@ -886,15 +892,8 @@ begin
                        end;
                   End;
 
-                  if cfgvtwo.glcatBy = 'commander' Then qrg := catControl.readDXLabs();
-
-                  if cfgvtwo.glcatBy = 'si57' Then qrg := IntToStr(cfgvtwo.glsi57QRGi);
-
-                  if cfgvtwo.glcatBy = 'none' Then qrg := Form1.editManQRG.Text;
-
                   // At this point String(qrg) contains "something" for evalQRG to digest.
 
-                  //evalQRG(const qrg : String; const mode : string; var qrgk : Double; var qrghz : Integer; var asciiqrg : String) : Boolean;
                   If not mval.evalQRG(qrg, 'LAX', globalData.gqrg, globalData.iqrg, globalData.strqrg) Then
                   Begin
                        // Failed to convert
@@ -3856,13 +3855,13 @@ begin
      // Update form title with rb info.
      If cbEnRB.Checked Then
      Begin
-          foo := 'JT65-HF Version ' + verHolder.verReturn() + '  [RB Enabled, ';
+          foo := 'JT65-HF Version ' + verHolder.verReturn + '  [RB Enabled, ';
           If globalData.rbLoggedIn Then foo := foo + 'logged in.  QRG = ' + Form1.editManQRG.Text + ' KHz]' Else foo := foo + 'not logged in.  QRG = ' + Form1.editManQRG.Text + ' KHz]';
           foo := foo + ' [ ' + globalData.fullcall + ' QRV]';
      End
      Else
      Begin
-          foo := 'JT65-HF Version ' + verHolder.verReturn() + '  [ ' + globalData.fullcall + ' QRV]';
+          foo := 'JT65-HF Version ' + verHolder.verReturn + '  [ ' + globalData.fullcall + ' QRV]';
      End;
      if Form1.Caption <> foo Then Form1.Caption := foo;
 end;
@@ -3895,7 +3894,9 @@ Begin
      // This block is executed only once when the program starts
      if cfgError Then
      Begin
-          showMessage('Configuration file damaged and can not be recovered.');
+          showMessage('Configuration file damaged and can not be recovered.' + sLineBreak +
+                      'Run JT65-HF Configuration Repair and use delete function.' + sLineBreak + sLineBreak +
+                      'Program will now exit.');
           Halt;
      End;
      if cfgRecover then ShowMessage('Configuration file erased due to unrecoverable error.  Please reconfigure.');
@@ -3905,11 +3906,8 @@ Begin
      vint := 0;
      vstr := '0.0.0.0';
      ver(@vint, vstr);
-     if vint <> verHolder.dllReturn() Then showMessage('wsjt.dll incorrect version.  Program halted.');
-     if vint <> verHolder.dllReturn() Then
-     Begin
-          halt;
-     End;
+     if vint <> verHolder.dllReturn Then showMessage('wsjt.dll incorrect version.  Program halted.');
+     if vint <> verHolder.dllReturn Then halt;
      dlog.fileDebug('JT65.dll version check OK.');
 
      // Setup internal database
@@ -3930,19 +3928,9 @@ Begin
      end;
      tstint := 0;
      tstflt := 0.0;
-     Form1.Caption := 'JT65-HF V' + verHolder.verReturn() + ' (c) 2009,2010 W6CQZ.  Free to use/modify/distribute under GPL 2.0 License.';
+     Form1.Caption := 'JT65-HF V' + verHolder.verReturn + ' (c) 2009...2011 W6CQZ.  Free to use/modify/distribute under GPL 2.0 License.';
      // See comments in procedure code to understand why this is a MUST to use.
      DisableFloatingPointExceptions();
-     // Create the decoder thread with param False so it starts.
-     d65.glinProg := False;
-     decoderThread := decodeThread.Create(False);
-     // Create the CAT control thread with param False so it starts.
-     rigThread := catThread.Create(False);
-     cfgvtwo.glrbcLogin := False;
-     cfgvtwo.glrbcLogout := False;
-     // Create the RB thread with param False so it starts.
-     rbcPing := False;
-     rbThread := rbcThread.Create(False);
      //
      // Initialize various form items to startup values
      //
@@ -4169,7 +4157,7 @@ Begin
           If cfgvtwo.Form6.cbSaveCSV.Checked Then cfg.StoredValue['saveCSV'] := '1' Else cfg.StoredValue['saveCSV'] := '0';
           cfg.StoredValue['csvPath'] := cfgvtwo.Form6.DirectoryEdit1.Directory;
           cfg.StoredValue['adiPath'] := log.Form2.DirectoryEdit1.Directory;
-          cfg.StoredValue['version'] := verHolder.verReturn();
+          cfg.StoredValue['version'] := verHolder.verReturn;
           cfg.StoredValue['cqColor'] := IntToStr(cfgvtwo.Form6.ComboBox1.ItemIndex);
           cfg.StoredValue['callColor'] := IntToStr(cfgvtwo.Form6.ComboBox2.ItemIndex);
           cfg.StoredValue['qsoColor'] := IntToStr(cfgvtwo.Form6.ComboBox3.ItemIndex);
@@ -4522,7 +4510,7 @@ Begin
      if cfg.StoredValue['saveCSV'] = '1' Then cfgvtwo.Form6.cbSaveCSV.Checked := True else cfgvtwo.Form6.cbSaveCSV.Checked := False;
      if Length(cfg.StoredValue['csvPath']) > 0 Then cfgvtwo.Form6.DirectoryEdit1.Directory := cfg.StoredValue['csvPath'] else cfgvtwo.Form6.DirectoryEdit1.Directory := GetAppConfigDir(False);
      if Length(cfg.StoredValue['adiPath']) > 0 Then log.Form2.DirectoryEdit1.Directory := cfg.StoredValue['adiPath'] else log.Form2.DirectoryEdit1.Directory := GetAppConfigDir(False);
-     if cfg.StoredValue['version'] <> verHolder.verReturn() Then verUpdate := True else verUpdate := False;
+     if cfg.StoredValue['version'] <> verHolder.verReturn Then verUpdate := True else verUpdate := False;
      if cfg.StoredValue['txWatchDog'] = '1' Then
      Begin
           cfgvtwo.Form6.cbTXWatchDog.Checked := True
@@ -4943,7 +4931,7 @@ Begin
 
      if Length(cfg.StoredValue['LogComment'])>0 Then log.Form2.edLogComment.Text := cfg.StoredValue['LogComment'];
 
-     if cfg.StoredValue['version'] <> verHolder.verReturn() Then verUpdate := True else verUpdate := False;
+     if cfg.StoredValue['version'] <> verHolder.verReturn Then verUpdate := True else verUpdate := False;
 
      if verUpdate Then
      Begin
@@ -4954,7 +4942,7 @@ Begin
                 sleep(10);
                 Application.ProcessMessages
           until not cfgvtwo.glmustConfig;
-          cfg.StoredValue['version'] := verHolder.verReturn();
+          cfg.StoredValue['version'] := verHolder.verReturn;
           cfg.Save;
           dlog.fileDebug('Ran configuration update.');
      End;
@@ -5085,13 +5073,27 @@ Begin
      end;
      // Create and initialize TWaterfallControl
      Waterfall := TWaterfallControl.Create(Self);
-     Waterfall.Height := 160;
+     if verholder.guiSize = 'Normal' then Waterfall.Height := 180;
+     if verholder.guiSize = 'Small' then Waterfall.Height := 160;
      Waterfall.Width  := 750;
      Waterfall.Top    := 25;
      Waterfall.Left   := 177;
      Waterfall.Parent := Self;
      Waterfall.OnMouseDown := waterfallMouseDown;
      Waterfall.DoubleBuffered := True;
+
+     // Create the decoder thread with param False so it starts.
+     d65.glinProg := False;
+     decoderThread := decodeThread.Create(False);
+
+     // Create the CAT control thread with param False so it starts.
+     rigThread := catThread.Create(False);
+
+     // Create the RB thread with param False so it starts.
+     cfgvtwo.glrbcLogin := False;
+     cfgvtwo.glrbcLogout := False;
+     rbcPing := False;
+     rbThread := rbcThread.Create(False);
 End;
 
 function TForm1.SetAudio(auin : Integer; auout : Integer) : Boolean;

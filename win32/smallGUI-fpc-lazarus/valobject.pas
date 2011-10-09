@@ -1140,12 +1140,13 @@ implementation
 
    function TValidator.evalQRG(const qrg : String; const mode : string; var qrgk : Double; var qrghz : Integer; var asciiqrg : String) : Boolean;
    var
-        i        : Integer;
         i1,i2,i3 : Integer;
-        found    : Boolean;
+        wcount   : Integer;
         resolved : Boolean;
         foo, s1  : String;
-        s2       : String;
+        s2, sqrg : String;
+        decichar : Char;
+        kilochar : Char;
    begin
         // Returns an integer value in Hz for an input string that may be
         // in MHz, KHz or Hz.  Mode parameter can be lax or strict.  Float QRG
@@ -1174,193 +1175,45 @@ implementation
         asciiqrg := '';
         result   := False;
         resolved := false;
-        foo := '';
-        // Testing for something like 28,076.1 or 14,076.05 or 1,838.155
-        if (ansiContainsText(qrg,',')) and (ansiContainsText(qrg,'.')) Then
+        foo      := '';
+        sqrg     := '';
+        // Will rely on defined constants for decimal and thousand markers.
+        // Hopefully this will be correct for decimal point indication.
+        decichar := DecimalSeparator;
+        kilochar := ThousandSeparator;
+        // "Normalize" string qrg to a string with no thousands mark and a . decimal mark
+        // based upon locale setting for those marks.
+        // Remove any thousands indicators first.
+        foo := StringReplace(qrg,kilochar,'',[rfReplaceAll]);
+        // If decichar not . then be sure it is now.
+        if not (decichar='.') then
         begin
-             // This seems to be something like ##,###.##
-             // Strip the , and leave the .
-             s1 := '';
-             for i := 1 to length(qrg) do
-             begin
-                  if not (qrg[i]=',') then
-                  begin
-                       s1 := s1+qrg[i];
-                  end;
-                  foo := s1;
-             end;
-             // Pesky thousands mark removed
-             // Now to attempt a conversion to a pair of integers
-             // with one representing the left of . portion (whole) and the
-             // second representing the right of . portion (fraction)
-             s1 := '';
-             s2 := '';
-             found := false;
-             for i := 1 to length(foo) do
-             begin
-                  if foo[i] = '.' then
-                  begin
-                       found := true;
-                  end
-                  else
-                  begin
-                       if not found then
-                       begin
-                            s1 := s1+foo[i];
-                       end
-                       else
-                       begin
-                            s2 := s2+foo[i];
-                       end;
-                  end;
-             end;
-             If not TrystrToInt(s1,i1) then i1 := 0;
-             i1 := i1 * 1000;
-             If not TrystrToInt(s2,i2) then i2 := 0;
-             if length(s2) = 2 then i2 := i2*10;
-             if length(s2) = 1 then i2 := i2*100;
-             i3 := i1+i2;
-             resolved := true;
+             foo := StringReplace(foo,decichar,'.',[rfReplaceAll]);
         end;
-        // Testing for something like  28076,1 or 14076,05 or 1838,155 or 28,076 or 14,076 or 1,838
-        // This is more complex as I could have a case with , demarking thousands or decimal point. <sigh>
-        if not resolved and (ansiContainsText(qrg,',')) and  not (ansiContainsText(qrg,'.')) Then
+        // Save converted string for rest of routine to use
+        sqrg := foo;
+        // Now I need to deal with a nice simple 14.076515 or 14076.515
+        if not resolved and (ansiContainsText(sqrg,'.')) and not (ansiContainsText(sqrg,',')) then
         begin
-             // Lets try to figure out what we have.  First look for , as a decimal mark rather than a thousands mark
-             // This works for something like 28076,010 or 1838,1 or 7076,05
+             // Now only dealing with a string having ####.#### with . as decimal point.  Still
+             // no idea if I'm seeing MHz or KHz, but will attempt to figure that out now.
+             // s1 holds string to left of decimal point
+             // s2 holds string to right of decimal point
+             // i3 holds the conversion of string to integer for processing later
              s1 := '';
              s2 := '';
-             found := false;
-             for i := 1 to length(qrg) do
+             wcount := WordCount(sqrg,['.']);
+             if wcount = 2 then
              begin
-                  if qrg[i] = ',' then
-                  begin
-                       found := true;
-                  end
-                  else
-                  begin
-                       if not found then
-                       begin
-                            s1 := s1+qrg[i];
-                       end
-                       else
-                       begin
-                            s2 := s2+qrg[i];
-                       end;
-                  end;
-             end;
-             if not trystrToInt(s1,i1) then i1 := 0;
-             i1 := i1 * 1000;
-             if not trystrToInt(s2,i2) then i2 := 0;
-             if length(s2) = 1 then i2 := i2*1;
-             if length(s2) = 2 then i2 := i2*10;
-             if length(s2) = 1 then i2 := i2*100;
-             i3 := i1+i2;
-             resolved := true;
-        end;
-        // Testing for something like  28076,1 or 14076,05 or 1838,155 or 28,076 or 14,076 or 1,838
-        // This is more complex as I could have a case with , demarking thousands or decimal point. <sigh>
-        if not resolved and (ansiContainsText(qrg,',')) and  not (ansiContainsText(qrg,'.')) Then
-        begin
-             // Lets try to figure out what we have.  First look for , as a decimal mark rather than a thousands mark
-             // This works for something like 1,838 or 28,076 or 14,075 BUT It yields KHz :)
-             // Now.. if you pass it something like 14,075151 as in 14 Million 75 thousand 151 Hertz it breaks
-             // returning 14000 + 89151 Hz so I need to look a little harder.
-             s1 := '';
-             s2 := '';
-             found := false;
-             for i := 1 to length(qrg) do
+                  s1 := ExtractWord(1,sqrg,['.']);
+                  s2 := ExtractWord(2,sqrg,['.']);
+             end
+             else
              begin
-                  if qrg[i] = ',' then
-                  begin
-                       found := true;
-                  end
-                  else
-                  begin
-                       if not found then
-                       begin
-                            s1 := s1+qrg[i];
-                       end
-                       else
-                       begin
-                            s2 := s2+qrg[i];
-                       end;
-                  end;
+                  s1 := '0';
+                  s2 := '0';
              end;
-             if not trystrToInt(s1,i1) then i1 := 0;
-             if not trystrToInt(s2,i2) then i2 := 0;
-             // OK... if this is a value such as 14,076 that would be either 14.076 MHz or 14,076 KHz which is the same thing :)
-             // If this is a value such as 14,07615 I'd have 14.07615 MHz or 14,07615 KHz which is most certainly not the same thing.
-             // It looks like I could test length of S2 and if = 3 then it would seem to be a KHz value.  If > 3 then it's probably
-             // a MHz value using , as decimal point.
-             resolved := false;
-             if length(s2) = 3 then
-             begin
-                  // Looks like it'll be KHz as in 14,076 or 28,077 or 1,835
-                  // s2(i2) will be thousands and s1(i1) millions
-                  i1 := i1*1000000;
-                  i2 := i2*1000;
-                  i3 := i1+i2;
-                  resolved := true;
-             end;
-             if not resolved and (length(s2)=4) then
-             begin
-                  //14,0761 would likely be 14,076,100 Hz
-                  //s1(i1) will be millions as in 14M
-                  //s2(will be hundreds) as in 76100 in the example 14,0761
-                  i1 := i1*1000000;
-                  i2 := i2*100;
-                  i3 := i1+i2;
-                  resolved := true;
-             end;
-             if not resolved and (length(s2)=5) then
-             begin
-                  //14,07615 would likely be 14,076,150 Hz
-                  //s1(i1) will be millions as in 14M
-                  //s2(i2) will be 10 as in 76150
-                  i1 := i1*1000000;
-                  i2 := i2*10;
-                  i3 := i1+i2;
-                  resolved := true;
-             end;
-             if not resolved and (length(s2)=6) then
-             begin
-                  //14,076155 would likely be 14,076,155 Hz
-                  //s1(i1) will be millions
-                  //s2(i2) will be ones as in 76155
-                  i1:=i1*1000000;
-                  i3:=i1+i2;
-                  resolved := true;
-             end;
-             if not resolved then result := false;
-        end;
-        // OK, I've handled the cases of strings like 14,076.150 or 14,076 (like
-        // KHz with , as thousands mark) or 14,076515 (like MHz with , as thousands
-        // mark)  Now I need to deal with a nice simple 14.076515 or 14076.515
-        if not resolved and (ansiContainsText(qrg,'.')) and not (ansiContainsText(qrg,',')) then
-        begin
-             // Now only dealing with a string having ####.#### with . as decimal point
-             s1 := '';
-             s2 := '';
-             found := false;
-             for i := 1 to length(qrg) do
-             begin
-                  if qrg[i] = '.' then
-                  begin
-                       found := true;
-                  end
-                  else
-                  begin
-                       if not found then
-                       begin
-                            s1 := s1+qrg[i];
-                       end
-                       else
-                       begin
-                            s2 := s2+qrg[i];
-                       end;
-                  end;
-             end;
+
              // It will most likely be a KHz value if length(s1) >= 4 with s2 being 3 or less
              if length(s1) > 3 then
              begin
@@ -1369,12 +1222,13 @@ implementation
                   if not trystrToInt(s1,i1) then i1 := 0;
                   if not trystrToInt(s2,i2) then i2 := 0;
                   i1 := i1*1000;
-                  if length(s2)=3 then i2 := i2*1; // Redundant, but necessary for the logic
+                  if length(s2)=3 then i2 := i2*1; // Redundant, but necessary for understanding the logic
                   if length(s2)=2 then i2 := i2*10;
                   if length(s2)=1 then i2 := i2*100;
                   i3 := i1+i2;
                   resolved := true;
              end;
+
              if length(s1) < 4 then
              begin
                   //This will likely be MHz in s1 and fractional MHz in s2
@@ -1395,6 +1249,7 @@ implementation
                   resolved := true;
              end;
         end;
+
         // OK, now I've handled everything I can think of except the case of an
         // integer value being passed.  I would hope that if I do get a value
         // that seems to be an integer it will be Hz, but it could be KHz or Mhz
@@ -1404,6 +1259,7 @@ implementation
              // Seems to have an integer so we'll make it simple
              if trystrToInt(qrg,i3) then resolved := true else resolved := false;
         end;
+
         // Now... if resolved = true then i3 will hold an integer value.  Lets
         // see if it seems to make sense.
         if resolved then
