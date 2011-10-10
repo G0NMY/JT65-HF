@@ -49,8 +49,8 @@ object Form1: TForm1
     Left = 556
     Height = 17
     Top = 361
-    Width = 177
-    Caption = 'Call CQ and answer callers.'
+    Width = 173
+    Caption = 'Call CQ and answer callers'
     Font.Height = -13
     Font.Name = 'Arial'
     Font.Style = [fsBold]
@@ -61,8 +61,8 @@ object Form1: TForm1
     Left = 556
     Height = 17
     Top = 416
-    Width = 95
-    Caption = 'Answering CQ.'
+    Width = 91
+    Caption = 'Answering CQ'
     Font.Height = -13
     Font.Name = 'Arial'
     Font.Style = [fsBold]
@@ -1217,8 +1217,8 @@ object Form1: TForm1
     Left = 656
     Height = 15
     Top = 539
-    Width = 90
-    Caption = 'Multi Resolution'
+    Width = 48
+    Caption = 'Multi BW'
     Font.Height = -11
     Font.Name = 'Arial'
     Font.Style = [fsBold]

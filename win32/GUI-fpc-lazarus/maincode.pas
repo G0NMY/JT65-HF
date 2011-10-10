@@ -2790,7 +2790,7 @@ Begin
           if resolved then
           begin
                resolved := True;
-               msg      := word2 + ' ' + globalData.fullcall + ' ' + cfgvtwo.Form6.edMyGrid.Text[1..4];
+               if ansiContainsText(globalData.fullcall,'/') Then msg := word2 + ' ' + globalData.fullcall else msg := word2 + ' ' + globalData.fullcall + ' ' + cfgvtwo.Form6.edMyGrid.Text[1..4];
                doCWID   := False;
                doQSO    := True;
           end
@@ -2818,7 +2818,7 @@ Begin
                     If ValidateCallsign(word2) Then Form1.edHisCall.Text := word2 Else Form1.edHisCall.Text := '';
                     If ValidateGrid(word3) Then Form1.edHisGrid.Text := word3 Else Form1.edHisGrid.Text := '';
                     resolved := True;
-                    msg      := word2 + ' ' + globalData.fullcall + ' ' + lsiglevel;
+                    if ansiContainsText(globalData.fullcall,'/') Then msg := word2 + ' ' + lsiglevel else msg := word2 + ' ' + globalData.fullcall + ' ' + lsiglevel;
                     doCWID   := False;
                     doQSO    := True;
                End;
@@ -2828,7 +2828,7 @@ Begin
                     // The usual response would be an R-##
                     If ValidateCallsign(word2) Then Form1.edHisCall.Text := word2 Else Form1.edHisCall.Text := '';
                     resolved := True;
-                    msg      := word2 + ' ' + globalData.fullcall + ' R' + lsiglevel;
+                    if ansiContainsText(globalData.fullcall,'/') Then msg := word2 + ' R' + lsiglevel else msg := word2 + ' ' + globalData.fullcall + ' R' + lsiglevel;
                     doCWID   := False;
                     doQSO    := True;
                End;
@@ -2838,7 +2838,7 @@ Begin
                     // The usual response would be an RRR
                     If ValidateCallsign(word2) Then Form1.edHisCall.Text := word2 Else Form1.edHisCall.Text := '';
                     resolved := True;
-                    msg      := word2 + ' ' + globalData.fullcall + ' RRR';
+                    if ansiContainsText(globalData.fullcall,'/') Then msg := word2 + ' RRR' else msg := word2 + ' ' + globalData.fullcall + ' RRR';
                     doCWID   := False;
                     doQSO    := True;
                End;
@@ -2847,7 +2847,7 @@ Begin
                     // This is an ack.  The usual response would be 73
                     If ValidateCallsign(word2) Then Form1.edHisCall.Text := word2 Else Form1.edHisCall.Text := '';
                     resolved := True;
-                    msg      := word2 + ' ' + globalData.fullcall + ' 73';
+                    if ansiContainsText(globalData.fullcall,'/') Then msg := word2 + ' 73' else msg := word2 + ' ' + globalData.fullcall + ' 73';
                     if cfgvtwo.Form6.cbCWID.Checked Then doCWID := True else doCWID := False;
                     doQSO    := True;
                End;
@@ -2856,7 +2856,7 @@ Begin
                     // The usual response to a 73 is a 73
                     If ValidateCallsign(word2) Then Form1.edHisCall.Text := word2 Else Form1.edHisCall.Text := '';
                     resolved := True;
-                    msg      := word2 + ' ' + globalData.fullcall + ' 73';
+                    if ansiContainsText(globalData.fullcall,'/') Then msg := word2 + ' 73' else msg := word2 + ' ' + globalData.fullcall + ' 73';
                     if cfgvtwo.Form6.cbCWID.Checked Then doCWID := True else doCWID := False;
                     doQSO    := True;
                End;
@@ -2869,7 +2869,7 @@ Begin
                     Form1.edHisCall.Text := word2;
                     If ValidateGrid(word3) Then Form1.edHisGrid.Text := word3 Else Form1.edHisGrid.Text := '';
                     resolved := True;
-                    msg      := word2 + ' ' + globalData.fullcall + ' ' + cfgvtwo.Form6.edMyGrid.Text[1..4];
+                    if ansiContainsText(globalData.fullcall,'/') Then msg := word2 + ' ' + globalData.fullcall else msg := word2 + ' ' + globalData.fullcall + ' ' + cfgvtwo.Form6.edMyGrid.Text[1..4];
                     doCWID   := False;
                     doQSO    := False;
                end
