@@ -53,6 +53,9 @@ type
     cb160: TCheckBox;
     cb6: TCheckBox;
     cb2: TCheckBox;
+    Label1 : TLabel ;
+    ListBox1 : TListBox ;
+    ListBox2 : TListBox ;
     wcb160: TCheckBox;
     wcb80: TCheckBox;
     wcb40: TCheckBox;
@@ -90,11 +93,8 @@ type
     Label23: TLabel;
     Label24: TLabel;
     Label3: TLabel;
-    Label4: TLabel;
-    Label5: TLabel;
     Label6: TLabel;
     Label7: TLabel;
-    Label8: TLabel;
     Label9: TLabel;
     lbSearchResults: TListBox;
     procedure Button1Click(Sender: TObject);
