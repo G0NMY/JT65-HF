@@ -1476,7 +1476,7 @@ begin
           Begin
                if AnsiContainsStr(globalData.fullcall,'/') Or AnsiContainsStr(Form1.edHiscall.Text,'/') Then
                Begin
-                    Form1.edMsg.Text := Form1.edHisCall.Text + Form1.edSigRep.Text;
+                    Form1.edMsg.Text := Form1.edHisCall.Text + ' ' + Form1.edSigRep.Text;
                End
                Else
                Begin
@@ -6856,11 +6856,11 @@ Begin
      end;
      // Update RB/PSKR/DB Stats
      heard.Form9.Label3.Caption := 'RB Reports Sent:  ' + rb.RBcount;
-     heard.Form9.Label4.Caption := 'Discarded:  ' + rb.rbDiscard;
-     heard.Form9.Label5.Caption := 'Rejected:  ' + rb.RBfail;
+     //heard.Form9.Label4.Caption := 'Discarded:  ' + rb.rbDiscard;
+     //heard.Form9.Label5.Caption := 'Rejected:  ' + rb.RBfail;
      heard.Form9.Label6.Caption := 'PSKR Reports Sent:  ' + IntToStr(rb.pskrCallsSent);
      heard.Form9.Label7.Caption := 'Buffered:  ' + IntToStr(rb.pskrCallsBuff);
-     heard.Form9.Label8.Caption := 'Discarded:  ' + IntToStr(rb.pskrCallsDisc);
+     //heard.Form9.Label8.Caption := 'Discarded:  ' + IntToStr(rb.pskrCallsDisc);
      heard.Form9.Label23.Caption := 'Stats DB Added:  ' + rb.dbfCount;
      heard.Form9.Label24.Caption := 'Updates:  ' + rb.dbfUCount;
      // Check to see if user needs a search completed from the heard unit
