@@ -33,7 +33,7 @@ uses
   dac, ClipBrd, dlog, rawdec, cfgvtwo, guiConfig, verHolder,
   catControl, Menus, synaser, log, diagout, synautil, waterfall, d65,
   spectrum, {$IFDEF WIN32}windows, {$ENDIF}{$IFDEF LINUX}unix, {$ENDIF}
-  {$IFDEF DARWIN}unix, {$ENDIF} about, spot, valobject, heard;
+  {$IFDEF DARWIN}unix, {$ENDIF} about, spot, valobject, heard, lconvencoding;
 
 Const
   JT_DLL = 'jt65.dll';
@@ -155,9 +155,6 @@ type
     MenuItem16a: TMenuItem;
     MenuItem4a: TMenuItem;
     menuHeard: TMenuItem;
-    MenuItem30 : TMenuItem;
-    MenuItem31 : TMenuItem;
-    menuQRX : TMenuItem;
     menuSetup: TMenuItem;
     menuRawDecoder: TMenuItem;
     menuRigControl: TMenuItem;
@@ -240,7 +237,6 @@ type
     procedure menuAboutClick(Sender: TObject);
     procedure menuHeardClick(Sender: TObject);
     procedure MenuItemHandler(Sender: TObject);
-    procedure menuQRXClick (Sender : TObject );
     procedure menuRawDecoderClick(Sender: TObject);
     procedure menuRigControlClick(Sender: TObject);
     procedure menuSetupClick(Sender: TObject);
@@ -2309,44 +2305,6 @@ Begin
 
 End;
 
-procedure TForm1.menuQRXClick(Sender : TObject);
-Var
-   termcount : Integer;
-begin
-     // Places program into standby mode, releases audio devices and waits for
-     // another click here to begin anew as if program was just launched.
-     if inStandby then
-     begin
-          // In standby, start it up again.
-          // Mimic startup as anew
-          runOnce := true;
-          Timer1.Enabled := True;
-          inStandby := False;
-          menuQRX.Caption := 'Enter Standby Mode';
-     end
-     else
-     begin
-          // QRV switch to standby
-          Timer1.Enabled := False;
-          inStandBy := True;
-          menuQRX.Caption := 'Exit Standby Mode';
-          // Shutdown portaudio
-          portAudio.Pa_StopStream(paInStream);
-          portAudio.Pa_StopStream(paOutStream);
-          termcount := 0;
-          while (portAudio.Pa_IsStreamActive(paInStream) > 0) or (portAudio.Pa_IsStreamActive(paOutStream) > 0) Do
-          Begin
-               application.ProcessMessages;
-               if portAudio.Pa_IsStreamActive(paInStream) > 0 Then portAudio.Pa_AbortStream(paInStream);
-               if portAudio.Pa_IsStreamActive(paOutStream) > 0 Then portAudio.Pa_AbortStream(paOutStream);
-               sleep(1000);
-               inc(termcount);
-               if termcount > 9 then break;
-          end;
-          portaudio.Pa_Terminate();
-     end;
-end;
-
 procedure TForm1.menuRawDecoderClick(Sender: TObject);
 begin
      diagout.Form3.Visible := True; // diagout is the raw decoder output form... it was repurposed for this.
@@ -4063,18 +4021,13 @@ Begin
                // out devices.
                If portaudio.Pa_GetDeviceInfo(i)^.maxInputChannels > 0 Then
                Begin
-                    if i < 10 Then
-                       paInS := '0' + IntToStr(i) + '-' + StrPas(portaudio.Pa_GetDeviceInfo(i)^.name)
-                    else
-                       paInS := IntToStr(i) + '-' + StrPas(portaudio.Pa_GetDeviceInfo(i)^.name);
+                    if i < 10 Then paInS := '0' + IntToStr(i) + '-' + ConvertEncoding(StrPas(portaudio.Pa_GetDeviceInfo(i)^.name),GuessEncoding(StrPas(portaudio.Pa_GetDeviceInfo(i)^.name)),EncodingUTF8) else paInS := IntToStr(i) + '-' + ConvertEncoding(StrPas(portaudio.Pa_GetDeviceInfo(i)^.name),GuessEncoding(StrPas(portaudio.Pa_GetDeviceInfo(i)^.name)),EncodingUTF8);
+
                     cfgvtwo.Form6.cbAudioIn.Items.Insert(0,paInS);
                End;
                If portaudio.Pa_GetDeviceInfo(i)^.maxOutputChannels > 0 Then
                Begin
-                    if i < 10 Then
-                       paOutS := '0' + IntToStr(i) +  '-' + StrPas(portaudio.Pa_GetDeviceInfo(i)^.name)
-                    else
-                       paOutS := IntToStr(i) +  '-' + StrPas(portaudio.Pa_GetDeviceInfo(i)^.name);
+                    if i < 10 Then paOutS := '0' + IntToStr(i) +  '-' + ConvertEncoding(StrPas(portaudio.Pa_GetDeviceInfo(i)^.name),GuessEncoding(StrPas(portaudio.Pa_GetDeviceInfo(i)^.name)),EncodingUTF8) else paOutS := IntToStr(i) +  '-' + ConvertEncoding(StrPas(portaudio.Pa_GetDeviceInfo(i)^.name),GuessEncoding(StrPas(portaudio.Pa_GetDeviceInfo(i)^.name)),EncodingUTF8);
                     cfgvtwo.Form6.cbAudioOut.Items.Insert(0,paOutS);
                End;
                dec(i);

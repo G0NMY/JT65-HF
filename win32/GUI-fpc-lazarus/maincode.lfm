@@ -18,7 +18,7 @@ object Form1: TForm1
   OnCreate = FormCreate
   SessionProperties = 'Left;Top'
   ShowHint = True
-  LCLVersion = '0.9.30'
+  LCLVersion = '0.9.30.2RC1'
   Visible = True
   object Label6: TLabel
     Left = 784
@@ -202,7 +202,7 @@ object Form1: TForm1
     Left = 556
     Height = 20
     Top = 228
-    Width = 329
+    Width = 330
     Caption = 'Message To TX:  1234567890123456789012'
     Font.Height = -16
     Font.Name = 'Arial'
@@ -254,7 +254,7 @@ object Form1: TForm1
     Left = 177
     Height = 15
     Top = 210
-    Width = 296
+    Width = 298
     Caption = 'Left click waterfall to set TX CF, Right click sets RX CF.'
     Font.Height = -11
     Font.Name = 'Arial'
@@ -576,7 +576,7 @@ object Form1: TForm1
       Left = 1
       Height = 15
       Top = 107
-      Width = 84
+      Width = 85
       Caption = 'Digital Audio Gain'
       ParentColor = False
     end
@@ -600,9 +600,9 @@ object Form1: TForm1
     end
     object rbUseLeft: TRadioButton
       Left = 106
-      Height = 19
+      Height = 18
       Top = 16
-      Width = 36
+      Width = 34
       Caption = '-21'
       Checked = True
       Font.Height = -11
@@ -615,9 +615,9 @@ object Form1: TForm1
     end
     object rbUseRight: TRadioButton
       Left = 106
-      Height = 19
+      Height = 18
       Top = 45
-      Width = 36
+      Width = 34
       Caption = '-21'
       Font.Height = -11
       Font.Name = 'Arial'
@@ -799,7 +799,7 @@ object Form1: TForm1
       Left = 296
       Height = 20
       Top = 13
-      Width = 69
+      Width = 67
       Caption = 'Smooth'
       Font.Height = -13
       Font.Name = 'Arial'
@@ -867,9 +867,9 @@ object Form1: TForm1
   end
   object chkEnTX: TCheckBox
     Left = 597
-    Height = 19
+    Height = 18
     Top = 112
-    Width = 48
+    Width = 46
     Caption = 'EATX'
     Enabled = False
     Font.Height = -11
@@ -881,10 +881,10 @@ object Form1: TForm1
   end
   object chkAutoTxDF: TCheckBox
     Left = 679
-    Height = 19
+    Height = 17
     Hint = 'If Checked TX and RX DF will always be same.'
     Top = 472
-    Width = 20
+    Width = 18
     Checked = True
     Font.Height = -12
     Font.Name = 'Arial'
@@ -964,9 +964,9 @@ object Form1: TForm1
   end
   object chkNB: TCheckBox
     Left = 679
-    Height = 19
+    Height = 18
     Top = 514
-    Width = 84
+    Width = 82
     Caption = 'Noise Blank'
     Font.Height = -11
     Font.Name = 'Arial'
@@ -977,9 +977,9 @@ object Form1: TForm1
   end
   object chkAFC: TCheckBox
     Left = 679
-    Height = 19
+    Height = 18
     Top = 493
-    Width = 42
+    Width = 40
     Caption = 'AFC'
     Font.Height = -11
     Font.Name = 'Arial'
@@ -990,9 +990,9 @@ object Form1: TForm1
   end
   object chkMultiDecode: TCheckBox
     Left = 556
-    Height = 19
+    Height = 18
     Top = 587
-    Width = 136
+    Width = 134
     Caption = 'Enable Multi-decoder'
     Checked = True
     Font.Height = -11
@@ -1055,7 +1055,7 @@ object Form1: TForm1
     Left = 556
     Height = 20
     Top = 249
-    Width = 167
+    Width = 165
     Caption = 'TX Text (13 Characters)'
     Font.Height = -13
     Font.Name = 'Arial'
@@ -1068,7 +1068,7 @@ object Form1: TForm1
     Left = 556
     Height = 20
     Top = 302
-    Width = 108
+    Width = 106
     Caption = 'TX Generated'
     Checked = True
     Font.Color = clRed
@@ -1126,7 +1126,7 @@ object Form1: TForm1
     Left = 556
     Height = 20
     Top = 620
-    Width = 82
+    Width = 80
     Caption = 'Enable RB'
     TabOrder = 35
   end
@@ -1134,7 +1134,7 @@ object Form1: TForm1
     Left = 556
     Height = 20
     Top = 644
-    Width = 100
+    Width = 98
     Caption = 'Enable PSKR'
     TabOrder = 36
   end
@@ -1229,7 +1229,7 @@ object Form1: TForm1
     Left = 177
     Height = 38
     Top = 32
-    Width = 693
+    Width = 694
     Caption = 'Waterfall display is disabled by user request.'
     Font.Height = -32
     Font.Name = 'Arial'
@@ -1907,14 +1907,6 @@ object Form1: TForm1
     object menuAbout: TMenuItem
       Caption = 'About JT65-HF'
       OnClick = menuAboutClick
-    end
-    object MenuItem30: TMenuItem
-    end
-    object MenuItem31: TMenuItem
-    end
-    object menuQRX: TMenuItem
-      Caption = 'Enter Standby Mode'
-      OnClick = menuQRXClick
     end
   end
   object Timer2: TTimer
