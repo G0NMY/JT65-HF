@@ -29,9 +29,8 @@ uses
   Interfaces, // this includes the LCL widgetset
   Forms, maincode, portaudio, encode65, globalData, spectrum, cmaps, fftw_jl,
   adc, samplerate, dac, dlog, rawdec, cfgvtwo, guiConfig, verHolder,
-  PSKReporter, catControl, synaser,
-  adif, log, diagout, waterfall, d65, hrdinterface5, hrdinterface4, about,
-  madc, mdac , spot , valobject , heard ;
+  PSKReporter, catControl, synaser, adif, log, diagout, waterfall, d65,
+  hrdinterface5, hrdinterface4, about, spot, valobject, heard;
 
 {$R *.res}
 

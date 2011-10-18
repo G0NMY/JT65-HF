@@ -242,7 +242,7 @@ implementation
          prRBOn      := False;
          prRBError   := '';
          prPSKROn    := False;
-         prVersion   := '2000';
+         prVersion   := '2001';
          prRBCount   := 0;
          prPRCount   := 0;
          prRBFail    := 0;
@@ -1188,7 +1188,7 @@ implementation
 
     function TSpot.loginRB : Boolean;
     var
-       url      : String;
+       url : String;
     Begin
          prRBError    := '';
          prBusy       := True;
@@ -1350,8 +1350,10 @@ implementation
                                      // NO - Indicates spot failed and safe to retry. (Probably RB Server busy)
                                      // ERR - Indicates RB Server has an issue with the data and not allowed to retry.
                                      // QRG - Indicates RB Server will no accept the current QRG
+                                     prRBError := rbResult.Text;
                                      If Length(rbResult.Text) > 1 then
                                      begin
+                                          {TODO Handle case of response being QSL#13#10 Why this happens once ever few hundred reports I don't know, but it mucks up the error handler}
                                           If TrimLeft(TrimRight(rbResult.Text)) = 'QSL' Then resolved := true;
                                           If TrimLeft(TrimRight(rbResult.Text)) = 'QRG' Then resolved := false;
                                           If TrimLeft(TrimRight(rbResult.Text)) = 'NO'  Then resolved := false;
@@ -1390,6 +1392,7 @@ implementation
                                   //if foo[1..3] = 'EXC' then prSpots[i].rbsent := true; { TODO : Fix this (Set back to true) once I decide how to better handle retries }
                                   //if foo[1..3] = 'ERR' then prSpots[i].rbsent := true;
                                   //if foo[1..3] = 'BAD' then prSpots[i].rbsent := true;  // RB Server doesn't like some of the data (probably big DT) so no resend
+                                  foo := prRBError;
                                   inc(prRBFail);
                              end;
                         end
@@ -1428,7 +1431,7 @@ implementation
                              if parseExchange(prSpots[i].exchange, callheard, gridheard) and prVal.evalIQRG(prSpots[i].qrg,'LAX',band) then
                              begin
                                   // Init was good, lets do some work
-                                  pskrloc := BuildLocalString(prMyCall,prMyGrid,'JT65-HF','1.0.8',prInfo);
+                                  pskrloc := BuildLocalString(prMyCall,prMyGrid,'JT65-HF','1.0.9',prInfo);
                                   If not (gridheard='NILL') then
                                   begin
                                        pskrrep := BuildRemoteStringGrid(callheard,'JT65',IntToStr(prSpots[i].qrg),gridHeard,prSpots[i].date[1..8],prSpots[i].date[9..12]+'00');

@@ -1284,6 +1284,7 @@ begin
                    If not TryStrToInt(TrimLeft(TrimRight(foo)), decode.numSync) Then decode.numSync := -99;
                    foo := ExtractWord(4,gldecOut.Strings[i],CsvDelim);
                    If not TryStrToInt(TrimLeft(TrimRight(foo)), decode.dsigLevel) Then decode.dsigLevel := -99;
+                   If decode.dsigLevel > -1 then decode.dsigLevel := -1;
                    foo := ExtractWord(5,gldecOut.Strings[i],CsvDelim);
                    If not TryStrToFloat(TrimLeft(TrimRight(foo)), decode.deltaTime) Then
                    begin
@@ -1372,7 +1373,8 @@ begin
                    if gld65decodes[j].dtProcessed Then
                    begin
                         gld65decodes[j].dtTimeStamp := gld65timestamp;
-                        gld65decodes[j].dtSigLevel := IntToStr(Round(snrsh));
+                        //gld65decodes[j].dtSigLevel := IntToStr(Round(snrsh));
+                        gld65decodes[j].dtSigLevel := '-30';
                         gld65decodes[j].dtNumSync := '0';
                         gld65decodes[j].dtDeltaTime := '0.0';
                         gld65decodes[j].dtDeltaFreq := IntToStr(idfsh);

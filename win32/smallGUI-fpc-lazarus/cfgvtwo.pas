@@ -129,7 +129,6 @@ type
     hrdAddress : TEdit ;
     hrdPort : TEdit ;
     Label10 : TLabel ;
-    Label11 : TLabel ;
     Label122 : TLabel ;
     Label123 : TLabel ;
     Label124 : TLabel ;
@@ -142,25 +141,19 @@ type
     Label131 : TLabel ;
     Label132 : TLabel ;
     Label14 : TLabel ;
-    Label15 : TLabel ;
     Label16 : TLabel ;
-    Label17 : TLabel ;
-    Label18 : TLabel ;
     Label19 : TLabel ;
     Label2 : TLabel ;
     Label20 : TLabel ;
     Label21 : TLabel ;
     Label22 : TLabel ;
     Label23 : TLabel ;
-    Label24 : TLabel ;
-    Label25 : TLabel ;
     Label26 : TLabel ;
     Label27 : TLabel ;
     Label28 : TLabel ;
     Label29 : TLabel ;
     Label3 : TLabel ;
     Label30 : TLabel ;
-    Label31 : TLabel ;
     Label32 : TLabel ;
     Label33 : TLabel ;
     Label34 : TLabel ;
@@ -214,9 +207,6 @@ type
     lbDiagLog : TListBox ;
     OmniGroup : TRadioGroup ;
     PageControl1 : TPageControl ;
-    pbAULeft : TProgressBar ;
-    pbAURight : TProgressBar ;
-    pbSMeter : TProgressBar ;
     qsyHour1 : TSpinEdit ;
     qsyHour2 : TSpinEdit ;
     qsyHour3 : TSpinEdit ;
@@ -238,10 +228,6 @@ type
     rbHRD5 : TRadioButton ;
     rigQRG : TEdit ;
     setHRDQRG : TButton ;
-    sliderAFGain : TTrackBar ;
-    sliderMicGain : TTrackBar ;
-    sliderPALevel : TTrackBar ;
-    sliderRFGain : TTrackBar ;
     TabSheet1 : TTabSheet ;
     TabSheet2 : TTabSheet ;
     TabSheet3 : TTabSheet ;
@@ -276,10 +262,6 @@ type
     procedure hrdAddressChange(Sender: TObject);
     procedure hrdPortChange(Sender: TObject);
     procedure setHRDQRGClick(Sender: TObject);
-    procedure sliderAFGainChange(Sender: TObject);
-    procedure sliderMicGainChange(Sender: TObject);
-    procedure sliderPALevelChange(Sender: TObject);
-    procedure sliderRFGainChange(Sender: TObject);
     procedure testHRDPTTClick(Sender: TObject);
 
   private
@@ -738,62 +720,6 @@ Begin
      Begin
           // Need to send a set QRG message
           catControl.writeHRD('[' + globalData.hrdcatControlcurrentRig.radioContext + '] set frequency-hz ' + cfgvtwo.Form6.Edit4.Text);
-     end;
-end;
-
-procedure TForm6.sliderAFGainChange(Sender: TObject);
-begin
-     if cfgvtwo.Form6.rbHRD4.Checked Then globalData.hrdVersion :=4;
-     if cfgvtwo.Form6.rbHRD5.Checked Then globalData.hrdVersion :=5;
-     catControl.hrdrigCAPS();
-     if globalData.hrdcatControlcurrentRig.hrdAlive Then
-     Begin
-          // Changes AF Gain via HRD
-          sleep(10);
-          //[c] set slider-pos RADIO XXX POS
-          catControl.writeHRD('[' + globalData.hrdcatControlcurrentRig.radioContext + '] set slider-pos ' + globalData.hrdcatControlcurrentRig.radioName + ' ' + globalData.hrdcatControlcurrentRig.afgControl + ' ' + IntToStr(cfgvtwo.Form6.sliderAFGain.Position));
-     end;
-end;
-
-procedure TForm6.sliderMicGainChange(Sender: TObject);
-begin
-     if cfgvtwo.Form6.rbHRD4.Checked Then globalData.hrdVersion :=4;
-     if cfgvtwo.Form6.rbHRD5.Checked Then globalData.hrdVersion :=5;
-     catControl.hrdrigCAPS();
-     if globalData.hrdcatControlcurrentRig.hrdAlive Then
-     Begin
-          // Changes Mic Gain via HRD
-          sleep(10);
-          //[c] set slider-pos RADIO XXX POS
-          catControl.writeHRD('[' + globalData.hrdcatControlcurrentRig.radioContext + '] set slider-pos ' + globalData.hrdcatControlcurrentRig.radioName + ' ' + globalData.hrdcatControlcurrentRig.micgControl + ' ' + IntToStr(cfgvtwo.Form6.sliderMicGain.Position));
-     end;
-end;
-
-procedure TForm6.sliderPALevelChange(Sender: TObject);
-begin
-     if cfgvtwo.Form6.rbHRD4.Checked Then globalData.hrdVersion :=4;
-     if cfgvtwo.Form6.rbHRD5.Checked Then globalData.hrdVersion :=5;
-     catControl.hrdrigCAPS();
-     if globalData.hrdcatControlcurrentRig.hrdAlive Then
-     Begin
-          // Changes PA Output level via HRD
-          sleep(10);
-          //[c] set slider-pos RADIO XXX POS
-          catControl.writeHRD('[' + globalData.hrdcatControlcurrentRig.radioContext + '] set slider-pos ' + globalData.hrdcatControlcurrentRig.radioName + ' ' + globalData.hrdcatControlcurrentRig.pagControl + ' ' + IntToStr(cfgvtwo.Form6.sliderPALevel.Position));
-     end;
-end;
-
-procedure TForm6.sliderRFGainChange(Sender: TObject);
-begin
-     if cfgvtwo.Form6.rbHRD4.Checked Then globalData.hrdVersion :=4;
-     if cfgvtwo.Form6.rbHRD5.Checked Then globalData.hrdVersion :=5;
-     catControl.hrdrigCAPS();
-     if globalData.hrdcatControlcurrentRig.hrdAlive Then
-     Begin
-          // Changes RF gain via HRD
-          sleep(10);
-          //[c] set slider-pos RADIO XXX POS
-          catControl.writeHRD('[' + globalData.hrdcatControlcurrentRig.radioContext + '] set slider-pos ' + globalData.hrdcatControlcurrentRig.radioName + ' ' + globalData.hrdcatControlcurrentRig.rfgControl + ' ' + IntToStr(cfgvtwo.Form6.sliderRFGain.Position));
      end;
 end;
 

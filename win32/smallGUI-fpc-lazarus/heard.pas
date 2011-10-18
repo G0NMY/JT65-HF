@@ -53,9 +53,14 @@ type
     cb160: TCheckBox;
     cb6: TCheckBox;
     cb2: TCheckBox;
+    GroupBox1 : TGroupBox ;
     Label1 : TLabel ;
-    ListBox1 : TListBox ;
-    ListBox2 : TListBox ;
+    Label23 : TLabel ;
+    Label24 : TLabel ;
+    Label3 : TLabel ;
+    Label4 : TLabel ;
+    Label6 : TLabel ;
+    Label7 : TLabel ;
     wcb160: TCheckBox;
     wcb80: TCheckBox;
     wcb40: TCheckBox;
@@ -76,7 +81,6 @@ type
     cb12: TCheckBox;
     cb10: TCheckBox;
     edSearchCallsign: TEdit;
-    GroupBox1: TGroupBox;
     Label10: TLabel;
     Label11: TLabel;
     Label12: TLabel;
@@ -90,11 +94,6 @@ type
     Label20: TLabel;
     Label21: TLabel;
     Label22: TLabel;
-    Label23: TLabel;
-    Label24: TLabel;
-    Label3: TLabel;
-    Label6: TLabel;
-    Label7: TLabel;
     Label9: TLabel;
     lbSearchResults: TListBox;
     procedure Button1Click(Sender: TObject);

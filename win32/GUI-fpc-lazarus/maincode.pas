@@ -29,7 +29,7 @@ interface
 uses
   Classes, SysUtils, LResources, Forms, Controls, Graphics, Dialogs,
   StdCtrls, CTypes, StrUtils, Math, portaudio, ExtCtrls, ComCtrls, Spin,
-  DateUtils, encode65, parseCallSign, globalData, XMLPropStorage, adc,
+  DateUtils, encode65, globalData, XMLPropStorage, adc,
   dac, ClipBrd, dlog, rawdec, cfgvtwo, guiConfig, verHolder,
   catControl, Menus, synaser, log, diagout, synautil, waterfall, d65,
   spectrum, {$IFDEF WIN32}windows, {$ENDIF}{$IFDEF LINUX}unix, {$ENDIF}
@@ -234,6 +234,7 @@ type
     procedure Label31DblClick(Sender: TObject);
     procedure Label32DblClick (Sender : TObject );
     procedure Label39Click(Sender: TObject);
+    //procedure ListBox3DblClick (Sender : TObject );
     procedure menuAboutClick(Sender: TObject);
     procedure menuHeardClick(Sender: TObject);
     procedure MenuItemHandler(Sender: TObject);
@@ -285,9 +286,6 @@ type
     procedure oncePerTick();
     procedure displayAudio(audioAveL : Integer; audioAveR : Integer);
     function  getPTTMethod() : String;
-    function  BuildRemoteString (call, mode, freq, date, time : String) : WideString;
-    function  BuildRemoteStringGrid (call, mode, freq, grid, date, time : String) : WideString;
-    function  BuildLocalString (station_callsign, my_gridsquare, programid, programversion, my_antenna : String) : WideString;
     function  isSigRep(rep : String) : Boolean;
     function  utcTime : TSYSTEMTIME;
     procedure addToRBC(i , m : Integer);
@@ -499,30 +497,6 @@ Begin
      if cfgvtwo.Form6.chkHRDPTT.Checked And cfgvtwo.Form6.chkUseHRD.Checked Then result := 'HRD';
 end;
 
-function TForm1.BuildRemoteString (call, mode, freq, date, time : String) : WideString;
-begin
-     If freq='0' Then
-        result := 'call' + #0 + call + #0 + 'mode' + #0 + mode + #0 + 'QSO_DATE' + #0 + date + #0 + 'TIME_ON' + #0 + time + #0 + #0
-     else
-        result := 'call' + #0 + call + #0 + 'mode' + #0 + mode + #0 + 'freq' + #0 + freq + #0 + 'QSO_DATE' + #0 + date + #0 + 'TIME_ON' + #0 + time + #0 + #0;
-end;
-
-function TForm1.BuildRemoteStringGrid (call, mode, freq, grid, date, time : String) : WideString;
-begin
-     If freq='0' Then
-        result := 'call' + #0 + call + #0 + 'mode' + #0 + mode + #0 + 'grid' + #0 + grid + #0 + 'QSO_DATE' + #0 + date + #0 + 'TIME_ON' + #0 + time + #0 + #0
-     else
-        result := 'call' + #0 + call + #0 + 'mode' + #0 + mode + #0 + 'freq' + #0 + freq + #0 + 'grid' + #0 + 'QSO_DATE' + #0 + date + #0 + 'TIME_ON' + #0 + time + #0 + #0;
-end;
-
-function TForm1.BuildLocalString (station_callsign, my_gridsquare, programid, programversion, my_antenna : String) : WideString;
-begin
-     result := 'station_callsign' + #0 + station_callsign + #0 + 'my_gridsquare' + #0 + my_gridsquare + #0 +
-               'programid' + #0 + programid + #0 +
-               'programversion' + #0 + programversion + #0 +
-               'my_antenna' + #0 + my_antenna + #0 + #0;
-end;
-
 procedure rbcThread.Execute;
 Var
    qrgk : Double;
@@ -578,9 +552,8 @@ begin
                     sleep(100);
                end;
 
-               // Use internal database system to maintain list of calls heard with
-               // bands heard on and dates first/last heard.
-               rb.useDBF := True;
+               // Do not use internal database system for now.
+               rb.useDBF := False;
 
                // PSKR work
                if Form1.cbEnPSKR.Checked Then rb.usePSKR := True else rb.usePSKR := False;
@@ -711,9 +684,6 @@ End;
 procedure catThread.Execute();
 Var
    ifoo : Integer;
-   foo  : WideString;
-   efoo : WideString;
-   tfoo : String;
    qrg  : String;
    sqrg : String;
 begin
@@ -759,96 +729,6 @@ begin
                             cfgvtwo.Form6.groupHRD.Caption := 'HRD Connected to ' + globalData.hrdcatControlcurrentRig.radioName;
                             qrg := catControl.readHRDQRG();
 
-                            if globalData.hrdcatControlcurrentRig.hasAFGain Then
-                            Begin
-                                 // Read audio level
-                                 cfgvtwo.Form6.sliderAFGain.Visible := True;
-                                 cfgvtwo.Form6.Label11.Visible := True;
-                                 cfgvtwo.Form6.pbAULeft.Visible := True;
-                                 cfgvtwo.Form6.pbAURight.Visible := True;
-                                 cfgvtwo.Form6.sliderAFGain.Min := globalData.hrdcatControlcurrentRig.afgMin;
-                                 cfgvtwo.Form6.sliderAFGain.Max := globalData.hrdcatControlcurrentRig.afgMax;
-                                 foo := catControl.readHRD('[' + globalData.hrdcatControlcurrentRig.radioContext + '] Get slider-pos ' + globalData.hrdcatControlcurrentRig.radioName + ' ' + globalData.hrdcatControlcurrentRig.afgControl);
-                                 efoo := ExtractWord(1,foo,catControl.hrdDelim);
-                                 ifoo := -1;
-                                 If TryStrToInt(efoo, ifoo) Then cfgvtwo.Form6.sliderAFGain.Position := ifoo;
-                                 cfgvtwo.Form6.Label11.Caption := 'Audio Gain (Currently:  ' + ExtractWord(2,foo,catControl.HRDDelim) + '%)';
-                            end
-                            else
-                            begin
-                                 cfgvtwo.Form6.sliderAFGain.Visible := False;
-                                 cfgvtwo.Form6.Label11.Visible := False;
-                                 cfgvtwo.Form6.pbAULeft.Visible := False;
-                                 cfgvtwo.Form6.pbAURight.Visible := False;
-                            end;
-                            if globalData.hrdcatControlcurrentRig.hasRFGain Then
-                            Begin
-                                 // Read RF Gain level
-                                 cfgvtwo.Form6.sliderRFGain.Visible := True;
-                                 cfgvtwo.Form6.Label17.Visible := True;
-                                 cfgvtwo.Form6.sliderRFGain.Min := globalData.hrdcatControlcurrentRig.rfgMin;
-                                 cfgvtwo.Form6.sliderRFGain.Max := globalData.hrdcatControlcurrentRig.rfgMax;
-                                 foo := catControl.readHRD('[' + globalData.hrdcatControlcurrentRig.radioContext + '] Get slider-pos ' + globalData.hrdcatControlcurrentRig.radioName + ' ' + globalData.hrdcatControlcurrentRig.rfgControl);
-                                 efoo := ExtractWord(1,foo,catControl.hrdDelim);
-                                 ifoo := -1;
-                                 If TryStrToInt(efoo, ifoo) Then cfgvtwo.Form6.sliderRFGain.Position := ifoo;
-                                 cfgvtwo.Form6.Label17.Caption := 'RF Gain (Currently:  ' + ExtractWord(2,foo,catControl.HRDDelim) + '%)';
-                            end
-                            else
-                            begin
-                                 cfgvtwo.Form6.sliderRFGain.Visible := False;
-                                 cfgvtwo.Form6.Label17.Visible := False;
-                            end;
-                            if globalData.hrdcatControlcurrentRig.hasMicGain Then
-                            Begin
-                                 // Read Mic Gain level
-                                 cfgvtwo.Form6.sliderMicGain.Visible := True;
-                                 cfgvtwo.Form6.Label15.Visible := True;
-                                 cfgvtwo.Form6.sliderMicGain.Min := globalData.hrdcatControlcurrentRig.micgMin;
-                                 cfgvtwo.Form6.sliderMicGain.Max := globalData.hrdcatControlcurrentRig.micgMax;
-                                 foo := catControl.readHRD('[' + globalData.hrdcatControlcurrentRig.radioContext + '] Get slider-pos ' + globalData.hrdcatControlcurrentRig.radioName + ' ' + globalData.hrdcatControlcurrentRig.micgControl);
-                                 efoo := ExtractWord(1,foo,catControl.hrdDelim);
-                                 ifoo := -1;
-                                 If TryStrToInt(efoo, ifoo) Then cfgvtwo.Form6.sliderMicGain.Position := ifoo;
-                                 cfgvtwo.Form6.Label15.Caption := 'Mic Gain (Currently:  ' + ExtractWord(2,foo,catControl.HRDDelim) + '%)';
-                            end
-                            else
-                            begin
-                                 cfgvtwo.Form6.sliderMicGain.Visible := False;
-                                 cfgvtwo.Form6.Label15.Visible := False;
-                            end;
-                            if globalData.hrdcatControlcurrentRig.hasPAGain Then
-                            Begin
-                                 // Read PA limit level
-                                 cfgvtwo.Form6.sliderPALevel.Visible := True;
-                                 cfgvtwo.Form6.Label18.Visible := True;
-                                 cfgvtwo.Form6.sliderPALevel.Min := globalData.hrdcatControlcurrentRig.pagMin;
-                                 cfgvtwo.Form6.sliderPALevel.Max := globalData.hrdcatControlcurrentRig.pagMax;
-                                 foo := catControl.readHRD('[' + globalData.hrdcatControlcurrentRig.radioContext + '] Get slider-pos ' + globalData.hrdcatControlcurrentRig.radioName + ' ' + globalData.hrdcatControlcurrentRig.pagControl);
-                                 efoo := ExtractWord(1,foo,catControl.hrdDelim);
-                                 ifoo := -1;
-                                 If TryStrToInt(efoo, ifoo) Then cfgvtwo.Form6.sliderPALevel.Position := ifoo;
-                                 cfgvtwo.Form6.Label18.Caption := 'RF Output Level (Currently:  ' + ExtractWord(2,foo,catControl.HRDDelim) + '%)';
-                            end
-                            else
-                            begin
-                                 cfgvtwo.Form6.sliderPALevel.Visible := False;
-                                 cfgvtwo.Form6.Label18.Visible := False;
-                            end;
-                            if globalData.hrdcatControlcurrentRig.hasSMeter Then
-                            Begin
-                                 // Read S-Meter level
-                                 // Smeter returns 3 csv values. 1 = Text S level, 2 = raw level and 3 = max level.
-                                 foo := catControl.readHRD('[' + globalData.hrdcatControlcurrentRig.radioContext + '] Get ' + globalData.hrdcatControlcurrentRig.smeterControl);
-                                 efoo := ExtractWord(3,foo,catControl.hrdDelim);
-                                 ifoo := -1;
-                                 cfgvtwo.Form6.pbSMeter.Min := 0;
-                                 If TryStrToInt(efoo, ifoo) Then cfgvtwo.Form6.pbSMeter.Max := ifoo;
-                                 efoo := ExtractWord(2,foo,catControl.hrdDelim);
-                                 ifoo := -1;
-                                 If TryStrToInt(efoo, ifoo) Then cfgvtwo.Form6.pbSMeter.Position := ifoo;
-                                 cfgvtwo.Form6.Label24.Caption := ExtractWord(1,foo,catControl.HRDDelim);
-                            end;
                             if globalData.hrdcatControlcurrentRig.hasTX Then
                             begin
                                  cfgvtwo.Form6.chkHRDPTT.Visible := True;
@@ -1986,7 +1866,6 @@ end;
 procedure TForm1.FormClose(Sender: TObject; var CloseAction: TCloseAction);
 var
    i, termcount : Integer;
-   foo          : String;
    kverr        : Integer;
 begin
      Form1.Timer1.Enabled := False;
@@ -2029,7 +1908,7 @@ begin
                diagout.Form3.ListBox1.Items.Add('Closed RB');
           end;
           diagout.Form3.ListBox1.Items.Add('Terminating RB Thread');
-          rbThread.Suspend;
+          //rbThread.Suspend;
           diagout.Form3.ListBox1.Items.Add('Terminated RB Thread');
 
           diagout.Form3.ListBox1.Items.Add('Terminating Decoder Thread');
@@ -2041,7 +1920,7 @@ begin
                inc(termcount);
                if termcount > 9 then break;
           end;
-          decoderThread.Suspend;
+          //decoderThread.Suspend;
           diagout.Form3.ListBox1.Items.Add('Terminated Decoder Thread');
 
           diagout.Form3.ListBox1.Items.Add('Terminating Rig Control Thread');
@@ -2063,7 +1942,7 @@ begin
                inc(termcount);
                if termcount > 9 then break;
           end;
-          rigThread.Suspend;
+          //rigThread.Suspend;
           diagout.Form3.ListBox1.Items.Add('Terminated Rig Control Thread');
 
           diagout.Form3.ListBox1.Items.Add('Freeing Threads');
@@ -2164,6 +2043,7 @@ begin
                     srec.pskrsent := false;
                     srec.dbfsent  := false;
                     if rb.addSpot(srec) then d65.gld65decodes[i].dtProcessed := True else d65.gld65decodes[i].dtProcessed := false;
+                    //ListBox3.Items.Insert(0,srec.date + ' ' + srec.exchange);
                end
                else
                begin
@@ -2251,6 +2131,11 @@ procedure TForm1.Label39Click(Sender: TObject);
 begin
      if chkAutoTxDF.Checked Then chkAutoTxDF.Checked := False else chkAutoTxDF.Checked := True;
 end;
+
+//procedure TForm1.ListBox3DblClick(Sender : TObject);
+//begin
+//     ListBox3.Clear;
+//end;
 
 procedure TForm1.menuAboutClick(Sender: TObject);
 begin
@@ -3154,10 +3039,10 @@ begin
      if Index > -1 Then
      Begin
           foo := Form1.ListBox1.Items[Index];
-          if IsWordPresent('WARNING:', foo, parseCallsign.WordDelimiter) Then lineWarn := True else lineWarn := False;
-          if IsWordPresent('CQ', foo, parseCallSign.WordDelimiter) Then lineCQ := True;
-          if IsWordPresent('QRZ', foo, parseCallSign.WordDelimiter) Then lineCQ := True;
-          if IsWordPresent(globalData.fullcall, foo, parseCallsign.WordDelimiter) Then lineMyCall := True else lineMyCall := False;
+          if IsWordPresent('WARNING:', foo, [' ']) Then lineWarn := True else lineWarn := False;
+          if IsWordPresent('CQ', foo, [' ']) Then lineCQ := True;
+          if IsWordPresent('QRZ', foo, [' ']) Then lineCQ := True;
+          if IsWordPresent(globalData.fullcall, foo, [' ']) Then lineMyCall := True else lineMyCall := False;
           myBrush := TBrush.Create;
           with (Control as TListBox).Canvas do
           begin
@@ -3508,12 +3393,12 @@ Begin
           end;
           // Trying to find a signal report value
           wcount := 0;
-          wcount := WordCount(d65.gld65decodes[i].dtDecoded,parseCallSign.WordDelimiter);
+          wcount := WordCount(d65.gld65decodes[i].dtDecoded,[' ']);
           if wcount = 3 Then
           Begin
-               word1 := ExtractWord(1,d65.gld65decodes[i].dtDecoded,parseCallSign.WordDelimiter); // CQ or a call sign
-               //word2 := ExtractWord(2,d65.gld65decodes[i].dtDecoded,parseCallSign.WordDelimiter); // call sign
-               word3 := ExtractWord(3,d65.gld65decodes[i].dtDecoded,parseCallSign.WordDelimiter); // could be grid or report.
+               word1 := ExtractWord(1,d65.gld65decodes[i].dtDecoded,[' ']); // CQ or a call sign
+               //word2 := ExtractWord(2,d65.gld65decodes[i].dtDecoded,[' ']); // call sign
+               word3 := ExtractWord(3,d65.gld65decodes[i].dtDecoded,[' ']); // could be grid or report.
           End
           Else
           Begin
@@ -3788,8 +3673,6 @@ Begin
      // No warning range -10 .. +10 dB or 25 .. 75 sLevel
      Form1.pbAu1.Position := audioAveL;
      Form1.pbAu2.Position := audioAveR;
-     cfgvtwo.Form6.pbAULeft.Position := audioAveL;
-     cfgvtwo.Form6.pbAURight.Position := audioAveR;
      // Convert S Level to dB for text display
      if paInParams.channelCount = 2 then
      Begin
@@ -3806,22 +3689,6 @@ Begin
      if paInParams.channelCount = 2 then
      begin
           if (adc.specLevel2 < 40) Or (adc.specLevel2 > 60) Then rbUseRight.Font.Color := clRed else rbUseRight.Font.Color := clBlack;
-     end;
-     if paInParams.channelCount = 2 then
-     begin
-          if adc.specLevel1 > 0 Then cfgvtwo.Form6.Label25.Caption := 'L ' + IntToStr(Round((audioAveL*0.4)-20)) Else cfgvtwo.Form6.Label25.Caption := 'L -20';
-     end;
-     if paInParams.channelCount = 2 then
-     begin
-          if adc.specLevel2 > 0 Then cfgvtwo.Form6.Label31.Caption := 'R ' + IntToStr(Round((audioAveR*0.4)-20)) Else cfgvtwo.Form6.Label31.Caption := 'R -20';
-     end;
-     if paInParams.channelCount = 2 then
-     begin
-          if (adc.specLevel1 < 40) Or (adc.specLevel1 > 60) Then cfgvtwo.Form6.Label25.Font.Color := clRed else cfgvtwo.Form6.Label25.Font.Color := clBlack;
-     end;
-     if paInParams.channelCount = 2 then
-     begin
-          if (adc.specLevel2 < 40) Or (adc.specLevel2 > 60) Then cfgvtwo.Form6.Label31.Font.Color := clRed else cfgvtwo.Form6.Label31.Font.Color := clBlack;
      end;
 End;
 
@@ -6809,7 +6676,7 @@ Begin
      end;
      // Update RB/PSKR/DB Stats
      heard.Form9.Label3.Caption := 'RB Reports Sent:  ' + rb.RBcount;
-     //heard.Form9.Label4.Caption := 'Discarded:  ' + rb.rbDiscard;
+     heard.Form9.Label4.Caption := 'Discarded:  ' + rb.rbDiscard + '/' + rb.RBFail;
      //heard.Form9.Label5.Caption := 'Rejected:  ' + rb.RBfail;
      heard.Form9.Label6.Caption := 'PSKR Reports Sent:  ' + IntToStr(rb.pskrCallsSent);
      heard.Form9.Label7.Caption := 'Buffered:  ' + IntToStr(rb.pskrCallsBuff);
@@ -6877,6 +6744,14 @@ Var
    i    : Integer;
    cont : Boolean;
 Begin
+
+     if rbthread.Suspended then
+     begin
+          timer1.enabled := false;
+          showmessage('RB Thread is suspended.');
+          timer1.Enabled := true;
+     end;
+
      if spinDT.Value <> 0 Then Label32.Font.Color := clRed else Label32.Font.Color := clBlack;
 
      // Check for changes to configured callsign since last tick

@@ -1,5 +1,24 @@
 Change Log
 
+Version 1.0.9
+
+Disabled internal database function for tracking heard callsigns.
+
+Modified server side RB code to correct some infinite loop errrors
+in RB client code.
+
+Corrected issue with slashed calls generating incorrect response
+(no space between callsign and signal report).
+
+Removed controls for AF Gain, RF Gain, PA Gain, Mic Gain, S-Meter
+leaving only QRG/PTT for Ham Radio Deluxe rig control.  This is
+an attempt to correct some errors seen with buggy RF Gain control
+interaction.
+
+Removed Si570 control functions for now.  Little used -- poorly
+implemented and buggy as anything.  Will return in later versions.
+
+
 Version 1.0.8.2
 
 Corrected issue with QRG value being (like) 28.076,30 or 28,076.30
