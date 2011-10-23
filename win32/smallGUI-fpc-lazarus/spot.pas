@@ -1188,7 +1188,7 @@ implementation
 
     function TSpot.loginRB : Boolean;
     var
-       url : String;
+       url      : String;
     Begin
          prRBError    := '';
          prBusy       := True;
@@ -1234,9 +1234,9 @@ implementation
 
     function TSpot.logoutRB : Boolean;
     var
-       url      : String;
-       band     : String;
-       go       : Boolean;
+       url  : String;
+       band : String;
+       go   : Boolean;
     Begin
          prBusy       := True;
          band := '';

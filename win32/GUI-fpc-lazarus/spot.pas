@@ -1234,9 +1234,9 @@ implementation
 
     function TSpot.logoutRB : Boolean;
     var
-       url      : String;
-       band     : String;
-       go       : Boolean;
+       url  : String;
+       band : String;
+       go   : Boolean;
     Begin
          prBusy       := True;
          band := '';

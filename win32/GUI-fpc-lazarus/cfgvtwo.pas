@@ -27,7 +27,7 @@ interface
 uses
   Classes, SysUtils, LResources, Forms, Controls, Graphics, Dialogs,
   ComCtrls, ExtCtrls, StdCtrls, StrUtils, globalData, CTypes, synaser,
-  EditBtn, Spin, Si570dev, catControl, valobject;
+  EditBtn, Spin, catControl, valobject;
 
 Const
     myWordDelims = [' ',','];
@@ -40,7 +40,6 @@ type
 
   TForm6 = class(TForm)
     btnClearLog : TButton ;
-    btnSetSi570 : TButton ;
     Button1 : TButton ;
     buttonTestPTT : TButton ;
     cbATQSY1 : TCheckBox ;
@@ -60,10 +59,8 @@ type
     cbMultiAutoEnable : TCheckBox ;
     cbRestoreMulti : TCheckBox ;
     cbSaveCSV : TCheckBox ;
-    cbSi570PTT : TCheckBox ;
     cbTXWatchDog : TCheckBox ;
     cbUseAltPTT : TCheckBox ;
-    checkSi570 : TCheckBox ;
     chkEnableAutoSR : TCheckBox ;
     chkHRDPTT : TCheckBox ;
     chkNoOptFFT : TCheckBox ;
@@ -83,8 +80,6 @@ type
     Edit3 : TEdit ;
     editPSKRAntenna : TEdit ;
     editPSKRCall : TEdit ;
-    editSI570Freq : TEdit ;
-    editSI570FreqOffset : TEdit ;
     editUserDefinedPort1 : TEdit ;
     edMyCall : TEdit ;
     edMyGrid : TEdit ;
@@ -161,7 +156,6 @@ type
     Label36 : TLabel ;
     Label37 : TLabel ;
     Label39 : TLabel ;
-    Label4 : TLabel ;
     Label41 : TLabel ;
     Label42 : TLabel ;
     Label43 : TLabel ;
@@ -171,7 +165,6 @@ type
     Label47 : TLabel ;
     Label48 : TLabel ;
     Label49 : TLabel ;
-    Label5 : TLabel ;
     Label50 : TLabel ;
     Label51 : TLabel ;
     Label52 : TLabel ;
@@ -182,18 +175,14 @@ type
     Label57 : TLabel ;
     Label58 : TLabel ;
     Label59 : TLabel ;
-    Label6 : TLabel ;
     Label60 : TLabel ;
     Label61 : TLabel ;
     Label62 : TLabel ;
     Label63 : TLabel ;
     Label64 : TLabel ;
-    Label65 : TLabel ;
     Label66 : TLabel ;
-    Label67 : TLabel ;
     Label68 : TLabel ;
     Label69 : TLabel ;
-    Label7 : TLabel ;
     Label70 : TLabel ;
     Label71 : TLabel ;
     Label72 : TLabel ;
@@ -202,7 +191,6 @@ type
     Label76 : TLabel ;
     Label77 : TLabel ;
     Label78 : TLabel ;
-    Label8 : TLabel ;
     Label9 : TLabel ;
     lbDiagLog : TListBox ;
     OmniGroup : TRadioGroup ;
@@ -221,9 +209,6 @@ type
     RadioGroup2 : TRadioGroup ;
     radioOmni1 : TRadioButton ;
     radioOmni2 : TRadioButton ;
-    radioSI570X1 : TRadioButton ;
-    radioSI570X2 : TRadioButton ;
-    radioSI570X4 : TRadioButton ;
     rbHRD4 : TRadioButton ;
     rbHRD5 : TRadioButton ;
     rigQRG : TEdit ;
@@ -232,7 +217,6 @@ type
     TabSheet2 : TTabSheet ;
     TabSheet3 : TTabSheet ;
     TabSheet4 : TTabSheet ;
-    TabSheet5 : TTabSheet ;
     TabSheet6 : TTabSheet ;
     TabSheet7 : TTabSheet ;
     testHRDPTT : TButton ;
@@ -241,8 +225,6 @@ type
     procedure buttonTestPTTClick(Sender: TObject);
     procedure cbAudioInChange(Sender: TObject);
     procedure cbAudioOutChange(Sender: TObject);
-    procedure cbSi570PTTChange(Sender: TObject);
-    procedure checkSi570Change(Sender: TObject);
     procedure chkEnableAutoSRChange(Sender: TObject);
     procedure chkUseCommanderChange(Sender: TObject);
     procedure chkUseHRDChange(Sender: TObject);
@@ -251,7 +233,6 @@ type
     procedure ComboBox2Change(Sender: TObject);
     procedure ComboBox3Change(Sender: TObject);
     procedure comboPrefixChange(Sender: TObject);
-    procedure editSI570FreqChange(Sender: TObject);
     procedure edMyCallChange(Sender: TObject);
     procedure edMyCallKeyPress (Sender : TObject ; var Key : char );
     procedure edMyGridKeyPress (Sender : TObject ; var Key : char );
@@ -275,11 +256,7 @@ var
   glcqColor        : TColor;
   glcallColor      : TColor;
   glqsoColor       : TColor;
-  glsi57           : Si570Dev.TSi570Device;
-  glsi57QRGi       : Integer;
-  glsi57QRGs       : Integer;
   cfpttSerial      : TBlockSerial;
-  glsi57Set        : Boolean;
   glautoSR         : Boolean;
   glmyCall         : String;
   glmustConfig     : Boolean;
@@ -473,11 +450,6 @@ begin
      gld65AudioChange := True;
 end;
 
-procedure TForm6.cbSi570PTTChange(Sender: TObject);
-begin
-     if cbSi570PTT.Checked Then globalData.si570ptt := True else globalData.si570ptt := False;
-end;
-
 procedure TForm6.chkEnableAutoSRChange(Sender: TObject);
 begin
      if Form6.chkEnableAutoSR.Checked Then glautoSR := True else glautoSR := False;
@@ -531,50 +503,6 @@ begin
           glcatBy := 'none';
           globalData.gqrg := 0.0;
           globalData.strqrg := '0';
-     End;
-end;
-
-procedure TForm6.editSI570FreqChange(Sender: TObject);
-var
-   ifoo1, ifoo2, ifoo3, ifoo4 : Integer;
-begin
-     ifoo1 := 0;
-     ifoo2 := 0;
-     ifoo3 := 0;
-     ifoo3 := 0;
-     TryStrToInt(self.editSI570Freq.Text, ifoo1);
-     TryStrToInt(self.editSI570FreqOffset.Text, ifoo2);
-     ifoo3 := ifoo1 + ifoo2;
-     if ifoo3 > 0 Then
-     Begin
-          if self.radioSI570X4.Checked Then ifoo4 := ifoo3 * 4;
-          if self.radioSI570X2.Checked Then ifoo4 := ifoo3 * 2;
-          if self.radioSI570X1.Checked Then ifoo4 := ifoo3;
-     End;
-     if ifoo4 > 0 Then glsi57.SetFrequency(ifoo4);
-     glsi57Set := True;
-     glsi57QRGi := ifoo1;  // Indicated QRG Hz
-     glsi57QRGs := ifoo3;  // Actual Si570 QRG Hz
-     Label5.Caption := 'Indicated QRG Hz:  ' + IntToStr(glsi57QRGi);
-     Label7.Caption := 'Actual Si570 QRG Hz:  ' + IntToStr(glsi57QRGs);
-end;
-
-procedure TForm6.checkSi570Change(Sender: TObject);
-begin
-     If checkSi570.Checked Then
-     Begin
-          glsi57 := Si570Dev.TSi570Device.Create;
-          btnSetSi570.Enabled := True;
-          glsi57Set := False;
-          glcatBy := 'si57';
-     End
-     Else
-     Begin
-          glsi57.Close;
-          glsi57.Destroy;
-          btnSetSi570.Enabled := False;
-          glsi57Set := False;
-          glcatBy := 'none';
      End;
 end;
 
@@ -922,9 +850,6 @@ initialization
   glcqColor     := clLime;
   glcallColor   := clRed;
   glqsoColor    := clSilver;
-  glsi57QRGi      := 0;
-  glsi57QRGs      := 0;
-  glsi57Set       := False;
   cfval           := valobject.TValidator.create(); // This creates a access point to validation routines needed for new RB code
 end.
 

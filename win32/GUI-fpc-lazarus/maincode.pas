@@ -24,6 +24,10 @@ unit maincode;
 {$MODE DELPHI }
 {$H+}
 
+{TODO Diagnose pskr disable/enable cycle does not return to sending pskr spots}
+{TODO DT adjustment leads to no WF display}
+{TODO Remove internal DB functions replace with SQLite now that I know it will run in thread}
+
 interface
 
 uses
@@ -295,8 +299,6 @@ type
     procedure WaterfallMouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
     procedure addToDisplayTX(exchange : String);
     procedure saveCSV();
-    procedure si570Raiseptt();
-    procedure si570Lowerptt();
     Function  ValidateCallsign(csign : String) : Boolean;
     Function  ValidateSlashedCallsign(csign : String) : Boolean;
     function  ValidateGrid(const grid : String) : Boolean;
@@ -493,7 +495,6 @@ function TForm1.getPTTMethod() : String;
 Begin
      result := '';
      if cfgvtwo.Form6.cbUseAltPTT.Checked Then result := 'ALT' else result := 'PTT';
-     if cfgvtwo.Form6.cbSi570PTT.Checked Then result := 'SI5';
      if cfgvtwo.Form6.chkHRDPTT.Checked And cfgvtwo.Form6.chkUseHRD.Checked Then result := 'HRD';
 end;
 
@@ -715,8 +716,6 @@ begin
 
                   if cfgvtwo.glcatBy = 'commander' Then qrg := catControl.readDXLabs();
 
-                  if cfgvtwo.glcatBy = 'si57' Then qrg := IntToStr(cfgvtwo.glsi57QRGi);
-
                   if cfgvtwo.glcatBy = 'none' Then qrg := Form1.editManQRG.Text;
 
                   if cfgvtwo.glcatBy = 'hrd' Then
@@ -826,42 +825,6 @@ end;
 //          end;
 //     End;
 //End;
-
-procedure TForm1.si570Raiseptt();
-Begin
-     mnpttOpened := False;
-     Try
-        if cfgvtwo.Form6.checkSi570.Checked Then
-        Begin
-             cfgvtwo.glsi57.SetPTT(True);
-             mnpttOpened := True;
-        End
-        Else
-        Begin
-             dlog.fileDebug('Si570 PTT raise failed.  Device not enabled.');
-        End;
-     Except
-        dlog.fileDebug('Si570 PTT raise failed.  Exception.');
-     End;
-End;
-
-procedure TForm1.si570Lowerptt();
-Begin
-     mnpttOpened := False;
-     Try
-        if cfgvtwo.Form6.checkSi570.Checked Then
-        Begin
-             cfgvtwo.glsi57.SetPTT(False);
-             mnpttOpened := False;
-        End
-        Else
-        Begin
-             dlog.fileDebug('Si570 PTT lower failed.  Device not enabled.');
-        End;
-     Except
-        dlog.fileDebug('Si570 PTT lower failed.  Exception.');
-     End;
-End;
 
 procedure TForm1.altRaisePTT();
 var
@@ -1171,7 +1134,6 @@ begin
        // likely drop synaserial and use wsjt ptt from library.
        globalData.txInProgress := False;
        sleep(100);
-       if getPTTMethod() = 'SI5' Then si570Lowerptt();
        if getPTTMethod() = 'HRD' Then hrdLowerPTT();
        if getPTTMethod() = 'ALT' Then altLowerPTT();
        if getPTTMethod() = 'PTT' Then lowerPTT();
@@ -1745,12 +1707,7 @@ Begin
      cfg.StoredValue['cqColor'] := IntToStr(cfgvtwo.Form6.ComboBox1.ItemIndex);
      cfg.StoredValue['callColor'] := IntToStr(cfgvtwo.Form6.ComboBox2.ItemIndex);
      cfg.StoredValue['qsoColor'] := IntToStr(cfgvtwo.Form6.ComboBox3.ItemIndex);
-     if cfgvtwo.Form6.radioSI570X1.Checked Then cfg.StoredValue['si570mul'] := '1';
-     if cfgvtwo.Form6.radioSI570X2.Checked Then cfg.StoredValue['si570mul'] := '2';
-     if cfgvtwo.Form6.radioSI570X4.Checked Then cfg.StoredValue['si570mul'] := '4';
-     cfg.StoredValue['si570cor'] := cfgvtwo.Form6.editSI570FreqOffset.Text;
-     cfg.StoredValue['si570qrg'] := cfgvtwo.Form6.editSI570Freq.Text;
-     if cfgvtwo.Form6.cbSi570PTT.Checked Then cfg.StoredValue['si570ptt'] := 'y' else cfg.StoredValue['si570ptt'] := 'n';
+     cfg.StoredValue['si570ptt'] := 'n';
      if cfgvtwo.Form6.cbCWID.Checked Then cfg.StoredValue['useCWID'] := 'y' else cfg.StoredValue['useCWID'] := 'n';
      if cfgvtwo.Form6.chkTxDFVFO.Checked Then cfg.StoredValue['useCATTxDF'] := 'yes' else cfg.StoredValue['useCATTxDF'] := 'no';
      if cfgvtwo.Form6.cbEnableQSY1.Checked Then cfg.StoredValue['enAutoQSY1'] := 'yes' else cfg.StoredValue['enAutoQSY1'] := 'no';
@@ -1891,7 +1848,6 @@ begin
              if mnpttOpened Then
              Begin
                   diagout.Form3.ListBox1.Items.Add('Closing PTT Port');
-                  if getPTTMethod() = 'SI5' Then si570Lowerptt();
                   if getPTTMethod() = 'HRD' Then hrdLowerPTT();
                   if getPTTMethod() = 'ALT' Then altLowerPTT();
                   if getPTTMethod() = 'PTT' Then lowerPTT();
@@ -3814,9 +3770,7 @@ Begin
      Form1.Caption := 'JT65-HF V' + verHolder.verReturn + ' (c) 2009...2011 W6CQZ.  Free to use/modify/distribute under GPL 2.0 License.';
      // See comments in procedure code to understand why this is a MUST to use.
      DisableFloatingPointExceptions();
-     //
-     // Initialize various form items to startup values
-     //
+     // Setup temporal variables
      st := utcTime();
      thisMinute := st.Minute;
      if st.Minute = 0 then
@@ -4004,6 +3958,8 @@ Begin
           Form1.edHisCall.Clear;
           Form1.edHisGrid.Clear;
           Form1.edSigRep.Clear;
+          Form1.spinDecoderBin.Value := 3;
+          Form1.Edit3.Text := '100';
           cfgvtwo.Form6.Show;
           cfgvtwo.Form6.BringToFront;
           repeat
@@ -4082,13 +4038,7 @@ Begin
           if Form1.cbSmooth.Checked Then cfg.StoredValue['smooth'] := 'on' else cfg.StoredValue['smooth'] := 'off';
           if cfgvtwo.Form6.cbRestoreMulti.Checked Then cfg.StoredValue['restoreMulti'] := 'on' else cfg.StoredValue['restoreMulti'] := 'off';
           cfg.StoredValue['specVGain'] := IntToStr(spinGain.Value);
-          if cfgvtwo.Form6.radioSI570X1.Checked Then cfg.StoredValue['si570mul'] := '1';
-          if cfgvtwo.Form6.radioSI570X2.Checked Then cfg.StoredValue['si570mul'] := '2';
-          if cfgvtwo.Form6.radioSI570X4.Checked Then cfg.StoredValue['si570mul'] := '4';
-          cfg.StoredValue['si570cor'] := cfgvtwo.Form6.editSI570FreqOffset.Text;
-          cfg.StoredValue['si570qrg'] := cfgvtwo.Form6.editSI570Freq.Text;
-          if cfgvtwo.Form6.cbSi570PTT.Checked Then cfg.StoredValue['si570ptt'] := 'y' else cfg.StoredValue['si570ptt'] := 'n';
-          if cfgvtwo.Form6.cbSi570PTT.Checked Then cfg.StoredValue['si570ptt'] := 'y' else cfg.StoredValue['si570ptt'] := 'n';
+          cfg.StoredValue['si570ptt'] := 'n';
           if cfgvtwo.Form6.cbCWID.Checked Then cfg.StoredValue['useCWID'] := 'y' else cfg.StoredValue['useCWID'] := 'n';
           if cfgvtwo.Form6.chkTxDFVFO.Checked Then cfg.StoredValue['useCATTxDF'] := 'yes' else cfg.StoredValue['useCATTxDF'] := 'no';
           if cfgvtwo.Form6.cbEnableQSY1.Checked Then cfg.StoredValue['enAutoQSY1'] := 'yes' else cfg.StoredValue['enAutoQSY1'] := 'no';
@@ -4676,7 +4626,6 @@ Begin
      Form1.MenuItem19b.Caption := cfg.StoredValue['usrMsg16'];
      Form1.MenuItem20b.Caption := cfg.StoredValue['usrMsg17'];
 
-     // Fixed, restore defaults was the problem.  :)
      tstint := 0;
      if TryStrToInt(cfg.StoredValue['binSpace'],tstint) Then Form1.spinDecoderBin.value := tstint else Form1.spinDecoderBin.Value := 3;
      if spinDecoderBin.Value = 1 Then edit3.Text := '20';
@@ -4703,13 +4652,6 @@ Begin
      if cfg.StoredValue['smooth'] = 'on' Then Form1.cbSmooth.Checked := True else Form1.cbSmooth.Checked := False;
      if Form1.cbSmooth.Checked Then spectrum.specSmooth := True else spectrum.specSmooth := False;
      if cfg.StoredValue['restoreMulti'] = 'on' Then cfgvtwo.Form6.cbRestoreMulti.Checked := True else cfgvtwo.Form6.cbRestoreMulti.Checked := False;
-     if cfg.StoredValue['si570mul'] = '1' Then cfgvtwo.Form6.radioSI570X1.Checked := True;
-     if cfg.StoredValue['si570mul'] = '2' Then cfgvtwo.Form6.radioSI570X2.Checked := True;
-     if cfg.StoredValue['si570mul'] = '4' Then cfgvtwo.Form6.radioSI570X4.Checked := True;
-     cfgvtwo.Form6.editSI570FreqOffset.Text := cfg.StoredValue['si570cor'];
-     cfgvtwo.Form6.editSI570Freq.Text := cfg.StoredValue['si570qrg'];
-     if cfg.storedValue['si570ptt'] = 'y' then cfgvtwo.Form6.cbSi570PTT.Checked := True else cfgvtwo.Form6.cbSi570PTT.Checked := False;
-     if cfg.storedValue['si570ptt'] = 'y' then globalData.si570ptt := True else globalData.si570ptt := False;
      if cfg.storedValue['useCWID'] = 'y' then cfgvtwo.Form6.cbCWID.Checked := True else cfgvtwo.Form6.cbCWID.Checked := False;
      if cfg.StoredValue['useCATTxDF'] = 'yes' then cfgvtwo.Form6.chkTxDFVFO.Checked := True else cfgvtwo.Form6.chkTxDFVFO.Checked := False;
 
@@ -6189,7 +6131,6 @@ Begin
                          dac.d65txBufferPtr := @dac.d65txBuffer[0];
 
                          rxCount := 0;
-                         if getPTTMethod() = 'SI5' Then si570Raiseptt();
                          if getPTTMethod() = 'HRD' Then hrdRaisePTT();
                          if getPTTMethod() = 'ALT' Then altRaisePTT();
                          if getPTTMethod() = 'PTT' Then raisePTT();
@@ -6248,7 +6189,6 @@ Begin
                     if (dac.d65txBufferIdx >= d65nwave+11025) Or (dac.d65txBufferIdx >= 661503-(11025 DIV 2)) Then
                     Begin
                          globalData.txInProgress := False;
-                         if getPTTMethod() = 'SI5' Then si570Lowerptt();
                          if getPTTMethod() = 'HRD' Then hrdLowerPTT();
                          if getPTTMethod() = 'ALT' Then altLowerPTT();
                          if getPTTMethod() = 'PTT' Then lowerPTT();
@@ -6306,7 +6246,6 @@ Begin
                          dac.d65txBufferPtr := @dac.d65txBuffer[0];
 
                          rxCount := 0;
-                         if getPTTMethod() = 'SI5' Then si570Raiseptt();
                          if getPTTMethod() = 'HRD' Then hrdRaisePTT();
                          if getPTTMethod() = 'ALT' Then altRaisePTT();
                          if getPTTMethod() = 'PTT' Then raisePTT();
@@ -6366,7 +6305,6 @@ Begin
                     if (dac.d65txBufferIdx >= d65nwave+11025) Or (dac.d65txBufferIdx >= 661503-(11025 DIV 2)) Or (thisSecond > 48) Then
                     Begin
                          // I have a full TX cycle when d65txBufferIdx >= 538624 or thisSecond > 48
-                         if getPTTMethod() = 'SI5' Then si570Lowerptt();
                          if getPTTMethod() = 'HRD' Then hrdLowerPTT();
                          if getPTTMethod() = 'ALT' Then altLowerPTT();
                          if getPTTMethod() = 'PTT' Then lowerPTT();
@@ -6597,8 +6535,7 @@ Begin
      // Force Rig control read cycle.
      if (st.Second mod 3 = 0) And not primed Then doCAT := True;
      // Set manual entry ability.
-     if (cfgvtwo.glcatBy = 'none') and not cfgvtwo.glsi57Set Then Form1.editManQRG.Enabled := True else Form1.editManQRG.Enabled := False;
-     //if (cfgvtwo.glcatBy = 'none') and not cfgvtwo.glsi57Set Then Form1.Label23.Visible := True else Form1.Label23.Visible := False;
+     if cfgvtwo.glcatBy = 'none' Then Form1.editManQRG.Enabled := True else Form1.editManQRG.Enabled := False;
      if Form1.editManQRG.Text = '0' Then
      Begin
           Form1.Label12.Font.Color := clRed;
@@ -7098,7 +7035,6 @@ initialization
   haveOddBuffer := False;
   haveEvenBuffer := False;
   globalData.mtext := '/Multi%20On%202K%20BW';
-  globalData.si570ptt := False;
   doCWID := False;
   actionSet := False;
   catControl.catControlautoQSY := False;

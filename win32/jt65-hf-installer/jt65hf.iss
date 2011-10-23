@@ -4,10 +4,10 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING .ISS SCRIPT FILES!
 
 [Setup]
-AppName=JT65-HF-1.0.8
-AppVerName=JT65-HF 1.0.8
-DefaultDirName={pf}\jt65hf108
-DefaultGroupName=JT65-HF-V108
+AppName=JT65-HF-1.0.9
+AppVerName=JT65-HF 1.0.9
+DefaultDirName={pf}\jt65hf109
+DefaultGroupName=JT65-HF-V109
 UninstallDisplayIcon={app}\jt65-hf.exe
 Compression=lzma/Max
 SolidCompression=true
@@ -16,13 +16,13 @@ OutputDir=.
 AppCopyright=(c)2009...2011 J C Large W6CQZ
 PrivilegesRequired=none
 MinVersion=,5.1.2600
-VersionInfoVersion=1.0.8
+VersionInfoVersion=1.0.9
 VersionInfoCompany=W6CQZ
 VersionInfoDescription=JT65A for HF
-VersionInfoTextVersion=JT65-HF 1.0.8
+VersionInfoTextVersion=JT65-HF 1.0.9
 VersionInfoCopyright=(c)2009...2011 J C Large W6CQZ
 VersionInfoProductName=JT65-HF
-VersionInfoProductVersion=1.0.8
+VersionInfoProductVersion=1.0.9
 
 [InstallDelete]
 Type: files; Name: "{app}\gpl-2.0.txt"
@@ -34,7 +34,6 @@ Type: files; Name: "{app}\jt65.dll"
 Type: files; Name: "{app}\jt65-hf.exe"
 Type: files; Name: "{app}\libfftw3f-3.dll"
 Type: files; Name: "{app}\libfftw3f.dll"
-Type: files; Name: "{app}\libusb0.dll"
 Type: files; Name: "{app}\PSKReporter.dll"
 Type: files; Name: "{app}\HRDInterface0014.dll"
 Type: files; Name: "{app}\HRDInterface0015.dll"
@@ -56,7 +55,6 @@ Source: "jl-libsamplerate.dll"; DestDir: "{app}"
 Source: "PSKReporter.dll"; DestDir: "{app}"
 Source: "HRDInterface0014.dll"; DestDir: "{app}"
 Source: "HRDInterface0015.dll"; DestDir: "{app}"
-Source: "libusb0.dll"; DestDir: "{app}"
 Source: "gpl-2.0.txt"; DestDir: "{app}"
 Source: "jt65-hf-setup.pdf"; DestDir: "{app}"
 Source: "jt65repair.exe"; DestDir: "{app}"

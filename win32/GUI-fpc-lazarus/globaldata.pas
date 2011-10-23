@@ -73,7 +73,6 @@ Var
    fullcall                : String;
    gmode                   : Integer; // 65 or 4
    mtext                   : String;
-   si570ptt                : Boolean;
    hrdcatControlcurrentRig : hrdrigCAP;
    hrdVersion              : Integer;
    canTX                   : Boolean;

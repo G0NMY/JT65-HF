@@ -18,6 +18,9 @@ interaction.
 Removed Si570 control functions for now.  Little used -- poorly
 implemented and buggy as anything.  Will return in later versions.
 
+Added code for CP conversion to UTF8 for portaudio device list so
+non UTF8 returns don't display garbage.
+
 
 Version 1.0.8.2
 
