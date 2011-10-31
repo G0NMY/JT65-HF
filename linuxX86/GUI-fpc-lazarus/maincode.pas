@@ -29,7 +29,7 @@ interface
 uses
   Classes, SysUtils, LResources, Forms, Controls, Graphics, Dialogs,
   StdCtrls, CTypes, StrUtils, Math, portaudio, ExtCtrls, ComCtrls, Spin,
-  DateUtils, encode65, parseCallSign, globalData, XMLPropStorage, adc,
+  DateUtils, encode65, globalData, XMLPropStorage, adc,
   dac, ClipBrd, dlog, rawdec, cfgvtwo, guiConfig, verHolder,
   Menus, synaser, log, diagout, synautil, d65, spectrum, {$IFDEF WIN32}windows,
   {$ENDIF}{$IFDEF LINUX}unix, {$ENDIF}{$IFDEF DARWIN}unix, {$ENDIF} about, spot,
@@ -257,8 +257,8 @@ type
     procedure tbBrightChange(Sender: TObject);
     procedure tbContrastChange(Sender: TObject);
     procedure ListBox1DblClick(Sender: TObject);
-    procedure ListBox1DrawItem(Control: TWinControl; Index: Integer; ARect: TRect; State: TOwnerDrawState);
-    procedure ListBox1MouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
+    //procedure ListBox1DrawItem(Control: TWinControl; Index: Integer; ARect: TRect; State: TOwnerDrawState);
+    //procedure ListBox1MouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
     procedure rbFirstChange(Sender: TObject);
     procedure rbUseMixChange(Sender: TObject);
     procedure spinDecoderCFChange(Sender: TObject);
@@ -800,7 +800,6 @@ End;
 
 procedure TForm1.initDecode();
 Var
-   sr               : CTypes.cdouble;
    i                : Integer;
 Begin
      if not d65.glinprog Then
@@ -836,7 +835,6 @@ Begin
           if ost.Hour < 10 Then d65.gld65timestamp := d65.gld65timestamp + '0' + IntToStr(ost.Hour) else d65.gld65timestamp := d65.gld65timestamp + IntToStr(ost.Hour);
           if ost.Minute < 10 Then d65.gld65timestamp := d65.gld65timestamp + '0' + IntToStr(ost.Minute) else d65.gld65timestamp := d65.gld65timestamp + IntToStr(ost.Minute);
           d65.gld65timestamp := d65.gld65timestamp + '00';
-          sr := 1.0;
           globalData.d65samfacin := 1.0;
           d65samfacout := 1.0;
           d65.glMouseDF := Form1.spinDecoderCF.Value;
@@ -1395,8 +1393,6 @@ begin
 end;
 
 procedure TForm1.SaveConfig;
-Var
-   foo : String;
 Begin
      // Update configuration settings.
      cfg.StoredValue['call']         := UpperCase(cfgvtwo.glmycall);
@@ -1813,21 +1809,21 @@ begin
      rawdec.Form5.Visible := True;
 end;
 
-procedure TForm1.ListBox1MouseDown(Sender: TObject; Button: TMouseButton;
-  Shift: TShiftState; X, Y: Integer);
-Var
-   MousePos      : TPoint;
-   OverItemIndex : integer;
-begin
-     MousePos.x := X;
-     MousePos.y := Y;
-     if (Button = mbRight) And itemsIn then
-     begin
-          OverItemIndex := Form1.ListBox1.ItemAtPos(MousePos,True);
-          If OverItemIndex > -1 Then Form1.ListBox1.ItemIndex:=OverItemIndex;
-          If OverItemIndex > -1 Then Clipboard.AsText := Form1.ListBox1.Items[OverItemIndex];
-     end;
-end;
+//procedure TForm1.ListBox1MouseDown(Sender: TObject; Button: TMouseButton;
+//  Shift: TShiftState; X, Y: Integer);
+//Var
+//   MousePos      : TPoint;
+//   OverItemIndex : integer;
+//begin
+//     MousePos.x := X;
+//     MousePos.y := Y;
+//     if (Button = mbRight) And itemsIn then
+//     begin
+//          OverItemIndex := Form1.ListBox1.ItemAtPos(MousePos,True);
+//          If OverItemIndex > -1 Then Form1.ListBox1.ItemIndex:=OverItemIndex;
+//          If OverItemIndex > -1 Then Clipboard.AsText := Form1.ListBox1.Items[OverItemIndex];
+//     end;
+//end;
 
 function  TForm1.genSlashedMessage(const exchange : String; var Msg : String; var err : String; var doQSO : Boolean; Const lsiglevel : String) : Boolean;
 Var
@@ -2638,40 +2634,40 @@ begin
      end;
 end;
 
-procedure TForm1.ListBox1DrawItem(Control: TWinControl; Index: Integer;
-  ARect: TRect; State: TOwnerDrawState);
-Var
-   myColor            : TColor;
-   myBrush            : TBrush;
-   lineCQ, lineMyCall : Boolean;
-   lineWarn           : Boolean;
-   foo                : String;
-begin
-     lineCQ := False;
-     lineMyCall := False;
-     if Index > -1 Then
-     Begin
-          foo := Form1.ListBox1.Items[Index];
-          if IsWordPresent('WARNING:', foo, parseCallsign.WordDelimiter) Then lineWarn := True else lineWarn := False;
-          if IsWordPresent('CQ', foo, parseCallSign.WordDelimiter) Then lineCQ := True;
-          if IsWordPresent('QRZ', foo, parseCallSign.WordDelimiter) Then lineCQ := True;
-          if IsWordPresent(globalData.fullcall, foo, parseCallsign.WordDelimiter) Then lineMyCall := True else lineMyCall := False;
-          myBrush := TBrush.Create;
-          with (Control as TListBox).Canvas do
-          begin
-               myColor := cfgvtwo.glqsoColor;
-               if lineCQ Then myColor := cfgvtwo.glcqColor;
-               if lineMyCall Then myColor := cfgvtwo.glcallColor;
-               if lineWarn then myColor := clRed;
-               myBrush.Style := bsSolid;
-               myBrush.Color := myColor;
-               lclintf.FillRect(handle, ARect, myBrush.Reference.Handle);
-               Brush.Style := bsClear;
-               TextOut(ARect.Left, ARect.Top,(Control as TListBox).Items[Index]);
-               MyBrush.Free;
-          end;
-     end;
-end;
+//procedure TForm1.ListBox1DrawItem(Control: TWinControl; Index: Integer;
+//  ARect: TRect; State: TOwnerDrawState);
+//Var
+//   myColor            : TColor;
+//   myBrush            : TBrush;
+//   lineCQ, lineMyCall : Boolean;
+//   lineWarn           : Boolean;
+//   foo                : String;
+//begin
+//     lineCQ := False;
+//     lineMyCall := False;
+//     if Index > -1 Then
+//     Begin
+//          foo := Form1.ListBox1.Items[Index];
+//          if IsWordPresent('WARNING:', foo, [' ']) Then lineWarn := True else lineWarn := False;
+//          if IsWordPresent('CQ', foo, [' ']) Then lineCQ := True;
+//          if IsWordPresent('QRZ', foo, [' ']) Then lineCQ := True;
+//          if IsWordPresent(globalData.fullcall, foo, [' ']) Then lineMyCall := True else lineMyCall := False;
+//          myBrush := TBrush.Create;
+//          with (Control as TListBox).Canvas do
+//          begin
+//               myColor := cfgvtwo.glqsoColor;
+//               if lineCQ Then myColor := cfgvtwo.glcqColor;
+//               if lineMyCall Then myColor := cfgvtwo.glcallColor;
+//               if lineWarn then myColor := clRed;
+//               myBrush.Style := bsSolid;
+//               myBrush.Color := myColor;
+//               lclintf.FillRect(handle, ARect, myBrush.Reference.Handle);
+//               Brush.Style := bsClear;
+//               TextOut(ARect.Left, ARect.Top,(Control as TListBox).Items[Index]);
+//               MyBrush.Free;
+//          end;
+//     end;
+//end;
 
 procedure TForm1.rbFirstChange(Sender: TObject);
 begin
@@ -2776,7 +2772,6 @@ procedure TForm1.btnReDecodeClick(Sender: TObject);
 Var
    proceed : Boolean;
    i       : Integer;
-   sr      : CTypes.cdouble;
 begin
      proceed := False;
      if haveOddBuffer Then
@@ -2812,7 +2807,6 @@ begin
                if ost.Hour < 10 Then d65.gld65timestamp := d65.gld65timestamp + '0' + IntToStr(ost.Hour) else d65.gld65timestamp := d65.gld65timestamp + IntToStr(ost.Hour);
                if ost.Minute < 10 Then d65.gld65timestamp := d65.gld65timestamp + '0' + IntToStr(ost.Minute) else d65.gld65timestamp := d65.gld65timestamp + IntToStr(ost.Minute);
                d65.gld65timestamp := d65.gld65timestamp + '00';
-               sr := 1.0;
                globalData.d65samfacin := 1.0;
                d65samfacout := 1.0;
                d65.glMouseDF := Form1.spinDecoderCF.Value;
@@ -3008,12 +3002,12 @@ Begin
           end;
           // Trying to find a signal report value
           wcount := 0;
-          wcount := WordCount(d65.gld65decodes[i].dtDecoded,parseCallSign.WordDelimiter);
+          wcount := WordCount(d65.gld65decodes[i].dtDecoded,[' ']);
           if wcount = 3 Then
           Begin
-               word1 := ExtractWord(1,d65.gld65decodes[i].dtDecoded,parseCallSign.WordDelimiter); // CQ or a call sign
-               //word2 := ExtractWord(2,d65.gld65decodes[i].dtDecoded,parseCallSign.WordDelimiter); // call sign
-               word3 := ExtractWord(3,d65.gld65decodes[i].dtDecoded,parseCallSign.WordDelimiter); // could be grid or report.
+               word1 := ExtractWord(1,d65.gld65decodes[i].dtDecoded,[' ']); // CQ or a call sign
+               //word2 := ExtractWord(2,d65.gld65decodes[i].dtDecoded,[' ']); // call sign
+               word3 := ExtractWord(3,d65.gld65decodes[i].dtDecoded,[' ']); // could be grid or report.
           End
           Else
           Begin
@@ -3355,29 +3349,29 @@ begin
      Begin
           foo := 'JT65-HF Version ' + verHolder.verReturn + '  [RB Enabled, ';
           If globalData.rbLoggedIn Then foo := foo + 'logged in.  QRG = ' + Form1.editManQRG.Text + ' KHz]' Else foo := foo + 'not logged in.  QRG = ' + Form1.editManQRG.Text + ' KHz]';
-          foo := foo + ' [ ' + globalData.fullcall + ' QRV]';
+          foo := foo + ' [ ' + globalData.fullcall + ' QRV ]';
      End
      Else
      Begin
-          foo := 'JT65-HF Version ' + verHolder.verReturn + '  [ ' + globalData.fullcall + ' QRV]';
+          foo := 'JT65-HF Version ' + verHolder.verReturn + '  [ ' + globalData.fullcall + ' QRV ]';
      End;
      if Form1.Caption <> foo Then Form1.Caption := foo;
 end;
 
 procedure TForm1.initializerCode();
 var
-   paInS, paOutS, foo   : String;
-   i, kverr             : Integer;
-   paDefApi             : Integer;
-   paDefApiDevCount     : Integer;
-   vint, tstint         : Integer;
-   painputs, paoutputs  : Integer;
-   vstr                 : PChar;
-   st                   : TSYSTEMTIME;
-   tstflt               : Double;
-   fname, lasto, lasti  : String;
-   verUpdate, cont      : Boolean;
-   ain, aout, din, dout : Integer;
+   foo                    : String;
+   i, kverr               : Integer;
+   paDefApi               : Integer;
+   paDefApiDevCount       : Integer;
+   vint, tstint           : Integer;
+   painputs, paoutputs    : Integer;
+   vstr                   : PChar;
+   st                     : TSYSTEMTIME;
+   fname                  : String;
+   verUpdate, cont        : Boolean;
+   havepulsei, havepulseo : Boolean;
+   ain, aout, din, dout   : Integer;
 Begin
      Timer1.Enabled := False;
      Timer2.Enabled := False;
@@ -3425,7 +3419,6 @@ Begin
           cfgvtwo.Form6.comboSuffix.Items.Add(encode65.e65sfx[i]);
      end;
      tstint := 0;
-     tstflt := 0.0;
      Form1.Caption := 'JT65-HF V' + verHolder.verReturn + ' (c) 2009...2011 W6CQZ.  Free to use/modify/distribute under GPL 2.0 License.';
      // See comments in procedure code to understand why this is a MUST to use.
      DisableFloatingPointExceptions();
@@ -3464,7 +3457,8 @@ Begin
      // rely only on pulse of have hundres -- if not thousands of lines devoted to
      // figuring out how the hell to make audio work reliably under every form of Linux
      // out there.
-
+     havepulsei := False;
+     havepulseo := False;
      paDefApi := portaudio.Pa_GetDefaultHostApi();
      if paDefApi >= 0 Then
      Begin
@@ -3474,14 +3468,12 @@ Begin
           // device count = 0 then CAN NOT continue as I need both.
           painputs  := 0;
           paoutputs := 0;
-
           While i >= 0 do
           Begin
                If portaudio.Pa_GetDeviceInfo(i)^.maxInputChannels > 0 Then inc(painputs);
                If portaudio.Pa_GetDeviceInfo(i)^.maxOutputChannels > 0 Then inc(paoutputs);
                dec(i);
           end;
-
           // Test for invalid sound configuration based on device count.  Bail if hardware is invalid.
           if (painputs=0) OR (paoutputs=0) Then
           Begin
@@ -3498,16 +3490,15 @@ Begin
                showmessage(foo);
                halt;
           end;
-
           i := paDefApiDevCount-1;
           While i >= 0 do
           Begin
-               // I need to pfind pulse audio device ID for input and output.
+               // I need to find pulse audio device ID for input and output.
                If portaudio.Pa_GetDeviceInfo(i)^.maxInputChannels > 0 Then
                Begin
                     if ConvertEncoding(StrPas(portaudio.Pa_GetDeviceInfo(i)^.name),GuessEncoding(StrPas(portaudio.Pa_GetDeviceInfo(i)^.name)),EncodingUTF8) = 'pulse' then
                     begin
-                         showmessage('Have pulse input!');
+                         havepulsei := True;
                          ain := i;
                          din := i;
                     end;
@@ -3516,15 +3507,19 @@ Begin
                Begin
                     if ConvertEncoding(StrPas(portaudio.Pa_GetDeviceInfo(i)^.name),GuessEncoding(StrPas(portaudio.Pa_GetDeviceInfo(i)^.name)),EncodingUTF8) = 'pulse' then
                     begin
-                         showmessage('Have pulse output!');;
+                         havepulseo := True;
                          aout := i;
                          dout := i;
                     end;
                End;
                dec(i);
           End;
-
-          dlog.fileDebug('Audio Devices added to pulldowns.');
+          if (not havepulsei) or (not havepulseo) then
+          begin
+               ShowMessage('FATAL:  Pulse Audio device not found.  Program closing.');
+               halt;
+          end;
+          dlog.fileDebug('Audio Devices found.');
      End
      Else
      Begin
@@ -4867,7 +4862,7 @@ end;
 procedure TForm1.genTX1();
 Var
    txdf, nwave, i : CTypes.cint;
-   txsr, freqcw   : CTypes.cdouble;
+   freqcw         : CTypes.cdouble;
    d65sending     : PChar;
 Begin
      // Generate TX samples for a normal TX Cycle.
@@ -4904,7 +4899,6 @@ Begin
           d65nwave := 0;
           d65sendingsh := -1;
           d65nmsg := 0;
-          txsr := 1.0;
           d65samfacout := 1.0;
           // Insert .3 second or 3307 samples of silence as .3 Seconds of prepended silence seems to get the timing right.
           // Why .3?  No idea, it was discovered through trial and error in the earliest days of coding JT65-HF.
@@ -5022,7 +5016,6 @@ End;
 procedure TForm1.genTX2();
 Var
    txdf : CTypes.cint;
-   txsr : CTypes.cdouble;
    d65sending : PChar;
 Begin
      {TODO [1.0.9] Modify this routine such that it looks at the current offset to correct timing then begins TX where the data SHOULD be if timing was perfect.}
@@ -5051,7 +5044,6 @@ Begin
           d65nwave := 0;
           d65sendingsh := -1;
           d65nmsg := 0;
-          txsr := 1.0;
           d65samfacout := 1.0;
           // Generate samples.
           if (paOutParams.channelCount = 2) And (txMode = 65) Then encode65.gen65(d65txmsg,@txdf,@dac.d65txBuffer[0],@d65nwave,@d65sendingsh,d65sending,@d65nmsg);
