@@ -1,0 +1,267 @@
+<?xml version="1.0"?>
+<CONFIG>
+  <ProjectSession>
+    <Version Value="9"/>
+    <Units Count="26">
+      <Unit0>
+        <Filename Value="jt65-hf.lpr"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="11"/>
+        <WindowIndex Value="0"/>
+        <TopLine Value="8"/>
+        <CursorPos X="27" Y="32"/>
+        <UsageCount Value="30"/>
+        <Loaded Value="True"/>
+      </Unit0>
+      <Unit1>
+        <Filename Value="maincode.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="Form1"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="maincode"/>
+        <IsVisibleTab Value="True"/>
+        <EditorIndex Value="1"/>
+        <WindowIndex Value="0"/>
+        <TopLine Value="5731"/>
+        <CursorPos X="8" Y="5747"/>
+        <UsageCount Value="30"/>
+        <Loaded Value="True"/>
+        <LoadedDesigner Value="True"/>
+      </Unit1>
+      <Unit2>
+        <Filename Value="portaudio.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="portaudio"/>
+        <EditorIndex Value="12"/>
+        <WindowIndex Value="0"/>
+        <TopLine Value="42"/>
+        <CursorPos X="33" Y="63"/>
+        <UsageCount Value="30"/>
+        <Loaded Value="True"/>
+      </Unit2>
+      <Unit3>
+        <Filename Value="encode65.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="encode65"/>
+        <EditorIndex Value="10"/>
+        <WindowIndex Value="0"/>
+        <TopLine Value="23"/>
+        <CursorPos X="21" Y="38"/>
+        <UsageCount Value="30"/>
+        <Loaded Value="True"/>
+      </Unit3>
+      <Unit4>
+        <Filename Value="globaldata.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="globalData"/>
+        <UsageCount Value="30"/>
+      </Unit4>
+      <Unit5>
+        <Filename Value="spectrum.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="spectrum"/>
+        <EditorIndex Value="9"/>
+        <WindowIndex Value="0"/>
+        <TopLine Value="372"/>
+        <CursorPos X="15" Y="385"/>
+        <UsageCount Value="30"/>
+        <Loaded Value="True"/>
+      </Unit5>
+      <Unit6>
+        <Filename Value="cmaps.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="cmaps"/>
+        <UsageCount Value="30"/>
+      </Unit6>
+      <Unit7>
+        <Filename Value="adc.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="adc"/>
+        <EditorIndex Value="4"/>
+        <WindowIndex Value="0"/>
+        <TopLine Value="179"/>
+        <CursorPos X="18" Y="209"/>
+        <UsageCount Value="30"/>
+        <Loaded Value="True"/>
+      </Unit7>
+      <Unit8>
+        <Filename Value="samplerate.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="samplerate"/>
+        <EditorIndex Value="13"/>
+        <WindowIndex Value="0"/>
+        <TopLine Value="1"/>
+        <CursorPos X="82" Y="1"/>
+        <UsageCount Value="30"/>
+        <Loaded Value="True"/>
+      </Unit8>
+      <Unit9>
+        <Filename Value="dac.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="dac"/>
+        <UsageCount Value="30"/>
+      </Unit9>
+      <Unit10>
+        <Filename Value="dlog.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="dlog"/>
+        <UsageCount Value="30"/>
+      </Unit10>
+      <Unit11>
+        <Filename Value="rawdec.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="Form5"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="rawdec"/>
+        <UsageCount Value="30"/>
+      </Unit11>
+      <Unit12>
+        <Filename Value="cfgvtwo.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="Form6"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="cfgvtwo"/>
+        <EditorIndex Value="6"/>
+        <WindowIndex Value="0"/>
+        <TopLine Value="152"/>
+        <CursorPos X="109" Y="168"/>
+        <UsageCount Value="30"/>
+        <Loaded Value="True"/>
+        <LoadedDesigner Value="True"/>
+      </Unit12>
+      <Unit13>
+        <Filename Value="guiconfig.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="guiConfig"/>
+        <UsageCount Value="30"/>
+      </Unit13>
+      <Unit14>
+        <Filename Value="verholder.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="verHolder"/>
+        <EditorIndex Value="2"/>
+        <WindowIndex Value="0"/>
+        <TopLine Value="11"/>
+        <CursorPos X="24" Y="37"/>
+        <UsageCount Value="30"/>
+        <Loaded Value="True"/>
+      </Unit14>
+      <Unit15>
+        <Filename Value="synaser.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="synaser"/>
+        <WindowIndex Value="0"/>
+        <TopLine Value="2261"/>
+        <CursorPos X="35" Y="2278"/>
+        <UsageCount Value="30"/>
+      </Unit15>
+      <Unit16>
+        <Filename Value="adif.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="adif"/>
+        <UsageCount Value="30"/>
+      </Unit16>
+      <Unit17>
+        <Filename Value="log.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="Form2"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="log"/>
+        <UsageCount Value="30"/>
+      </Unit17>
+      <Unit18>
+        <Filename Value="diagout.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="Form3"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="diagout"/>
+        <UsageCount Value="30"/>
+      </Unit18>
+      <Unit19>
+        <Filename Value="fftw_jl.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="fftw_jl"/>
+        <EditorIndex Value="5"/>
+        <WindowIndex Value="0"/>
+        <TopLine Value="11"/>
+        <CursorPos X="23" Y="30"/>
+        <UsageCount Value="30"/>
+        <Loaded Value="True"/>
+      </Unit19>
+      <Unit20>
+        <Filename Value="waterfall.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="waterfall"/>
+        <EditorIndex Value="3"/>
+        <WindowIndex Value="0"/>
+        <TopLine Value="24"/>
+        <CursorPos X="38" Y="57"/>
+        <UsageCount Value="30"/>
+        <Loaded Value="True"/>
+      </Unit20>
+      <Unit21>
+        <Filename Value="d65.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="d65"/>
+        <EditorIndex Value="8"/>
+        <WindowIndex Value="0"/>
+        <TopLine Value="1002"/>
+        <CursorPos X="1" Y="1020"/>
+        <UsageCount Value="30"/>
+        <Loaded Value="True"/>
+      </Unit21>
+      <Unit22>
+        <Filename Value="about.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="Form4"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="about"/>
+        <UsageCount Value="30"/>
+      </Unit22>
+      <Unit23>
+        <Filename Value="spot.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="spot"/>
+        <EditorIndex Value="7"/>
+        <WindowIndex Value="0"/>
+        <TopLine Value="1426"/>
+        <CursorPos X="10" Y="1443"/>
+        <UsageCount Value="30"/>
+        <Loaded Value="True"/>
+      </Unit23>
+      <Unit24>
+        <Filename Value="valobject.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="valobject"/>
+        <UsageCount Value="30"/>
+      </Unit24>
+      <Unit25>
+        <Filename Value="heard.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="Form9"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="heard"/>
+        <EditorIndex Value="0"/>
+        <WindowIndex Value="0"/>
+        <TopLine Value="40"/>
+        <CursorPos X="8" Y="55"/>
+        <UsageCount Value="30"/>
+        <Loaded Value="True"/>
+        <LoadedDesigner Value="True"/>
+      </Unit25>
+    </Units>
+    <General>
+      <ActiveWindowIndexAtStart Value="0"/>
+    </General>
+  </ProjectSession>
+  <Debugging>
+    <BreakPoints Count="1">
+      <Item1>
+        <Source Value="maincode.pas"/>
+        <Line Value="3527"/>
+      </Item1>
+    </BreakPoints>
+  </Debugging>
+</CONFIG>

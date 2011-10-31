@@ -1,0 +1,22 @@
+{ This is an automatically generated lazarus resource file }
+
+LazarusResources.Add('TForm4','FORMDATA',[
+  'TPF0'#6'TForm4'#5'Form4'#4'Left'#2#10#6'Height'#3','#1#3'Top'#2#3#5'Width'#3
+  +#144#1#11'BorderIcons'#11#12'biSystemMenu'#0#7'Caption'#6#13'About JT65-HF'
+  +#12'ClientHeight'#3','#1#11'ClientWidth'#3#144#1#21'Constraints.MaxHeight'#3
+  +','#1#20'Constraints.MaxWidth'#3#144#1#21'Constraints.MinHeight'#3','#1#20'C'
+  +'onstraints.MinWidth'#3#144#1#10'LCLVersion'#6#8'0.9.28.2'#0#5'TMemo'#5'Memo'
+  +'1'#4'Left'#2#8#6'Height'#3#24#1#3'Top'#2#8#5'Width'#3#128#1#13'Lines.String'
+  +'s'#1#6'&JT65-HF (c)2008...2011 Joe Large W6CQZ'#6#0#6'9JT65-HF is an implem'
+  +'entation of the JT65 protocol with an'#6'6emphasis upon its usage in the HF'
+  +' Amateur Radio bands.'#6#0#6'=The JT65 protocol is the creation of Joe Tayl'
+  +'or - K1JT and is'#6#14'documented at;'#6#0#6'1http://physics.princeton.edu/'
+  +'pulsar/K1JT/JT65.pdf'#6#0#6'<JT65-HF is open source software using technolo'
+  +'gy of original'#6'8creation and algorithms from other open source projects.'
+  +#6#0#6'?Original code for JT65-HF is licensed under the GPL 2.0 license'#6'A'
+  +'while other elements retain their original copyright and license.'#6#0#6'?J'
+  +'T65-HF sourcecode and binaries may be found at its SourceForge'#6#8'page at'
+  +';'#6#0#6')https://sourceforge.net/projects/jt65-hf/'#6#0#6#24'Support may b'
+  +'e found at;'#6#0#6'''http://groups.google.com/group/jt65-hf/'#6#0#6#16'73 -'
+  +' Joe - W6CQZ'#0#10'ScrollBars'#7#14'ssAutoVertical'#8'TabOrder'#2#0#0#0#0
+]);
