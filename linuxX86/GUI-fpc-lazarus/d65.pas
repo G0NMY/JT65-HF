@@ -25,8 +25,8 @@ unit d65;
 interface
 
 uses
-  Classes, SysUtils, CTypes, globalData, samplerate, math, Process, diagout,
-  Types, StrUtils, rawDec;
+  Classes, SysUtils, CTypes, globalData, math, Process, diagout, Types,
+  StrUtils, rawDec;
 
 Const
   {$IFDEF WIN32}
@@ -283,7 +283,6 @@ Var
    xmag, avesq, basevb, sq       : CTypes.cfloat;
    ffoo, snrsh, dfsh             : CTypes.cfloat;
    samratio                      : CTypes.cdouble;
-   sampconv                      : samplerate.SRC_DATA;
    lical, idf                    : CTypes.cint;
    bw, afc, ierr                 : CTypes.cint;
    lmousedf, mousedf2, jz2, j    : CTypes.cint;
@@ -423,49 +422,9 @@ begin
     End;
     // Int16 converted to float, now resample if needed.  If no resample
     // then copy f3Buffer to f1Buffer.
-    if globalData.d65samfacin <> 1.0 Then
-    Begin
-         diagout.Form3.ListBox1.Items.Add('SR Correction being applied.');
-         // Resample f3Buffer placing resample into f2Buffer
-         samratio := 1.0/globalData.d65samfacin;
-         ierr := -1;
-         sampconv.data_in  := glf3Buffer;
-         sampconv.data_out := glf2Buffer;
-         sampconv.input_frames  := bEnd+1;
-         sampconv.output_frames := bEnd+1;
-         sampconv.src_ratio     := samratio;
-         ierr := samplerate.src_simple(@sampconv,2,1); //(@sampconv,type,channels) type 2 = fastest, type 0 = best quality
-         if ierr = 0 Then
-         Begin
-              diagout.Form3.ListBox1.Items.Add('SR Correction complete.');
-              // Conversion success.  f2Buffer now has valid resampled data.
-              // Setting new bEnd value as it may have changed due to resample.
-              bEnd := sampconv.output_frames_gen+1;
-              // Now copy f2Buffer to f1Buffer
-              for i := bStart to bEnd do
-              Begin
-                   glf1Buffer[i] := glf2Buffer[i];
-              end;
-         end
-         else
-         begin
-              // Conversion failed.  f3Buffer will need to be copied to f1Buffer
-              diagout.Form3.ListBox1.Items.Add('SR Correction error, using uncorrected samples.');
-              for i := bStart to bEnd do
-              Begin
-                   glf1Buffer[i] := glf3Buffer[i];
-              end;
-         end;
-    End
-    Else
-    Begin
-         // No resample so need to manually copy f3Buffer to f1Buffer
-         diagout.Form3.ListBox1.Items.Add('No SR Correction needed, using uncorrected samples.');
-         for i := bStart to bEnd do
-         Begin
-              glf1Buffer[i] := glf3Buffer[i];
-         end;
-    end;
+    // No resample so need to manually copy f3Buffer to f1Buffer
+    diagout.Form3.ListBox1.Items.Add('No SR Correction needed, using uncorrected samples.');
+    for i := bStart to bEnd do glf1Buffer[i] := glf3Buffer[i];
     jz := bEnd;
     // From this point on f1Buffer becomes sole sample holder.
     // Figure average level

@@ -58,7 +58,7 @@ Type
 
 Var
    // Global Vars
-   d65samfacin             : CTypes.cdouble;
+//   d65samfacin             : CTypes.cdouble;
    specMs65                : TMemoryStream;
    spectrumComputing65     : Boolean;
    audioComputing          : Boolean;
@@ -73,9 +73,9 @@ Var
    fullcall                : String;
    gmode                   : Integer; // 65 or 4
    mtext                   : String;
-   si570ptt                : Boolean;
-   hrdcatControlcurrentRig : hrdrigCAP;
-   hrdVersion              : Integer;
+//   si570ptt                : Boolean;
+//   hrdcatControlcurrentRig : hrdrigCAP;
+//   hrdVersion              : Integer;
    canTX                   : Boolean;
 
    // The variable list above comprises those variables used in more than two
@@ -89,4 +89,4 @@ Var
 implementation
 
 end.
-
+

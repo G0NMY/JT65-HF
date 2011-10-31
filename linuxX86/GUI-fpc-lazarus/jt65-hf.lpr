@@ -24,7 +24,7 @@ program jt65hf;
 
 uses
   cthreads, cmem, Interfaces, Forms, maincode, portaudio, encode65, globalData,
-  spectrum, cmaps, fftw_jl, adc, samplerate, dac, dlog, rawdec, cfgvtwo,
+  spectrum, cmaps, fftw_jl, adc, dac, dlog, rawdec, cfgvtwo,
   guiConfig, verHolder, synaser, adif, log, diagout, waterfall, d65, about,
   spot, valobject, heard ;
 

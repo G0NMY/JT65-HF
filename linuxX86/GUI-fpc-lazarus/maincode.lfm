@@ -5,7 +5,7 @@ object Form1: TForm1
   Width = 935
   ActiveControl = btnReDecode
   Caption = 'JT65-HF'
-  ClientHeight = 667
+  ClientHeight = 663
   ClientWidth = 935
   Constraints.MaxHeight = 690
   Constraints.MaxWidth = 935
@@ -597,9 +597,9 @@ object Form1: TForm1
     end
     object rbUseLeft: TRadioButton
       Left = 106
-      Height = 24
+      Height = 22
       Top = 15
-      Width = 44
+      Width = 42
       Caption = '-21'
       Checked = True
       Font.Height = -10
@@ -612,9 +612,9 @@ object Form1: TForm1
     end
     object rbUseRight: TRadioButton
       Left = 106
-      Height = 24
+      Height = 22
       Top = 44
-      Width = 44
+      Width = 42
       Caption = '-21'
       Font.Height = -10
       Font.Name = 'arial [monotype]'
@@ -802,9 +802,9 @@ object Form1: TForm1
     end
     object cbSmooth: TCheckBox
       Left = 296
-      Height = 24
+      Height = 22
       Top = 22
-      Width = 69
+      Width = 67
       Caption = 'Smooth'
       Font.Height = -10
       Font.Name = 'arial [monotype]'
@@ -873,9 +873,9 @@ object Form1: TForm1
   end
   object chkEnTX: TCheckBox
     Left = 598
-    Height = 24
+    Height = 22
     Top = 112
-    Width = 58
+    Width = 56
     Caption = 'EATX'
     Enabled = False
     Font.Height = -11
@@ -887,10 +887,10 @@ object Form1: TForm1
   end
   object chkAutoTxDF: TCheckBox
     Left = 557
-    Height = 24
+    Height = 22
     Hint = 'If Checked TX and RX DF will always be same.'
     Top = 472
-    Width = 26
+    Width = 24
     Checked = True
     Font.Height = -12
     Font.Name = 'arial [monotype]'
@@ -970,9 +970,9 @@ object Form1: TForm1
   end
   object chkNB: TCheckBox
     Left = 686
-    Height = 24
+    Height = 22
     Top = 496
-    Width = 92
+    Width = 90
     Caption = 'Noise Blank'
     Font.Height = -10
     Font.Name = 'arial [monotype]'
@@ -983,9 +983,9 @@ object Form1: TForm1
   end
   object chkAFC: TCheckBox
     Left = 686
-    Height = 24
+    Height = 22
     Top = 472
-    Width = 48
+    Width = 46
     Caption = 'AFC'
     Checked = True
     Font.Height = -10
@@ -998,9 +998,9 @@ object Form1: TForm1
   end
   object chkMultiDecode: TCheckBox
     Left = 557
-    Height = 24
+    Height = 22
     Top = 613
-    Width = 145
+    Width = 143
     Caption = 'Enable Multi-decoder'
     Checked = True
     Font.Height = -10
@@ -1061,9 +1061,9 @@ object Form1: TForm1
   end
   object rbFreeMsg: TRadioButton
     Left = 557
-    Height = 24
+    Height = 22
     Top = 249
-    Width = 200
+    Width = 198
     Caption = 'TX Text (13 Characters)'
     Font.Height = -13
     Font.Name = 'arial [monotype]'
@@ -1074,9 +1074,9 @@ object Form1: TForm1
   end
   object rbGenMsg: TRadioButton
     Left = 557
-    Height = 24
+    Height = 22
     Top = 302
-    Width = 127
+    Width = 125
     Caption = 'TX Generated'
     Checked = True
     Font.Color = clRed
@@ -1132,9 +1132,9 @@ object Form1: TForm1
   end
   object cbEnRB: TCheckBox
     Left = 272
-    Height = 24
+    Height = 22
     Top = 640
-    Width = 76
+    Width = 74
     Caption = 'Enable RB'
     Font.Height = -10
     Font.Name = 'arial [monotype]'

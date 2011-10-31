@@ -25,7 +25,7 @@ unit spectrum;
 interface
 
 uses
-  Classes, SysUtils, CTypes, cmaps, fftw_jl, globalData, samplerate, graphics, Math, dlog;
+  Classes, SysUtils, CTypes, cmaps, fftw_jl, globalData, graphics, Math, dlog;
 
 Type
     RGBPixel = Packed Record
@@ -274,7 +274,6 @@ Var
    rgbSpectra                          : RGBArray;
    doSpec, proceed                     : Boolean;
    samratio                            : CTypes.cdouble;
-   sampconv                            : samplerate.SRC_DATA;
    bmpH                                : BMP_Header;
    Bytes_Per_Raster                    : LongInt;
    Raster_Pad, nfrange                 : Integer;
@@ -352,20 +351,7 @@ Begin
              end;
              // Apply the resampler here so the spectrum display is a
              // touch more accurate if SR correction enabled.
-             if globalData.d65samfacin <> 1.0 Then
-             Begin
-                  samratio := 1.0/globalData.d65samfacin;
-                  sampconv.data_in  := srealArray165;
-                  sampconv.data_out := srealArray65;
-                  sampconv.input_frames  := 4096;
-                  sampconv.output_frames := 4096;
-                  sampconv.src_ratio     := samratio;
-                  samplerate.src_simple(@sampconv,2,1);
-             End
-             Else
-             Begin
-                  for i := 0 to 4095 do srealArray65[i] := srealArray165[i];
-             End;
+             for i := 0 to 4095 do srealArray65[i] := srealArray165[i];
              // Populate FFT input array
              proceed := True;
              if fftIn65 = Nil Then

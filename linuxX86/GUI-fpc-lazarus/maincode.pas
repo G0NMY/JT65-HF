@@ -835,7 +835,6 @@ Begin
           if ost.Hour < 10 Then d65.gld65timestamp := d65.gld65timestamp + '0' + IntToStr(ost.Hour) else d65.gld65timestamp := d65.gld65timestamp + IntToStr(ost.Hour);
           if ost.Minute < 10 Then d65.gld65timestamp := d65.gld65timestamp + '0' + IntToStr(ost.Minute) else d65.gld65timestamp := d65.gld65timestamp + IntToStr(ost.Minute);
           d65.gld65timestamp := d65.gld65timestamp + '00';
-          globalData.d65samfacin := 1.0;
           d65samfacout := 1.0;
           d65.glMouseDF := Form1.spinDecoderCF.Value;
           if d65.glMouseDF > 1000 then d65.glMouseDF := 1000;
@@ -2807,7 +2806,6 @@ begin
                if ost.Hour < 10 Then d65.gld65timestamp := d65.gld65timestamp + '0' + IntToStr(ost.Hour) else d65.gld65timestamp := d65.gld65timestamp + IntToStr(ost.Hour);
                if ost.Minute < 10 Then d65.gld65timestamp := d65.gld65timestamp + '0' + IntToStr(ost.Minute) else d65.gld65timestamp := d65.gld65timestamp + IntToStr(ost.Minute);
                d65.gld65timestamp := d65.gld65timestamp + '00';
-               globalData.d65samfacin := 1.0;
                d65samfacout := 1.0;
                d65.glMouseDF := Form1.spinDecoderCF.Value;
                if d65.glMouseDF > 1000 then d65.glMouseDF := 1000;
@@ -4140,7 +4138,6 @@ Begin
      if cfg.StoredValue['smooth'] = 'on' Then Form1.cbSmooth.Checked := True else Form1.cbSmooth.Checked := False;
      if Form1.cbSmooth.Checked Then spectrum.specSmooth := True else spectrum.specSmooth := False;
      if cfg.StoredValue['restoreMulti'] = 'on' Then cfgvtwo.Form6.cbRestoreMulti.Checked := True else cfgvtwo.Form6.cbRestoreMulti.Checked := False;
-     globalData.si570ptt := False;
      if cfg.storedValue['useCWID'] = 'y' then cfgvtwo.Form6.cbCWID.Checked := True else cfgvtwo.Form6.cbCWID.Checked := False;
 
      if Length(cfg.StoredValue['LogComment'])>0 Then log.Form2.edLogComment.Text := cfg.StoredValue['LogComment'];
@@ -6144,7 +6141,6 @@ initialization
   haveOddBuffer := False;
   haveEvenBuffer := False;
   globalData.mtext := '/Multi%20On%202K%20BW';
-  globalData.si570ptt := False;
   doCWID := False;
   actionSet := False;
   // Create spotting class object.
