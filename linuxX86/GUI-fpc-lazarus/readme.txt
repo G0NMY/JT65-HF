@@ -1,3 +1,30 @@
+Status of Linux code as of 1/November/2011
+
+Mostly complete at this point.
+
+Spectrum now working along with KV Decoder and color
+coded decode display.
+
+Still working on ListBox for decoder output as I'm
+not happy with the current implementation.  In Win32
+I still get normal highlight action even with the
+custom color coding, but, with Linux+GTK2 I don't...
+so I hacked an imperfect solution for now so you can
+at least see what line you've selected.  Another
+annoyance is that TListBox does not remain scrolled
+to top as in Win32 so I've had to add another hack
+to keep the list at top most scroll.  Still working
+on this as I think I can do better.
+
+Chasing a seemingly random core dump as well.  Not
+sure where the issue is rooted but I have a feeling
+it's in the compiler optimization settings or those
+I passed to GFortran/GCC for the shared library.
+
+All in all it's much better today than yesterday.  :)
+
+-----
+
 Status of Linux code as of 31/October/2011
 
 It works.  Sort of.  :)
