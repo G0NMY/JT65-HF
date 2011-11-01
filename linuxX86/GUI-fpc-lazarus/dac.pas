@@ -1,6 +1,6 @@
 unit dac;
 //
-// Copyright (c) 2008,2009 J C Large - W6CQZ
+// Copyright (c) 2008,2009,2010, 2011 J C Large - W6CQZ
 //
 //
 // JT65-HF is the legal property of its developer.
@@ -25,7 +25,7 @@ unit dac;
 interface
 
 uses
-  Classes, SysUtils, PortAudio, globalData, DateUtils, CTypes;
+  Classes, SysUtils, PortAudio, globalData, CTypes;
 
 function dacCallback(input: Pointer; output: Pointer; frameCount: Longword;
                        timeInfo: PPaStreamCallbackTimeInfo;
@@ -36,13 +36,6 @@ Var
    d65txBuffer    : Packed Array[0..661503] of CTypes.cint16;
    d65txBufferPtr : ^CTypes.cint16;
    d65txBufferIdx : Integer;
-   dacE, dacT     : LongInt;
-   dacErate       : Double;
-   dacEavg        : Double;
-   dacErr         : CTypes.cdouble;
-   dacTimeStamp   : Integer;
-   dacLTimeStamp  : Integer;
-   dacSTimeStamp  : TTimeStamp;
 
 implementation
 
@@ -54,34 +47,6 @@ Var
    i             : Integer;
    optr          : ^smallint;
 Begin
-     // Set DAC entry timestamp
-     dacSTimeStamp := DateTimeToTimeStamp(Now);
-     if dacT = 0 Then
-     Begin
-          dacE := 0;
-          dacErr := 0;
-          dacErate := 0;
-          dacEavg := 0;
-          dacLTimeStamp := dacSTimeStamp.Time;
-          dacTimeStamp  := dacSTimeStamp.Time;
-     End
-     Else
-     Begin
-          dacTimeStamp := dacSTimeStamp.Time;
-          if dacTimeStamp > dacLTimeStamp Then
-          Begin
-               dacE := dacE+(dacTimeStamp - dacLTimeStamp);
-               dacLTimeStamp := dacTimeStamp;
-          End
-          Else
-          Begin
-               dacT := -1;
-          End;
-     End;
-     if dacT > 0 Then dacErr := dacE / dacT;
-     dacErate := 185.75963718820861678004535147392/dacErr;
-     inc(dacT);
-     if dacT > 100000 Then dacT := 0;
      optr := output;
      if globalData.txInProgress Then
      Begin
@@ -108,4 +73,4 @@ Begin
      result := paContinue;
 End;
 end.
-
+

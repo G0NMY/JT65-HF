@@ -1,6 +1,6 @@
 unit cfgvtwo;
 //
-// Copyright (c) 2008,2009 J C Large - W6CQZ
+// Copyright (c) 2008,2009, 2010, 2011 J C Large - W6CQZ
 //
 //
 // JT65-HF is the legal property of its developer.
@@ -26,8 +26,8 @@ interface
 
 uses
   Classes, SysUtils, LResources, Forms, Controls, Graphics, Dialogs,
-  ComCtrls, ExtCtrls, StdCtrls, StrUtils, globalData, CTypes, synaser,
-  EditBtn, Spin, valobject;
+  ComCtrls, ExtCtrls, StdCtrls, StrUtils, globalData, synaser, EditBtn,
+  valobject;
 
 Const
     myWordDelims = [' ',','];

@@ -118,33 +118,9 @@ procedure fftwf_forget_wisdom();
 
 {$calling register} {Back to normal!}
 
-procedure fftw_getmem(var p:pointer;sz:LongInt);
-
-procedure fftw_freemem(p:pointer);
-
 {*****************************************************************************}
                                   implementation
 {*****************************************************************************}
 
-
-{Better don't use fftw_malloc and fftw_free, but provide Pascal replacements.}
-
-
-procedure fftw_getmem(var p:pointer;sz:LongInt);
-
-begin
-{$IF defined(cpui386) or defined(cpupowerpc)}
-  getmem(p,sz+16-1);
-  ptruint(p):=(ptruint(p)+16-1) and not (16-1);
-{$ELSE}
-  getmem(p,sz);
-{$ENDIF}
-end;
-
-procedure fftw_freemem(p:pointer);
-
-begin
-  freemem(p);
-end;
 
 end.

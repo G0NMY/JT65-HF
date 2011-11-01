@@ -250,18 +250,6 @@ object Form1: TForm1
     ParentFont = False
     OnClick = Label39Click
   end
-  object Label38: TLabel
-    Left = 178
-    Height = 14
-    Top = 210
-    Width = 304
-    Caption = 'Left click waterfall to set TX CF, Right click sets RX CF.'
-    Font.Height = -10
-    Font.Name = 'arial [monotype]'
-    Font.Style = [fsBold]
-    ParentColor = False
-    ParentFont = False
-  end
   object Label12: TLabel
     Left = 815
     Height = 15
@@ -549,40 +537,6 @@ object Form1: TForm1
       ParentColor = False
       ParentFont = False
     end
-    object Label10: TLabel
-      Left = 1
-      Height = 18
-      Top = 138
-      Width = 24
-      Caption = 'L: 0'
-      Font.Height = -13
-      Font.Name = 'arial [monotype]'
-      ParentColor = False
-      ParentFont = False
-    end
-    object Label11: TLabel
-      Left = 1
-      Height = 18
-      Top = 177
-      Width = 26
-      Caption = 'R: 0'
-      Font.Height = -13
-      Font.Name = 'arial [monotype]'
-      ParentColor = False
-      ParentFont = False
-    end
-    object Label25: TLabel
-      Left = 1
-      Height = 14
-      Top = 111
-      Width = 100
-      Caption = 'Digital Audio Gain'
-      Font.Height = -10
-      Font.Name = 'arial [monotype]'
-      Font.Style = [fsBold]
-      ParentColor = False
-      ParentFont = False
-    end
     object Label33: TLabel
       Left = 1
       Height = 14
@@ -623,37 +577,13 @@ object Form1: TForm1
       ParentFont = False
       TabOrder = 1
     end
-    object TrackBar1: TTrackBar
-      Left = 37
-      Height = 46
-      Top = 124
-      Width = 120
-      Max = 6
-      Min = -6
-      OnChange = TrackBar1Change
-      Position = 0
-      TickStyle = tsNone
-      TabOrder = 2
-    end
-    object TrackBar2: TTrackBar
-      Left = 37
-      Height = 46
-      Top = 163
-      Width = 120
-      Max = 6
-      Min = -6
-      OnChange = TrackBar2Change
-      Position = 0
-      TickStyle = tsNone
-      TabOrder = 3
-    end
     object pbAu1: TProgressBar
       Left = 1
       Height = 14
       Top = 20
       Width = 100
       Smooth = True
-      TabOrder = 4
+      TabOrder = 2
     end
     object pbAu2: TProgressBar
       Left = 1
@@ -661,7 +591,7 @@ object Form1: TForm1
       Top = 49
       Width = 100
       Smooth = True
-      TabOrder = 5
+      TabOrder = 3
     end
   end
   object GroupBox4: TGroupBox
@@ -838,7 +768,10 @@ object Form1: TForm1
     Font.Style = [fsBold]
     ItemHeight = 0
     OnDblClick = ListBox1DblClick
+    OnDrawItem = ListBox1DrawItem
+    OnMouseDown = ListBox1MouseDown
     ParentFont = False
+    Style = lbOwnerDrawFixed
     TabOrder = 16
     TopIndex = -1
   end
@@ -1943,21 +1876,6 @@ object Form1: TForm1
     object menuRigControl: TMenuItem
       Caption = 'Rig Control'
       OnClick = menuRigControlClick
-      left = 1
-    end
-    object menuRawDecoder: TMenuItem
-      Caption = 'Raw Decoder'
-      OnClick = menuRawDecoderClick
-      left = 1
-    end
-    object menuHeard: TMenuItem
-      Caption = 'Stations Heard'
-      OnClick = menuHeardClick
-      left = 1
-    end
-    object menuTXLog: TMenuItem
-      Caption = 'Transmit Log'
-      OnClick = menuTXLogClick
       left = 1
     end
     object menuAbout: TMenuItem

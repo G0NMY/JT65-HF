@@ -190,84 +190,92 @@ Begin
      // Looking for a KV decode
      Result := false;
      kdec := '';
-     //glkvs := '                      ';
-     //for i := 0 to 11 do
-     //Begin
-     //     kvDat[i] := 0;
-     //End;
-     //ierr := 0;
-     //if FileExists('KVASD.DAT') Then
-     //Begin
-     //     kvProc := TProcess.Create(nil);
-     //     kvProc.CommandLine := 'kvasd_g95.exe -q';
-     //     kvProc.Options := kvProc.Options + [poWaitOnExit];
-     //     kvProc.Options := kvProc.Options + [poNoConsole];
-     //     kvProc.Execute;
-     //     ierr := kvProc.ExitStatus;
-     //End
-     //Else
-     //Begin
-     //     ierr := -1;
-     //end;
-     //if ierr = 0 Then
-     //Begin
-     //     Try
-     //        // read kvasd.dat
-     //        AssignFile(kvFile, 'KVASD.DAT');
-     //        Reset(kvFile);
-     //        If FileSize(kvfile) > 256 Then
-     //        Begin
-     //             // Seek to nsec2 (256)
-     //             Seek(kvFile,256);
-     //             Read(kvFile, kvsec2);
-     //             Seek(kvFile,257);
-     //             Read(kvFile, kvcount);
-     //             For i := 258 to 269 do
-     //             Begin
-     //                  Seek(kvFile, i);
-     //                  Read(kvFile, kvDat[i-258]);
-     //             End;
-     //             CloseFile(kvFile);
-     //             if kvCount > -1 Then
-     //             Begin
-     //                  unpack(@kvDat[0],glkvs);
-     //             End
-     //             Else
-     //             Begin
-     //                  // No decode, kvasd failed to reconstruct message.
-     //                  Result := False;
-     //                  kdec := '';
-     //             End;
-     //        End
-     //        Else
-     //        Begin
-     //             CloseFile(kvFile);
-     //             Result := False;
-     //             kdec := '';
-     //        End;
-     //     except
-     //        Result := False;
-     //        kdec := '';
-     //     end;
-     //End
-     //Else
-     //Begin
-     //     // No decode, error status returned from kvasd.exe
-     //     Result := False;
-     //     kdec := '';
-     //End;
-     //kvProc.Destroy;
-     //kdec := TrimLeft(TrimRight(StrPas(glkvs)));
-     //if (Length(kdec) > 0) And (kvCount > -1) Then
-     //Begin
-     //     Result := True;
-     //End
-     //Else
-     //Begin
-     //     // No decode, kvasd messge too short or SNR too low.
-     //     Result := False;
-     //     kdec := '';
-     //End;
+     glkvs := '                      ';
+     for i := 0 to 11 do
+     Begin
+          kvDat[i] := 0;
+     End;
+     ierr := 0;
+     if FileExists('kvasd.dat') Then
+     Begin
+          kvProc := TProcess.Create(nil);
+          kvProc.CommandLine := 'KVASD_g95 -q';
+          kvProc.Options := kvProc.Options + [poWaitOnExit];
+          kvProc.Options := kvProc.Options + [poNoConsole];
+          kvProc.Execute;
+          ierr := kvProc.ExitStatus;
+     End
+     Else
+     Begin
+          ierr := -1;
+     end;
+     if ierr = 0 Then
+     Begin
+          Try
+             // read kvasd.dat
+             AssignFile(kvFile, 'kvasd.dat');
+             Reset(kvFile);
+             If FileSize(kvfile) > 256 Then
+             Begin
+                  // Seek to nsec2 (256)
+                  Seek(kvFile,256);
+                  Read(kvFile, kvsec2);
+                  Seek(kvFile,257);
+                  Read(kvFile, kvcount);
+                  For i := 258 to 269 do
+                  Begin
+                       Seek(kvFile, i);
+                       Read(kvFile, kvDat[i-258]);
+                  End;
+                  CloseFile(kvFile);
+                  if kvCount > -1 Then
+                  Begin
+                       unpack(@kvDat[0],glkvs);
+                  End
+                  Else
+                  Begin
+                       // No decode, kvasd failed to reconstruct message.
+                       Result := False;
+                       kdec := '';
+                  End;
+             End
+             Else
+             Begin
+                  CloseFile(kvFile);
+                  Result := False;
+                  kdec := '';
+             End;
+          except
+             Result := False;
+             kdec := '';
+          end;
+     End
+     Else
+     Begin
+          // No decode, error status returned from kvasd.exe
+          Result := False;
+          kdec := '';
+     End;
+     kvProc.Destroy;
+     kdec := TrimLeft(TrimRight(StrPas(glkvs)));
+     if (Length(kdec) > 0) And (kvCount > -1) Then
+     Begin
+          Result := True;
+     End
+     Else
+     Begin
+          // No decode, kvasd messge too short or SNR too low.
+          Result := False;
+          kdec := '';
+     End;
+     if fileExists('kvasd.dat') Then
+     Begin
+          Try
+             DeleteFile('kvasd.dat');
+          Except
+             //
+          end;
+     end;
 end;
 
 procedure doDecode(bStart, bEnd : Integer);
@@ -315,7 +323,7 @@ begin
          glmyline := StrAlloc(43);
          glkvs := StrAlloc(22);
          glwisfile := StrAlloc(Length(GetAppConfigDir(False)+'wisdom2.dat')+1);
-         glkvfname := StrAlloc(Length('KVASD.DAT')+1);
+         glkvfname := StrAlloc(Length('kvasd.dat')+1);
          gldecOut := TStringList.Create;
          glrawOut := TStringList.Create;
          gldecOut.CaseSensitive := False;
@@ -361,7 +369,7 @@ begin
     diagout.Form3.ListBox1.Clear;
     diagout.Form3.ListBox2.Clear;
     diagout.Form3.ListBox3.Clear;
-    strPcopy(glkvfname,'KVASD.DAT');
+    strPcopy(glkvfname,'kvasd.dat');
     strPcopy(glwisfile,GetAppConfigDir(False)+'wisdom2.dat');
     glmline := '                                                                        ';
     glmcall := '            ';
@@ -998,7 +1006,7 @@ begin
                                        begin
                                             // Oh joy.  Time to try for kv.
                                             kdec := '';
-                                            if FileExists('KVASD.DAT') Then
+                                            if FileExists('kvasd.dat') Then
                                             Begin
                                                  if evalKV(kdec) Then
                                                  Begin
@@ -1015,9 +1023,9 @@ begin
                                                            end;
                                                       end;
                                                       kverr := 0;
-                                                      while FileExists('KVASD.DAT') do
+                                                      while FileExists('kvasd.dat') do
                                                       begin
-                                                           DeleteFile('KVASD.DAT');
+                                                           DeleteFile('kvasd.dat');
                                                            inc(kverr);
                                                            if kverr > 10000 then break;
                                                       end;

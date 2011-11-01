@@ -29,11 +29,11 @@ interface
 uses
   Classes, SysUtils, LResources, Forms, Controls, Graphics, Dialogs,
   StdCtrls, CTypes, StrUtils, Math, portaudio, ExtCtrls, ComCtrls, Spin,
-  DateUtils, encode65, globalData, XMLPropStorage, adc,
+  DateUtils, encode65, globalData, XMLPropStorage, adc, waterfall,
   dac, ClipBrd, dlog, rawdec, cfgvtwo, guiConfig, verHolder,
   Menus, synaser, log, diagout, synautil, d65, spectrum, {$IFDEF WIN32}windows,
   {$ENDIF}{$IFDEF LINUX}unix, {$ENDIF}{$IFDEF DARWIN}unix, {$ENDIF} about, spot,
-  valobject, heard, lconvencoding, lclintf;
+  valobject, heard, lconvencoding, lclintf, types;
 
 Const
   {$IFDEF WIN32}
@@ -86,8 +86,6 @@ type
     GroupBox1: TGroupBox;
     GroupBox4: TGroupBox;
     Label1: TLabel;
-    Label10: TLabel;
-    Label11: TLabel;
     Label12: TLabel;
     Label13: TLabel;
     Label14: TLabel;
@@ -100,7 +98,6 @@ type
     Label22: TLabel;
     Label23: TLabel;
     Label24: TLabel;
-    Label25: TLabel;
     Label26: TLabel;
     Label27: TLabel;
     Label28: TLabel;
@@ -114,7 +111,6 @@ type
     Label35: TLabel;
     Label36: TLabel;
     Label37: TLabel;
-    Label38: TLabel;
     Label39: TLabel;
     Label4: TLabel;
     Label5 : TLabel ;
@@ -160,11 +156,8 @@ type
     MenuItem15a: TMenuItem;
     MenuItem16a: TMenuItem;
     MenuItem4a: TMenuItem;
-    menuHeard: TMenuItem;
     menuSetup: TMenuItem;
-    menuRawDecoder: TMenuItem;
     menuRigControl: TMenuItem;
-    menuTXLog: TMenuItem;
     menuAbout: TMenuItem;
     MenuItem5a: TMenuItem;
     MenuItem6a: TMenuItem;
@@ -195,9 +188,7 @@ type
     Timer1: TTimer;
     cfg: TXMLPropStorage;
     Timer2 : TTimer;
-    TrackBar1: TTrackBar;
-    TrackBar2: TTrackBar;
-//    Waterfall : TWaterfallControl;
+    wf : TWaterfallControl;
     tbBright: TTrackBar;
     tbContrast: TTrackBar;
     procedure btnDefaultsClick(Sender: TObject);
@@ -257,16 +248,14 @@ type
     procedure tbBrightChange(Sender: TObject);
     procedure tbContrastChange(Sender: TObject);
     procedure ListBox1DblClick(Sender: TObject);
-    //procedure ListBox1DrawItem(Control: TWinControl; Index: Integer; ARect: TRect; State: TOwnerDrawState);
-    //procedure ListBox1MouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
+    procedure ListBox1DrawItem(Control: TWinControl; Index: Integer; ARect: TRect; State: TOwnerDrawState);
+    procedure ListBox1MouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
     procedure rbFirstChange(Sender: TObject);
     procedure rbUseMixChange(Sender: TObject);
     procedure spinDecoderCFChange(Sender: TObject);
     procedure Timer1Timer(Sender: TObject);
     procedure Timer2Timer(Sender : TObject);
     procedure addToDisplay(i, m : Integer);
-    procedure TrackBar1Change(Sender: TObject);
-    procedure TrackBar2Change(Sender: TObject);
     procedure updateAudio();
     procedure updateStatus(i : Integer);
     procedure DisableFloatingPointExceptions();
@@ -578,9 +567,9 @@ begin
              if reDecode then reDecode := False;
           end;
           kverr := 0;
-          while FileExists('KVASD.DAT') do
+          while FileExists('kvasd.dat') do
           begin
-               DeleteFile('KVASD.DAT');
+               DeleteFile('kvasd.dat');
                inc(kverr);
                if kverr > 10000 then break;
           end;
@@ -1168,7 +1157,7 @@ begin
      if spinDecoderBin.Value = 4 Then d65.glbinspace := 200;
 end;
 
-procedure TForm1 .spinDecoderCFKeyPress (Sender : TObject ; var Key : char );
+procedure TForm1.spinDecoderCFKeyPress (Sender : TObject ; var Key : char );
 Var
    i : Integer;
 begin
@@ -1189,12 +1178,12 @@ begin
      // Handle spectrum being off (speed = -1)
      if spectrum.specSpeed2 < 0 then
      begin
-          //waterfall.Visible := False;
+          wf.Visible := False;
           Label5.Visible := True;
      end
      else
      begin
-          //waterfall.Visible := true;
+          wf.Visible := true;
           Label5.Visible := false;
      end;
 end;
@@ -1300,7 +1289,7 @@ begin
   Form1.edHisCall.Clear;
 end;
 
-procedure TForm1 .edHisCallKeyPress (Sender : TObject ; var Key : char );
+procedure TForm1.edHisCallKeyPress (Sender : TObject ; var Key : char );
 var
    i : Integer;
 begin
@@ -1344,7 +1333,7 @@ begin
      end;
 end;
 
-procedure TForm1 .editManQRGKeyPress (Sender : TObject ; var Key : char );
+procedure TForm1.editManQRGKeyPress (Sender : TObject ; var Key : char );
 Var
    i : Integer;
 begin
@@ -1352,7 +1341,7 @@ begin
      i := ord(key);
      if not (i=8) then
      begin
-        Key := upcase(key);
+        //Key := upcase(key);
         if not mval.asciiValidate(Key,'numeric') then Key := #0;
      end;
 
@@ -1378,7 +1367,7 @@ begin
      Form1.edSigRep.Text := '';
 end;
 
-procedure TForm1 .edSigRepKeyPress (Sender : TObject ; var Key : char );
+procedure TForm1.edSigRepKeyPress (Sender : TObject ; var Key : char );
 Var
    i : Integer;
 begin
@@ -1404,13 +1393,13 @@ Begin
      cfg.StoredValue['soundout']     := IntToStr(paOutParams.device);
      cfg.StoredValue['LastInput']    := 'pulse';
      cfg.StoredValue['LastOutput']   := 'pulse';
-     cfg.StoredValue['ldgain']       := IntToStr(Form1.TrackBar1.Position);
-     cfg.StoredValue['rdgain']       := IntToStr(Form1.TrackBar2.Position);
+     cfg.StoredValue['ldgain']       := '0';
+     cfg.StoredValue['rdgain']       := '0';
      cfg.StoredValue['samfacin']     := '1.0';
      cfg.StoredValue['samfacout']    := '1.0';
      if Form1.rbUseLeft.Checked Then cfg.StoredValue['audiochan'] := 'L' Else cfg.StoredValue['audiochan'] := 'R';
      cfg.StoredValue['autoSR']       := '0';
-     cfg.StoredValue['pttPort']      := UpperCase(cfgvtwo.Form6.editUserDefinedPort1.Text);
+     cfg.StoredValue['pttPort']      := cfgvtwo.Form6.editUserDefinedPort1.Text;
      if Form1.chkAFC.Checked Then cfg.StoredValue['afc'] := '1' Else cfg.StoredValue['afc'] := '0';
      if Form1.chkNB.Checked Then cfg.StoredValue['noiseblank'] := '1' Else cfg.StoredValue['noiseblank'] := '0';
      cfg.StoredValue['brightness']   := IntToStr(Form1.tbBright.Position);
@@ -1499,82 +1488,18 @@ var
    kverr     : Integer;
 begin
      Form1.Timer1.Enabled := False;
-     diagout.Form3.ListBox1.Clear;
-     diagout.Form3.Show;
-     diagout.Form3.BringToFront;
-     diagout.Form3.ListBox1.Items.Add('Closing JT65-HF.  This will take a few seconds.');
-     diagout.Form3.ListBox1.Items.Add('Saving Configuration');
+     Form1.Timer2.Enabled := False;
      if CloseAction = caFree Then
      Begin
-          kverr := 0;
-          while FileExists('KVASD.DAT') do
-          begin
-               DeleteFile('KVASD.DAT');
-               inc(kverr);
-               if kverr > 10000 then break;
-          end;
-
           saveConfig;
-
-          {TODO [1.0.9] Debug this.. something seems awry.  Using Try/Except to pass this for 1.0.8}
-          Try
-             if mnpttOpened Then
-             Begin
-                  diagout.Form3.ListBox1.Items.Add('Closing PTT Port');
-                  //if getPTTMethod() = 'SI5' Then si570Lowerptt();
-                  //if getPTTMethod() = 'HRD' Then hrdLowerPTT();
-                  //if getPTTMethod() = 'ALT' Then altLowerPTT();
-                  //if getPTTMethod() = 'PTT' Then lowerPTT();
-                  diagout.Form3.ListBox1.Items.Add('Closed PTT Port');
-             end;
-          Except
-             // Nothing needs to be done, this simply allows the code to pass safely on fail.
+          kverr := 0;
+          while FileExists('kvasd.dat') do
+          begin
+               DeleteFile('kvasd.dat');
+               inc(kverr);
+               if kverr > 100000 then break;
           end;
-
-          if globalData.rbLoggedIn Then
-          Begin
-               diagout.Form3.ListBox1.Items.Add('Closing RB');
-               rb.logoutRB;
-               diagout.Form3.ListBox1.Items.Add('Closed RB');
-          end;
-          diagout.Form3.ListBox1.Items.Add('Terminating RB Thread');
-          //rbThread.Suspend;
-          diagout.Form3.ListBox1.Items.Add('Terminated RB Thread');
-
-          diagout.Form3.ListBox1.Items.Add('Terminating Decoder Thread');
-          termcount := 0;
-          while d65.glinProg Do
-          Begin
-               application.ProcessMessages;
-               sleep(1000);
-               inc(termcount);
-               if termcount > 9 then break;
-          end;
-          //decoderThread.Suspend;
-          diagout.Form3.ListBox1.Items.Add('Terminated Decoder Thread');
-
-          diagout.Form3.ListBox1.Items.Add('Terminating Rig Control Thread');
-          termcount :=0;
-          while catInProgress Do
-          Begin
-               application.ProcessMessages;
-               sleep(1000);
-               inc(termcount);
-               if termcount > 9 then break;
-          end;
-          //rigThread.Suspend;
-          diagout.Form3.ListBox1.Items.Add('Terminated Rig Control Thread');
-
-          diagout.Form3.ListBox1.Items.Add('Freeing Threads');
-          //rbThread.Terminate;
-          //decoderThread.Terminate;
-          //rigThread.Terminate;
-          //if not rbThread.FreeOnTerminate Then rbThread.Free;
-          //if not decoderThread.FreeOnTerminate Then decoderThread.Free;
-          //if not rigThread.FreeOnTerminate Then rigThread.Free;
-          diagout.Form3.ListBox1.Items.Add('Done');
-
-          diagout.Form3.ListBox1.Items.Add('Cleaning up Audio Streams');
+          if globalData.rbLoggedIn Then rb.logoutRB;
           portAudio.Pa_StopStream(paInStream);
           portAudio.Pa_StopStream(paOutStream);
           termcount := 0;
@@ -1587,27 +1512,7 @@ begin
                inc(termcount);
                if termcount > 9 then break;
           end;
-          diagout.Form3.ListBox1.Items.Add('Stopped Audio Streams');
-          diagout.Form3.ListBox1.Items.Add('Terminating PortAudio');
           portaudio.Pa_Terminate();
-          diagout.Form3.ListBox1.Items.Add('Terminated PortAudio');
-
-          //if cbEnPSKR.Checked Then
-          //Begin
-          //     diagout.Form3.ListBox1.Items.Add('Closing PSK Reporter');
-          //     rb.logoutPSKR;
-          //     diagout.Form3.ListBox1.Items.Add('Closed PSK Reporter');
-          //end;
-
-          //diagout.Form3.ListBox1.Items.Add('Releasing waterfall');
-          //Waterfall.Free;
-          //diagout.Form3.ListBox1.Items.Add('Released waterfall');
-          //diagout.Form3.ListBox1.Items.Add('JT65-HF Shutdown complete.  Exiting.');
-          //For i := 0 to 9 do
-          //begin
-          //     application.ProcessMessages;
-          //     sleep(100);
-          //end;
      End;
 end;
 
@@ -1808,21 +1713,21 @@ begin
      rawdec.Form5.Visible := True;
 end;
 
-//procedure TForm1.ListBox1MouseDown(Sender: TObject; Button: TMouseButton;
-//  Shift: TShiftState; X, Y: Integer);
-//Var
-//   MousePos      : TPoint;
-//   OverItemIndex : integer;
-//begin
-//     MousePos.x := X;
-//     MousePos.y := Y;
-//     if (Button = mbRight) And itemsIn then
-//     begin
-//          OverItemIndex := Form1.ListBox1.ItemAtPos(MousePos,True);
-//          If OverItemIndex > -1 Then Form1.ListBox1.ItemIndex:=OverItemIndex;
-//          If OverItemIndex > -1 Then Clipboard.AsText := Form1.ListBox1.Items[OverItemIndex];
-//     end;
-//end;
+procedure TForm1.ListBox1MouseDown(Sender: TObject; Button: TMouseButton;
+  Shift: TShiftState; X, Y: Integer);
+Var
+   MousePos      : TPoint;
+   OverItemIndex : integer;
+begin
+     MousePos.x := X;
+     MousePos.y := Y;
+     if (Button = mbRight) And itemsIn then
+     begin
+          OverItemIndex := Form1.ListBox1.ItemAtPos(MousePos,True);
+          If OverItemIndex > -1 Then Form1.ListBox1.ItemIndex:=OverItemIndex;
+          If OverItemIndex > -1 Then Clipboard.AsText := Form1.ListBox1.Items[OverItemIndex];
+     end;
+end;
 
 function  TForm1.genSlashedMessage(const exchange : String; var Msg : String; var err : String; var doQSO : Boolean; Const lsiglevel : String) : Boolean;
 Var
@@ -2633,40 +2538,58 @@ begin
      end;
 end;
 
-//procedure TForm1.ListBox1DrawItem(Control: TWinControl; Index: Integer;
-//  ARect: TRect; State: TOwnerDrawState);
-//Var
-//   myColor            : TColor;
-//   myBrush            : TBrush;
-//   lineCQ, lineMyCall : Boolean;
-//   lineWarn           : Boolean;
-//   foo                : String;
-//begin
-//     lineCQ := False;
-//     lineMyCall := False;
-//     if Index > -1 Then
-//     Begin
-//          foo := Form1.ListBox1.Items[Index];
-//          if IsWordPresent('WARNING:', foo, [' ']) Then lineWarn := True else lineWarn := False;
-//          if IsWordPresent('CQ', foo, [' ']) Then lineCQ := True;
-//          if IsWordPresent('QRZ', foo, [' ']) Then lineCQ := True;
-//          if IsWordPresent(globalData.fullcall, foo, [' ']) Then lineMyCall := True else lineMyCall := False;
-//          myBrush := TBrush.Create;
-//          with (Control as TListBox).Canvas do
-//          begin
-//               myColor := cfgvtwo.glqsoColor;
-//               if lineCQ Then myColor := cfgvtwo.glcqColor;
-//               if lineMyCall Then myColor := cfgvtwo.glcallColor;
-//               if lineWarn then myColor := clRed;
-//               myBrush.Style := bsSolid;
-//               myBrush.Color := myColor;
-//               lclintf.FillRect(handle, ARect, myBrush.Reference.Handle);
-//               Brush.Style := bsClear;
-//               TextOut(ARect.Left, ARect.Top,(Control as TListBox).Items[Index]);
-//               MyBrush.Free;
-//          end;
-//     end;
-//end;
+procedure TForm1.ListBox1DrawItem(Control: TWinControl; Index: Integer;
+  ARect: TRect; State: TOwnerDrawState);
+Var
+   myColor            : TColor;
+   myBrush            : TBrush;
+   lineCQ, lineMyCall : Boolean;
+   lineWarn           : Boolean;
+   foo                : String;
+begin
+     lineCQ := False;
+     lineMyCall := False;
+     if Index > -1 Then
+     Begin
+          if index = Form1.ListBox1.ItemIndex Then
+          begin
+               foo := Form1.ListBox1.Items[Index];
+               myBrush := TBrush.Create;
+               with (Control as TListBox).Canvas do
+               begin
+                    myColor := clWhite;
+                    myBrush.Style := bsSolid;
+                    myBrush.Color := myColor;
+                    lclintf.FillRect(handle, ARect, myBrush.Reference.Handle);
+                    Brush.Style := bsClear;
+                    TextOut(ARect.Left, ARect.Top,(Control as TListBox).Items[Index]);
+                    MyBrush.Free;
+               end;
+          end
+          else
+          begin
+               foo := Form1.ListBox1.Items[Index];
+               if IsWordPresent('WARNING:', foo, [' ']) Then lineWarn := True else lineWarn := False;
+               if IsWordPresent('CQ', foo, [' ']) Then lineCQ := True;
+               if IsWordPresent('QRZ', foo, [' ']) Then lineCQ := True;
+               if IsWordPresent(globalData.fullcall, foo, [' ']) Then lineMyCall := True else lineMyCall := False;
+               myBrush := TBrush.Create;
+               with (Control as TListBox).Canvas do
+               begin
+                    myColor := cfgvtwo.glqsoColor;
+                    if lineCQ Then myColor := cfgvtwo.glcqColor;
+                    if lineMyCall Then myColor := cfgvtwo.glcallColor;
+                    if lineWarn then myColor := clRed;
+                    myBrush.Style := bsSolid;
+                    myBrush.Color := myColor;
+                    lclintf.FillRect(handle, ARect, myBrush.Reference.Handle);
+                    Brush.Style := bsClear;
+                    TextOut(ARect.Left, ARect.Top,(Control as TListBox).Items[Index]);
+                    MyBrush.Free;
+               end;
+          end;
+     end;
+end;
 
 procedure TForm1.rbFirstChange(Sender: TObject);
 begin
@@ -2712,7 +2635,7 @@ begin
      End;
 end;
 
-procedure TForm1 .spinTXCFKeyPress (Sender : TObject ; var Key : char );
+procedure TForm1.spinTXCFKeyPress (Sender : TObject ; var Key : char );
 Var
    i : Integer;
 begin
@@ -2962,20 +2885,11 @@ Begin
           csvstr := csvstr + '"' + d65.gld65decodes[i].dtDecoded + '","65A"';
           // csvstr now contains a possible report to file if user wishes.
           // Do actual display
-          //If firstReport Then
-          //Begin
-               //sleep(1);
-               Form1.ListBox1.Items.Insert(0,rpt);
-               //Form1.ListBox1.Items.Strings[1] := rpt;
-               firstReport := False;
-               itemsIn := True;
-          //End
-          //Else
-          //Begin
-          //     Form1.ListBox1.Items.Insert(1,rpt);
-          //     itemsIn := True;
-          //End;
-          // Manage size of scrollback
+          Form1.ListBox1.Items.Insert(0,rpt);
+          Form1.ListBox1.ItemIndex := 0;
+          firstReport := False;
+          itemsIn := True;
+          //// Manage size of scrollback
           //If Form1.ListBox1.Items.Count > 500 Then
           //Begin
           //     for idx := ListBox1.Items.Count - 1 downto 100 do
@@ -3026,21 +2940,6 @@ Begin
           end;
      end;
 End;
-
-procedure TForm1.TrackBar1Change(Sender: TObject);
-begin
-  // Handle change to Digital Gain
-  adc.adcLDgain := Form1.TrackBar1.Position;
-  Form1.Label10.Caption := 'L: ' + IntToStr(Form1.TrackBar1.Position);
-  If Form1.TrackBar1.Position <> 0 Then Form1.Label10.Font.Color := clRed else Form1.Label10.Font.Color := clBlack;
-end;
-
-procedure TForm1.TrackBar2Change(Sender: TObject);
-begin
-  adc.adcRDgain := Form1.TrackBar2.Position;
-  Form1.Label11.Caption := 'R: ' + IntToStr(Form1.TrackBar2.Position);
-  If Form1.TrackBar2.Position <> 0 Then Form1.Label11.Font.Color := clRed else Form1.Label11.Font.Color := clBlack;
-end;
 
 procedure TForm1.updateAudio();
 Var
@@ -3375,9 +3274,9 @@ Begin
      Timer2.Enabled := False;
 
      kverr := 0;
-     while FileExists('KVASD.DAT') do
+     while FileExists('kvasd.dat') do
      begin
-          DeleteFile('KVASD.DAT');
+          DeleteFile('kvasd.dat');
           inc(kverr);
           if kverr > 10000 then break;
      end;
@@ -3572,8 +3471,6 @@ Begin
           Form1.tbContrast.Position := 0;
           Form1.SpinEdit1.Value := 5;
           Form1.rbUseLeft.Checked := True;
-          Form1.TrackBar1.Position := 0;
-          Form1.TrackBar2.Position := 0;
           Form1.rbGenMsg.Checked := True;
           Form1.rbTX1.Checked := True;
           Form1.chkEnTX.Checked := False;
@@ -3593,13 +3490,13 @@ Begin
           cfg.StoredValue['pfx']          := IntToStr(cfgvtwo.Form6.comboPrefix.ItemIndex);
           cfg.StoredValue['sfx']          := IntToStr(cfgvtwo.Form6.comboSuffix.ItemIndex);
           cfg.StoredValue['grid']         := cfgvtwo.Form6.edMyGrid.Text;
-          cfg.StoredValue['ldgain']       := IntToStr(Form1.TrackBar1.Position);
-          cfg.StoredValue['rdgain']       := IntToStr(Form1.TrackBar2.Position);
+          cfg.StoredValue['ldgain']       := '0';
+          cfg.StoredValue['rdgain']       := '0';
           cfg.StoredValue['samfacin']     := '1.0';
           cfg.StoredValue['samfacout']    := '1.0';
           if Form1.rbUseLeft.Checked Then cfg.StoredValue['audiochan'] := 'L' Else cfg.StoredValue['audiochan'] := 'R';
           cfg.StoredValue['autoSR'] := '0';
-          cfg.StoredValue['pttPort']      := UpperCase(cfgvtwo.Form6.editUserDefinedPort1.Text);
+          cfg.StoredValue['pttPort']      := cfgvtwo.Form6.editUserDefinedPort1.Text;
           if Form1.chkAFC.Checked Then cfg.StoredValue['afc'] := '1' Else cfg.StoredValue['afc'] := '0';
           If Form1.chkNB.Checked Then cfg.StoredValue['noiseblank'] := '1' Else cfg.StoredValue['noiseblank'] := '0';
           cfg.StoredValue['brightness']   := IntToStr(Form1.tbBright.Position);
@@ -3705,115 +3602,12 @@ Begin
      tstint := 0;
      if TryStrToInt(cfg.StoredValue['txCF'],tstint) Then Form1.spinTXCF.Value := tstint else Form1.spinTXCF.Value := 0;
      spinTXCFChange(spinTXCF);
-
-     // Last selected in/out devices stored as names of device LESS the leading digits.
-     // These won't be present until the program has been ran and properly close once.
-     // So.. handle it if they're empty strings :)
-     // The string name of a device begins at the 4th character since 1..3 is ##-
-
-     //lasto := cfg.StoredValue['LastOutput'];
-     //lasti := cfg.StoredValue['LastInput'];
-
-     //tstint := 0;
-     //if TryStrToInt(cfg.StoredValue['soundin'],tstint) Then
-     //Begin
-          // Select default first, this will not be changed if no match found.
-          //cfgvtwo.Form6.cbAudioIn.ItemIndex := 0;
-          //for i := 0 to cfgvtwo.Form6.cbAudioIn.Items.Count-1 do
-          //begin
-               // Look for and select previously saved device if possible.
-               //foo := cfgvtwo.Form6.cbAudioIn.Items.Strings[i];
-               //if StrToInt(foo[1..2]) = tstint then
-               //begin
-               //     cfgvtwo.Form6.cbAudioIn.ItemIndex := i;
-               //     break;
-               //end;
-          //end;
-     //end
-     //else
-     //begin
-          //cfgvtwo.Form6.cbAudioIn.ItemIndex := 0;
-     //end;
-
-     //tstint := 0;
-     //if TryStrToInt(cfg.StoredValue['soundout'],tstint) Then
-     //begin
-     //     //for i := 0 to cfgvtwo.Form6.cbAudioIn.Items.Count-1 do showmessage('Index:  ' + IntToStr(i) + '  ' + cfgvtwo.Form6.cbAudioIn.Items.Strings[i]);
-     //     //for i := 0 to cfgvtwo.Form6.cbAudioOut.Items.Count-1 do showmessage('Index:  ' + IntToStr(i) + '  ' + cfgvtwo.Form6.cbAudioOut.Items.Strings[i]);
-     //
-     //     // Select default first, this will not be changed if no match found.
-     //     cfgvtwo.Form6.cbAudioOut.ItemIndex := 0;
-     //     for i := 0 to cfgvtwo.Form6.cbAudioOut.Items.Count-1 do
-     //     begin
-     //          // Look for and select previously saved device if possible.
-     //          foo := cfgvtwo.Form6.cbAudioOut.Items.Strings[i];
-     //          if StrToInt(foo[1..2]) = tstint then
-     //          begin
-     //               cfgvtwo.Form6.cbAudioOut.ItemIndex := i;
-     //               break;
-     //          end;
-     //     end;
-     //end
-     //else
-     //begin
-     //     cfgvtwo.Form6.cbAudioOut.ItemIndex := 0;
-     //end;
-
-     //// Test to see if currently selected devices match (string wise) previously selected devices.
-     //if length(lasti)>0 then
-     //begin
-     //     // Compare lasti to currently selected input
-     //     foo := cfgvtwo.Form6.cbAudioIn.Items.Strings[cfgvtwo.Form6.cbAudioIn.ItemIndex];
-     //     foo := foo[4..Length(foo)];
-     //     if lasti <> foo then showmessage('The currently selected input device has changed from saved value.' + sLineBreak +
-     //                                      'Saved:  ' + lasti + sLineBreak +
-     //                                      'Current:  ' + foo + sLineBreak + sLineBreak +
-     //                                      'Please check configuration to be sure correct device has been set.');
-     //end;
-     //
-     //if length(lasto)>0 then
-     //begin
-     //     // Compare lasto to currently selected output
-     //     foo := cfgvtwo.Form6.cbAudioOut.Items.Strings[cfgvtwo.Form6.cbAudioOut.ItemIndex];
-     //     foo := foo[4..Length(foo)];
-     //     if lasto <> foo then showmessage('The currently selected output device has changed from saved value.' + sLineBreak +
-     //                                      'Saved:  ' + lasto + sLineBreak +
-     //                                      'Current:  ' + foo + sLineBreak + sLineBreak +
-     //                                      'Please check configuration to be sure correct device has been set.');
-     //end;
-
-     tstint := 0;
-     if TryStrToInt(cfg.StoredValue['ldgain'],tstint) Then
-     Begin
-          Form1.TrackBar1.Position := tstint;
-          adc.adcLDgain := Form1.TrackBar1.Position;
-     End
-     else
-     Begin
-          Form1.TrackBar1.Position := 0;
-          adc.adcLDgain := Form1.TrackBar1.Position;
-     End;
-     tstint := 0;
-     if TryStrToInt(cfg.StoredValue['rdgain'],tstint) Then
-     Begin
-          Form1.TrackBar2.Position := tstint;
-          adc.adcRDgain := Form1.TrackBar2.Position;
-     End
-     else
-     Begin
-          Form1.TrackBar2.Position := 0;
-          adc.adcRDgain := Form1.TrackBar2.Position;
-     End;
-     Form1.Label10.Caption := 'L: ' + IntToStr(Form1.TrackBar1.Position);
-     Form1.Label11.Caption := 'R: ' + IntToStr(Form1.TrackBar2.Position);
-     If Form1.TrackBar1.Position <> 0 Then Form1.Label10.Font.Color := clRed else Form1.Label10.Font.Color := clBlack;
-     If Form1.TrackBar2.Position <> 0 Then Form1.Label11.Font.Color := clRed else Form1.Label11.Font.Color := clBlack;
      if cfg.StoredValue['audiochan'] = 'L' Then Form1.rbUseLeft.Checked := True;
      if cfg.StoredValue['audiochan'] = 'R' Then Form1.rbUseRight.Checked := True;
      If Form1.rbUseLeft.Checked Then adc.adcChan  := 1;
      If Form1.rbUseRight.Checked Then adc.adcChan := 2;
      cfgvtwo.glautoSR := False;
-     cfgvtwo.Form6.editUserDefinedPort1.Text := UpperCase(cfg.StoredValue['pttPort']);
+     cfgvtwo.Form6.editUserDefinedPort1.Text := cfg.StoredValue['pttPort'];
      if cfg.StoredValue['afc'] = '1' Then Form1.chkAfc.Checked := True Else Form1.chkAfc.Checked := False;
      If Form1.chkAFC.Checked Then Form1.chkAFC.Font.Color := clRed else Form1.chkAFC.Font.Color := clBlack;
      if Form1.chkAFC.Checked then d65.glNafc := 1 Else d65.glNafc := 0;
@@ -4272,15 +4066,15 @@ Begin
           end;
      end;
      // Create and initialize TWaterfallControl
-     //Waterfall := TWaterfallControl.Create(Self);
-     //if verholder.guiSize = 'Normal' then Waterfall.Height := 180;
-     //if verholder.guiSize = 'Small' then Waterfall.Height := 160;
-     //Waterfall.Width  := 750;
-     //Waterfall.Top    := 25;
-     //Waterfall.Left   := 177;
-     //Waterfall.Parent := Self;
-     //Waterfall.OnMouseDown := waterfallMouseDown;
-     //Waterfall.DoubleBuffered := True;
+     wf := TWaterfallControl.Create(Self);
+     if verholder.guiSize = 'Normal' then wf.Height := 180;
+     if verholder.guiSize = 'Small' then wf.Height := 160;
+     wf.Width  := 750;
+     wf.Top    := 25;
+     wf.Left   := 177;
+     wf.Parent := Self;
+     //wf.OnMouseDown := waterfallMouseDown;
+     wf.DoubleBuffered := True;
 
      // Create the decoder thread with param False so it starts.
      d65.glinProg := False;
@@ -4314,7 +4108,6 @@ Begin
      ppaInParams := @paInParams;
      // Set rxBuffer index to start of array.
      adc.d65rxBufferIdx := 0;
-     adc.adcT := 0;
      // Set ptr to start of buffer.
      adc.d65rxBufferPtr := @adc.d65rxBuffer[0];
      // output
@@ -4328,7 +4121,6 @@ Begin
      dac.d65txBufferIdx := 0;
      // Set ptr to start of buffer.
      dac.d65txBufferPtr := @dac.d65txBuffer[0];
-     dac.dacT := 0;
      // Attempt to open selected devices, both must pass open/start to continue.
      result := false;
      cont := False;
@@ -5794,6 +5586,7 @@ procedure TForm1.oncePerTick();
 Var
    i    : Integer;
    cont : Boolean;
+   //tg   : TBitmap;
 Begin
      if spinDT.Value <> 0 Then Label32.Font.Color := clRed else Label32.Font.Color := clBlack;
 
@@ -5819,17 +5612,19 @@ Begin
      end;
      // Refresh audio level display
      if not primed then updateAudio();
+
      // Update spectrum display.
-     //if not globalData.txInProgress and not primed and not globalData.spectrumComputing65 and not d65.glinProg Then
-     //Begin
+     if not globalData.txInProgress and not primed and not globalData.spectrumComputing65 and not d65.glinProg Then
+     Begin
           // Normal RX waterfall update
-          //If globalData.specNewSpec65 Then Waterfall.Repaint;
-     //End
-     //else
-     //begin
+          If globalData.specNewSpec65 Then wf.Repaint;
+     End
+     else
+     begin
           // Simple repaint update to keep display "clean" during TX or between new data.
-          //Waterfall.Repaint;
-     //end;
+          //wf.Repaint;
+     end;
+
      // Update RX/TX SR Display
      //if not primed Then updateSR();
      // Determine TX Buffer to use
@@ -6082,8 +5877,6 @@ initialization
   //
   // Actions 1=Init, 2=RX, 3=TX, 4=Decode, 5=Idle
   //
-  adc.adcT         := 0;
-  adc.adcE         := 0;
   mnpttOpened    := False;
   firstReport  := True;
   useBuffer := 0;

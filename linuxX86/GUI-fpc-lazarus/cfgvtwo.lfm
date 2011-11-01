@@ -1,7 +1,7 @@
 object Form6: TForm6
-  Left = 77
+  Left = 0
   Height = 542
-  Top = 91
+  Top = 28
   Width = 800
   BorderIcons = []
   Caption = 'Configuration'
@@ -14,7 +14,6 @@ object Form6: TForm6
   Font.Name = 'arial [monotype]'
   OnCreate = FormCreate
   LCLVersion = '0.9.30'
-  Visible = True
   object PageControl1: TPageControl
     Left = 8
     Height = 488
@@ -25,8 +24,8 @@ object Form6: TForm6
     TabOrder = 0
     object TabSheet1: TTabSheet
       Caption = 'Station Setup'
-      ClientHeight = 457
-      ClientWidth = 780
+      ClientHeight = 453
+      ClientWidth = 778
       object Label26: TLabel
         Left = 5
         Height = 15
@@ -125,9 +124,9 @@ object Form6: TForm6
       end
       object cbTXWatchDog: TCheckBox
         Left = 4
-        Height = 24
+        Height = 22
         Top = 250
-        Width = 515
+        Width = 513
         Caption = 'Disable TX after sending same message 15 times. (Runaway TX watchdog)'
         Checked = True
         State = cbChecked
@@ -135,9 +134,9 @@ object Form6: TForm6
       end
       object cbDisableMultiQSO: TCheckBox
         Left = 4
-        Height = 24
+        Height = 22
         Top = 276
-        Width = 588
+        Width = 586
         Caption = 'Disable Multidecoder while in QSO.  Suggested unless you have a fast CPU (>1.5GHz).'
         Checked = True
         State = cbChecked
@@ -145,9 +144,9 @@ object Form6: TForm6
       end
       object cbMultiAutoEnable: TCheckBox
         Left = 4
-        Height = 24
+        Height = 22
         Top = 302
-        Width = 516
+        Width = 514
         Caption = 'Enable Multidecoder after 2 minutes of no TX (If disabled by option above).'
         Checked = True
         State = cbChecked
@@ -155,9 +154,9 @@ object Form6: TForm6
       end
       object cbSaveCSV: TCheckBox
         Left = 4
-        Height = 24
+        Height = 22
         Top = 379
-        Width = 331
+        Width = 329
         Caption = 'Save text of decodes and transmissions to file.'
         Checked = True
         State = cbChecked
@@ -176,9 +175,9 @@ object Form6: TForm6
       end
       object cbRestoreMulti: TCheckBox
         Left = 4
-        Height = 24
+        Height = 22
         Top = 329
-        Width = 274
+        Width = 272
         Caption = 'Restore defaults sets Multidecoder On'
         Checked = True
         State = cbChecked
@@ -224,17 +223,17 @@ object Form6: TForm6
       end
       object cbCWID: TCheckBox
         Left = 4
-        Height = 24
+        Height = 22
         Top = 353
-        Width = 298
+        Width = 296
         Caption = 'Send CW ID With 73 or Free Text Message'
         TabOrder = 6
       end
     end
     object TabSheet2: TTabSheet
       Caption = 'Rig Control/PTT'
-      ClientHeight = 457
-      ClientWidth = 780
+      ClientHeight = 453
+      ClientWidth = 778
       object Label9: TLabel
         Left = 10
         Height = 15
@@ -260,7 +259,6 @@ object Form6: TForm6
         Height = 27
         Top = 43
         Width = 90
-        CharCase = ecUppercase
         TabOrder = 0
         Text = 'NONE'
       end
@@ -294,8 +292,8 @@ object Form6: TForm6
     end
     object TabSheet3: TTabSheet
       Caption = 'RB and PSKR'
-      ClientHeight = 457
-      ClientWidth = 780
+      ClientHeight = 453
+      ClientWidth = 778
       object Label34: TLabel
         Left = 4
         Height = 18
@@ -330,8 +328,8 @@ object Form6: TForm6
     end
     object TabSheet4: TTabSheet
       Caption = 'Macros'
-      ClientHeight = 457
-      ClientWidth = 780
+      ClientHeight = 453
+      ClientWidth = 778
       object Label2: TLabel
         Left = 1
         Height = 20
@@ -1179,8 +1177,8 @@ object Form6: TForm6
     end
     object TabSheet6: TTabSheet
       Caption = 'Colors'
-      ClientHeight = 457
-      ClientWidth = 780
+      ClientHeight = 453
+      ClientWidth = 778
       object Label78: TLabel
         Left = 12
         Height = 144
@@ -1352,8 +1350,8 @@ object Form6: TForm6
     end
     object TabSheet7: TTabSheet
       Caption = 'Diagnostics'
-      ClientHeight = 457
-      ClientWidth = 780
+      ClientHeight = 453
+      ClientWidth = 778
       object Label19: TLabel
         Left = 4
         Height = 18

@@ -20,8 +20,8 @@
       <UseVersionInfo Value="True"/>
       <AutoIncrementBuild Value="True"/>
       <MajorVersionNr Value="1"/>
-      <RevisionNr Value="8"/>
-      <BuildNr Value="35"/>
+      <RevisionNr Value="9"/>
+      <BuildNr Value="2"/>
       <StringTable FileDescription="Amateur Radio communications using JT65A" LegalCopyright="2009..2011 - J C Large - W6CQZ - GPL 2" ProductVersion=""/>
     </VersionInfo>
     <BuildModes Count="1">
@@ -208,12 +208,10 @@
       </SyntaxOptions>
     </Parsing>
     <CodeGeneration>
-      <Checks>
-        <IOChecks Value="True"/>
-        <RangeChecks Value="True"/>
-        <OverflowChecks Value="True"/>
-        <StackChecks Value="True"/>
-      </Checks>
+      <Optimizations>
+        <VariablesInRegisters Value="True"/>
+        <OptimizationLevel Value="2"/>
+      </Optimizations>
     </CodeGeneration>
     <Other>
       <CompilerMessages>
@@ -222,4 +220,11 @@
       <CompilerPath Value="$(CompPath)"/>
     </Other>
   </CompilerOptions>
+  <Debugging>
+    <Exceptions Count="1">
+      <Item1>
+        <Name Value="EInOutError"/>
+      </Item1>
+    </Exceptions>
+  </Debugging>
 </CONFIG>
