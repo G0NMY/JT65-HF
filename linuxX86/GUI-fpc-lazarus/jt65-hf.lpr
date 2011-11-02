@@ -24,9 +24,9 @@ program jt65hf;
 
 uses
   cmem, cthreads, Interfaces, Forms, maincode, portaudio, encode65, globalData,
-  spectrum, cmaps, fftw_jl, adc, dac, dlog, rawdec, cfgvtwo, guiConfig,
-  verHolder, synaser, adif, log, diagout, waterfall, d65, about, spot,
-  valobject, heard;
+  spectrum, cmaps, fftw_jl, adc, dac, dlog, cfgvtwo, guiConfig,
+  verHolder, synaser, adif, log, waterfall, d65, about, spot,
+  valobject;
 
 {$R *.res}
 
@@ -34,12 +34,9 @@ begin
   Application.Title:='JT65-HF';
   Application.Initialize;
   Application.CreateForm(TForm1, Form1);
-  Application.CreateForm(TForm5, Form5);
   Application.CreateForm(TForm6, Form6);
   Application.CreateForm(TForm2, Form2);
-  Application.CreateForm(TForm3, Form3);
   Application.CreateForm(TForm4, Form4);
-  Application.CreateForm(TForm9, Form9);
   Application.Run;
 end.
 

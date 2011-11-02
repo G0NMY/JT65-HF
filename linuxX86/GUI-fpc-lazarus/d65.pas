@@ -25,8 +25,8 @@ unit d65;
 interface
 
 uses
-  Classes, SysUtils, CTypes, globalData, math, Process, diagout, Types,
-  StrUtils, FileUtil, rawDec;
+  Classes, SysUtils, CTypes, globalData, math, Process, Types,
+  StrUtils, FileUtil;
 
 Const
   {$IFDEF WIN32}
@@ -365,9 +365,6 @@ begin
          end;
     End;
     // General housekeeping for a start of decoder cycle
-    diagout.Form3.ListBox1.Clear;
-    diagout.Form3.ListBox2.Clear;
-    diagout.Form3.ListBox3.Clear;
     strPcopy(glkvfname,'kvasd.dat');
     strPcopy(glwisfile,TrimFileName(GetAppConfigDir(False)+ PathDelim + 'wisdom2.dat'));
     glmline := '                                                                        ';
@@ -375,7 +372,6 @@ begin
     glmyline := '                                           ';
     // [d65.]inBuffer contains 16 bit signed integer input samples and has
     // been populated from maincode.
-    diagout.Form3.ListBox1.Items.Add('D65:  Convert int16 buffer to float.');
     // Convert inBuffer to f3buffer (int16 to float)
     sum := 0.0;
     nave := 0;
@@ -400,7 +396,6 @@ begin
     End;
     If glNblank > 0 Then
     Begin
-         diagout.Form3.ListBox1.Items.Add('Apply NB');
          // Noise blanker requested.
          avg       := 700.0;
          threshold := 5.0;
@@ -430,7 +425,6 @@ begin
     // Int16 converted to float, now resample if needed.  If no resample
     // then copy f3Buffer to f1Buffer.
     // No resample so need to manually copy f3Buffer to f1Buffer
-    diagout.Form3.ListBox1.Items.Add('No SR Correction needed, using uncorrected samples.');
     for i := bStart to bEnd do glf1Buffer[i] := glf3Buffer[i];
     jz := bEnd;
     // From this point on f1Buffer becomes sole sample holder.
@@ -443,7 +437,6 @@ begin
     end;
     avesq := sq/jz;
     basevb := db(avesq) - 44;
-    diagout.Form3.ListBox1.Items.Add('avesq = ' + floatToStr(avesq) + ' basevb = ' + floatToStr(basevb));
     if (avesq <> 0.0) And (basevb > -16.0) And (basevb < 21.0) Then
     Begin
          ndec := 0;
@@ -457,7 +450,6 @@ begin
               gllpfM[i] := glf1Buffer[i];
          end;
          lpf1(@gllpfM[0], @jz, @jz2, @lmousedf, @mousedf2, @lical, glwisfile);
-         diagout.Form3.ListBox1.Items.Add('LPF applied.');
          // msync will want a downsampled and lpf version of data.
          // Copy lpfM to f3Buffer
          for j := 0 to jz2 do
@@ -485,7 +477,6 @@ begin
          // Syncount is number of potential sync points.
          if syncount > 0 Then
          Begin
-              diagout.Form3.ListBox1.Items.Add('MSync found ' + IntToStr(syncount) + ' probable sync points');
               // Get bin spacing
               if glsteps = 1 Then
               Begin
@@ -493,10 +484,6 @@ begin
                    // Now... take the syncount list and place a 'tick' in each
                    // 'bin' where a sync detect has been found.
                    // 2000 Hz / 20 Hz = 100 bins. (101 actually)
-                   if binspace = 20 Then diagout.Form3.ListBox1.Items.Add('Using 101 bins [20Hz bin spacing]');
-                   if binspace = 50 Then diagout.Form3.ListBox1.Items.Add('Using 41 bins [50Hz bin spacing]');
-                   if binspace = 100 Then diagout.Form3.ListBox1.Items.Add('Using 21 bins [100Hz bin spacing]');
-                   if binspace = 200 Then diagout.Form3.ListBox1.Items.Add('Using 11 bins [200Hz bin spacing]');
                    for i := 0 to syncount-1 do
                    begin
                         passtest := trunc(dfxa[i]);
@@ -709,12 +696,8 @@ begin
                    begin
                         if bins[i] > 0 then inc(passcount);
                    end;
-                   diagout.Form3.ListBox1.Items.Add('Merged ' + IntToStr(syncount) + ' points to ' + IntToStr(passcount) + ' bins.');
                    if (syncount > (2000 div binspace) + 5) And (passcount > 20) Then
                    Begin
-                        diagout.Form3.ListBox3.Items.Add('Probable dirty signal detected');
-                        diagout.Form3.ListBox3.Items.Add('Too many sync detects. (' + IntToStr(passcount) + ')');
-                        diagout.Form3.ListBox3.Items.Add('Decode cycle aborted.');
                         passcount := 0;
                    End;
                    // Now... at this point I have some count of bins to do a 20/40/80Hz bw decode upon.
@@ -931,8 +914,7 @@ begin
                    begin
                         if bins[i] > 0 then inc(passcount);
                    end;
-                   //diagout.Form3.ListBox1.Items.Add('Merged 1 point to ' + IntToStr(passcount) + ' bin.');
-                   if (passcount > 1) or (passcount < 1) Then diagout.Form3.ListBox3.Items.Add('PASSCOUNT WRONG.  ' + IntToStr(passcount));
+                   //if (passcount > 1) or (passcount < 1) Then diagout.Form3.ListBox3.Items.Add('PASSCOUNT WRONG.  ' + IntToStr(passcount));
               End;
               ndec := 0;
               glrawOut.Clear;
@@ -967,7 +949,6 @@ begin
                              glmline := '                                                                        ';
                              bw := binspace;
                              afc := glNafc;
-                             diagout.Form3.ListBox1.Items.Add('Decode at Center DF = ' + IntToStr(lmousedf) + ' Tolerance = ' + IntToStr(binspace) + 'Hz');
                              // Copy lpfM to f3Buffer
                              for j := 0 to jz2 do
                              Begin
@@ -1039,31 +1020,22 @@ begin
                         End;
                    end;
               end;
-              if glrawOut.Count > 0 Then
-              Begin
-                   diagout.Form3.ListBox2.Clear;
-                   for i := 0 to glrawOut.Count-1 do
-                   Begin
-                        diagout.Form3.ListBox2.Items.Add(glrawOut.Strings[i]);
-                   End;
-                   glrawOut.Clear;
-              End;
          End
          else
          begin
-              diagout.Form3.ListBox1.Items.Add('MSync found no sync points.');
+              //diagout.Form3.ListBox1.Items.Add('MSync found no sync points.');
          end;
     End
     Else
     Begin
-         diagout.Form3.ListBox1.Items.Add('Average audio level too low or high.');
-         diagout.Form3.ListBox1.Items.Add('Decode cycle aborted.');
+         //diagout.Form3.ListBox1.Items.Add('Average audio level too low or high.');
+         //diagout.Form3.ListBox1.Items.Add('Decode cycle aborted.');
          ndec := 0;
     End;
     // Fix up the decodes to display/rbc specs.
     if gldecOut.Count > 0 Then
     Begin
-         diagout.Form3.ListBox1.Items.Add('Potential decodes = '+IntToStr(ndec));
+         //diagout.Form3.ListBox1.Items.Add('Potential decodes = '+IntToStr(ndec));
          // Have ndec decodes available in decArray[x]
          // Now.. I plan to do away with the long standing bug of reading a
          // very strong signal as a very weak one due to decoding a harmonic
@@ -1312,7 +1284,7 @@ begin
     end
     else
     begin
-         diagout.Form3.ListBox1.Items.Add('No decodes.');
+         //diagout.Form3.ListBox1.Items.Add('No decodes.');
     end;
     if (gldecOut.Count = 0) And (glSteps = 0) Then
     Begin
@@ -1328,7 +1300,7 @@ begin
          snrsh := 0;
          nwsh := 0;
          idfsh := 0;
-         diagout.Form3.ListBox1.Items.Add('Attempting SH Decode.');
+         //diagout.Form3.ListBox1.Items.Add('Attempting SH Decode.');
          shdec(@glf1Buffer[0],@bEnd,@glMouseDF,@glDFTolerance,@nspecial,@nstest,@dfsh,@iderrsh,@idriftsh,@snrsh,@nwsh,@idfsh,@lical,glwisfile);
          if nspecial > 0 Then
          Begin
@@ -1337,10 +1309,10 @@ begin
               if nspecial = 2 Then foo := 'RO';
               if nspecial = 3 Then foo := 'RRR';
               if nspecial = 4 Then foo := '73';
-              diagout.Form3.ListBox1.Items.Add('nspecial = ' + IntToStr(nspecial) + ' which is:  ' + foo);
-              diagout.Form3.ListBox1.Items.Add('nstest: ' + IntToStr(nstest) + ' dfsh: ' + FloatToStr(dfsh) + ' iderrsh: ' + IntToStr(iderrsh));
-              diagout.Form3.ListBox1.Items.Add('idriftsh: ' + IntToStr(idriftsh) + ' snrsh: ' + FloatToStr(snrsh) + ' nwsh: ' + IntToStr(nwsh));
-              diagout.Form3.ListBox1.Items.Add('idfsh: ' + IntToStr(idfsh));
+              //diagout.Form3.ListBox1.Items.Add('nspecial = ' + IntToStr(nspecial) + ' which is:  ' + foo);
+              //diagout.Form3.ListBox1.Items.Add('nstest: ' + IntToStr(nstest) + ' dfsh: ' + FloatToStr(dfsh) + ' iderrsh: ' + IntToStr(iderrsh));
+              //diagout.Form3.ListBox1.Items.Add('idriftsh: ' + IntToStr(idriftsh) + ' snrsh: ' + FloatToStr(snrsh) + ' nwsh: ' + IntToStr(nwsh));
+              //diagout.Form3.ListBox1.Items.Add('idfsh: ' + IntToStr(idfsh));
               for j := 0 to 49 do
               begin
                    if gld65decodes[j].dtProcessed Then
@@ -1363,11 +1335,10 @@ begin
          End
          Else
          Begin
-              diagout.Form3.ListBox1.Items.Add('No SH message found.');
+              //diagout.Form3.ListBox1.Items.Add('No SH message found.');
          End;
     End;
     gldecOut.Clear;
-    glrawOut.Clear;
     glsort1.Clear;
     glinprog := False;
     glnd65FirstRun := False;

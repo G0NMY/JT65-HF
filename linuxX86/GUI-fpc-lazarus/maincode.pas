@@ -30,10 +30,10 @@ uses
   Classes, SysUtils, LResources, Forms, Controls, Graphics, Dialogs, FileUtil,
   StdCtrls, CTypes, StrUtils, Math, portaudio, ExtCtrls, ComCtrls, Spin,
   DateUtils, encode65, globalData, XMLPropStorage, adc, waterfall,
-  dac, ClipBrd, dlog, rawdec, cfgvtwo, guiConfig, verHolder,
-  Menus, synaser, log, diagout, synautil, d65, spectrum, {$IFDEF WIN32}windows,
+  dac, ClipBrd, dlog, cfgvtwo, guiConfig, verHolder,
+  Menus, synaser, log, synautil, d65, spectrum, {$IFDEF WIN32}windows,
   {$ENDIF}{$IFDEF LINUX}unix, {$ENDIF}{$IFDEF DARWIN}unix, {$ENDIF} about, spot,
-  valobject, heard, lconvencoding, lclintf, types;
+  valobject, lconvencoding, lclintf, types;
 
 Const
   {$IFDEF WIN32}
@@ -121,6 +121,8 @@ type
     Label9: TLabel;
     ListBox1: TListBox;
     ListBox2: TListBox;
+    lbTXLog: TListBox;
+    lbRawDecoder: TListBox;
     MainMenu1: TMainMenu;
     MenuItem14b : TMenuItem ;
     MenuItem17a : TMenuItem ;
@@ -194,7 +196,6 @@ type
     procedure btnDefaultsClick(Sender: TObject);
     procedure btnEngageTxClick(Sender: TObject);
     procedure btnHaltTxClick(Sender: TObject);
-    procedure btnRawDecoderClick(Sender: TObject);
     procedure btnZeroRXClick(Sender: TObject);
     procedure btnZeroTXClick(Sender: TObject);
     procedure btnLogQSOClick(Sender: TObject);
@@ -224,19 +225,19 @@ type
     procedure edSigRepKeyPress (Sender : TObject ; var Key : char );
     procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
     procedure FormCreate(Sender: TObject);
+    procedure FormResize(Sender: TObject);
     procedure Label17DblClick(Sender: TObject);
     procedure Label22DblClick(Sender: TObject);
     procedure Label30DblClick(Sender: TObject);
     procedure Label31DblClick(Sender: TObject);
     procedure Label32DblClick (Sender : TObject );
     procedure Label39Click(Sender: TObject);
+    procedure lbRawDecoderDblClick(Sender: TObject);
+    procedure lbTXLogDblClick(Sender: TObject);
     procedure menuAboutClick(Sender: TObject);
-    procedure menuHeardClick(Sender: TObject);
     procedure MenuItemHandler(Sender: TObject);
-    procedure menuRawDecoderClick(Sender: TObject);
     procedure menuRigControlClick(Sender: TObject);
     procedure menuSetupClick(Sender: TObject);
-    procedure menuTXLogClick(Sender: TObject);
     procedure rbFreeMsgChange(Sender: TObject);
     procedure spinDecoderBWChange(Sender: TObject);
     procedure spinDecoderBinChange(Sender: TObject);
@@ -913,12 +914,6 @@ begin
   end;
 end;
 
-procedure TForm1.btnRawDecoderClick(Sender: TObject);
-begin
-     diagout.Form3.Visible := True;
-     rawdec.Form5.Visible := True;
-end;
-
 procedure TForm1.buttonClearListClick(Sender: TObject);
 begin
      // Clear the decoder listbox
@@ -1085,15 +1080,6 @@ begin
                doCWID := False;
           End;
      end;
-end;
-
-procedure TForm1.menuHeardClick(Sender: TObject);
-begin
-     heard.Form9.Show;
-     heard.Form9.BringToFront;
-     //cfgvtwo.Form6.PageControl1.ActivePage := cfgvtwo.Form6.TabSheet3;
-     //cfgvtwo.Form6.Show;
-     //cfgvtwo.Form6.BringToFront;
 end;
 
 procedure TForm1.menuRigControlClick(Sender: TObject);
@@ -1614,6 +1600,12 @@ begin
      End;
 end;
 
+procedure TForm1.FormResize(Sender: TObject);
+begin
+     If Self.Height > 810 Then lbTXLog.Visible := true else lbTXLog.Visible := False;
+     If Self.Height > 810 Then lbRawDecoder.Visible := true else lbRawDecoder.Visible := False;
+end;
+
 procedure TForm1.Label17DblClick(Sender: TObject);
 begin
      // Zero brightness
@@ -1649,6 +1641,16 @@ end;
 procedure TForm1.Label39Click(Sender: TObject);
 begin
      if chkAutoTxDF.Checked Then chkAutoTxDF.Checked := False else chkAutoTxDF.Checked := True;
+end;
+
+procedure TForm1.lbRawDecoderDblClick(Sender: TObject);
+begin
+     lbRawDecoder.Clear;
+end;
+
+procedure TForm1.lbTXLogDblClick(Sender: TObject);
+begin
+     lbTXLog.Clear;
 end;
 
 procedure TForm1.menuAboutClick(Sender: TObject);
@@ -1703,16 +1705,6 @@ Begin
      If Sender=Form1.MenuItem20b Then Form1.edFreeText.Text := cfgvtwo.Form6.edUserMsg20.Text;
 
 End;
-
-procedure TForm1.menuRawDecoderClick(Sender: TObject);
-begin
-     diagout.Form3.Visible := True; // diagout is the raw decoder output form... it was repurposed for this.
-end;
-
-procedure TForm1.menuTXLogClick(Sender: TObject);
-begin
-     rawdec.Form5.Visible := True;
-end;
 
 procedure TForm1.ListBox1MouseDown(Sender: TObject; Button: TMouseButton;
   Shift: TShiftState; X, Y: Integer);
@@ -2568,7 +2560,7 @@ begin
                myBrush := TBrush.Create;
                with (Control as TListBox).Canvas do
                begin
-                    myColor := clWhite;
+                    if index > 0 then myColor := clWhite else myColor := cfgvtwo.glqsoColor;
                     myBrush.Style := bsSolid;
                     myBrush.Color := myColor;
                     lclintf.FillRect(handle, ARect, myBrush.Reference.Handle);
@@ -2805,24 +2797,14 @@ Begin
      if st.Hour < 10 Then foo := '0' + IntToStr(st.Hour) + ':' else foo := IntToStr(st.Hour) + ':';
      if st.Minute < 10 then foo := foo + '0' + IntToStr(st.Minute) else foo := foo + IntToStr(st.Minute);
      rpt := foo + '  TX ' + exchange;
-     If firstReport Then
-     Begin
-          rawdec.Form5.ListBox1.Clear;
-          rawdec.Form5.ListBox1.Items.Add(rpt);
-          firstReport := False;
-          itemsIn := True;
-     End
-     Else
-     Begin
-          rawdec.Form5.ListBox1.Items.Add(rpt);
-          itemsIn := True;
-     End;
+     lbTXLog.Items.Add(rpt);
+     firstReport := False;
      // Manage size of scrollback
-     If Form1.ListBox1.Items.Count > 500 Then
+     If lbTXLog.Items.Count > 32 Then
      Begin
-          for idx := ListBox1.Items.Count - 1 downto 100 do
+          for idx := lbTXLog.Items.Count - 1 downto 32 do
           Begin
-              ListBox1.Items.Delete(idx);
+              lbTXLog.Items.Delete(idx);
           end;
      End;
 end;
@@ -2848,7 +2830,7 @@ Var
    csvstr       : String;
    wcount       : Integer;
    word1, word3 : String;
-   ii           : Integer;
+   ii, idx      : Integer;
 Begin
      //if globalData.gmode = 65 Then mode := 'JT65A';
      //if globalData.gmode =  4 Then mode := 'JT4B';
@@ -2900,14 +2882,14 @@ Begin
           Form1.ListBox1.ItemIndex := 0;
           firstReport := False;
           itemsIn := True;
-          //// Manage size of scrollback
-          //If Form1.ListBox1.Items.Count > 500 Then
-          //Begin
-          //     for idx := ListBox1.Items.Count - 1 downto 100 do
-          //     Begin
-          //          ListBox1.Items.Delete(idx);
-          //     end;
-          //End;
+          // Manage size of scrollback
+          If Form1.ListBox1.Items.Count > 500 Then
+          Begin
+               for idx := ListBox1.Items.Count - 1 downto 100 do
+               Begin
+                    ListBox1.Items.Delete(idx);
+               end;
+          End;
           d65.gld65decodes[i].dtDisplayed := True;
           d65.gld65decodes[i].dtProcessed := True;
           // Save to RX/TX log if user has selected such.
@@ -4725,7 +4707,6 @@ Begin
           // CW ID Handler
           if doCWID Then
           Begin
-               diagout.Form3.ListBox3.Clear;
                doCWID := False;
                // Add .25s silence between end of JT65 and start of CW ID
                for mnlooper := mnlooper to mnlooper + 11025 do
@@ -4749,7 +4730,6 @@ Begin
                End;
                if freqcw < 300.0 then freqcw := 300.0;
                if freqcw > 2270.0 then freqcw := 2270.0;
-               diagout.Form3.ListBox3.Items.Add('CW ID Au=' + FloatToStr(freqcw) + ' Hz');
                nwave := 0;
                encode65.genCW(cwidMsg,@freqcw,@encode65.e65cwid[0],@nwave);
                //subroutine gencwid(msg,freqcw,iwave,nwave)
@@ -5206,9 +5186,6 @@ Begin
                     txCount := 0;
                     lastTX := '';
                     Form1.chkEnTX.Checked := False;
-                    diagout.Form3.ListBox1.Items.Insert(0,'TX Halted.  Same message sent 15 times.');
-                    diagout.Form3.Show;
-                    diagout.Form3.BringToFront;
                End;
           End
           Else
@@ -5323,9 +5300,6 @@ Begin
                     txCount := 0;
                     lastTX := '';
                     Form1.chkEnTX.Checked := False;
-                    diagout.Form3.ListBox1.Items.Insert(0,'TX Halted.  Same message sent 15 times.');
-                    diagout.Form3.Show;
-                    diagout.Form3.BringToFront;
                End;
           End
           Else
@@ -5388,14 +5362,6 @@ Begin
      // I can only see action 2..5 from here.  action=1 does not exist
      // if I have made it here.
      // Handler for action=2
-     // Keep transmit log output from getting too large.
-     If rawdec.Form5.ListBox1.Items.Count > 75 Then
-     Begin
-          for idx := rawdec.Form5.ListBox1.Items.Count - 1 downto 25 do
-          Begin
-               rawdec.Form5.ListBox1.Items.Delete(idx);
-          end;
-     End;
 End;
 
 procedure TForm1.processOncePerSecond(st : TSystemTime);
@@ -5517,8 +5483,6 @@ Begin
      Begin
           If cbEnRB.Checked And odd(st.Minute) Then rbcPing := True;
      end;
-     // Update RB/PSKR/DB Stats
-     heard.Form9.Label3.Caption := 'RB Reports Sent:  ' + rb.RBcount;
 end;
 
 procedure TForm1.oncePerTick();
@@ -5600,6 +5564,17 @@ Begin
                end;
           End;
           d65.gld65HaveDecodes := False;
+          {TODO Pick up raw decodes for main form display}
+          if d65.glrawOut.Count > 0 Then
+          Begin
+               lbRawDecoder.Clear;
+               lbRawDecoder.Items.Add('Bin,DF,Sync,dB,DT,Decode');
+               for i := 0 to d65.glrawOut.Count-1 do
+               Begin
+                    lbRawDecoder.Items.Add(d65.glrawOut.Strings[i]);
+               End;
+               d65.glrawOut.Clear;
+          End;
           // Remove extra '-----------------------------------------------' lines
           if ListBox1.Items.Count > 1 Then
           Begin
@@ -5612,7 +5587,7 @@ Begin
                          ccnt := ccnt+1;
                     end;
                end;
-               If ccnt > 1 Then
+               If ccnt > 2 Then
                Begin
                     // Compact :)
                     repeat
@@ -5689,9 +5664,6 @@ begin
      If alreadyHere then
      Begin
           Form1.Timer1.Enabled := False;
-          diagout.Form3.Show;
-          diagout.Form3.BringToFront;
-          diagout.Form3.ListBox1.Items.Add('resync! ' + IntToStr(gst.Second));
           runOnce := True;
           Form1.Timer1.Enabled := True;
           {TODO [1.0.9] Review this based on any 1.0.8 feedback.}

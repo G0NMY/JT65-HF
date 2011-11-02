@@ -17,6 +17,7 @@ object Form1: TForm1
   Menu = MainMenu1
   OnClose = FormClose
   OnCreate = FormCreate
+  OnResize = FormResize
   SessionProperties = 'Left;Top'
   ShowHint = True
   LCLVersion = '0.9.30'
@@ -1245,6 +1246,35 @@ object Form1: TForm1
     ParentColor = False
     ParentFont = False
     OnDblClick = Label32DblClick
+  end
+  object lbTXLog: TListBox
+    Left = 561
+    Height = 53
+    Top = 566
+    Width = 369
+    Items.Strings = (
+      'Transmissions'
+    )
+    ItemHeight = 23
+    OnDblClick = lbTXLogDblClick
+    TabOrder = 41
+    Visible = False
+  end
+  object lbRawDecoder: TListBox
+    AnchorSideBottom.Control = btnDefaults
+    Left = 561
+    Height = 1
+    Top = 623
+    Width = 369
+    Anchors = [akTop, akLeft, akBottom]
+    BorderSpacing.Bottom = 5
+    Items.Strings = (
+      'Unprocessed decoder output'
+    )
+    ItemHeight = 23
+    OnDblClick = lbRawDecoderDblClick
+    TabOrder = 42
+    Visible = False
   end
   object Timer1: TTimer
     Interval = 220
