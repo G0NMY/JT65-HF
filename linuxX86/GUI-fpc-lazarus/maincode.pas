@@ -2312,7 +2312,7 @@ begin
                // message versus an error message the first two characters must be resolvable
                // to an integer ranging from 00 to 23.  Will use TryStrToInt()
                i := 0;
-               if length(exchange)> 27 Then
+               if (length(exchange)> 27) And Not (exchange[1..4]='----') Then
                Begin
                     if TryStrToInt(exchange[1..2],i) Then
                     Begin
@@ -5654,7 +5654,7 @@ Begin
      // Only run this block if decoder thread is inactive.
      If not d65.glinProg and d65.gld65HaveDecodes Then
      Begin
-          Form1.ListBox1.Items.Insert(0,'');
+          Form1.ListBox1.Items.Insert(0,'-----------------------------------------------');
           for i := 0 to 49 do
           Begin
                if (not d65.gld65decodes[i].dtProcessed) And (not d65.gld65decodes[i].dtDisplayed) Then
