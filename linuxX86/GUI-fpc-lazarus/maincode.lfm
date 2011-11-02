@@ -789,7 +789,7 @@ object Form1: TForm1
     Constraints.MinHeight = 300
     Constraints.MinWidth = 548
     Font.Height = -19
-    Font.Name = 'Courier New'
+    Font.Name = 'courier new'
     Font.Style = [fsBold]
     ItemHeight = 0
     OnDblClick = ListBox1DblClick
@@ -807,7 +807,7 @@ object Form1: TForm1
     Width = 548
     Enabled = False
     Font.Height = -19
-    Font.Name = 'Courier New'
+    Font.Name = 'courier new'
     Font.Style = [fsBold]
     Items.Strings = (
       ' UTC Sync dB  DT    DF        Exchange'
@@ -1687,6 +1687,10 @@ object Form1: TForm1
       end    
       item
         Name = 'LogComment'
+      end    
+      item
+        Name = 'directXLog'
+        Value = 'n'
       end>
     FileName = 'station.xml'
     left = 705

@@ -290,9 +290,8 @@ Var
    sum, ave, avg, threshold      : CTypes.cfloat;
    xmag, avesq, basevb, sq       : CTypes.cfloat;
    ffoo, snrsh, dfsh             : CTypes.cfloat;
-   samratio                      : CTypes.cdouble;
    lical, idf                    : CTypes.cint;
-   bw, afc, ierr                 : CTypes.cint;
+   bw, afc                       : CTypes.cint;
    lmousedf, mousedf2, jz2, j    : CTypes.cint;
    decArray                      : Array[0..99] Of String;
    wcount, strongest, nstest     : CTypes.cint;

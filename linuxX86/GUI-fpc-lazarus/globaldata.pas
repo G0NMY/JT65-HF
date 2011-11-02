@@ -25,7 +25,7 @@ unit globalData;
 interface
 
 uses
-  Classes, SysUtils, Graphics, CTypes;
+  Classes, SysUtils, Graphics;
 
 Type
     hrdrigCAP = Record

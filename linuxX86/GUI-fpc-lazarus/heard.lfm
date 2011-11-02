@@ -21,7 +21,7 @@ object Form9: TForm9
     Width = 138
     Caption = 'RB Reports Sent:  '
     Font.Height = -15
-    Font.Name = 'courier new [monotype]'
+    Font.Name = 'courier new'
     ParentColor = False
     ParentFont = False
   end

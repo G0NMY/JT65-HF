@@ -12,7 +12,7 @@ object Form3: TForm3
   Constraints.MinHeight = 535
   Constraints.MinWidth = 730
   Font.Height = -13
-  Font.Name = 'Arial'
+  Font.Name = 'arial [monotype]'
   LCLVersion = '0.9.30'
   object ListBox1: TListBox
     Left = 0
@@ -37,7 +37,7 @@ object Form3: TForm3
     Width = 321
     Font.Color = clRed
     Font.Height = -13
-    Font.Name = 'Arial'
+    Font.Name = 'arial [monotype]'
     Font.Style = [fsBold]
     ItemHeight = 0
     ParentFont = False
@@ -50,7 +50,7 @@ object Form3: TForm3
     Width = 261
     Caption = 'Bin, DF, Sync, Signal dB, DT, Check, Text'
     Font.Height = -13
-    Font.Name = 'Arial'
+    Font.Name = 'arial [monotype]'
     Font.Style = [fsBold]
     ParentColor = False
     ParentFont = False
@@ -62,7 +62,7 @@ object Form3: TForm3
     Width = 129
     Caption = 'General Information'
     Font.Height = -13
-    Font.Name = 'Arial'
+    Font.Name = 'arial [monotype]'
     Font.Style = [fsBold]
     ParentColor = False
     ParentFont = False
@@ -74,7 +74,7 @@ object Form3: TForm3
     Width = 102
     Caption = 'Errors/Warnings'
     Font.Height = -13
-    Font.Name = 'Arial'
+    Font.Name = 'arial [monotype]'
     Font.Style = [fsBold]
     ParentColor = False
     ParentFont = False

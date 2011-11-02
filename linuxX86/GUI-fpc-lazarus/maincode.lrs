@@ -216,12 +216,12 @@ LazarusResources.Add('TForm1','FORMDATA',[
   +'p'#6'akLeft'#7'akRight'#8'akBottom'#0#20'BorderSpacing.Bottom'#2#5#21'Const'
   +'raints.MaxHeight'#3#192#1#20'Constraints.MaxWidth'#3'$'#2#21'Constraints.Mi'
   +'nHeight'#3','#1#20'Constraints.MinWidth'#3'$'#2#11'Font.Height'#2#237#9'Fon'
-  +'t.Name'#6#11'Courier New'#10'Font.Style'#11#6'fsBold'#0#10'ItemHeight'#2#0
+  +'t.Name'#6#11'courier new'#10'Font.Style'#11#6'fsBold'#0#10'ItemHeight'#2#0
   +#10'OnDblClick'#7#16'ListBox1DblClick'#10'OnDrawItem'#7#16'ListBox1DrawItem'
   +#11'OnMouseDown'#7#17'ListBox1MouseDown'#10'ParentFont'#8#5'Style'#7#16'lbOw'
   +'nerDrawFixed'#8'TabOrder'#2#16#8'TopIndex'#2#255#0#0#8'TListBox'#8'ListBox2'
   +#4'Left'#2#5#6'Height'#2#31#3'Top'#3','#1#5'Width'#3'$'#2#7'Enabled'#8#11'Fo'
-  +'nt.Height'#2#237#9'Font.Name'#6#11'Courier New'#10'Font.Style'#11#6'fsBold'
+  +'nt.Height'#2#237#9'Font.Name'#6#11'courier new'#10'Font.Style'#11#6'fsBold'
   +#0#13'Items.Strings'#1#6'& UTC Sync dB  DT    DF        Exchange'#0#10'ItemH'
   +'eight'#2#28#10'ParentFont'#8#8'TabOrder'#2#17#0#0#5'TEdit'#8'edSigRep'#4'Le'
   +'ft'#3'u'#3#6'Height'#2#24#3'Top'#3#235#1#5'Width'#2'-'#7'Anchors'#11#5'akTo'
@@ -407,73 +407,73 @@ LazarusResources.Add('TForm1','FORMDATA',[
   +#4'Name'#6#8'UserQRG9'#5'Value'#6#1'0'#0#1#4'Name'#6#9'UserQRG10'#5'Value'#6
   +#1'0'#0#1#4'Name'#6#9'UserQRG11'#5'Value'#6#1'0'#0#1#4'Name'#6#9'UserQRG12'#5
   +'Value'#6#1'0'#0#1#4'Name'#6#9'UserQRG13'#5'Value'#6#1'0'#0#1#4'Name'#6#9'La'
-  +'stInput'#0#1#4'Name'#6#10'LastOutput'#0#1#4'Name'#6#10'LogComment'#0#0#8'Fi'
-  +'leName'#6#11'station.xml'#4'left'#3#193#2#3'top'#2'H'#0#0#10'TPopupMenu'#8
-  +'popupQRG'#4'left'#3#193#2#3'top'#3#128#0#0#9'TMenuItem'#10'MenuItem1a'#7'Ca'
-  +'ption'#6#4'1838'#7'OnClick'#7#15'MenuItemHandler'#4'left'#2#1#0#0#9'TMenuIt'
-  +'em'#10'MenuItem2a'#7'Caption'#6#4'3576'#9'RadioItem'#9#7'OnClick'#7#15'Menu'
-  +'ItemHandler'#4'left'#2#1#0#0#9'TMenuItem'#10'MenuItem3a'#7'Caption'#6#4'703'
-  +'9'#9'RadioItem'#9#7'OnClick'#7#15'MenuItemHandler'#4'left'#2#1#0#0#9'TMenuI'
-  +'tem'#10'MenuItem4a'#7'Caption'#6#4'7076'#9'RadioItem'#9#7'OnClick'#7#15'Men'
-  +'uItemHandler'#4'left'#2#1#0#0#9'TMenuItem'#10'MenuItem5a'#7'Caption'#6#5'14'
-  +'076'#9'RadioItem'#9#7'OnClick'#7#15'MenuItemHandler'#4'left'#2#1#0#0#9'TMen'
-  +'uItem'#10'MenuItem6a'#7'Caption'#6#5'21076'#9'RadioItem'#9#7'OnClick'#7#15
-  +'MenuItemHandler'#4'left'#2#1#0#0#9'TMenuItem'#10'MenuItem7a'#7'Caption'#6#5
-  +'28076'#9'RadioItem'#9#7'OnClick'#7#15'MenuItemHandler'#4'left'#2#1#0#0#9'TM'
-  +'enuItem'#10'MenuItem8a'#7'Caption'#6#14'USER DEFINED 1'#9'RadioItem'#9#7'On'
-  +'Click'#7#15'MenuItemHandler'#4'left'#2#1#0#0#9'TMenuItem'#10'MenuItem9a'#7
-  +'Caption'#6#14'USER DEFINED 2'#9'RadioItem'#9#7'OnClick'#7#15'MenuItemHandle'
-  +'r'#4'left'#2#1#0#0#9'TMenuItem'#11'MenuItem10a'#7'Caption'#6#14'USER DEFINE'
-  +'D 3'#9'RadioItem'#9#7'OnClick'#7#15'MenuItemHandler'#4'left'#2#1#0#0#9'TMen'
-  +'uItem'#11'MenuItem11a'#7'Caption'#6#14'USER DEFINED 4'#9'RadioItem'#9#7'OnC'
-  +'lick'#7#15'MenuItemHandler'#4'left'#2#1#0#0#9'TMenuItem'#11'MenuItem12a'#7
-  +'Caption'#6#14'USER DEFINED 5'#9'RadioItem'#9#7'OnClick'#7#15'MenuItemHandle'
-  +'r'#4'left'#2#1#0#0#9'TMenuItem'#11'MenuItem13a'#7'Caption'#6#14'USER DEFINE'
-  +'D 6'#7'OnClick'#7#15'MenuItemHandler'#4'left'#2#1#0#0#9'TMenuItem'#11'MenuI'
-  +'tem14a'#7'Caption'#6#14'USER DEFINED 7'#7'OnClick'#7#15'MenuItemHandler'#4
-  +'left'#2#1#0#0#9'TMenuItem'#11'MenuItem15a'#7'Caption'#6#14'USER DEFINED 8'#7
-  +'OnClick'#7#15'MenuItemHandler'#4'left'#2#1#0#0#9'TMenuItem'#11'MenuItem16a'
-  +#7'Caption'#6#14'USER DEFINED 9'#7'OnClick'#7#15'MenuItemHandler'#4'left'#2#1
-  +#0#0#9'TMenuItem'#11'MenuItem17a'#7'Caption'#6#15'USER DEFINED 10'#7'OnClick'
-  +#7#15'MenuItemHandler'#4'left'#2#1#0#0#9'TMenuItem'#11'MenuItem18a'#7'Captio'
-  +'n'#6#15'USER DEFINED 11'#7'OnClick'#7#15'MenuItemHandler'#4'left'#2#1#0#0#9
-  +'TMenuItem'#11'MenuItem19a'#7'Caption'#6#15'USER DEFINED 12'#7'OnClick'#7#15
-  +'MenuItemHandler'#4'left'#2#1#0#0#9'TMenuItem'#11'MenuItem20a'#7'Caption'#6
-  +#15'USER DEFINED 13'#7'OnClick'#7#15'MenuItemHandler'#4'left'#2#1#0#0#0#10'T'
-  +'PopupMenu'#9'popupMsgs'#4'left'#3#9#3#3'top'#3#128#0#0#9'TMenuItem'#10'Menu'
-  +'Item1b'#7'Caption'#6#13'Short-hand RO'#7'OnClick'#7#15'MenuItemHandler'#4'l'
-  +'eft'#2#1#0#0#9'TMenuItem'#10'MenuItem2b'#7'Caption'#6#14'Short-hand RRR'#7
-  +'OnClick'#7#15'MenuItemHandler'#4'left'#2#1#0#0#9'TMenuItem'#10'MenuItem3b'#7
-  +'Caption'#6#13'Short-hand 73'#7'OnClick'#7#15'MenuItemHandler'#4'left'#2#1#0
-  +#0#9'TMenuItem'#10'MenuItem4b'#7'Caption'#6#9'New Item5'#7'OnClick'#7#15'Men'
-  +'uItemHandler'#4'left'#2#1#0#0#9'TMenuItem'#10'MenuItem5b'#7'Caption'#6#9'Ne'
-  +'w Item6'#7'OnClick'#7#15'MenuItemHandler'#4'left'#2#1#0#0#9'TMenuItem'#10'M'
-  +'enuItem6b'#7'Caption'#6#9'New Item7'#7'OnClick'#7#15'MenuItemHandler'#4'lef'
-  ,'t'#2#1#0#0#9'TMenuItem'#10'MenuItem7b'#7'Caption'#6#9'New Item8'#7'OnClick'
-  +#7#15'MenuItemHandler'#4'left'#2#1#0#0#9'TMenuItem'#10'MenuItem8b'#7'Caption'
-  +#6#9'New Item9'#7'OnClick'#7#15'MenuItemHandler'#4'left'#2#1#0#0#9'TMenuItem'
-  +#10'MenuItem9b'#7'Caption'#6#10'New Item10'#7'OnClick'#7#15'MenuItemHandler'
-  +#4'left'#2#1#0#0#9'TMenuItem'#11'MenuItem10b'#7'Caption'#6#10'New Item11'#7
-  +'OnClick'#7#15'MenuItemHandler'#4'left'#2#1#0#0#9'TMenuItem'#11'MenuItem11b'
-  +#7'Caption'#6#10'New Item12'#7'OnClick'#7#15'MenuItemHandler'#4'left'#2#1#0#0
-  +#9'TMenuItem'#11'MenuItem12b'#7'Caption'#6#10'New Item13'#7'OnClick'#7#15'Me'
-  +'nuItemHandler'#4'left'#2#1#0#0#9'TMenuItem'#11'MenuItem13b'#7'Caption'#6#10
-  +'New Item13'#7'OnClick'#7#15'MenuItemHandler'#4'left'#2#1#0#0#9'TMenuItem'#11
-  +'MenuItem14b'#7'Caption'#6#10'New Item14'#7'OnClick'#7#15'MenuItemHandler'#4
-  +'left'#2#1#0#0#9'TMenuItem'#11'MenuItem15b'#7'Caption'#6#10'New Item15'#7'On'
-  +'Click'#7#15'MenuItemHandler'#4'left'#2#1#0#0#9'TMenuItem'#11'MenuItem16b'#7
-  +'Caption'#6#10'New Item16'#7'OnClick'#7#15'MenuItemHandler'#4'left'#2#1#0#0#9
-  +'TMenuItem'#11'MenuItem17b'#7'Caption'#6#10'New Item17'#7'OnClick'#7#15'Menu'
-  +'ItemHandler'#4'left'#2#1#0#0#9'TMenuItem'#11'MenuItem18b'#7'Caption'#6#10'N'
-  +'ew Item18'#7'OnClick'#7#15'MenuItemHandler'#4'left'#2#1#0#0#9'TMenuItem'#11
-  +'MenuItem19b'#7'Caption'#6#10'New Item19'#7'OnClick'#7#15'MenuItemHandler'#4
-  +'left'#2#1#0#0#9'TMenuItem'#11'MenuItem20b'#7'Caption'#6#10'New Item20'#7'On'
-  +'Click'#7#15'MenuItemHandler'#4'left'#2#1#0#0#0#9'TMainMenu'#9'MainMenu1'#4
-  +'left'#3#9#3#3'top'#2'H'#0#9'TMenuItem'#9'menuSetup'#7'Caption'#6#5'Setup'#7
-  +'OnClick'#7#14'menuSetupClick'#4'left'#2#1#0#0#9'TMenuItem'#14'menuRigContro'
-  +'l'#7'Caption'#6#11'Rig Control'#7'OnClick'#7#19'menuRigControlClick'#4'left'
-  +#2#1#0#0#9'TMenuItem'#9'menuAbout'#7'Caption'#6#13'About JT65-HF'#7'OnClick'
-  +#7#14'menuAboutClick'#4'left'#2#1#0#0#0#6'TTimer'#6'Timer2'#7'Enabled'#8#8'I'
-  +'nterval'#3#184#11#7'OnTimer'#7#11'Timer2Timer'#4'left'#3'I'#3#3'top'#2'H'#0
-  +#0#0
+  +'stInput'#0#1#4'Name'#6#10'LastOutput'#0#1#4'Name'#6#10'LogComment'#0#1#4'Na'
+  +'me'#6#10'directXLog'#5'Value'#6#1'n'#0#0#8'FileName'#6#11'station.xml'#4'le'
+  +'ft'#3#193#2#3'top'#2'H'#0#0#10'TPopupMenu'#8'popupQRG'#4'left'#3#193#2#3'to'
+  +'p'#3#128#0#0#9'TMenuItem'#10'MenuItem1a'#7'Caption'#6#4'1838'#7'OnClick'#7
+  +#15'MenuItemHandler'#4'left'#2#1#0#0#9'TMenuItem'#10'MenuItem2a'#7'Caption'#6
+  +#4'3576'#9'RadioItem'#9#7'OnClick'#7#15'MenuItemHandler'#4'left'#2#1#0#0#9'T'
+  +'MenuItem'#10'MenuItem3a'#7'Caption'#6#4'7039'#9'RadioItem'#9#7'OnClick'#7#15
+  +'MenuItemHandler'#4'left'#2#1#0#0#9'TMenuItem'#10'MenuItem4a'#7'Caption'#6#4
+  +'7076'#9'RadioItem'#9#7'OnClick'#7#15'MenuItemHandler'#4'left'#2#1#0#0#9'TMe'
+  +'nuItem'#10'MenuItem5a'#7'Caption'#6#5'14076'#9'RadioItem'#9#7'OnClick'#7#15
+  +'MenuItemHandler'#4'left'#2#1#0#0#9'TMenuItem'#10'MenuItem6a'#7'Caption'#6#5
+  +'21076'#9'RadioItem'#9#7'OnClick'#7#15'MenuItemHandler'#4'left'#2#1#0#0#9'TM'
+  +'enuItem'#10'MenuItem7a'#7'Caption'#6#5'28076'#9'RadioItem'#9#7'OnClick'#7#15
+  +'MenuItemHandler'#4'left'#2#1#0#0#9'TMenuItem'#10'MenuItem8a'#7'Caption'#6#14
+  +'USER DEFINED 1'#9'RadioItem'#9#7'OnClick'#7#15'MenuItemHandler'#4'left'#2#1
+  +#0#0#9'TMenuItem'#10'MenuItem9a'#7'Caption'#6#14'USER DEFINED 2'#9'RadioItem'
+  +#9#7'OnClick'#7#15'MenuItemHandler'#4'left'#2#1#0#0#9'TMenuItem'#11'MenuItem'
+  +'10a'#7'Caption'#6#14'USER DEFINED 3'#9'RadioItem'#9#7'OnClick'#7#15'MenuIte'
+  +'mHandler'#4'left'#2#1#0#0#9'TMenuItem'#11'MenuItem11a'#7'Caption'#6#14'USER'
+  +' DEFINED 4'#9'RadioItem'#9#7'OnClick'#7#15'MenuItemHandler'#4'left'#2#1#0#0
+  +#9'TMenuItem'#11'MenuItem12a'#7'Caption'#6#14'USER DEFINED 5'#9'RadioItem'#9
+  +#7'OnClick'#7#15'MenuItemHandler'#4'left'#2#1#0#0#9'TMenuItem'#11'MenuItem13'
+  +'a'#7'Caption'#6#14'USER DEFINED 6'#7'OnClick'#7#15'MenuItemHandler'#4'left'
+  +#2#1#0#0#9'TMenuItem'#11'MenuItem14a'#7'Caption'#6#14'USER DEFINED 7'#7'OnCl'
+  +'ick'#7#15'MenuItemHandler'#4'left'#2#1#0#0#9'TMenuItem'#11'MenuItem15a'#7'C'
+  +'aption'#6#14'USER DEFINED 8'#7'OnClick'#7#15'MenuItemHandler'#4'left'#2#1#0
+  +#0#9'TMenuItem'#11'MenuItem16a'#7'Caption'#6#14'USER DEFINED 9'#7'OnClick'#7
+  +#15'MenuItemHandler'#4'left'#2#1#0#0#9'TMenuItem'#11'MenuItem17a'#7'Caption'
+  +#6#15'USER DEFINED 10'#7'OnClick'#7#15'MenuItemHandler'#4'left'#2#1#0#0#9'TM'
+  +'enuItem'#11'MenuItem18a'#7'Caption'#6#15'USER DEFINED 11'#7'OnClick'#7#15'M'
+  +'enuItemHandler'#4'left'#2#1#0#0#9'TMenuItem'#11'MenuItem19a'#7'Caption'#6#15
+  +'USER DEFINED 12'#7'OnClick'#7#15'MenuItemHandler'#4'left'#2#1#0#0#9'TMenuIt'
+  +'em'#11'MenuItem20a'#7'Caption'#6#15'USER DEFINED 13'#7'OnClick'#7#15'MenuIt'
+  +'emHandler'#4'left'#2#1#0#0#0#10'TPopupMenu'#9'popupMsgs'#4'left'#3#9#3#3'to'
+  +'p'#3#128#0#0#9'TMenuItem'#10'MenuItem1b'#7'Caption'#6#13'Short-hand RO'#7'O'
+  +'nClick'#7#15'MenuItemHandler'#4'left'#2#1#0#0#9'TMenuItem'#10'MenuItem2b'#7
+  +'Caption'#6#14'Short-hand RRR'#7'OnClick'#7#15'MenuItemHandler'#4'left'#2#1#0
+  +#0#9'TMenuItem'#10'MenuItem3b'#7'Caption'#6#13'Short-hand 73'#7'OnClick'#7#15
+  +'MenuItemHandler'#4'left'#2#1#0#0#9'TMenuItem'#10'MenuItem4b'#7'Caption'#6#9
+  +'New Item5'#7'OnClick'#7#15'MenuItemHandler'#4'left'#2#1#0#0#9'TMenuItem'#10
+  +'MenuItem5b'#7'Caption'#6#9'New Item6'#7'OnClick'#7#15'MenuItemHandler'#4'le'
+  +'ft'#2#1#0#0#9'TMenuItem'#10'MenuItem6b'#7'Caption'#6#9'New Item7'#7'OnClick'
+  ,#7#15'MenuItemHandler'#4'left'#2#1#0#0#9'TMenuItem'#10'MenuItem7b'#7'Caption'
+  +#6#9'New Item8'#7'OnClick'#7#15'MenuItemHandler'#4'left'#2#1#0#0#9'TMenuItem'
+  +#10'MenuItem8b'#7'Caption'#6#9'New Item9'#7'OnClick'#7#15'MenuItemHandler'#4
+  +'left'#2#1#0#0#9'TMenuItem'#10'MenuItem9b'#7'Caption'#6#10'New Item10'#7'OnC'
+  +'lick'#7#15'MenuItemHandler'#4'left'#2#1#0#0#9'TMenuItem'#11'MenuItem10b'#7
+  +'Caption'#6#10'New Item11'#7'OnClick'#7#15'MenuItemHandler'#4'left'#2#1#0#0#9
+  +'TMenuItem'#11'MenuItem11b'#7'Caption'#6#10'New Item12'#7'OnClick'#7#15'Menu'
+  +'ItemHandler'#4'left'#2#1#0#0#9'TMenuItem'#11'MenuItem12b'#7'Caption'#6#10'N'
+  +'ew Item13'#7'OnClick'#7#15'MenuItemHandler'#4'left'#2#1#0#0#9'TMenuItem'#11
+  +'MenuItem13b'#7'Caption'#6#10'New Item13'#7'OnClick'#7#15'MenuItemHandler'#4
+  +'left'#2#1#0#0#9'TMenuItem'#11'MenuItem14b'#7'Caption'#6#10'New Item14'#7'On'
+  +'Click'#7#15'MenuItemHandler'#4'left'#2#1#0#0#9'TMenuItem'#11'MenuItem15b'#7
+  +'Caption'#6#10'New Item15'#7'OnClick'#7#15'MenuItemHandler'#4'left'#2#1#0#0#9
+  +'TMenuItem'#11'MenuItem16b'#7'Caption'#6#10'New Item16'#7'OnClick'#7#15'Menu'
+  +'ItemHandler'#4'left'#2#1#0#0#9'TMenuItem'#11'MenuItem17b'#7'Caption'#6#10'N'
+  +'ew Item17'#7'OnClick'#7#15'MenuItemHandler'#4'left'#2#1#0#0#9'TMenuItem'#11
+  +'MenuItem18b'#7'Caption'#6#10'New Item18'#7'OnClick'#7#15'MenuItemHandler'#4
+  +'left'#2#1#0#0#9'TMenuItem'#11'MenuItem19b'#7'Caption'#6#10'New Item19'#7'On'
+  +'Click'#7#15'MenuItemHandler'#4'left'#2#1#0#0#9'TMenuItem'#11'MenuItem20b'#7
+  +'Caption'#6#10'New Item20'#7'OnClick'#7#15'MenuItemHandler'#4'left'#2#1#0#0#0
+  +#9'TMainMenu'#9'MainMenu1'#4'left'#3#9#3#3'top'#2'H'#0#9'TMenuItem'#9'menuSe'
+  +'tup'#7'Caption'#6#5'Setup'#7'OnClick'#7#14'menuSetupClick'#4'left'#2#1#0#0#9
+  +'TMenuItem'#14'menuRigControl'#7'Caption'#6#11'Rig Control'#7'OnClick'#7#19
+  +'menuRigControlClick'#4'left'#2#1#0#0#9'TMenuItem'#9'menuAbout'#7'Caption'#6
+  +#13'About JT65-HF'#7'OnClick'#7#14'menuAboutClick'#4'left'#2#1#0#0#0#6'TTime'
+  +'r'#6'Timer2'#7'Enabled'#8#8'Interval'#3#184#11#7'OnTimer'#7#11'Timer2Timer'
+  +#4'left'#3'I'#3#3'top'#2'H'#0#0#0
 ]);

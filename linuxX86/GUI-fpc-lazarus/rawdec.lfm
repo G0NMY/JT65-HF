@@ -12,7 +12,7 @@ object Form5: TForm5
   Constraints.MinHeight = 375
   Constraints.MinWidth = 675
   Font.Height = -13
-  Font.Name = 'Arial'
+  Font.Name = 'arial [monotype]'
   LCLVersion = '0.9.28.2'
   object ListBox1: TListBox
     Left = 0
@@ -20,7 +20,7 @@ object Form5: TForm5
     Top = 0
     Width = 672
     Font.Height = -13
-    Font.Name = 'Courier New'
+    Font.Name = 'courier new'
     Font.Style = [fsBold]
     ItemHeight = 0
     ParentFont = False
