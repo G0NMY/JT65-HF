@@ -279,7 +279,7 @@ type
     procedure addToDisplayE(msg : String);
     procedure rbcCheck();
     //procedure updateList(callsign : String);
-//    procedure WaterfallMouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
+    procedure WaterfallMouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
     procedure addToDisplayTX(exchange : String);
     procedure saveCSV();
     Function  ValidateCallsign(csign : String) : Boolean;
@@ -1241,28 +1241,28 @@ begin
   spectrum.specColorMap := Form1.cbSpecPal.ItemIndex;
 end;
 
-//procedure TForm1.WaterFallMouseDown(Sender: TObject; Button: TMouseButton;
-//  Shift: TShiftState; X, Y: Integer);
-//Var
-//   df : Single;
-//begin
-//     if x = 0 then df := -1019;
-//     if x > 0 Then df := X*2.7027;
-//     df := -1018.9189 + df;
-//
-//     if Button = mbLeft Then
-//     Begin
-//          Form1.spinTXCF.Value := round(df);
-//          if form1.chkAutoTxDF.Checked Then Form1.spinDecoderCF.Value := Form1.spinTXCF.Value;
-//     End;
-//
-//     if Button = mbRight Then
-//     Begin
-//          Form1.spinDecoderCF.Value := round(df);
-//          if form1.chkAutoTxDF.Checked Then Form1.spinTXCF.Value := Form1.spinDecoderCF.Value;
-//     End;
-//
-//end;
+procedure TForm1.WaterFallMouseDown(Sender: TObject; Button: TMouseButton;
+  Shift: TShiftState; X, Y: Integer);
+Var
+   df : Single;
+begin
+     if x = 0 then df := -1019;
+     if x > 0 Then df := X*2.7027;
+     df := -1018.9189 + df;
+
+     if Button = mbLeft Then
+     Begin
+          Form1.spinTXCF.Value := round(df);
+          if form1.chkAutoTxDF.Checked Then Form1.spinDecoderCF.Value := Form1.spinTXCF.Value;
+     End;
+
+     if Button = mbRight Then
+     Begin
+          Form1.spinDecoderCF.Value := round(df);
+          if form1.chkAutoTxDF.Checked Then Form1.spinTXCF.Value := Form1.spinDecoderCF.Value;
+     End;
+
+end;
 
 procedure TForm1.edFreeTextDblClick(Sender: TObject);
 begin
@@ -2284,7 +2284,7 @@ begin
           txControls();
 
           idx := Form1.ListBox1.ItemIndex;
-          if idx > -1 Then
+          if idx > 0 Then
           Begin
                // On a double click I need to figure out the form of the message text..
                // CQ CALL GRID, SOMECALL MYCALL SOMEGRID, SOMECALL MYCALL SOMEREPORT,
@@ -2312,227 +2312,237 @@ begin
                // message versus an error message the first two characters must be resolvable
                // to an integer ranging from 00 to 23.  Will use TryStrToInt()
                i := 0;
-               if TryStrToInt(exchange[1..2],i) Then
+               if length(exchange)> 27 Then
                Begin
-                    exchange := exchange[28..Length(exchange)];
-                    exchange := TrimLeft(TrimRight(exchange));
-                    exchange := DelSpace1(exchange);
-
-                    siglevel := Form1.ListBox1.Items[idx];
-                    siglevel := siglevel[10..12];
-                    siglevel := TrimLeft(TrimRight(siglevel));
-
-                    isiglevel := -30;
-                    if not tryStrToInt(siglevel,isiglevel) Then
+                    if TryStrToInt(exchange[1..2],i) Then
                     Begin
-                         isiglevel := -25;
-                         siglevel := '-25';
-                    End
-                    Else
-                    Begin
-                         if isiglevel > -1 Then
+                         exchange := exchange[28..Length(exchange)];
+                         exchange := TrimLeft(TrimRight(exchange));
+                         exchange := DelSpace1(exchange);
+
+                         siglevel := Form1.ListBox1.Items[idx];
+                         siglevel := siglevel[10..12];
+                         siglevel := TrimLeft(TrimRight(siglevel));
+
+                         isiglevel := -30;
+                         if not tryStrToInt(siglevel,isiglevel) Then
                          Begin
-                              isiglevel := -1;
-                              siglevel := '-1';
+                              isiglevel := -25;
+                              siglevel := '-25';
+                         End
+                         Else
+                         Begin
+                              if isiglevel > -1 Then
+                              Begin
+                                   isiglevel := -1;
+                                   siglevel := '-1';
+                              End;
                          End;
-                    End;
-                    if (isiglevel > -10) and (isiglevel < 0) Then
-                    Begin
-                         foo := '-0';
-                         siglevel := IntToStr(isiglevel);
-                         foo := foo + siglevel[2];
-                         siglevel := foo;
-                    end;
-                    txhz := Form1.ListBox1.Items[idx];
-                    txhz := txhz[19..23];
-                    txhz := TrimLeft(TrimRight(txhz));
-                    txhz := DelSpace1(txhz);
+                         if (isiglevel > -10) and (isiglevel < 0) Then
+                         Begin
+                              foo := '-0';
+                              siglevel := IntToStr(isiglevel);
+                              foo := foo + siglevel[2];
+                              siglevel := foo;
+                         end;
+                         txhz := Form1.ListBox1.Items[idx];
+                         txhz := txhz[19..23];
+                         txhz := TrimLeft(TrimRight(txhz));
+                         txhz := DelSpace1(txhz);
 
-                    wcount := WordCount(exchange,[' ']);
+                         wcount := WordCount(exchange,[' ']);
 
-                    If (wcount < 2) Or (wcount > 3) Then
-                    Begin
+                         If (wcount < 2) Or (wcount > 3) Then
+                         Begin
+                              Resolved := false;
+                              Form1.edHisCall.Text := '';
+                              msgToSend := '';
+                              exchange := '';
+                              resolved := False;
+                              efoo     := 'Can not compute TX message';
+                         End;
+
+                         {TODO [1.0.9 and beyond] Continue testing result of message parsers for bith 2/3 word forms.}
+
+                         // Lots of comments.  :)
+                         //
+                         // OK.. outline the entire process and try to get it right once and for all.  It will
+                         // be a happy day in my little world when I can say this works and forget about it.
+                         //
+                         // This routine needs to compute a response message to the finite set of STRUCTURED
+                         // messages defined by JT65 as a protocol.  The allowed messages come in two forms,
+                         // one set for local and remote callsigns NOT having a slashed callsign and another
+                         // for those where ONE and ONLY ONE callsign is slashed.  If both local and remote
+                         // is slashed then the QSO can not be made.
+                         //
+                         // Take the best/easiet case first:  Local and remote callsign is slash free leading
+                         // to the finite set of messages to parse as:
+                         // (R_CALLSIGN = Remote callsign L_CALLSIGN = Local callsign)
+                         //
+                         // Message Received                 Response
+                         // ----------------------           --------------------------
+                         // CQ  CALLSIGN GRID                R_CALLSIGN L_CALLSIGN GRID
+                         // QRZ CALLSIGN GRID                R_CALLSIGN L_CALLSIGN GRID
+                         // CALLSIGN CALLSIGN GRID           R_CALLSIGN L_CALLSIGN -##
+                         // CALLSIGN CALLSIGN -##            R_CALLSIGN L_CALLSIGN R-##
+                         // CALLSIGN CALLSIGN R-##           R_CALLSIGN L_CALLSIGN RRR
+                         // CALLSIGN CALLSIGN RRR            R_CALLSIGN L_CALLSIGN 73
+                         // CALLSIGN CALLSIGN 73             R_CALLSIGN L_CALLSIGN 73
+
+                         // Next comes Remote callsign is slashed, local is not.
+                         // It does not matter if remote callsign is with prefix or suffix, slash is slash.
+                         // ONLY the following 3 can be used to generate a response message since when using
+                         // slashed callsing these are the only ones where both the remote and local callsign
+                         // is present in the decode.  The remaining sequences only contain a single callsign
+                         // and -##, R-##, RRR or 73 leading to no ability to ascertain which station is actually
+                         // transmitting.  Subtle, but follow it 2 or 3 times and it'll become apparent.
+                         //
+                         // Message Received                 Response
+                         // ----------------------           --------------------------
+                         // CQ  CALLSIGN/x                   R_CALLSIGN/x L_CALLSIGN
+                         // QRZ CALLSIGN/x                   R_CALLSIGN/x L_CALLSIGN
+                         // CALLSIGN/x CALLSIGN              R_CALLSIGN -##
+                         //
+                         // Note the switch in context for the third form.  This is CALLSIGN/x answering a
+                         // message from remote CALLSIGN with no slash in its call.
+
+                         // Next comes Remote callsign is not slashed, local is.
+                         // Message Received                 Response
+                         // ----------------------           --------------------------
+                         // CQ  CALLSIGN GRID                R_CALLSIGN L_CALLSIGN/x
+                         // QRZ CALLSIGN GRID                R_CALLSIGN L_CALLSIGN/x
+                         // CALLSIGN CALLSIGN/x              R_CALLSIGN/x -##
+                         //
+                         // Again, you see a swtich in message form based on context at the third form.
+                         // In both cases where a / is present you can only parse the 3 forms listed above.
+                         // The remaining forms can not be parsed UNLESS YOU HAVE THE CONTEXT given by
+                         // those 3 messages!
+                         //
+                         // To complete the / message types (those with no context unless the 3 above have
+                         // been received and, ultimately contain the local operator's callsign) you have:
+                         //
+                         // Message Received
+                         // ----------------------
+                         // CALLSIGN    -##
+                         // CALLSIGN/x  -##
+                         // CALLSIGN   R-##
+                         // CALLSIGN/x R-##
+                         // CALLSIGN   RRR
+                         // CALLSIGN/x RRR
+                         // CALLSIGN   73
+                         // CALLSIGN/x 73
+                         //
+                         // In each of the 2 word types shown above the CALLSIGN or CALLSIGN/x is the callsign
+                         // OF THE RECEIVING STATION, not the callsign of the TRANSMITTING STATION. So, one more
+                         // time, there is no way of working into those 2 word exchanges without having the
+                         // context of the 3 word exchanges.  Time for a headache pill yet? :)
+                         //
+                         // So.  It's all about context.  In a 3 word exchange you can always get context IF
+                         // it's a valid structured message form.  This implies that when dealing with 2 word
+                         // exchanges the first word MUST BE THE LOCAL USER'S CALLSIGN or CQ or QRZ to result
+                         // in response generation.
+
+                         if wcount = 3 Then
+                         Begin
+                              // Call message generator for normal sequences.  For 3 word sequences context
+                              // of the current message can always be found if it's a VALID 3 word structured
+                              // message.
+                              txt   := '';
+                              efoo  := '';
+                              doQSO := False;
+                              resolved := genNormalMessage(exchange, txt, efoo, doQSO, siglevel);
+                         End;
+
+                         if wcount = 2 Then
+                         Begin
+                              txt   := '';
+                              efoo  := '';
+                              doQSO := False;
+                              // Call message generator for slashed sequences.  For 2 word sequences context
+                              // is less apparent and can only be found when first word is CQ or QRZ or the
+                              // local operator's callsign.
+                              resolved := genSlashedMessage(exchange, txt, efoo, doQSO, siglevel);
+                         end;
+                    end
+                    else
+                    begin
+                         // Line clicked is not a decode, probably a warning/error message.
                          Resolved := false;
                          Form1.edHisCall.Text := '';
+                         Form1.edHisGrid.Text := '';
                          msgToSend := '';
                          exchange := '';
                          resolved := False;
                          efoo     := 'Can not compute TX message';
-                    End;
-
-                    {TODO [1.0.9 and beyond] Continue testing result of message parsers for bith 2/3 word forms.}
-
-                    // Lots of comments.  :)
-                    //
-                    // OK.. outline the entire process and try to get it right once and for all.  It will
-                    // be a happy day in my little world when I can say this works and forget about it.
-                    //
-                    // This routine needs to compute a response message to the finite set of STRUCTURED
-                    // messages defined by JT65 as a protocol.  The allowed messages come in two forms,
-                    // one set for local and remote callsigns NOT having a slashed callsign and another
-                    // for those where ONE and ONLY ONE callsign is slashed.  If both local and remote
-                    // is slashed then the QSO can not be made.
-                    //
-                    // Take the best/easiet case first:  Local and remote callsign is slash free leading
-                    // to the finite set of messages to parse as:
-                    // (R_CALLSIGN = Remote callsign L_CALLSIGN = Local callsign)
-                    //
-                    // Message Received                 Response
-                    // ----------------------           --------------------------
-                    // CQ  CALLSIGN GRID                R_CALLSIGN L_CALLSIGN GRID
-                    // QRZ CALLSIGN GRID                R_CALLSIGN L_CALLSIGN GRID
-                    // CALLSIGN CALLSIGN GRID           R_CALLSIGN L_CALLSIGN -##
-                    // CALLSIGN CALLSIGN -##            R_CALLSIGN L_CALLSIGN R-##
-                    // CALLSIGN CALLSIGN R-##           R_CALLSIGN L_CALLSIGN RRR
-                    // CALLSIGN CALLSIGN RRR            R_CALLSIGN L_CALLSIGN 73
-                    // CALLSIGN CALLSIGN 73             R_CALLSIGN L_CALLSIGN 73
-
-                    // Next comes Remote callsign is slashed, local is not.
-                    // It does not matter if remote callsign is with prefix or suffix, slash is slash.
-                    // ONLY the following 3 can be used to generate a response message since when using
-                    // slashed callsing these are the only ones where both the remote and local callsign
-                    // is present in the decode.  The remaining sequences only contain a single callsign
-                    // and -##, R-##, RRR or 73 leading to no ability to ascertain which station is actually
-                    // transmitting.  Subtle, but follow it 2 or 3 times and it'll become apparent.
-                    //
-                    // Message Received                 Response
-                    // ----------------------           --------------------------
-                    // CQ  CALLSIGN/x                   R_CALLSIGN/x L_CALLSIGN
-                    // QRZ CALLSIGN/x                   R_CALLSIGN/x L_CALLSIGN
-                    // CALLSIGN/x CALLSIGN              R_CALLSIGN -##
-                    //
-                    // Note the switch in context for the third form.  This is CALLSIGN/x answering a
-                    // message from remote CALLSIGN with no slash in its call.
-
-                    // Next comes Remote callsign is not slashed, local is.
-                    // Message Received                 Response
-                    // ----------------------           --------------------------
-                    // CQ  CALLSIGN GRID                R_CALLSIGN L_CALLSIGN/x
-                    // QRZ CALLSIGN GRID                R_CALLSIGN L_CALLSIGN/x
-                    // CALLSIGN CALLSIGN/x              R_CALLSIGN/x -##
-                    //
-                    // Again, you see a swtich in message form based on context at the third form.
-                    // In both cases where a / is present you can only parse the 3 forms listed above.
-                    // The remaining forms can not be parsed UNLESS YOU HAVE THE CONTEXT given by
-                    // those 3 messages!
-                    //
-                    // To complete the / message types (those with no context unless the 3 above have
-                    // been received and, ultimately contain the local operator's callsign) you have:
-                    //
-                    // Message Received
-                    // ----------------------
-                    // CALLSIGN    -##
-                    // CALLSIGN/x  -##
-                    // CALLSIGN   R-##
-                    // CALLSIGN/x R-##
-                    // CALLSIGN   RRR
-                    // CALLSIGN/x RRR
-                    // CALLSIGN   73
-                    // CALLSIGN/x 73
-                    //
-                    // In each of the 2 word types shown above the CALLSIGN or CALLSIGN/x is the callsign
-                    // OF THE RECEIVING STATION, not the callsign of the TRANSMITTING STATION. So, one more
-                    // time, there is no way of working into those 2 word exchanges without having the
-                    // context of the 3 word exchanges.  Time for a headache pill yet? :)
-                    //
-                    // So.  It's all about context.  In a 3 word exchange you can always get context IF
-                    // it's a valid structured message form.  This implies that when dealing with 2 word
-                    // exchanges the first word MUST BE THE LOCAL USER'S CALLSIGN or CQ or QRZ to result
-                    // in response generation.
-
-                    if wcount = 3 Then
+                    end;
+                    If resolved Then
                     Begin
-                         // Call message generator for normal sequences.  For 3 word sequences context
-                         // of the current message can always be found if it's a VALID 3 word structured
-                         // message.
-                         txt   := '';
-                         efoo  := '';
-                         doQSO := False;
-                         resolved := genNormalMessage(exchange, txt, efoo, doQSO, siglevel);
-                    End;
-
-                    if wcount = 2 Then
-                    Begin
-                         txt   := '';
-                         efoo  := '';
-                         doQSO := False;
-                         // Call message generator for slashed sequences.  For 2 word sequences context
-                         // is less apparent and can only be found when first word is CQ or QRZ or the
-                         // local operator's callsign.
-                         resolved := genSlashedMessage(exchange, txt, efoo, doQSO, siglevel);
+                         form1.edSigRep.Text := siglevel;
+                         if TryStrToInt(txhz, itxhz) Then
+                         Begin
+                              itxhz := StrToInt(txhz);
+                              if form1.chkAutoTxDF.Checked then form1.spinTXCF.Value := itxhz;
+                              form1.spinDecoderCF.value := itxhz;
+                         End;
+                         srxp := Form1.ListBox1.Items[idx];
+                         srxp := srxp[1..5];
+                         srxp := TrimLeft(TrimRight(srxp));
+                         srxp := DelSpace1(srxp);
+                         srxp := srxp[4..5];
+                         irxp := StrToInt(srxp);
+                         itxp := irxp+1;
+                         if itxp = 60 Then itxp := 0;
+                         if Odd(itxp) Then
+                         Begin
+                              Form1.rbTX1.Checked := False;
+                              Form1.rbTX2.Checked := True;
+                         End
+                         Else
+                         Begin
+                              Form1.rbTX2.Checked := False;
+                              Form1.rbTX1.Checked := True;
+                         End;
+                         form1.edMsg.Text := txt;
+                         if doQSO Then
+                         Begin
+                              watchMulti := False;
+                              if cfgvtwo.Form6.cbDisableMultiQSO.Checked And Form1.chkMultiDecode.Checked Then
+                              Begin
+                                   preTXCF := entTXCF;
+                                   preRXCF := entRXCF;
+                                   if Form1.chkMultiDecode.Checked Then Form1.chkMultiDecode.Checked := False;
+                                   rxCount := 0;
+                                   if cfgvtwo.Form6.cbMultiAutoEnable.Checked Then watchMulti := True else watchMulti := False;
+                              End;
+                              Form1.chkEnTX.Checked := True;
+                              Form1.rbGenMsg.Checked := True;
+                              Form1.rbGenMsg.Font.Color := clRed;
+                              Form1.rbFreeMsg.Font.Color  := clBlack;
+                              useBuffer := 0;
+                              ss := '';
+                              if gst.Hour < 10 Then ss := '0' + IntToStr(gst.Hour) else ss := ss + IntToStr(gst.Hour);
+                              if gst.Minute < 10 Then ss := ss + '0' + IntToStr(gst.Minute) else ss := ss + IntToStr(gst.Minute);
+                              qsoSTime := ss;
+                              ss := '';
+                              ss := IntToStr(gst.Year);
+                              if gst.Month < 10 Then ss := ss + '0' + IntToStr(gst.Month) else ss := ss + IntToStr(gst.Month);
+                              if gst.Day < 10 Then ss := ss + '0' + IntToStr(gst.Day) else ss := ss + IntToStr(gst.Day);
+                              qsoSDate := ss;
+                         End;
+                    End
+                    Else
+                    begin
+                         // Message didn't resolve
+                         addToDisplayE(efoo);
                     end;
                end
                else
                begin
-                    // Line clicked is not a decode, probably a warning/error message.
-                    Resolved := false;
                     Form1.edHisCall.Text := '';
                     Form1.edHisGrid.Text := '';
                     msgToSend := '';
                     exchange := '';
                     resolved := False;
-                    efoo     := 'Can not compute TX message';
-               end;
-
-               If resolved Then
-               Begin
-                    form1.edSigRep.Text := siglevel;
-                    if TryStrToInt(txhz, itxhz) Then
-                    Begin
-                         itxhz := StrToInt(txhz);
-                         if form1.chkAutoTxDF.Checked then form1.spinTXCF.Value := itxhz;
-                         form1.spinDecoderCF.value := itxhz;
-                    End;
-                    srxp := Form1.ListBox1.Items[idx];
-                    srxp := srxp[1..5];
-                    srxp := TrimLeft(TrimRight(srxp));
-                    srxp := DelSpace1(srxp);
-                    srxp := srxp[4..5];
-                    irxp := StrToInt(srxp);
-                    itxp := irxp+1;
-                    if itxp = 60 Then itxp := 0;
-                    if Odd(itxp) Then
-                    Begin
-                         Form1.rbTX1.Checked := False;
-                         Form1.rbTX2.Checked := True;
-                    End
-                    Else
-                    Begin
-                         Form1.rbTX2.Checked := False;
-                         Form1.rbTX1.Checked := True;
-                    End;
-                    form1.edMsg.Text := txt;
-                    if doQSO Then
-                    Begin
-                         watchMulti := False;
-                         if cfgvtwo.Form6.cbDisableMultiQSO.Checked And Form1.chkMultiDecode.Checked Then
-                         Begin
-                              preTXCF := entTXCF;
-                              preRXCF := entRXCF;
-                              if Form1.chkMultiDecode.Checked Then Form1.chkMultiDecode.Checked := False;
-                              rxCount := 0;
-                              if cfgvtwo.Form6.cbMultiAutoEnable.Checked Then watchMulti := True else watchMulti := False;
-                         End;
-                         Form1.chkEnTX.Checked := True;
-                         Form1.rbGenMsg.Checked := True;
-                         Form1.rbGenMsg.Font.Color := clRed;
-                         Form1.rbFreeMsg.Font.Color  := clBlack;
-                         useBuffer := 0;
-                         ss := '';
-                         if gst.Hour < 10 Then ss := '0' + IntToStr(gst.Hour) else ss := ss + IntToStr(gst.Hour);
-                         if gst.Minute < 10 Then ss := ss + '0' + IntToStr(gst.Minute) else ss := ss + IntToStr(gst.Minute);
-                         qsoSTime := ss;
-                         ss := '';
-                         ss := IntToStr(gst.Year);
-                         if gst.Month < 10 Then ss := ss + '0' + IntToStr(gst.Month) else ss := ss + IntToStr(gst.Month);
-                         if gst.Day < 10 Then ss := ss + '0' + IntToStr(gst.Day) else ss := ss + IntToStr(gst.Day);
-                         qsoSDate := ss;
-                    End;
-               End;
-               If not resolved then
-               begin
-                    // Message didn't resolve
-                    addToDisplayE(efoo);
                end;
           End;
      end;
@@ -2885,7 +2895,7 @@ Begin
           csvstr := csvstr + '"' + d65.gld65decodes[i].dtDecoded + '","65A"';
           // csvstr now contains a possible report to file if user wishes.
           // Do actual display
-          Form1.ListBox1.Items.Insert(0,rpt);
+          Form1.ListBox1.Items.Insert(1,rpt);
           Form1.ListBox1.ItemIndex := 0;
           firstReport := False;
           itemsIn := True;
@@ -4073,7 +4083,7 @@ Begin
      wf.Top    := 25;
      wf.Left   := 177;
      wf.Parent := Self;
-     //wf.OnMouseDown := waterfallMouseDown;
+     wf.OnMouseDown := waterfallMouseDown;
      wf.DoubleBuffered := True;
 
      // Create the decoder thread with param False so it starts.
@@ -5644,6 +5654,7 @@ Begin
      // Only run this block if decoder thread is inactive.
      If not d65.glinProg and d65.gld65HaveDecodes Then
      Begin
+          Form1.ListBox1.Items.Insert(0,'');
           for i := 0 to 49 do
           Begin
                if (not d65.gld65decodes[i].dtProcessed) And (not d65.gld65decodes[i].dtDisplayed) Then
@@ -5662,6 +5673,7 @@ Begin
                     d65.gld65decodes[i].dtTimeStamp := '';
                     d65.gld65decodes[i].dtType      := '';
                end;
+               d65.gld65HaveDecodes := False;
           End;
           if reDecode then reDecode := False;
      End;

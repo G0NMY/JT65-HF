@@ -1,3 +1,16 @@
+Status of Linux code as of 2/November/2011
+
+Looking good.  Can now resize main window vertically
+giving more space to decoder output display.  Still
+not thrilled with the hack to keep color coding in
+the output display and set at top of scroll -- but,
+it'll do for now.
+
+Looking at adding direct communication to XLog. Then
+Hamlib.
+
+-----
+
 Status of Linux code as of 1/November/2011
 
 Mostly complete at this point.

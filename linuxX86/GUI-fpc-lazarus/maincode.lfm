@@ -4,10 +4,11 @@ object Form1: TForm1
   Top = 30
   Width = 935
   ActiveControl = btnReDecode
+  BorderIcons = [biSystemMenu, biMinimize]
   Caption = 'JT65-HF'
   ClientHeight = 663
   ClientWidth = 935
-  Constraints.MaxHeight = 690
+  Constraints.MaxHeight = 1000
   Constraints.MaxWidth = 935
   Constraints.MinHeight = 690
   Constraints.MinWidth = 935
@@ -25,6 +26,7 @@ object Form1: TForm1
     Height = 14
     Top = 472
     Width = 81
+    Anchors = [akTop, akRight]
     Caption = 'TX to Call Sign'
     Font.Height = -10
     Font.Name = 'arial [monotype]'
@@ -167,6 +169,7 @@ object Form1: TForm1
     Height = 14
     Top = 472
     Width = 46
+    Anchors = [akTop, akRight]
     Caption = 'Rpt (-#)'
     Font.Height = -10
     Font.Name = 'arial [monotype]'
@@ -179,6 +182,7 @@ object Form1: TForm1
     Height = 15
     Top = 499
     Width = 38
+    Anchors = [akTop, akLeft, akRight]
     Caption = 'RX DF'
     Font.Height = -11
     Font.Name = 'arial [monotype]'
@@ -191,6 +195,7 @@ object Form1: TForm1
     Height = 15
     Top = 499
     Width = 38
+    Anchors = [akTop, akLeft, akRight]
     Caption = 'TX DF'
     Font.Height = -11
     Font.Name = 'arial [monotype]'
@@ -229,6 +234,7 @@ object Form1: TForm1
     Height = 14
     Top = 570
     Width = 56
+    Anchors = [akBottom]
     Caption = 'Single BW'
     Font.Height = -10
     Font.Name = 'arial [monotype]'
@@ -241,6 +247,7 @@ object Form1: TForm1
     Height = 14
     Top = 477
     Width = 82
+    Anchors = [akTop, akLeft, akRight]
     Caption = 'TX DF = RX DF'
     Font.Color = clRed
     Font.Height = -10
@@ -255,6 +262,7 @@ object Form1: TForm1
     Height = 15
     Top = 587
     Width = 83
+    Anchors = [akBottom]
     Caption = 'Dial QRG KHz'
     Font.Height = -11
     Font.Name = 'arial [monotype]'
@@ -267,6 +275,7 @@ object Form1: TForm1
     Height = 15
     Top = 647
     Width = 114
+    Anchors = [akBottom]
     Caption = 'Right Click for Menu'
     Font.Height = -11
     Font.Name = 'arial [monotype]'
@@ -280,6 +289,7 @@ object Form1: TForm1
     Hint = 'Double click to disable RB'
     Top = 645
     Width = 7
+    Anchors = [akBottom]
     Caption = '0'
     Font.Height = -10
     Font.Name = 'arial [monotype]'
@@ -292,6 +302,7 @@ object Form1: TForm1
     Height = 14
     Top = 645
     Width = 64
+    Anchors = [akBottom]
     Caption = 'Reports Sent'
     Font.Height = -10
     Font.Name = 'arial [monotype]'
@@ -319,6 +330,7 @@ object Form1: TForm1
     Height = 24
     Top = 491
     Width = 93
+    Anchors = [akTop, akRight]
     CharCase = ecUppercase
     Font.Height = -11
     Font.Name = 'arial [monotype]'
@@ -412,7 +424,7 @@ object Form1: TForm1
   end
   object btnHaltTx: TButton
     Left = 858
-    Height = 23
+    Height = 32
     Top = 272
     Width = 70
     Caption = 'Halt TX'
@@ -426,7 +438,7 @@ object Form1: TForm1
   end
   object btnEngageTx: TButton
     Left = 759
-    Height = 23
+    Height = 32
     Top = 272
     Width = 94
     Caption = 'Enable TX'
@@ -441,8 +453,9 @@ object Form1: TForm1
   object buttonClearList: TButton
     Left = 5
     Height = 25
-    Top = 640
+    Top = 637
     Width = 108
+    Anchors = [akBottom]
     Caption = 'Clear Decodes'
     Font.Height = -11
     Font.Name = 'arial [monotype]'
@@ -759,10 +772,22 @@ object Form1: TForm1
     end
   end
   object ListBox1: TListBox
+    AnchorSideLeft.Control = ListBox2
+    AnchorSideTop.Control = ListBox2
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = ListBox2
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = buttonClearList
     Left = 5
-    Height = 307
-    Top = 330
+    Height = 301
+    Top = 331
     Width = 548
+    Anchors = [akTop, akLeft, akRight, akBottom]
+    BorderSpacing.Bottom = 5
+    Constraints.MaxHeight = 448
+    Constraints.MaxWidth = 548
+    Constraints.MinHeight = 300
+    Constraints.MinWidth = 548
     Font.Height = -19
     Font.Name = 'Courier New'
     Font.Style = [fsBold]
@@ -796,6 +821,7 @@ object Form1: TForm1
     Height = 24
     Top = 491
     Width = 45
+    Anchors = [akTop, akRight]
     Font.Height = -11
     Font.Name = 'arial [monotype]'
     Font.Style = [fsBold]
@@ -824,6 +850,7 @@ object Form1: TForm1
     Hint = 'If Checked TX and RX DF will always be same.'
     Top = 472
     Width = 24
+    Anchors = [akTop, akLeft, akRight]
     Checked = True
     Font.Height = -12
     Font.Name = 'arial [monotype]'
@@ -838,6 +865,7 @@ object Form1: TForm1
     Height = 23
     Top = 516
     Width = 55
+    Anchors = [akTop, akLeft, akRight]
     Font.Height = -10
     Font.Name = 'arial [monotype]'
     Font.Style = [fsBold]
@@ -853,6 +881,7 @@ object Form1: TForm1
     Height = 23
     Top = 516
     Width = 55
+    Anchors = [akTop, akLeft, akRight]
     Font.Height = -10
     Font.Name = 'arial [monotype]'
     Font.Style = [fsBold]
@@ -868,6 +897,7 @@ object Form1: TForm1
     Height = 16
     Top = 545
     Width = 55
+    Anchors = [akTop, akLeft, akRight]
     Caption = 'Zero'
     Font.Height = -8
     Font.Name = 'arial [monotype]'
@@ -880,6 +910,7 @@ object Form1: TForm1
     Height = 16
     Top = 545
     Width = 55
+    Anchors = [akTop, akLeft, akRight]
     Caption = 'Zero'
     Font.Height = -8
     Font.Name = 'arial [monotype]'
@@ -891,7 +922,8 @@ object Form1: TForm1
     Left = 595
     Height = 23
     Top = 586
-    Width = 22
+    Width = 17
+    Anchors = [akBottom]
     Font.Height = -10
     Font.Name = 'arial [monotype]'
     MaxValue = 4
@@ -906,6 +938,7 @@ object Form1: TForm1
     Height = 22
     Top = 496
     Width = 90
+    Anchors = [akTop, akLeft, akRight]
     Caption = 'Noise Blank'
     Font.Height = -10
     Font.Name = 'arial [monotype]'
@@ -919,6 +952,7 @@ object Form1: TForm1
     Height = 22
     Top = 472
     Width = 46
+    Anchors = [akTop, akLeft, akRight]
     Caption = 'AFC'
     Checked = True
     Font.Height = -10
@@ -934,6 +968,7 @@ object Form1: TForm1
     Height = 22
     Top = 613
     Width = 143
+    Anchors = [akBottom]
     Caption = 'Enable Multi-decoder'
     Checked = True
     Font.Height = -10
@@ -946,8 +981,8 @@ object Form1: TForm1
   end
   object RadioGroup1: TRadioGroup
     Left = 759
-    Height = 49
-    Top = 297
+    Height = 33
+    Top = 313
     Width = 171
     AutoFill = True
     ChildSizing.LeftRightSpacing = 6
@@ -958,13 +993,13 @@ object Form1: TForm1
     ChildSizing.ShrinkVertical = crsScaleChilds
     ChildSizing.Layout = cclLeftToRightThenTopToBottom
     ChildSizing.ControlsPerLine = 2
-    ClientHeight = 45
+    ClientHeight = 29
     ClientWidth = 167
     Columns = 2
     TabOrder = 29
     object rbTX1: TRadioButton
       Left = 6
-      Height = 33
+      Height = 17
       Top = 6
       Width = 80
       Caption = 'TX Even'
@@ -980,7 +1015,7 @@ object Form1: TForm1
     end
     object rbTX2: TRadioButton
       Left = 86
-      Height = 33
+      Height = 17
       Top = 6
       Width = 75
       Caption = 'TX Odd'
@@ -1026,6 +1061,7 @@ object Form1: TForm1
     Height = 27
     Top = 557
     Width = 146
+    Anchors = [akBottom]
     Caption = 'Restore Defaults'
     Font.Height = -13
     Font.Name = 'arial [monotype]'
@@ -1040,6 +1076,7 @@ object Form1: TForm1
     Top = 606
     Width = 146
     Alignment = taCenter
+    Anchors = [akBottom]
     Font.Height = -21
     Font.Name = 'arial [monotype]'
     Font.Style = [fsBold]
@@ -1055,6 +1092,7 @@ object Form1: TForm1
     Height = 32
     Top = 520
     Width = 146
+    Anchors = [akTop, akLeft, akRight]
     Caption = 'Log QSO'
     Font.Height = -13
     Font.Name = 'arial [monotype]'
@@ -1068,6 +1106,7 @@ object Form1: TForm1
     Height = 22
     Top = 640
     Width = 74
+    Anchors = [akBottom]
     Caption = 'Enable RB'
     Font.Height = -10
     Font.Name = 'arial [monotype]'
@@ -1079,6 +1118,7 @@ object Form1: TForm1
     Height = 23
     Top = 586
     Width = 40
+    Anchors = [akBottom]
     Font.Height = -10
     Font.Name = 'arial [monotype]'
     Font.Style = [fsBold]
@@ -1092,8 +1132,9 @@ object Form1: TForm1
   object btnReDecode: TButton
     Left = 130
     Height = 25
-    Top = 640
+    Top = 637
     Width = 115
+    Anchors = [akBottom]
     Caption = 'Decode Again'
     Font.Height = -11
     Font.Name = 'arial [monotype]'
@@ -1125,6 +1166,7 @@ object Form1: TForm1
     Height = 23
     Top = 586
     Width = 40
+    Anchors = [akBottom]
     Font.Height = -10
     Font.Name = 'arial [monotype]'
     Font.Style = [fsBold]
@@ -1139,7 +1181,8 @@ object Form1: TForm1
     Left = 664
     Height = 23
     Top = 586
-    Width = 22
+    Width = 17
+    Anchors = [akBottom]
     Font.Height = -10
     Font.Name = 'arial [monotype]'
     MaxValue = 4
@@ -1154,6 +1197,7 @@ object Form1: TForm1
     Height = 14
     Top = 570
     Width = 50
+    Anchors = [akBottom]
     Caption = 'Multi BW'
     Font.Height = -10
     Font.Name = 'arial [monotype]'
@@ -1179,6 +1223,7 @@ object Form1: TForm1
     Height = 24
     Top = 640
     Width = 49
+    Anchors = [akBottom]
     Font.Height = -11
     Font.Name = 'arial [monotype]'
     Font.Style = [fsBold]
@@ -1192,6 +1237,7 @@ object Form1: TForm1
     Height = 14
     Top = 646
     Width = 143
+    Anchors = [akBottom]
     Caption = 'Adjust Timing (DT Offset)'
     Font.Height = -10
     Font.Name = 'arial [monotype]'
