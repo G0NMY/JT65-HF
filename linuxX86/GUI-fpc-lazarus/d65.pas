@@ -26,7 +26,7 @@ interface
 
 uses
   Classes, SysUtils, CTypes, globalData, math, Process, diagout, Types,
-  StrUtils, rawDec;
+  StrUtils, FileUtil, rawDec;
 
 Const
   {$IFDEF WIN32}
@@ -215,7 +215,7 @@ Begin
              // read kvasd.dat
              AssignFile(kvFile, 'kvasd.dat');
              Reset(kvFile);
-             If FileSize(kvfile) > 256 Then
+             If System.FileSize(kvfile) > 256 Then
              Begin
                   // Seek to nsec2 (256)
                   Seek(kvFile,256);
@@ -370,7 +370,7 @@ begin
     diagout.Form3.ListBox2.Clear;
     diagout.Form3.ListBox3.Clear;
     strPcopy(glkvfname,'kvasd.dat');
-    strPcopy(glwisfile,GetAppConfigDir(False)+'wisdom2.dat');
+    strPcopy(glwisfile,TrimFileName(GetAppConfigDir(False)+ PathDelim + 'wisdom2.dat'));
     glmline := '                                                                        ';
     glmcall := '            ';
     glmyline := '                                           ';

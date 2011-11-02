@@ -27,7 +27,7 @@ unit maincode;
 interface
 
 uses
-  Classes, SysUtils, LResources, Forms, Controls, Graphics, Dialogs,
+  Classes, SysUtils, LResources, Forms, Controls, Graphics, Dialogs, FileUtil,
   StdCtrls, CTypes, StrUtils, Math, portaudio, ExtCtrls, ComCtrls, Spin,
   DateUtils, encode65, globalData, XMLPropStorage, adc, waterfall,
   dac, ClipBrd, dlog, rawdec, cfgvtwo, guiConfig, verHolder,
@@ -606,7 +606,7 @@ Begin
                End;
              {$ENDIF}
              {$IFDEF linux}
-               fname := cfgvtwo.Form6.DirectoryEdit1.Directory + 'JT65hf-log.csv';
+               fname := TrimFileName(cfgvtwo.Form6.DirectoryEdit1.Directory + PathDelim + 'JT65hf-log.csv');
                AssignFile(logFile, fname);
                If FileExists(fname) Then
                Begin
@@ -3959,7 +3959,7 @@ Begin
      d65.glfftSWisdom := 0;
      if not cfgvtwo.Form6.chkNoOptFFT.Checked Then
      Begin
-          fname := GetAppConfigDir(False)+'wisdom2.dat';
+          fname := TrimFileName(GetAppConfigDir(False)+ PathDelim + 'wisdom2.dat');
           if FileExists(fname) Then
           Begin
                // I have data for FFTW_MEASURE metrics use ical settings in
