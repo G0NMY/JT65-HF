@@ -1,15 +1,17 @@
 object Form1: TForm1
   Left = 0
   Height = 690
-  Top = 30
+  Top = 24
   Width = 935
+  HorzScrollBar.Visible = False
+  VertScrollBar.Visible = False
   ActiveControl = btnReDecode
   BorderIcons = [biSystemMenu, biMinimize]
   Caption = 'JT65-HF'
-  ClientHeight = 663
+  ClientHeight = 660
   ClientWidth = 935
-  Constraints.MaxHeight = 1000
-  Constraints.MaxWidth = 935
+  Constraints.MaxHeight = 900
+  Constraints.MaxWidth = 1500
   Constraints.MinHeight = 690
   Constraints.MinWidth = 935
   Font.Height = -13
@@ -27,7 +29,6 @@ object Form1: TForm1
     Height = 14
     Top = 472
     Width = 81
-    Anchors = [akTop, akRight]
     Caption = 'TX to Call Sign'
     Font.Height = -10
     Font.Name = 'arial [monotype]'
@@ -170,7 +171,6 @@ object Form1: TForm1
     Height = 14
     Top = 472
     Width = 46
-    Anchors = [akTop, akRight]
     Caption = 'Rpt (-#)'
     Font.Height = -10
     Font.Name = 'arial [monotype]'
@@ -183,7 +183,6 @@ object Form1: TForm1
     Height = 15
     Top = 499
     Width = 38
-    Anchors = [akTop, akLeft, akRight]
     Caption = 'RX DF'
     Font.Height = -11
     Font.Name = 'arial [monotype]'
@@ -196,7 +195,6 @@ object Form1: TForm1
     Height = 15
     Top = 499
     Width = 38
-    Anchors = [akTop, akLeft, akRight]
     Caption = 'TX DF'
     Font.Height = -11
     Font.Name = 'arial [monotype]'
@@ -233,9 +231,9 @@ object Form1: TForm1
   object Label13: TLabel
     Left = 557
     Height = 14
-    Top = 570
+    Top = 567
     Width = 56
-    Anchors = [akBottom]
+    Anchors = [akLeft, akBottom]
     Caption = 'Single BW'
     Font.Height = -10
     Font.Name = 'arial [monotype]'
@@ -248,7 +246,6 @@ object Form1: TForm1
     Height = 14
     Top = 477
     Width = 82
-    Anchors = [akTop, akLeft, akRight]
     Caption = 'TX DF = RX DF'
     Font.Color = clRed
     Font.Height = -10
@@ -261,9 +258,9 @@ object Form1: TForm1
   object Label12: TLabel
     Left = 815
     Height = 15
-    Top = 587
+    Top = 584
     Width = 83
-    Anchors = [akBottom]
+    Anchors = [akLeft, akBottom]
     Caption = 'Dial QRG KHz'
     Font.Height = -11
     Font.Name = 'arial [monotype]'
@@ -274,9 +271,9 @@ object Form1: TForm1
   object Label23: TLabel
     Left = 799
     Height = 15
-    Top = 647
+    Top = 644
     Width = 114
-    Anchors = [akBottom]
+    Anchors = [akLeft, akBottom]
     Caption = 'Right Click for Menu'
     Font.Height = -11
     Font.Name = 'arial [monotype]'
@@ -288,9 +285,9 @@ object Form1: TForm1
     Left = 440
     Height = 14
     Hint = 'Double click to disable RB'
-    Top = 645
+    Top = 642
     Width = 7
-    Anchors = [akBottom]
+    Anchors = [akLeft, akBottom]
     Caption = '0'
     Font.Height = -10
     Font.Name = 'arial [monotype]'
@@ -301,9 +298,9 @@ object Form1: TForm1
   object Label2: TLabel
     Left = 368
     Height = 14
-    Top = 645
+    Top = 642
     Width = 64
-    Anchors = [akBottom]
+    Anchors = [akLeft, akBottom]
     Caption = 'Reports Sent'
     Font.Height = -10
     Font.Name = 'arial [monotype]'
@@ -331,7 +328,6 @@ object Form1: TForm1
     Height = 24
     Top = 491
     Width = 93
-    Anchors = [akTop, akRight]
     CharCase = ecUppercase
     Font.Height = -11
     Font.Name = 'arial [monotype]'
@@ -454,9 +450,9 @@ object Form1: TForm1
   object buttonClearList: TButton
     Left = 5
     Height = 25
-    Top = 637
+    Top = 634
     Width = 108
-    Anchors = [akBottom]
+    Anchors = [akLeft, akBottom]
     Caption = 'Clear Decodes'
     Font.Height = -11
     Font.Name = 'arial [monotype]'
@@ -780,7 +776,7 @@ object Form1: TForm1
     AnchorSideRight.Side = asrBottom
     AnchorSideBottom.Control = buttonClearList
     Left = 5
-    Height = 301
+    Height = 300
     Top = 331
     Width = 548
     Anchors = [akTop, akLeft, akRight, akBottom]
@@ -822,7 +818,6 @@ object Form1: TForm1
     Height = 24
     Top = 491
     Width = 45
-    Anchors = [akTop, akRight]
     Font.Height = -11
     Font.Name = 'arial [monotype]'
     Font.Style = [fsBold]
@@ -851,7 +846,6 @@ object Form1: TForm1
     Hint = 'If Checked TX and RX DF will always be same.'
     Top = 472
     Width = 24
-    Anchors = [akTop, akLeft, akRight]
     Checked = True
     Font.Height = -12
     Font.Name = 'arial [monotype]'
@@ -866,7 +860,6 @@ object Form1: TForm1
     Height = 23
     Top = 516
     Width = 55
-    Anchors = [akTop, akLeft, akRight]
     Font.Height = -10
     Font.Name = 'arial [monotype]'
     Font.Style = [fsBold]
@@ -882,7 +875,6 @@ object Form1: TForm1
     Height = 23
     Top = 516
     Width = 55
-    Anchors = [akTop, akLeft, akRight]
     Font.Height = -10
     Font.Name = 'arial [monotype]'
     Font.Style = [fsBold]
@@ -898,7 +890,6 @@ object Form1: TForm1
     Height = 16
     Top = 545
     Width = 55
-    Anchors = [akTop, akLeft, akRight]
     Caption = 'Zero'
     Font.Height = -8
     Font.Name = 'arial [monotype]'
@@ -911,7 +902,6 @@ object Form1: TForm1
     Height = 16
     Top = 545
     Width = 55
-    Anchors = [akTop, akLeft, akRight]
     Caption = 'Zero'
     Font.Height = -8
     Font.Name = 'arial [monotype]'
@@ -922,9 +912,9 @@ object Form1: TForm1
   object spinDecoderBW: TSpinEdit
     Left = 595
     Height = 23
-    Top = 586
+    Top = 583
     Width = 17
-    Anchors = [akBottom]
+    Anchors = [akLeft, akBottom]
     Font.Height = -10
     Font.Name = 'arial [monotype]'
     MaxValue = 4
@@ -939,7 +929,6 @@ object Form1: TForm1
     Height = 22
     Top = 496
     Width = 90
-    Anchors = [akTop, akLeft, akRight]
     Caption = 'Noise Blank'
     Font.Height = -10
     Font.Name = 'arial [monotype]'
@@ -953,7 +942,6 @@ object Form1: TForm1
     Height = 22
     Top = 472
     Width = 46
-    Anchors = [akTop, akLeft, akRight]
     Caption = 'AFC'
     Checked = True
     Font.Height = -10
@@ -967,9 +955,9 @@ object Form1: TForm1
   object chkMultiDecode: TCheckBox
     Left = 557
     Height = 22
-    Top = 613
+    Top = 610
     Width = 143
-    Anchors = [akBottom]
+    Anchors = [akLeft, akBottom]
     Caption = 'Enable Multi-decoder'
     Checked = True
     Font.Height = -10
@@ -1060,9 +1048,9 @@ object Form1: TForm1
   object btnDefaults: TButton
     Left = 784
     Height = 27
-    Top = 557
+    Top = 554
     Width = 146
-    Anchors = [akBottom]
+    Anchors = [akLeft, akBottom]
     Caption = 'Restore Defaults'
     Font.Height = -13
     Font.Name = 'arial [monotype]'
@@ -1074,10 +1062,10 @@ object Form1: TForm1
   object editManQRG: TEdit
     Left = 784
     Height = 35
-    Top = 606
+    Top = 603
     Width = 146
     Alignment = taCenter
-    Anchors = [akBottom]
+    Anchors = [akLeft, akBottom]
     Font.Height = -21
     Font.Name = 'arial [monotype]'
     Font.Style = [fsBold]
@@ -1093,7 +1081,6 @@ object Form1: TForm1
     Height = 32
     Top = 520
     Width = 146
-    Anchors = [akTop, akLeft, akRight]
     Caption = 'Log QSO'
     Font.Height = -13
     Font.Name = 'arial [monotype]'
@@ -1105,9 +1092,9 @@ object Form1: TForm1
   object cbEnRB: TCheckBox
     Left = 272
     Height = 22
-    Top = 640
+    Top = 637
     Width = 74
-    Anchors = [akBottom]
+    Anchors = [akLeft, akBottom]
     Caption = 'Enable RB'
     Font.Height = -10
     Font.Name = 'arial [monotype]'
@@ -1117,9 +1104,9 @@ object Form1: TForm1
   object Edit2: TEdit
     Left = 557
     Height = 23
-    Top = 586
+    Top = 583
     Width = 40
-    Anchors = [akBottom]
+    Anchors = [akLeft, akBottom]
     Font.Height = -10
     Font.Name = 'arial [monotype]'
     Font.Style = [fsBold]
@@ -1133,9 +1120,9 @@ object Form1: TForm1
   object btnReDecode: TButton
     Left = 130
     Height = 25
-    Top = 637
+    Top = 634
     Width = 115
-    Anchors = [akBottom]
+    Anchors = [akLeft, akBottom]
     Caption = 'Decode Again'
     Font.Height = -11
     Font.Name = 'arial [monotype]'
@@ -1165,9 +1152,9 @@ object Form1: TForm1
   object Edit3: TEdit
     Left = 626
     Height = 23
-    Top = 586
+    Top = 583
     Width = 40
-    Anchors = [akBottom]
+    Anchors = [akLeft, akBottom]
     Font.Height = -10
     Font.Name = 'arial [monotype]'
     Font.Style = [fsBold]
@@ -1181,9 +1168,9 @@ object Form1: TForm1
   object spinDecoderBin: TSpinEdit
     Left = 664
     Height = 23
-    Top = 586
+    Top = 583
     Width = 17
-    Anchors = [akBottom]
+    Anchors = [akLeft, akBottom]
     Font.Height = -10
     Font.Name = 'arial [monotype]'
     MaxValue = 4
@@ -1196,9 +1183,9 @@ object Form1: TForm1
   object Label18: TLabel
     Left = 626
     Height = 14
-    Top = 570
+    Top = 567
     Width = 50
-    Anchors = [akBottom]
+    Anchors = [akLeft, akBottom]
     Caption = 'Multi BW'
     Font.Height = -10
     Font.Name = 'arial [monotype]'
@@ -1222,9 +1209,9 @@ object Form1: TForm1
   object SpinDT: TSpinEdit
     Left = 557
     Height = 24
-    Top = 640
+    Top = 637
     Width = 49
-    Anchors = [akBottom]
+    Anchors = [akLeft, akBottom]
     Font.Height = -11
     Font.Name = 'arial [monotype]'
     Font.Style = [fsBold]
@@ -1236,9 +1223,9 @@ object Form1: TForm1
   object Label32: TLabel
     Left = 610
     Height = 14
-    Top = 646
+    Top = 643
     Width = 143
-    Anchors = [akBottom]
+    Anchors = [akLeft, akBottom]
     Caption = 'Adjust Timing (DT Offset)'
     Font.Height = -10
     Font.Name = 'arial [monotype]'
@@ -1248,26 +1235,34 @@ object Form1: TForm1
     OnDblClick = Label32DblClick
   end
   object lbTXLog: TListBox
-    Left = 561
-    Height = 53
-    Top = 566
-    Width = 369
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 936
+    Height = 178
+    Top = 477
+    Width = 304
+    Anchors = [akTop, akLeft, akRight, akBottom]
+    BorderSpacing.Right = 10
+    BorderSpacing.Bottom = 5
+    Constraints.MinHeight = 100
+    Constraints.MinWidth = 304
     Items.Strings = (
       'Transmissions'
     )
     ItemHeight = 23
     OnDblClick = lbTXLogDblClick
     TabOrder = 41
-    Visible = False
   end
   object lbRawDecoder: TListBox
     AnchorSideBottom.Control = btnDefaults
-    Left = 561
+    Left = 557
     Height = 1
-    Top = 623
-    Width = 369
+    Top = 568
+    Width = 371
     Anchors = [akTop, akLeft, akBottom]
-    BorderSpacing.Bottom = 5
+    BorderSpacing.Bottom = 10
     Items.Strings = (
       'Unprocessed decoder output'
     )
@@ -1275,6 +1270,24 @@ object Form1: TForm1
     OnDblClick = lbRawDecoderDblClick
     TabOrder = 42
     Visible = False
+  end
+  object Memo1: TMemo
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    Left = 936
+    Height = 464
+    Top = 3
+    Width = 304
+    Anchors = [akTop, akLeft, akRight]
+    BorderSpacing.Right = 10
+    Constraints.MaxHeight = 464
+    Constraints.MinHeight = 464
+    Constraints.MinWidth = 304
+    Lines.Strings = (
+      'Stations Heard This Session'
+    )
+    TabOrder = 43
+    WordWrap = False
   end
   object Timer1: TTimer
     Interval = 220

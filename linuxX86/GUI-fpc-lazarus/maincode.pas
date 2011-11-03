@@ -124,6 +124,7 @@ type
     lbTXLog: TListBox;
     lbRawDecoder: TListBox;
     MainMenu1: TMainMenu;
+    Memo1: TMemo;
     MenuItem14b : TMenuItem ;
     MenuItem17a : TMenuItem ;
     MenuItem18a : TMenuItem ;
@@ -329,6 +330,7 @@ type
      auOddBuffer, auEvenBuffer  : Packed Array[0..661503] of CTypes.cint16;
      paInParams, paOutParams    : TPaStreamParameters;
      ppaInParams, ppaOutParams  : PPaStreamParameters;
+     paInStream, paOutStream    : PPaStream;
      paResult                   : TPaError;
      alreadyHere                : Boolean;
      mnlooper, ij               : Integer;
@@ -350,26 +352,18 @@ type
      thisAction                 : Integer;
      nextAction                 : Integer;
      sLevel1, sLevel2           : Integer;
-     smeterIdx                  : Integer;
      txCount                    : Integer;
      bStart, bEnd, rxCount      : Integer;
      TxDirty, TxValid           : Boolean;
-     answeringCQ                : Boolean;
+//     answeringCQ                : Boolean;
      msgToSend                  : String;
-     dErrLErate, dErrAErate     : Double;
-     dErrError, adError         : Double;
-     adLErate, adAErate         : Double;
-     dErrCount, adCount         : Integer;
      mnnport                    : String;
      mnpttOpened, itemsIn       : Boolean;
      firstReport                : Boolean;
-     paInStream, paOutStream    : PPaStream;
      lastMsg, curMsg            : String;
      gst, ost                   : TSYSTEMTIME;
      thisTX, lastTX             : String;
      watchMulti, doCAT          : Boolean;
-     haveRXSRerr, haveTXSRerr   : Boolean;
-     rxsrs, txsrs, lastSRerr    : String;
      preTXCF, preRXCF           : Integer;
      audioAve1, audioAve2       : Integer;
      sopQRG, eopQRG             : Double;
@@ -867,13 +861,6 @@ begin
      Form1.edHisGrid.Clear;
      Form1.spinTXCF.Value := 0;
      Form1.spinDecoderCF.Value := 0;
-     {Excluding single/multi bin spacing from defaults restore}
-     //Form1.spinDecoderBW.Value := 3;
-     //Form1.spinDecoderBin.Value := 3;
-     //edit2.Text := '100';
-     //d65.glDFTolerance := 100;
-     //edit3.Text := '100';
-     //d65.glbinspace := 100;
      Form1.rbGenMsg.Checked := True;
      Form1.chkAutoTxDF.Checked := True;
      Form1.chkEnTX.Checked := False;
@@ -892,10 +879,7 @@ begin
        // likely drop synaserial and use wsjt ptt from library.
        globalData.txInProgress := False;
        sleep(100);
-       //if getPTTMethod() = 'SI5' Then si570Lowerptt();
-       //if getPTTMethod() = 'HRD' Then hrdLowerPTT();
        if getPTTMethod() = 'ALT' Then altLowerPTT();
-       //if getPTTMethod() = 'PTT' Then lowerPTT();
        nextAction := 2;
        txNextPeriod := False;
        Form1.chkEnTX.Checked := False;
@@ -1464,7 +1448,7 @@ Begin
      cfg.StoredValue['autoQSYQRG4'] := '';
      cfg.StoredValue['autoQSYQRG5'] := '';
      if length(log.Form2.edLogComment.Text)>0 Then cfg.StoredValue['LogComment'] := log.Form2.edLogComment.Text else cfg.StoredValue['LogComment'] := '';
-     if log.Form2.cbXLog.Checked Then cfg.StoredValue['directXLog'] := 'yes' else cfg.StoredValue['directXLog'] := 'no';
+     if log.Form2.cbXLog.Checked Then cfg.StoredValue['directXLog'] := 'y' else cfg.StoredValue['directXLog'] := 'n';
      cfg.Save;
 end;
 
@@ -1602,8 +1586,7 @@ end;
 
 procedure TForm1.FormResize(Sender: TObject);
 begin
-     If Self.Height > 810 Then lbTXLog.Visible := true else lbTXLog.Visible := False;
-     If Self.Height > 810 Then lbRawDecoder.Visible := true else lbRawDecoder.Visible := False;
+     If Self.Height > 760 Then lbRawDecoder.Visible := true else lbRawDecoder.Visible := False;
 end;
 
 procedure TForm1.Label17DblClick(Sender: TObject);
@@ -1632,7 +1615,7 @@ begin
      spectrum.specVGain := Form1.spinGain.Value + 7;
 end;
 
-procedure TForm1 .Label32DblClick (Sender : TObject );
+procedure TForm1.Label32DblClick(Sender : TObject);
 begin
      // Set DT offset to 0
      spinDT.Value := 0;
@@ -2683,7 +2666,7 @@ begin
      qsoETime := ss;
      log.Form2.edLogETime.Text := qsoETime;
      log.Form2.edLogSReport.Text := edSigRep.Text;
-     fqrg := globalData.iqrg / 1000000;
+     fqrg := globalData.iqrg / 1000000.0;
      sqrg := FloatToStr(fqrg);
      log.Form2.edLogFrequency.Text := sqrg;
      log.logmycall := globalData.fullcall;
@@ -2797,8 +2780,8 @@ Begin
      if st.Hour < 10 Then foo := '0' + IntToStr(st.Hour) + ':' else foo := IntToStr(st.Hour) + ':';
      if st.Minute < 10 then foo := foo + '0' + IntToStr(st.Minute) else foo := foo + IntToStr(st.Minute);
      rpt := foo + '  TX ' + exchange;
-     lbTXLog.Items.Add(rpt);
-     firstReport := False;
+     if lbTXLog.Items.Count < 1 Then lbTXLog.Items.Add(rpt) else lbTXLog.Items.Insert(0,rpt);
+     if lbTXLog.Items.Count > 0 Then lbTXLog.ItemIndex:=0;
      // Manage size of scrollback
      If lbTXLog.Items.Count > 32 Then
      Begin
@@ -3480,94 +3463,6 @@ Begin
                 Application.ProcessMessages
           until not cfgvtwo.glmustConfig;
           cfgvtwo.Form6.Visible := False;
-          //cfg.StoredValue['call']         := UpperCase(cfgvtwo.glmycall);
-          //cfg.StoredValue['pfx']          := IntToStr(cfgvtwo.Form6.comboPrefix.ItemIndex);
-          //cfg.StoredValue['sfx']          := IntToStr(cfgvtwo.Form6.comboSuffix.ItemIndex);
-          //cfg.StoredValue['grid']         := cfgvtwo.Form6.edMyGrid.Text;
-          //cfg.StoredValue['ldgain']       := '0';
-          //cfg.StoredValue['rdgain']       := '0';
-          //cfg.StoredValue['samfacin']     := '1.0';
-          //cfg.StoredValue['samfacout']    := '1.0';
-          //if Form1.rbUseLeft.Checked Then cfg.StoredValue['audiochan'] := 'L' Else cfg.StoredValue['audiochan'] := 'R';
-          //cfg.StoredValue['autoSR'] := '0';
-          //cfg.StoredValue['pttPort']      := cfgvtwo.Form6.editUserDefinedPort1.Text;
-          //if Form1.chkAFC.Checked Then cfg.StoredValue['afc'] := '1' Else cfg.StoredValue['afc'] := '0';
-          //If Form1.chkNB.Checked Then cfg.StoredValue['noiseblank'] := '1' Else cfg.StoredValue['noiseblank'] := '0';
-          //cfg.StoredValue['brightness']   := IntToStr(Form1.tbBright.Position);
-          //cfg.StoredValue['contrast']     := IntToStr(Form1.tbContrast.Position );
-          //cfg.StoredValue['colormap']     := IntToStr(Form1.cbSpecPal.ItemIndex);
-          //cfg.StoredValue['specspeed']    := IntToStr(Form1.SpinEdit1.Value);
-          //cfg.StoredValue['txCF']         := '0';
-          //cfg.StoredValue['rxCF']         := '0';
-          //If cfgvtwo.Form6.cbSaveCSV.Checked Then cfg.StoredValue['saveCSV'] := '1' Else cfg.StoredValue['saveCSV'] := '0';
-          //cfg.StoredValue['csvPath'] := cfgvtwo.Form6.DirectoryEdit1.Directory;
-          //cfg.StoredValue['adiPath'] := log.Form2.DirectoryEdit1.Directory;
-          //cfg.StoredValue['version'] := verHolder.verReturn;
-          //cfg.StoredValue['cqColor'] := IntToStr(cfgvtwo.Form6.ComboBox1.ItemIndex);
-          //cfg.StoredValue['callColor'] := IntToStr(cfgvtwo.Form6.ComboBox2.ItemIndex);
-          //cfg.StoredValue['qsoColor'] := IntToStr(cfgvtwo.Form6.ComboBox3.ItemIndex);
-          //cfg.StoredValue['catBy'] := cfgvtwo.glcatBy;
-          //if cfgvtwo.Form6.editPSKRCall.Text = '' Then cfgvtwo.Form6.editPSKRCall.Text := cfgvtwo.Form6.edMyCall.Text;
-          //cfg.StoredValue['usePSKR'] := 'no';
-          //if cbEnRB.Checked Then cfg.StoredValue['useRB'] := 'yes' else cfg.StoredValue['useRB'] := 'no';
-          //cfg.StoredValue['pskrCall'] := cfgvtwo.Form6.editPSKRCall.Text;
-          //cfg.StoredValue['pskrAntenna'] := cfgvtwo.Form6.editPSKRAntenna.Text;
-          //if cfgvtwo.Form6.chkNoOptFFT.Checked Then cfg.StoredValue['optFFT'] := 'off' else cfg.StoredValue['optFFT'] := 'on';
-          //cfg.StoredValue['useAltPTT'] := 'yes';
-          //cfg.StoredValue['useHRDPTT'] := 'no';
-          //cfg.StoredValue['userQRG1'] := cfgvtwo.Form6.edUserQRG1.Text;
-          //cfg.StoredValue['userQRG2'] := cfgvtwo.Form6.edUserQRG2.Text;
-          //cfg.StoredValue['userQRG3'] := cfgvtwo.Form6.edUserQRG3.Text;
-          //cfg.StoredValue['userQRG4'] := cfgvtwo.Form6.edUserQRG4.Text;
-          //cfg.StoredValue['userQRG5'] := cfgvtwo.Form6.edUserQRG5.Text;
-          //cfg.StoredValue['userQRG6'] := cfgvtwo.Form6.edUserQRG6.Text;
-          //cfg.StoredValue['userQRG7'] := cfgvtwo.Form6.edUserQRG7.Text;
-          //cfg.StoredValue['userQRG8'] := cfgvtwo.Form6.edUserQRG8.Text;
-          //cfg.StoredValue['userQRG9'] := cfgvtwo.Form6.edUserQRG9.Text;
-          //cfg.StoredValue['userQRG10'] := cfgvtwo.Form6.edUserQRG10.Text;
-          //cfg.StoredValue['userQRG11'] := cfgvtwo.Form6.edUserQRG11.Text;
-          //cfg.StoredValue['userQRG12'] := cfgvtwo.Form6.edUserQRG12.Text;
-          //cfg.StoredValue['userQRG13'] := cfgvtwo.Form6.edUserQRG13.Text;
-          //cfg.StoredValue['usrMsg1'] := cfgvtwo.Form6.edUserMsg4.Text;
-          //cfg.StoredValue['usrMsg2'] := cfgvtwo.Form6.edUserMsg5.Text;
-          //cfg.StoredValue['usrMsg3'] := cfgvtwo.Form6.edUserMsg6.Text;
-          //cfg.StoredValue['usrMsg4'] := cfgvtwo.Form6.edUserMsg7.Text;
-          //cfg.StoredValue['usrMsg5'] := cfgvtwo.Form6.edUserMsg8.Text;
-          //cfg.StoredValue['usrMsg6'] := cfgvtwo.Form6.edUserMsg9.Text;
-          //cfg.StoredValue['usrMsg7'] := cfgvtwo.Form6.edUserMsg10.Text;
-          //cfg.StoredValue['usrMsg8'] := cfgvtwo.Form6.edUserMsg11.Text;
-          //cfg.StoredValue['usrMsg9'] := cfgvtwo.Form6.edUserMsg12.Text;
-          //cfg.StoredValue['usrMsg10'] := cfgvtwo.Form6.edUserMsg13.Text;
-          //cfg.StoredValue['usrMsg11'] := cfgvtwo.Form6.edUserMsg14.Text;
-          //cfg.StoredValue['usrMsg12'] := cfgvtwo.Form6.edUserMsg15.Text;
-          //cfg.StoredValue['usrMsg13'] := cfgvtwo.Form6.edUserMsg16.Text;
-          //cfg.StoredValue['usrMsg14'] := cfgvtwo.Form6.edUserMsg17.Text;
-          //cfg.StoredValue['usrMsg15'] := cfgvtwo.Form6.edUserMsg18.Text;
-          //cfg.StoredValue['usrMsg16'] := cfgvtwo.Form6.edUserMsg19.Text;
-          //cfg.StoredValue['usrMsg17'] := cfgvtwo.Form6.edUserMsg20.Text;
-          //cfg.StoredValue['binspace'] := '100';
-          //if Form1.cbSmooth.Checked Then cfg.StoredValue['smooth'] := 'on' else cfg.StoredValue['smooth'] := 'off';
-          //if cfgvtwo.Form6.cbRestoreMulti.Checked Then cfg.StoredValue['restoreMulti'] := 'on' else cfg.StoredValue['restoreMulti'] := 'off';
-          //cfg.StoredValue['specVGain'] := IntToStr(spinGain.Value);
-          //cfg.StoredValue['si570ptt'] := 'n';
-          //if cfgvtwo.Form6.cbCWID.Checked Then cfg.StoredValue['useCWID'] := 'y' else cfg.StoredValue['useCWID'] := 'n';
-          //cfg.StoredValue['useCATTxDF'] := 'no';
-          //cfg.StoredValue['enAutoQSY1'] := 'no';
-          //cfg.StoredValue['enAutoQSY2'] := 'no';
-          //cfg.StoredValue['enAutoQSY3'] := 'no';
-          //cfg.StoredValue['enAutoQSY4'] := 'no';
-          //cfg.StoredValue['enAutoQSY5'] := 'no';
-          //cfg.StoredValue['autoQSYAT1'] := 'no';
-          //cfg.StoredValue['autoQSYAT2'] := 'no';
-          //cfg.StoredValue['autoQSYAT3'] := 'no';
-          //cfg.StoredValue['autoQSYAT4'] := 'no';
-          //cfg.StoredValue['autoQSYAT5'] := 'no';
-          //cfg.StoredValue['autoQSYQRG1'] := '';
-          //cfg.StoredValue['autoQSYQRG2'] := '';
-          //cfg.StoredValue['autoQSYQRG3'] := '';
-          //cfg.StoredValue['autoQSYQRG4'] := '';
-          //cfg.StoredValue['autoQSYQRG5'] := '';
-          //cfg.Save;
           saveConfig;
           dlog.fileDebug('Ran initial configuration.');
      End;
@@ -3900,7 +3795,6 @@ Begin
      Form1.MenuItem19b.Caption := cfg.StoredValue['usrMsg16'];
      Form1.MenuItem20b.Caption := cfg.StoredValue['usrMsg17'];
 
-     // Fixed, restore defaults was the problem.  :)
      tstint := 0;
      if TryStrToInt(cfg.StoredValue['binSpace'],tstint) Then Form1.spinDecoderBin.value := tstint else Form1.spinDecoderBin.Value := 3;
      if spinDecoderBin.Value = 1 Then edit3.Text := '20';
@@ -4067,7 +3961,7 @@ Begin
      if verholder.guiSize = 'Small' then wf.Height := 160;
      wf.Width  := 750;
      wf.Top    := 25;
-     wf.Left   := 177;
+     wf.Left   := 178;
      wf.Parent := Self;
      wf.OnMouseDown := waterfallMouseDown;
      wf.DoubleBuffered := True;
@@ -5197,10 +5091,7 @@ Begin
                     if (dac.d65txBufferIdx >= d65nwave+11025) Or (dac.d65txBufferIdx >= 661503-(11025 DIV 2)) Then
                     Begin
                          globalData.txInProgress := False;
-                         //if getPTTMethod() = 'SI5' Then si570Lowerptt();
-                         //if getPTTMethod() = 'HRD' Then hrdLowerPTT();
                          if getPTTMethod() = 'ALT' Then altLowerPTT();
-                         //if getPTTMethod() = 'PTT' Then lowerPTT();
                          thisAction := 5;
                          actionSet := False;
                          curMsg := '';
@@ -5255,10 +5146,7 @@ Begin
                          dac.d65txBufferPtr := @dac.d65txBuffer[0];
 
                          rxCount := 0;
-                         //if getPTTMethod() = 'SI5' Then si570Raiseptt();
-                         //if getPTTMethod() = 'HRD' Then hrdRaisePTT();
                          if getPTTMethod() = 'ALT' Then altRaisePTT();
-                         //if getPTTMethod() = 'PTT' Then raisePTT();
                          globalData.txInProgress := True;
                          foo := '';
                          if gst.Hour < 10 then foo := '0' + IntToStr(gst.Hour) + ':' else foo := IntToStr(gst.Hour) + ':';
@@ -5312,10 +5200,7 @@ Begin
                     if (dac.d65txBufferIdx >= d65nwave+11025) Or (dac.d65txBufferIdx >= 661503-(11025 DIV 2)) Or (thisSecond > 48) Then
                     Begin
                          // I have a full TX cycle when d65txBufferIdx >= 538624 or thisSecond > 48
-                         //if getPTTMethod() = 'SI5' Then si570Lowerptt();
-                         //if getPTTMethod() = 'HRD' Then hrdLowerPTT();
                          if getPTTMethod() = 'ALT' Then altLowerPTT();
-                         //if getPTTMethod() = 'PTT' Then lowerPTT();
                          actionSet := False;
                          thisAction := 5;
                          globalData.txInProgress := False;
@@ -5330,7 +5215,7 @@ End;
 
 procedure TForm1.processNewMinute(st : TSystemTime);
 Var
-   i, idx : Integer;
+   i : Integer;
 Begin
      // Warning for DT being offset
      if spinDT.Value <> 0 Then Form1.addToDisplayE('WARNING: DT offset is not 0');
@@ -5359,9 +5244,6 @@ Begin
      lastMinute := thisMinute;
      thisMinute := st.Minute;
      if st.Minute = 59 then nextMinute := 0 else nextMinute := st.Minute + 1;
-     // I can only see action 2..5 from here.  action=1 does not exist
-     // if I have made it here.
-     // Handler for action=2
 End;
 
 procedure TForm1.processOncePerSecond(st : TSystemTime);
@@ -5412,13 +5294,11 @@ Begin
      Begin
           Form1.Label12.Font.Color := clRed;
           Form1.editManQRG.Font.Color := clRed;
-          //Form1.Label23.Font.Color := clRed;
      end
      else
      begin
          Form1.Label12.Font.Color := clBlack;
          Form1.editManQRG.Font.Color := clBlack;
-         //Form1.Label23.Font.Color := clBlack;
      end;
      If globalData.rbLoggedIn Then Form1.Label30.Font.Color := clBlack else Form1.Label30.Font.Color := clRed;
      // Update AU Levels display
@@ -5483,6 +5363,8 @@ Begin
      Begin
           If cbEnRB.Checked And odd(st.Minute) Then rbcPing := True;
      end;
+     // Update spectrum display while in TX.
+     if globalData.txInProgress and not primed and not globalData.spectrumComputing65 and not d65.glinProg Then wf.Repaint;
 end;
 
 procedure TForm1.oncePerTick();
@@ -5500,15 +5382,12 @@ Begin
      if cont then
      begin
           // Callsign and Grid is good so RB is fine to be enabled.
-          //cbEnPSKR.Enabled := True;
           cbEnRB.Enabled   := True;
           globalData.canTX := True;
      end
      else
      begin
-          //cbEnPSKR.Enabled := False;
           cbEnRB.Enabled   := False;
-          //cbEnPSKR.Checked := False;
           cbEnRB.Checked   := False;
           globalData.canTX := False;
      end;
@@ -5520,11 +5399,6 @@ Begin
      Begin
           // Normal RX waterfall update
           If globalData.specNewSpec65 Then wf.Repaint;
-     End
-     else
-     begin
-          // Simple repaint update to keep display "clean" during TX or between new data.
-          //wf.Repaint;
      end;
      // Determine TX Buffer to use
      if useBuffer = 0 Then curMsg := UpCase(padRight(Form1.edMsg.Text,22));
@@ -5568,7 +5442,7 @@ Begin
           if d65.glrawOut.Count > 0 Then
           Begin
                lbRawDecoder.Clear;
-               lbRawDecoder.Items.Add('Bin,DF,Sync,dB,DT,Decode');
+               lbRawDecoder.Items.Add('Bin,DF,Sync,dB,DT,Check,Decode');
                for i := 0 to d65.glrawOut.Count-1 do
                Begin
                     lbRawDecoder.Items.Add(d65.glrawOut.Strings[i]);
@@ -5587,7 +5461,7 @@ Begin
                          ccnt := ccnt+1;
                     end;
                end;
-               If ccnt > 2 Then
+               If ccnt > 1 Then
                Begin
                     // Compact :)
                     repeat
@@ -5789,7 +5663,6 @@ initialization
   alreadyHere := False; // Used to detect an overrun of timer servicing loop.
   sLevel1 := 0;
   sLevel2 := 0;
-  smeterIdx := 0;
   adc.adcSpecCount := 0;
   adc.adcChan := 1;
   globalData.specNewSpec65 := False;
@@ -5806,15 +5679,6 @@ initialization
   TxDirty      := True;
   TxValid      := False;
   itemsIn      := False;
-  // Setup error accumulators
-  dErrLErate   := 0;
-  dErrCount    := 0;
-  dErrAErate   := 0;
-  dErrError    := 0;
-  adCount      := 0;
-  adLErate     := 0;
-  adAErate     := 0;
-  adError      := 0;
   //
   // Actions 1=Init, 2=RX, 3=TX, 4=Decode, 5=Idle
   //
@@ -5831,11 +5695,6 @@ initialization
   txCount := 0;
   rxCount := 0;
   watchMulti := False;
-  haveTXSRerr := False;
-  haveRXSRerr := False;
-  rxsrs := '';
-  txsrs := '';
-  lastSRerr := '';
   audioAve1 := 0;
   audioAve2 := 0;
   doCAT := False;
