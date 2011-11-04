@@ -10,7 +10,7 @@
         <WindowIndex Value="0"/>
         <TopLine Value="12"/>
         <CursorPos X="1" Y="40"/>
-        <UsageCount Value="72"/>
+        <UsageCount Value="88"/>
         <Loaded Value="True"/>
       </Unit0>
       <Unit1>
@@ -20,14 +20,13 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="maincode"/>
-        <IsVisibleTab Value="True"/>
         <EditorIndex Value="0"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="1587"/>
-        <CursorPos X="26" Y="1589"/>
-        <UsageCount Value="72"/>
+        <TopLine Value="272"/>
+        <CursorPos X="96" Y="287"/>
+        <UsageCount Value="88"/>
         <Bookmarks Count="1">
-          <Item0 X="50" Y="3825" ID="0"/>
+          <Item0 X="50" Y="3834" ID="0"/>
         </Bookmarks>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
@@ -40,7 +39,7 @@
         <WindowIndex Value="0"/>
         <TopLine Value="42"/>
         <CursorPos X="33" Y="63"/>
-        <UsageCount Value="72"/>
+        <UsageCount Value="88"/>
         <Loaded Value="True"/>
       </Unit2>
       <Unit3>
@@ -51,7 +50,7 @@
         <WindowIndex Value="0"/>
         <TopLine Value="1"/>
         <CursorPos X="21" Y="1"/>
-        <UsageCount Value="72"/>
+        <UsageCount Value="88"/>
         <Loaded Value="True"/>
       </Unit3>
       <Unit4>
@@ -62,7 +61,7 @@
         <WindowIndex Value="0"/>
         <TopLine Value="13"/>
         <CursorPos X="30" Y="28"/>
-        <UsageCount Value="72"/>
+        <UsageCount Value="88"/>
         <Loaded Value="True"/>
       </Unit4>
       <Unit5>
@@ -71,16 +70,16 @@
         <UnitName Value="spectrum"/>
         <EditorIndex Value="12"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="11"/>
-        <CursorPos X="79" Y="28"/>
-        <UsageCount Value="72"/>
+        <TopLine Value="318"/>
+        <CursorPos X="1" Y="333"/>
+        <UsageCount Value="88"/>
         <Loaded Value="True"/>
       </Unit5>
       <Unit6>
         <Filename Value="cmaps.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="cmaps"/>
-        <UsageCount Value="72"/>
+        <UsageCount Value="88"/>
       </Unit6>
       <Unit7>
         <Filename Value="adc.pas"/>
@@ -90,7 +89,7 @@
         <WindowIndex Value="0"/>
         <TopLine Value="78"/>
         <CursorPos X="16" Y="85"/>
-        <UsageCount Value="72"/>
+        <UsageCount Value="88"/>
         <Loaded Value="True"/>
       </Unit7>
       <Unit8>
@@ -101,14 +100,14 @@
         <WindowIndex Value="0"/>
         <TopLine Value="46"/>
         <CursorPos X="43" Y="61"/>
-        <UsageCount Value="72"/>
+        <UsageCount Value="88"/>
         <Loaded Value="True"/>
       </Unit8>
       <Unit9>
         <Filename Value="dlog.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="dlog"/>
-        <UsageCount Value="72"/>
+        <UsageCount Value="88"/>
       </Unit9>
       <Unit10>
         <Filename Value="cfgvtwo.pas"/>
@@ -120,7 +119,7 @@
         <WindowIndex Value="0"/>
         <TopLine Value="374"/>
         <CursorPos X="1" Y="398"/>
-        <UsageCount Value="72"/>
+        <UsageCount Value="88"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
       </Unit10>
@@ -128,7 +127,7 @@
         <Filename Value="guiconfig.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="guiConfig"/>
-        <UsageCount Value="72"/>
+        <UsageCount Value="88"/>
       </Unit11>
       <Unit12>
         <Filename Value="verholder.pas"/>
@@ -138,7 +137,7 @@
         <WindowIndex Value="0"/>
         <TopLine Value="10"/>
         <CursorPos X="24" Y="37"/>
-        <UsageCount Value="72"/>
+        <UsageCount Value="88"/>
         <Loaded Value="True"/>
       </Unit12>
       <Unit13>
@@ -148,7 +147,7 @@
         <WindowIndex Value="0"/>
         <TopLine Value="2147"/>
         <CursorPos X="1" Y="2164"/>
-        <UsageCount Value="72"/>
+        <UsageCount Value="88"/>
       </Unit13>
       <Unit14>
         <Filename Value="adif.pas"/>
@@ -158,7 +157,7 @@
         <WindowIndex Value="0"/>
         <TopLine Value="1"/>
         <CursorPos X="1" Y="50"/>
-        <UsageCount Value="72"/>
+        <UsageCount Value="88"/>
         <Loaded Value="True"/>
       </Unit14>
       <Unit15>
@@ -167,11 +166,12 @@
         <ComponentName Value="Form2"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="log"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="2"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="56"/>
-        <CursorPos X="1" Y="80"/>
-        <UsageCount Value="72"/>
+        <TopLine Value="104"/>
+        <CursorPos X="143" Y="119"/>
+        <UsageCount Value="88"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
       </Unit15>
@@ -181,9 +181,9 @@
         <UnitName Value="fftw_jl"/>
         <EditorIndex Value="7"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="75"/>
+        <TopLine Value="21"/>
         <CursorPos X="10" Y="90"/>
-        <UsageCount Value="72"/>
+        <UsageCount Value="88"/>
         <Loaded Value="True"/>
       </Unit16>
       <Unit17>
@@ -192,9 +192,9 @@
         <UnitName Value="waterfall"/>
         <EditorIndex Value="4"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="41"/>
+        <TopLine Value="44"/>
         <CursorPos X="1" Y="61"/>
-        <UsageCount Value="72"/>
+        <UsageCount Value="88"/>
         <Loaded Value="True"/>
       </Unit17>
       <Unit18>
@@ -203,9 +203,9 @@
         <UnitName Value="d65"/>
         <EditorIndex Value="10"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="1318"/>
-        <CursorPos X="1" Y="1342"/>
-        <UsageCount Value="72"/>
+        <TopLine Value="21"/>
+        <CursorPos X="1" Y="1"/>
+        <UsageCount Value="88"/>
         <Loaded Value="True"/>
       </Unit18>
       <Unit19>
@@ -217,7 +217,7 @@
         <WindowIndex Value="0"/>
         <TopLine Value="1"/>
         <CursorPos X="1" Y="1"/>
-        <UsageCount Value="72"/>
+        <UsageCount Value="88"/>
       </Unit19>
       <Unit20>
         <Filename Value="spot.pas"/>
@@ -227,14 +227,14 @@
         <WindowIndex Value="0"/>
         <TopLine Value="521"/>
         <CursorPos X="1" Y="547"/>
-        <UsageCount Value="72"/>
+        <UsageCount Value="88"/>
         <Loaded Value="True"/>
       </Unit20>
       <Unit21>
         <Filename Value="valobject.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="valobject"/>
-        <UsageCount Value="72"/>
+        <UsageCount Value="88"/>
       </Unit21>
     </Units>
     <General>

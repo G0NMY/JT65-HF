@@ -16,7 +16,7 @@ object Form2: TForm2
   OnCreate = FormCreate
   LCLVersion = '0.9.30'
   object Label1: TLabel
-    Left = 128
+    Left = 123
     Height = 18
     Top = 52
     Width = 78
@@ -40,7 +40,7 @@ object Form2: TForm2
     ParentFont = False
   end
   object Label3: TLabel
-    Left = 264
+    Left = 263
     Height = 18
     Top = 52
     Width = 69
@@ -76,7 +76,7 @@ object Form2: TForm2
     ParentFont = False
   end
   object Label6: TLabel
-    Left = 96
+    Left = 95
     Height = 18
     Top = 94
     Width = 67
@@ -220,7 +220,6 @@ object Form2: TForm2
     Font.Name = 'arial [monotype]'
     ParentFont = False
     TabOrder = 4
-    Text = '-23'
   end
   object edLogRReport: TEdit
     Left = 164
@@ -323,5 +322,13 @@ object Form2: TForm2
     Font.Style = [fsBold]
     ParentFont = False
     TabOrder = 13
+  end
+  object Label13: TLabel
+    Left = 8
+    Height = 18
+    Top = 296
+    Width = 52
+    Caption = 'Label13'
+    ParentColor = False
   end
 end

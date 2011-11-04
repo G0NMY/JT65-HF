@@ -86,6 +86,7 @@ type
     GroupBox1: TGroupBox;
     GroupBox4: TGroupBox;
     Label1: TLabel;
+    Label10: TLabel;
     Label12: TLabel;
     Label13: TLabel;
     Label14: TLabel;
@@ -117,6 +118,7 @@ type
     Label50: TLabel;
     Label6: TLabel;
     Label21: TLabel;
+    Label7: TLabel;
     Label8: TLabel;
     Label9: TLabel;
     ListBox1: TListBox;
@@ -235,6 +237,7 @@ type
     procedure Label39Click(Sender: TObject);
     procedure lbRawDecoderDblClick(Sender: TObject);
     procedure lbTXLogDblClick(Sender: TObject);
+    procedure Memo1DblClick(Sender: TObject);
     procedure menuAboutClick(Sender: TObject);
     procedure MenuItemHandler(Sender: TObject);
     procedure menuRigControlClick(Sender: TObject);
@@ -1636,6 +1639,11 @@ begin
      lbTXLog.Clear;
 end;
 
+procedure TForm1.Memo1DblClick(Sender: TObject);
+begin
+     Memo1.Clear;
+end;
+
 procedure TForm1.menuAboutClick(Sender: TObject);
 begin
      about.Form4.Visible := True;
@@ -2671,6 +2679,7 @@ begin
      log.Form2.edLogFrequency.Text := sqrg;
      log.logmycall := globalData.fullcall;
      log.logmygrid := cfgvtwo.Form6.edMyGrid.Text;
+     log.Form2.Label13.Caption:='';
      log.Form2.Visible := True;
      log.Form2.Show;
      log.Form2.BringToFront;

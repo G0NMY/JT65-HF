@@ -1,14 +1,14 @@
 object Form1: TForm1
   Left = 0
   Height = 690
-  Top = 24
+  Top = 30
   Width = 935
   HorzScrollBar.Visible = False
   VertScrollBar.Visible = False
   ActiveControl = btnReDecode
   BorderIcons = [biSystemMenu, biMinimize]
   Caption = 'JT65-HF'
-  ClientHeight = 660
+  ClientHeight = 663
   ClientWidth = 935
   Constraints.MaxHeight = 900
   Constraints.MaxWidth = 1500
@@ -231,7 +231,7 @@ object Form1: TForm1
   object Label13: TLabel
     Left = 557
     Height = 14
-    Top = 567
+    Top = 570
     Width = 56
     Anchors = [akLeft, akBottom]
     Caption = 'Single BW'
@@ -258,7 +258,7 @@ object Form1: TForm1
   object Label12: TLabel
     Left = 815
     Height = 15
-    Top = 584
+    Top = 587
     Width = 83
     Anchors = [akLeft, akBottom]
     Caption = 'Dial QRG KHz'
@@ -271,7 +271,7 @@ object Form1: TForm1
   object Label23: TLabel
     Left = 799
     Height = 15
-    Top = 644
+    Top = 647
     Width = 114
     Anchors = [akLeft, akBottom]
     Caption = 'Right Click for Menu'
@@ -285,7 +285,7 @@ object Form1: TForm1
     Left = 440
     Height = 14
     Hint = 'Double click to disable RB'
-    Top = 642
+    Top = 645
     Width = 7
     Anchors = [akLeft, akBottom]
     Caption = '0'
@@ -298,7 +298,7 @@ object Form1: TForm1
   object Label2: TLabel
     Left = 368
     Height = 14
-    Top = 642
+    Top = 645
     Width = 64
     Anchors = [akLeft, akBottom]
     Caption = 'Reports Sent'
@@ -321,6 +321,7 @@ object Form1: TForm1
     OnDblClick = edMsgDblClick
     ParentFont = False
     ReadOnly = True
+    TabStop = False
     TabOrder = 0
   end
   object edHisCall: TEdit
@@ -450,7 +451,7 @@ object Form1: TForm1
   object buttonClearList: TButton
     Left = 5
     Height = 25
-    Top = 634
+    Top = 637
     Width = 108
     Anchors = [akLeft, akBottom]
     Caption = 'Clear Decodes'
@@ -776,7 +777,7 @@ object Form1: TForm1
     AnchorSideRight.Side = asrBottom
     AnchorSideBottom.Control = buttonClearList
     Left = 5
-    Height = 300
+    Height = 301
     Top = 331
     Width = 548
     Anchors = [akTop, akLeft, akRight, akBottom]
@@ -795,6 +796,7 @@ object Form1: TForm1
     ParentFont = False
     Style = lbOwnerDrawFixed
     TabOrder = 16
+    TabStop = False
     TopIndex = -1
   end
   object ListBox2: TListBox
@@ -912,7 +914,7 @@ object Form1: TForm1
   object spinDecoderBW: TSpinEdit
     Left = 595
     Height = 23
-    Top = 583
+    Top = 586
     Width = 17
     Anchors = [akLeft, akBottom]
     Font.Height = -10
@@ -955,7 +957,7 @@ object Form1: TForm1
   object chkMultiDecode: TCheckBox
     Left = 557
     Height = 22
-    Top = 610
+    Top = 613
     Width = 143
     Anchors = [akLeft, akBottom]
     Caption = 'Enable Multi-decoder'
@@ -1048,7 +1050,7 @@ object Form1: TForm1
   object btnDefaults: TButton
     Left = 784
     Height = 27
-    Top = 554
+    Top = 557
     Width = 146
     Anchors = [akLeft, akBottom]
     Caption = 'Restore Defaults'
@@ -1062,7 +1064,7 @@ object Form1: TForm1
   object editManQRG: TEdit
     Left = 784
     Height = 35
-    Top = 603
+    Top = 606
     Width = 146
     Alignment = taCenter
     Anchors = [akLeft, akBottom]
@@ -1092,7 +1094,7 @@ object Form1: TForm1
   object cbEnRB: TCheckBox
     Left = 272
     Height = 22
-    Top = 637
+    Top = 640
     Width = 74
     Anchors = [akLeft, akBottom]
     Caption = 'Enable RB'
@@ -1104,7 +1106,7 @@ object Form1: TForm1
   object Edit2: TEdit
     Left = 557
     Height = 23
-    Top = 583
+    Top = 586
     Width = 40
     Anchors = [akLeft, akBottom]
     Font.Height = -10
@@ -1120,7 +1122,7 @@ object Form1: TForm1
   object btnReDecode: TButton
     Left = 130
     Height = 25
-    Top = 634
+    Top = 637
     Width = 115
     Anchors = [akLeft, akBottom]
     Caption = 'Decode Again'
@@ -1152,7 +1154,7 @@ object Form1: TForm1
   object Edit3: TEdit
     Left = 626
     Height = 23
-    Top = 583
+    Top = 586
     Width = 40
     Anchors = [akLeft, akBottom]
     Font.Height = -10
@@ -1168,7 +1170,7 @@ object Form1: TForm1
   object spinDecoderBin: TSpinEdit
     Left = 664
     Height = 23
-    Top = 583
+    Top = 586
     Width = 17
     Anchors = [akLeft, akBottom]
     Font.Height = -10
@@ -1183,7 +1185,7 @@ object Form1: TForm1
   object Label18: TLabel
     Left = 626
     Height = 14
-    Top = 567
+    Top = 570
     Width = 50
     Anchors = [akLeft, akBottom]
     Caption = 'Multi BW'
@@ -1209,7 +1211,7 @@ object Form1: TForm1
   object SpinDT: TSpinEdit
     Left = 557
     Height = 24
-    Top = 637
+    Top = 640
     Width = 49
     Anchors = [akLeft, akBottom]
     Font.Height = -11
@@ -1223,7 +1225,7 @@ object Form1: TForm1
   object Label32: TLabel
     Left = 610
     Height = 14
-    Top = 643
+    Top = 646
     Width = 143
     Anchors = [akLeft, akBottom]
     Caption = 'Adjust Timing (DT Offset)'
@@ -1240,19 +1242,22 @@ object Form1: TForm1
     AnchorSideBottom.Control = Owner
     AnchorSideBottom.Side = asrBottom
     Left = 936
-    Height = 178
-    Top = 477
+    Height = 202
+    Top = 456
     Width = 304
     Anchors = [akTop, akLeft, akRight, akBottom]
     BorderSpacing.Right = 10
     BorderSpacing.Bottom = 5
     Constraints.MinHeight = 100
     Constraints.MinWidth = 304
+    Font.Height = -15
+    Font.Name = 'arial [monotype]'
     Items.Strings = (
-      'Transmissions'
+      ''
     )
-    ItemHeight = 23
+    ItemHeight = 24
     OnDblClick = lbTXLogDblClick
+    ParentFont = False
     TabOrder = 41
   end
   object lbRawDecoder: TListBox
@@ -1268,26 +1273,56 @@ object Form1: TForm1
     )
     ItemHeight = 23
     OnDblClick = lbRawDecoderDblClick
+    ParentShowHint = False
     TabOrder = 42
+    TabStop = False
     Visible = False
   end
   object Memo1: TMemo
     AnchorSideRight.Control = Owner
     AnchorSideRight.Side = asrBottom
     Left = 936
-    Height = 464
-    Top = 3
+    Height = 400
+    Top = 24
     Width = 304
     Anchors = [akTop, akLeft, akRight]
     BorderSpacing.Right = 10
     Constraints.MaxHeight = 464
-    Constraints.MinHeight = 464
+    Constraints.MinHeight = 400
     Constraints.MinWidth = 304
+    Font.Height = -15
+    Font.Name = 'arial [monotype]'
     Lines.Strings = (
-      'Stations Heard This Session'
+      ''
     )
+    OnDblClick = Memo1DblClick
+    ParentFont = False
     TabOrder = 43
     WordWrap = False
+  end
+  object Label7: TLabel
+    Left = 936
+    Height = 19
+    Top = 3
+    Width = 237
+    Caption = 'Stations Heard This Session'
+    Font.Height = -15
+    Font.Name = 'arial [monotype]'
+    Font.Style = [fsBold]
+    ParentColor = False
+    ParentFont = False
+  end
+  object Label10: TLabel
+    Left = 936
+    Height = 19
+    Top = 436
+    Width = 120
+    Caption = 'Transmissions'
+    Font.Height = -15
+    Font.Name = 'arial [monotype]'
+    Font.Style = [fsBold]
+    ParentColor = False
+    ParentFont = False
   end
   object Timer1: TTimer
     Interval = 220
