@@ -282,28 +282,30 @@ object Form1: TForm1
     PopupMenu = popupQRG
   end
   object Label30: TLabel
-    Left = 440
-    Height = 14
+    Left = 498
+    Height = 18
     Hint = 'Double click to disable RB'
-    Top = 645
-    Width = 7
+    Top = 638
+    Width = 10
     Anchors = [akLeft, akBottom]
     Caption = '0'
-    Font.Height = -10
+    Font.Height = -13
     Font.Name = 'arial [monotype]'
+    Font.Style = [fsBold]
     ParentColor = False
     ParentFont = False
     OnDblClick = Label30DblClick
   end
   object Label2: TLabel
-    Left = 368
-    Height = 14
-    Top = 645
-    Width = 64
+    Left = 392
+    Height = 18
+    Top = 638
+    Width = 96
     Anchors = [akLeft, akBottom]
     Caption = 'Reports Sent'
-    Font.Height = -10
+    Font.Height = -13
     Font.Name = 'arial [monotype]'
+    Font.Style = [fsBold]
     ParentColor = False
     ParentFont = False
   end
@@ -739,7 +741,6 @@ object Form1: TForm1
       OnChange = SpinEdit1Change
       ParentFont = False
       TabOrder = 3
-      Value = 5
     end
     object cbSmooth: TCheckBox
       Left = 296
@@ -1094,12 +1095,13 @@ object Form1: TForm1
   object cbEnRB: TCheckBox
     Left = 272
     Height = 22
-    Top = 640
-    Width = 74
+    Top = 637
+    Width = 98
     Anchors = [akLeft, akBottom]
     Caption = 'Enable RB'
-    Font.Height = -10
+    Font.Height = -13
     Font.Name = 'arial [monotype]'
+    Font.Style = [fsBold]
     ParentFont = False
     TabOrder = 35
   end
@@ -1290,13 +1292,15 @@ object Form1: TForm1
     Constraints.MaxHeight = 464
     Constraints.MinHeight = 400
     Constraints.MinWidth = 304
+    Enabled = False
     Font.Height = -15
     Font.Name = 'arial [monotype]'
     Lines.Strings = (
       ''
+      '  Not active this build.'
     )
-    OnDblClick = Memo1DblClick
     ParentFont = False
+    ReadOnly = True
     TabOrder = 43
     WordWrap = False
   end

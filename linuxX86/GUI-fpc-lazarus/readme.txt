@@ -1,3 +1,15 @@
+Status of Linux code as of 4/November/2011
+
+Integration with XLog completed.  Now logs directly
+into XLog (if enabled) AND writes ADIF file as
+before -- consider this a backup.  :)  DO NOT USE
+LOG DIRECT TO XLOG WITH YOUR PRIMARY LOG UNTIL YOU
+ARE SURE IT WORKS AS EXPECTED!!!!!
+
+Will pass along to alpha test group 5/November.
+
+-----
+
 Status of Linux code as of 2/November/2011
 
 Looking good.  Can now resize main window vertically

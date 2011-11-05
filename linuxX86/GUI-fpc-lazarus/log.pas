@@ -9,7 +9,7 @@ uses
   Dialogs, StdCtrls, adif, EditBtn, FileUtil, CTypes, DateUtils;
 
 Const
-     XLOG = 'XLog';
+     XLOG = 'jt65XLog';
 type
 
   { TForm2 }
