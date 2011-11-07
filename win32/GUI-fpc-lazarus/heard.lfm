@@ -1,7 +1,7 @@
 object Form9: TForm9
-  Left = 6
+  Left = 7
   Height = 485
-  Top = 13
+  Top = 16
   Width = 800
   BorderIcons = [biSystemMenu, biMinimize]
   Caption = 'Stations Heard'
@@ -13,7 +13,7 @@ object Form9: TForm9
   Constraints.MinWidth = 800
   Font.Height = -16
   Font.Name = 'Arial'
-  LCLVersion = '0.9.30.2RC1'
+  LCLVersion = '0.9.30.2'
   object edSearchCallsign: TEdit
     Left = 8
     Height = 26

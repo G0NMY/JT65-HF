@@ -93,10 +93,8 @@ type
     Label17: TLabel;
     Label18 : TLabel;
     Label19: TLabel;
-    Label2: TLabel;
     Label20: TLabel;
     Label22: TLabel;
-    Label23: TLabel;
     Label24: TLabel;
     Label25: TLabel;
     Label26: TLabel;
@@ -112,7 +110,6 @@ type
     Label35: TLabel;
     Label36: TLabel;
     Label37: TLabel;
-    Label38: TLabel;
     Label39: TLabel;
     Label4: TLabel;
     Label5 : TLabel ;
