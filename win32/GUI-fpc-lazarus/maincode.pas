@@ -235,7 +235,6 @@ type
     procedure Label31DblClick(Sender: TObject);
     procedure Label32DblClick (Sender : TObject );
     procedure Label39Click(Sender: TObject);
-    //procedure ListBox3DblClick (Sender : TObject );
     procedure menuAboutClick(Sender: TObject);
     procedure menuHeardClick(Sender: TObject);
     procedure MenuItemHandler(Sender: TObject);

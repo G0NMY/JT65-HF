@@ -461,9 +461,9 @@ LazarusResources.Add('TForm1','FORMDATA',[
   +'menuRigControl'#7'Caption'#6#11'Rig Control'#7'OnClick'#7#19'menuRigControl'
   +'Click'#0#0#9'TMenuItem'#14'menuRawDecoder'#7'Caption'#6#11'Raw Decoder'#7'O'
   +'nClick'#7#19'menuRawDecoderClick'#0#0#9'TMenuItem'#9'menuHeard'#7'Caption'#6
-  +#14'Stations Heard'#7'OnClick'#7#14'menuHeardClick'#0#0#9'TMenuItem'#9'menuT'
-  +'XLog'#7'Caption'#6#12'Transmit Log'#7'OnClick'#7#14'menuTXLogClick'#0#0#9'T'
-  +'MenuItem'#9'menuAbout'#7'Caption'#6#13'About JT65-HF'#7'OnClick'#7#14'menuA'
-  +'boutClick'#0#0#0#6'TTimer'#6'Timer2'#7'Enabled'#8#8'Interval'#3#184#11#7'On'
-  +'Timer'#7#11'Timer2Timer'#4'left'#3'H'#3#3'top'#2'H'#0#0#0
+  +#14'Stations Heard'#7'Visible'#8#7'OnClick'#7#14'menuHeardClick'#0#0#9'TMenu'
+  +'Item'#9'menuTXLog'#7'Caption'#6#12'Transmit Log'#7'OnClick'#7#14'menuTXLogC'
+  +'lick'#0#0#9'TMenuItem'#9'menuAbout'#7'Caption'#6#13'About JT65-HF'#7'OnClic'
+  +'k'#7#14'menuAboutClick'#0#0#0#6'TTimer'#6'Timer2'#7'Enabled'#8#8'Interval'#3
+  +#184#11#7'OnTimer'#7#11'Timer2Timer'#4'left'#3'H'#3#3'top'#2'H'#0#0#0
 ]);

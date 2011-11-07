@@ -1921,6 +1921,7 @@ object Form1: TForm1
     end
     object menuHeard: TMenuItem
       Caption = 'Stations Heard'
+      Visible = False
       OnClick = menuHeardClick
     end
     object menuTXLog: TMenuItem
