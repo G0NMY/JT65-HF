@@ -242,7 +242,7 @@ implementation
          prRBOn      := False;
          prRBError   := '';
          prPSKROn    := False;
-         prVersion   := '2001';
+         prVersion   := '2001'; // Windows is always Odd while Linux is Even. :)
          prRBCount   := 0;
          prPRCount   := 0;
          prRBFail    := 0;
