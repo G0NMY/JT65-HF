@@ -1,17 +1,18 @@
 object Form1: TForm1
   Left = 0
   Height = 690
-  Top = 30
+  Top = 24
   Width = 935
   HorzScrollBar.Visible = False
   VertScrollBar.Visible = False
   ActiveControl = btnReDecode
+  Anchors = [akTop, akLeft, akRight]
   BorderIcons = [biSystemMenu, biMinimize]
   Caption = 'JT65-HF'
   ClientHeight = 663
   ClientWidth = 935
   Constraints.MaxHeight = 900
-  Constraints.MaxWidth = 1500
+  Constraints.MaxWidth = 1400
   Constraints.MinHeight = 690
   Constraints.MinWidth = 935
   Font.Height = -13
@@ -1246,12 +1247,13 @@ object Form1: TForm1
     Left = 936
     Height = 202
     Top = 456
-    Width = 304
+    Width = 300
     Anchors = [akTop, akLeft, akRight, akBottom]
     BorderSpacing.Right = 10
     BorderSpacing.Bottom = 5
+    Constraints.MaxWidth = 445
     Constraints.MinHeight = 100
-    Constraints.MinWidth = 304
+    Constraints.MinWidth = 300
     Font.Height = -15
     Font.Name = 'arial [monotype]'
     Items.Strings = (
@@ -1280,30 +1282,6 @@ object Form1: TForm1
     TabStop = False
     Visible = False
   end
-  object Memo1: TMemo
-    AnchorSideRight.Control = Owner
-    AnchorSideRight.Side = asrBottom
-    Left = 936
-    Height = 400
-    Top = 24
-    Width = 304
-    Anchors = [akTop, akLeft, akRight]
-    BorderSpacing.Right = 10
-    Constraints.MaxHeight = 464
-    Constraints.MinHeight = 400
-    Constraints.MinWidth = 304
-    Enabled = False
-    Font.Height = -15
-    Font.Name = 'arial [monotype]'
-    Lines.Strings = (
-      ''
-      '  Not active this build.'
-    )
-    ParentFont = False
-    ReadOnly = True
-    TabOrder = 43
-    WordWrap = False
-  end
   object Label7: TLabel
     Left = 936
     Height = 19
@@ -1327,6 +1305,66 @@ object Form1: TForm1
     Font.Style = [fsBold]
     ParentColor = False
     ParentFont = False
+  end
+  object DBGrid1: TDBGrid
+    AnchorSideTop.Control = Label7
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = Label10
+    Left = 936
+    Height = 406
+    Top = 25
+    Width = 300
+    Anchors = [akTop, akLeft, akRight, akBottom]
+    BorderSpacing.Top = 3
+    BorderSpacing.Right = 10
+    BorderSpacing.Bottom = 5
+    Color = clWindow
+    Columns = <    
+      item
+        Title.Alignment = taCenter
+        Title.Caption = 'Callsign'
+        Title.Font.Height = -13
+        Title.Font.Name = 'arial [monotype]'
+        Title.Font.Style = [fsBold]
+        Width = 120
+        FieldName = 'Callsign'
+      end    
+      item
+        Title.Alignment = taCenter
+        Title.Caption = 'First'
+        Title.Font.Height = -13
+        Title.Font.Name = 'arial [monotype]'
+        Title.Font.Style = [fsBold]
+        Width = 120
+        FieldName = 'First'
+      end    
+      item
+        Title.Alignment = taCenter
+        Title.Caption = 'Last'
+        Title.Font.Height = -13
+        Title.Font.Name = 'arial [monotype]'
+        Title.Font.Style = [fsBold]
+        Width = 120
+        FieldName = 'Last'
+      end    
+      item
+        Title.Alignment = taCenter
+        Title.Caption = 'Count'
+        Title.Font.Height = -13
+        Title.Font.Name = 'arial [monotype]'
+        Title.Font.Style = [fsBold]
+        Width = 50
+        FieldName = 'Count'
+      end>
+    Constraints.MaxWidth = 445
+    Constraints.MinWidth = 300
+    DataSource = Datasource1
+    ReadOnly = True
+    TabOrder = 43
+    TitleFont.Height = -13
+    TitleFont.Name = 'arial [monotype]'
   end
   object Timer1: TTimer
     Interval = 220
@@ -2022,5 +2060,81 @@ object Form1: TForm1
     OnTimer = Timer2Timer
     left = 841
     top = 72
+  end
+  object Dbf1: TDbf
+    Exclusive = True
+    FilePath = '/home/jlarge/.config/JT65-HF/'
+    IndexDefs = <    
+      item
+        IndexFile = 'IDX_ID'
+        SortField = 'ID'
+        Options = [ixPrimary]
+      end    
+      item
+        IndexFile = 'IDX_CALLSIGN'
+        SortField = 'CALLSIGN'
+        Options = [ixUnique, ixCaseInsensitive]
+      end>
+    TableName = 'jt65hf.dbf'
+    TableLevel = 7
+    FilterOptions = [foCaseInsensitive]
+    left = 440
+    top = 96
+    object Dbf1id1: TAutoIncField
+      DisplayWidth = 10
+      FieldKind = fkData
+      FieldName = 'id'
+      Index = 0
+      LookupCache = False
+      ProviderFlags = [pfInWhere]
+      ReadOnly = True
+      Required = False
+    end
+    object Dbf1Callsign1: TStringField
+      DisplayWidth = 32
+      FieldKind = fkData
+      FieldName = 'Callsign'
+      Index = 1
+      LookupCache = False
+      ProviderFlags = [pfInUpdate, pfInWhere]
+      ReadOnly = False
+      Required = False
+      Size = 32
+    end
+    object Dbf1First1: TDateTimeField
+      DisplayWidth = 10
+      FieldKind = fkData
+      FieldName = 'First'
+      Index = 2
+      LookupCache = False
+      ProviderFlags = [pfInUpdate, pfInWhere]
+      ReadOnly = False
+      Required = False
+    end
+    object Dbf1Last1: TDateTimeField
+      DisplayWidth = 10
+      FieldKind = fkData
+      FieldName = 'Last'
+      Index = 3
+      LookupCache = False
+      ProviderFlags = [pfInUpdate, pfInWhere]
+      ReadOnly = False
+      Required = False
+    end
+    object Dbf1Count1: TLongintField
+      DisplayWidth = 10
+      FieldKind = fkData
+      FieldName = 'Count'
+      Index = 4
+      LookupCache = False
+      ProviderFlags = [pfInUpdate, pfInWhere]
+      ReadOnly = False
+      Required = False
+    end
+  end
+  object Datasource1: TDatasource
+    Enabled = False
+    left = 496
+    top = 96
   end
 end

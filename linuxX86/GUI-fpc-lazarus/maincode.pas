@@ -29,11 +29,10 @@ interface
 uses
   Classes, SysUtils, LResources, Forms, Controls, Graphics, Dialogs, FileUtil,
   StdCtrls, CTypes, StrUtils, Math, portaudio, ExtCtrls, ComCtrls, Spin,
-  DateUtils, encode65, globalData, XMLPropStorage, adc, waterfall,
-  dac, ClipBrd, dlog, cfgvtwo, guiConfig, verHolder,
-  Menus, synaser, log, synautil, d65, spectrum, {$IFDEF WIN32}windows,
-  {$ENDIF}{$IFDEF LINUX}unix, {$ENDIF}{$IFDEF DARWIN}unix, {$ENDIF} about, spot,
-  valobject, lconvencoding, lclintf, types;
+  DateUtils, encode65, globalData, XMLPropStorage, adc, waterfall, dac, ClipBrd,
+  dlog, cfgvtwo, guiConfig, verHolder, Menus, synaser, log, synautil, d65,
+  spectrum, unix, about, spot, valobject, lconvencoding, lclintf, DBGrids,
+  DbCtrls, types, BufDataset, db, dbf;
 
 Const
   {$IFDEF WIN32}
@@ -75,6 +74,14 @@ type
     chkEnTX: TCheckBox;
     chkMultiDecode: TCheckBox;
     chkNB: TCheckBox;
+    Datasource1: TDatasource;
+    Dbf1: TDbf;
+    Dbf1Callsign1: TStringField;
+    Dbf1Count1: TLongintField;
+    Dbf1First1: TDateTimeField;
+    Dbf1id1: TAutoIncField;
+    Dbf1Last1: TDateTimeField;
+    DBGrid1: TDBGrid;
     edFreeText: TEdit;
     Edit2: TEdit;
     Edit3 : TEdit;
@@ -126,7 +133,6 @@ type
     lbTXLog: TListBox;
     lbRawDecoder: TListBox;
     MainMenu1: TMainMenu;
-    Memo1: TMemo;
     MenuItem14b : TMenuItem ;
     MenuItem17a : TMenuItem ;
     MenuItem18a : TMenuItem ;
@@ -237,7 +243,6 @@ type
     procedure Label39Click(Sender: TObject);
     procedure lbRawDecoderDblClick(Sender: TObject);
     procedure lbTXLogDblClick(Sender: TObject);
-    procedure Memo1DblClick(Sender: TObject);
     procedure menuAboutClick(Sender: TObject);
     procedure MenuItemHandler(Sender: TObject);
     procedure menuRigControlClick(Sender: TObject);
@@ -1458,7 +1463,7 @@ end;
 procedure TForm1.FormClose(Sender: TObject; var CloseAction: TCloseAction);
 var
    termcount : Integer;
-   //foo          : String;
+   foo          : String;
    kverr     : Integer;
 begin
      Form1.Timer1.Enabled := False;
@@ -1466,6 +1471,7 @@ begin
      if CloseAction = caFree Then
      Begin
           saveConfig;
+          Dbf1.Close;
           kverr := 0;
           while FileExists('kvasd.dat') do
           begin
@@ -1637,11 +1643,6 @@ end;
 procedure TForm1.lbTXLogDblClick(Sender: TObject);
 begin
      lbTXLog.Clear;
-end;
-
-procedure TForm1.Memo1DblClick(Sender: TObject);
-begin
-     Memo1.Clear;
 end;
 
 procedure TForm1.menuAboutClick(Sender: TObject);
@@ -3251,9 +3252,10 @@ var
    vstr                   : PChar;
    st                     : TSYSTEMTIME;
    fname                  : String;
-   verUpdate, cont        : Boolean;
+   verUpdate, cont, tbool : Boolean;
    havepulsei, havepulseo : Boolean;
    ain, aout, din, dout   : Integer;
+   ifoo                   : Integer;
 Begin
      Timer1.Enabled := False;
      Timer2.Enabled := False;
@@ -3285,8 +3287,21 @@ Begin
      dlog.fileDebug('JT65.dll version check OK.');
 
      // Setup internal database
-     rb.logDir := GetAppConfigDir(False);
-
+     DBGrid1.Enabled := False;
+     DataSource1.Enabled := False;
+     Dbf1.Active := False;
+     DBGrid1.Clear;
+     Dbf1.FilePathFull := GetAppConfigDir(false); //Directory where all .dbf files will be stored
+     Dbf1.TableLevel := 7; //Visual dBase VII
+     Dbf1.TableName := 'jt65hf.dbf'; // note: is the .dbf really required?
+     Dbf1.Exclusive := True;
+     Dbf1.Open;
+     Dbf1.Active := true;
+     DataSource1.DataSet := Dbf1;
+     DataSource1.Enabled := True;
+     DBGrid1.Enabled := True;
+     DBGrid1.DataSource.DataSet := Dbf1;
+     DBGrid1.Refresh;
      // Uncomment to dump database at program start.
      //rb.dbToCSV(rb.logdir + 'spots.csv');
 

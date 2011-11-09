@@ -23,10 +23,9 @@ program jt65hf;
 {$mode objfpc}{$H+}
 
 uses
-  cmem, cthreads, Interfaces, Forms, maincode, portaudio, encode65, globalData,
-  spectrum, cmaps, fftw_jl, adc, dac, dlog, cfgvtwo, guiConfig,
-  verHolder, synaser, adif, log, waterfall, d65, about, spot,
-  valobject;
+  cmem, cthreads, Interfaces, Forms, dbflaz, maincode, portaudio, encode65,
+  globalData, spectrum, cmaps, fftw_jl, adc, dac, dlog, cfgvtwo, guiConfig,
+  verHolder, synaser, adif, log, waterfall, d65, about, spot, valobject;
 
 {$R *.res}
 
