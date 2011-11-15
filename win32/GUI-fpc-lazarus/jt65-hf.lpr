@@ -30,7 +30,7 @@ uses
   Forms, maincode, portaudio, encode65, globalData, spectrum, cmaps, fftw_jl,
   adc, samplerate, dac, dlog, rawdec, cfgvtwo, guiConfig, verHolder,
   PSKReporter, catControl, synaser, adif, log, diagout, waterfall, d65,
-  hrdinterface5, hrdinterface4, about, spot, valobject, heard;
+  hrdinterface5, hrdinterface4, about, spot, valobject;
 
 {$R *.res}
 
@@ -43,7 +43,6 @@ begin
   Application.CreateForm(TForm2, Form2);
   Application.CreateForm(TForm3, Form3);
   Application.CreateForm(TForm4, Form4);
-  Application.CreateForm(TForm9, Form9);
   Application.Run;
 end.
 

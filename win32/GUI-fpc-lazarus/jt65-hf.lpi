@@ -21,7 +21,7 @@
       <AutoIncrementBuild Value="True"/>
       <MajorVersionNr Value="1"/>
       <RevisionNr Value="9"/>
-      <BuildNr Value="1"/>
+      <BuildNr Value="2"/>
       <StringTable FileDescription="Amateur Radio communications using JT65A" LegalCopyright="2009..2011 - J C Large - W6CQZ - GPL 2" ProductVersion=""/>
     </VersionInfo>
     <BuildModes Count="1">
@@ -48,7 +48,7 @@
         <PackageName Value="LCL"/>
       </Item2>
     </RequiredPackages>
-    <Units Count="30">
+    <Units Count="29">
       <Unit0>
         <Filename Value="jt65-hf.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -206,14 +206,6 @@
         <IsPartOfProject Value="True"/>
         <UnitName Value="valobject"/>
       </Unit28>
-      <Unit29>
-        <Filename Value="heard.pas"/>
-        <IsPartOfProject Value="True"/>
-        <ComponentName Value="Form9"/>
-        <HasResources Value="True"/>
-        <ResourceBaseClass Value="Form"/>
-        <UnitName Value="heard"/>
-      </Unit29>
     </Units>
   </ProjectOptions>
   <CompilerOptions>

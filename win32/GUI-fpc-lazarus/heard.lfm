@@ -238,9 +238,9 @@ object Form9: TForm9
   end
   object cb160: TCheckBox
     Left = 76
-    Height = 19
+    Height = 17
     Top = 263
-    Width = 20
+    Width = 18
     OnClick = cbClick
     TabOrder = 15
     TabStop = False
@@ -248,9 +248,9 @@ object Form9: TForm9
   end
   object cb80: TCheckBox
     Left = 105
-    Height = 19
+    Height = 17
     Top = 263
-    Width = 20
+    Width = 18
     OnClick = cbClick
     TabOrder = 16
     TabStop = False
@@ -258,9 +258,9 @@ object Form9: TForm9
   end
   object cb40: TCheckBox
     Left = 133
-    Height = 19
+    Height = 17
     Top = 263
-    Width = 20
+    Width = 18
     OnClick = cbClick
     TabOrder = 17
     TabStop = False
@@ -268,9 +268,9 @@ object Form9: TForm9
   end
   object cb30: TCheckBox
     Left = 163
-    Height = 19
+    Height = 17
     Top = 263
-    Width = 20
+    Width = 18
     OnClick = cbClick
     TabOrder = 18
     TabStop = False
@@ -278,9 +278,9 @@ object Form9: TForm9
   end
   object cb20: TCheckBox
     Left = 191
-    Height = 19
+    Height = 17
     Top = 263
-    Width = 20
+    Width = 18
     OnClick = cbClick
     TabOrder = 19
     TabStop = False
@@ -288,9 +288,9 @@ object Form9: TForm9
   end
   object cb17: TCheckBox
     Left = 221
-    Height = 19
+    Height = 17
     Top = 263
-    Width = 20
+    Width = 18
     OnClick = cbClick
     TabOrder = 20
     TabStop = False
@@ -298,9 +298,9 @@ object Form9: TForm9
   end
   object cb15: TCheckBox
     Left = 253
-    Height = 19
+    Height = 17
     Top = 263
-    Width = 20
+    Width = 18
     OnClick = cbClick
     TabOrder = 21
     TabStop = False
@@ -308,9 +308,9 @@ object Form9: TForm9
   end
   object cb12: TCheckBox
     Left = 282
-    Height = 19
+    Height = 17
     Top = 263
-    Width = 20
+    Width = 18
     OnClick = cbClick
     TabOrder = 22
     TabStop = False
@@ -318,9 +318,9 @@ object Form9: TForm9
   end
   object cb10: TCheckBox
     Left = 312
-    Height = 19
+    Height = 17
     Top = 263
-    Width = 20
+    Width = 18
     OnClick = cbClick
     TabOrder = 23
     TabStop = False
@@ -328,9 +328,9 @@ object Form9: TForm9
   end
   object cb6: TCheckBox
     Left = 342
-    Height = 19
+    Height = 17
     Top = 263
-    Width = 20
+    Width = 18
     OnClick = cbClick
     TabOrder = 24
     TabStop = False
@@ -338,9 +338,9 @@ object Form9: TForm9
   end
   object cb2: TCheckBox
     Left = 372
-    Height = 19
+    Height = 17
     Top = 263
-    Width = 20
+    Width = 18
     OnClick = cbClick
     TabOrder = 25
     TabStop = False
@@ -348,9 +348,9 @@ object Form9: TForm9
   end
   object wcb160: TCheckBox
     Left = 76
-    Height = 19
+    Height = 17
     Top = 287
-    Width = 20
+    Width = 18
     Enabled = False
     TabOrder = 14
     TabStop = False
@@ -358,9 +358,9 @@ object Form9: TForm9
   end
   object wcb80: TCheckBox
     Left = 105
-    Height = 19
+    Height = 17
     Top = 287
-    Width = 20
+    Width = 18
     Enabled = False
     TabOrder = 13
     TabStop = False
@@ -368,9 +368,9 @@ object Form9: TForm9
   end
   object wcb40: TCheckBox
     Left = 133
-    Height = 19
+    Height = 17
     Top = 287
-    Width = 20
+    Width = 18
     Enabled = False
     TabOrder = 12
     TabStop = False
@@ -378,9 +378,9 @@ object Form9: TForm9
   end
   object wcb30: TCheckBox
     Left = 163
-    Height = 19
+    Height = 17
     Top = 287
-    Width = 20
+    Width = 18
     Enabled = False
     TabOrder = 11
     TabStop = False
@@ -388,9 +388,9 @@ object Form9: TForm9
   end
   object wcb20: TCheckBox
     Left = 191
-    Height = 19
+    Height = 17
     Top = 287
-    Width = 20
+    Width = 18
     Enabled = False
     TabOrder = 10
     TabStop = False
@@ -398,9 +398,9 @@ object Form9: TForm9
   end
   object wcb17: TCheckBox
     Left = 221
-    Height = 19
+    Height = 17
     Top = 287
-    Width = 20
+    Width = 18
     Enabled = False
     TabOrder = 9
     TabStop = False
@@ -408,9 +408,9 @@ object Form9: TForm9
   end
   object wcb15: TCheckBox
     Left = 253
-    Height = 19
+    Height = 17
     Top = 287
-    Width = 20
+    Width = 18
     Enabled = False
     TabOrder = 8
     TabStop = False
@@ -418,9 +418,9 @@ object Form9: TForm9
   end
   object wcb12: TCheckBox
     Left = 282
-    Height = 19
+    Height = 17
     Top = 287
-    Width = 20
+    Width = 18
     Enabled = False
     TabOrder = 7
     TabStop = False
@@ -428,9 +428,9 @@ object Form9: TForm9
   end
   object wcb10: TCheckBox
     Left = 312
-    Height = 19
+    Height = 17
     Top = 287
-    Width = 20
+    Width = 18
     Enabled = False
     TabOrder = 6
     TabStop = False
@@ -438,9 +438,9 @@ object Form9: TForm9
   end
   object wcb6: TCheckBox
     Left = 342
-    Height = 19
+    Height = 17
     Top = 287
-    Width = 20
+    Width = 18
     Enabled = False
     TabOrder = 5
     TabStop = False
@@ -448,9 +448,9 @@ object Form9: TForm9
   end
   object wcb2: TCheckBox
     Left = 372
-    Height = 19
+    Height = 17
     Top = 287
-    Width = 20
+    Width = 18
     Enabled = False
     TabOrder = 4
     TabStop = False

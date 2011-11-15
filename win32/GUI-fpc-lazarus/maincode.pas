@@ -37,7 +37,7 @@ uses
   dac, ClipBrd, dlog, rawdec, cfgvtwo, guiConfig, verHolder,
   catControl, Menus, synaser, log, diagout, synautil, waterfall, d65,
   spectrum, {$IFDEF WIN32}windows, {$ENDIF}{$IFDEF LINUX}unix, {$ENDIF}
-  {$IFDEF DARWIN}unix, {$ENDIF} about, spot, valobject, heard, lconvencoding;
+  {$IFDEF DARWIN}unix, {$ENDIF} about, spot, valobject, lconvencoding;
 
 Const
   JT_DLL = 'jt65.dll';
@@ -91,15 +91,19 @@ type
     Label16: TLabel;
     Label17: TLabel;
     Label18 : TLabel;
+    Label19: TLabel;
     Label2: TLabel;
     Label20: TLabel;
     Label22: TLabel;
+    Label23: TLabel;
+    Label24: TLabel;
     Label25: TLabel;
     Label26: TLabel;
     Label27: TLabel;
     Label28: TLabel;
     Label29: TLabel;
     Label3: TLabel;
+    Label30: TLabel;
     Label31: TLabel;
     Label32 : TLabel ;
     Label33: TLabel;
@@ -107,6 +111,7 @@ type
     Label35: TLabel;
     Label36: TLabel;
     Label37: TLabel;
+    Label38: TLabel;
     Label39: TLabel;
     Label4: TLabel;
     Label5 : TLabel ;
@@ -233,7 +238,6 @@ type
     procedure Label32DblClick (Sender : TObject );
     procedure Label39Click(Sender: TObject);
     procedure menuAboutClick(Sender: TObject);
-    procedure menuHeardClick(Sender: TObject);
     procedure MenuItemHandler(Sender: TObject);
     procedure menuRawDecoderClick(Sender: TObject);
     procedure menuRigControlClick(Sender: TObject);
@@ -1321,15 +1325,6 @@ begin
      end;
 end;
 
-procedure TForm1.menuHeardClick(Sender: TObject);
-begin
-     heard.Form9.Show;
-     heard.Form9.BringToFront;
-     //cfgvtwo.Form6.PageControl1.ActivePage := cfgvtwo.Form6.TabSheet3;
-     //cfgvtwo.Form6.Show;
-     //cfgvtwo.Form6.BringToFront;
-end;
-
 procedure TForm1.menuRigControlClick(Sender: TObject);
 begin
      cfgvtwo.Form6.PageControl1.ActivePage := cfgvtwo.Form6.TabSheet2;
@@ -1625,8 +1620,8 @@ Begin
      cfg.StoredValue['grid']         := cfgvtwo.Form6.edMyGrid.Text;
      cfg.StoredValue['txCF'] := IntToStr(Form1.spinTXCF.Value);
      cfg.StoredValue['rxCF'] := IntToStr(Form1.spinDecoderCF.Value);
-     cfg.StoredValue['soundin']      := IntToStr(paInParams.device);
-     cfg.StoredValue['soundout']     := IntToStr(paOutParams.device);
+     cfg.StoredValue['soundin']      := IntToStr(cfgvtwo.Form6.cbAudioIn.ItemIndex);
+     cfg.StoredValue['soundout']     := IntToStr(cfgvtwo.Form6.cbAudioOut.ItemIndex);
      foo := cfgvtwo.Form6.cbAudioIn.Items.Strings[cfgvtwo.Form6.cbAudioIn.ItemIndex];
      foo := foo[4..Length(foo)];
      cfg.StoredValue['LastInput'] := foo;
@@ -2065,11 +2060,19 @@ begin
      begin
           Label16.Top := 210;
           ProgressBar3.Top := 210;
+          Label19.Visible:=true;
+          Label23.Visible:=true;
+          Label24.Visible:=true;
+          Label30.Visible:=true;
      end
      else
      begin
           Label16.Top := 173;
           ProgressBar3.Top := 173;
+          Label19.Visible:=false;
+          Label23.Visible:=false;
+          Label24.Visible:=false;
+          Label30.Visible:=false;
      end;
 end;
 
@@ -3931,7 +3934,9 @@ Begin
           Form1.edHisGrid.Clear;
           Form1.edSigRep.Clear;
           Form1.spinDecoderBin.Value := 3;
+          Form1.spinDecoderBW.Value  := 3;
           Form1.Edit3.Text := '100';
+          Form1.Edit2.Text := '100';
           cfgvtwo.Form6.Show;
           cfgvtwo.Form6.BringToFront;
           repeat
@@ -3988,18 +3993,9 @@ Begin
      tstint := 0;
      if TryStrToInt(cfg.StoredValue['soundin'],tstint) Then
      Begin
-          // Select default first, this will not be changed if no match found.
-          cfgvtwo.Form6.cbAudioIn.ItemIndex := 0;
-          for i := 0 to cfgvtwo.Form6.cbAudioIn.Items.Count-1 do
-          begin
-               // Look for and select previously saved device if possible.
-               foo := cfgvtwo.Form6.cbAudioIn.Items.Strings[i];
-               if StrToInt(foo[1..2]) = tstint then
-               begin
-                    cfgvtwo.Form6.cbAudioIn.ItemIndex := i;
-                    break;
-               end;
-          end;
+          // Stored value is the index of the selected device from the last run.
+          // It may be as expected, different or missing completly.
+          if tstint < cfgvtwo.Form6.cbAudioIn.Items.Count then cfgvtwo.Form6.cbAudioIn.ItemIndex := tstint else cfgvtwo.Form6.cbAudioIn.ItemIndex:=0;
      end
      else
      begin
@@ -4009,21 +4005,9 @@ Begin
      tstint := 0;
      if TryStrToInt(cfg.StoredValue['soundout'],tstint) Then
      begin
-          //for i := 0 to cfgvtwo.Form6.cbAudioIn.Items.Count-1 do showmessage('Index:  ' + IntToStr(i) + '  ' + cfgvtwo.Form6.cbAudioIn.Items.Strings[i]);
-          //for i := 0 to cfgvtwo.Form6.cbAudioOut.Items.Count-1 do showmessage('Index:  ' + IntToStr(i) + '  ' + cfgvtwo.Form6.cbAudioOut.Items.Strings[i]);
-
-          // Select default first, this will not be changed if no match found.
-          cfgvtwo.Form6.cbAudioOut.ItemIndex := 0;
-          for i := 0 to cfgvtwo.Form6.cbAudioOut.Items.Count-1 do
-          begin
-               // Look for and select previously saved device if possible.
-               foo := cfgvtwo.Form6.cbAudioOut.Items.Strings[i];
-               if StrToInt(foo[1..2]) = tstint then
-               begin
-                    cfgvtwo.Form6.cbAudioOut.ItemIndex := i;
-                    break;
-               end;
-          end;
+          // Stored value is the index of the selected device from the last run.
+          // It may be as expected, different or missing completly.
+          if tstint < cfgvtwo.Form6.cbAudioOut.Items.Count then cfgvtwo.Form6.cbAudioOut.ItemIndex := tstint else cfgvtwo.Form6.cbAudioOut.ItemIndex:=0;
      end
      else
      begin
@@ -4565,6 +4549,9 @@ Begin
           cfg.StoredValue['version'] := verHolder.verReturn;
           saveConfig;
           ShowMessage('You can resize the main window! (Taller or shorter.)');
+          ShowMessage('Please confirm values for Single and Multiple decoder BW' + sLineBreak +
+                      'In some cases those will read 200 Hertz after update and' + sLineBreak +
+                      'this may not be what you want.  Suggest 100 Hertz (or less)');
           dlog.fileDebug('Ran configuration update.');
      End;
 
@@ -4601,9 +4588,11 @@ Begin
      // Setup input/output devices
      // Translate strings to PA integer device ID for selected and default devices.
      foo  := cfgvtwo.Form6.cbAudioIn.Items.Strings[cfgvtwo.Form6.cbAudioIn.ItemIndex];
+     Label23.Caption := foo;
      ain  := StrToInt(foo[1..2]);
 
      foo  := cfgvtwo.Form6.cbAudioOut.Items.Strings[cfgvtwo.Form6.cbAudioOut.ItemIndex];
+     Label30.Caption := foo;
      aout := StrToInt(foo[1..2]);
 
      din  := portaudio.Pa_GetHostApiInfo(paDefApi)^.defaultInputDevice;
@@ -4636,6 +4625,8 @@ Begin
                            'devices.  Please check that your sound device is properly' + sLineBreak +
                            'connected and any necessary cable(s) attached.' + sLineBreak + sLineBreak +
                            'THE DEFAULT DEVICES MAY NOT BE THE DEVICE YOU WISH TO USE!');
+               Label23.Caption := 'Default Input Device';
+               Label30.Caption := 'Default Output Device';
           end
           else
           begin
@@ -5649,6 +5640,8 @@ Begin
           saveConfig;
      end;
      cfgvtwo.gld65AudioChange := False;
+     Label23.Caption := cfgvtwo.Form6.cbAudioIn.Items.Strings[cfgvtwo.Form6.cbAudioIn.ItemIndex];
+     Label30.Caption := cfgvtwo.Form6.cbAudioOut.Items.Strings[cfgvtwo.Form6.cbAudioOut.ItemIndex];
      timer1.Enabled := true;
 End;
 
@@ -6281,9 +6274,7 @@ End;
 
 procedure TForm1.processOncePerSecond(st : TSystemTime);
 Var
-   i    : Integer;
    foo  : String;
-   sp   : spot.spotDBRec;
 Begin
      // Keep popup menu items in sync
      Form1.MenuItem8a.Caption  := cfgvtwo.Form6.edUserQRG1.Text;
@@ -6332,13 +6323,11 @@ Begin
      Begin
           Form1.Label12.Font.Color := clRed;
           Form1.editManQRG.Font.Color := clRed;
-          //Form1.Label23.Font.Color := clRed;
      end
      else
      begin
          Form1.Label12.Font.Color := clBlack;
          Form1.editManQRG.Font.Color := clBlack;
-         //Form1.Label23.Font.Color := clBlack;
      end;
      If cbEnRB.Checked Then
      Begin
@@ -6403,69 +6392,6 @@ Begin
      if st.Second = 55 Then
      Begin
           If cbEnRB.Checked And odd(st.Minute) Then rbcPing := True;
-     end;
-     // Update RB/PSKR/DB Stats
-     heard.Form9.Label3.Caption := 'RB Reports Sent:  ' + rb.RBcount;
-     heard.Form9.Label4.Caption := 'Discarded:  ' + rb.rbDiscard + '/' + rb.RBFail;
-     //heard.Form9.Label5.Caption := 'Rejected:  ' + rb.RBfail;
-     heard.Form9.Label6.Caption := 'PSKR Reports Sent:  ' + IntToStr(rb.pskrCallsSent);
-     heard.Form9.Label7.Caption := 'Buffered:  ' + IntToStr(rb.pskrCallsBuff);
-     //heard.Form9.Label8.Caption := 'Discarded:  ' + IntToStr(rb.pskrCallsDisc);
-     heard.Form9.Label23.Caption := 'Stats DB Added:  ' + rb.dbfCount;
-     heard.Form9.Label24.Caption := 'Updates:  ' + rb.dbfUCount;
-     // Check to see if user needs a search completed from the heard unit
-     if heard.pubdoDB Then
-     Begin
-          //Heard unit requesting data for callsign in heard.publuCall
-          i := 0;
-          i := rb.findDB(heard.publuCall);
-          if i > 0 then
-          begin
-               sp := rb.getDBREC(i);
-               for i := 0 to 16 do
-               begin
-                    heard.pubSP.callsign[i] := sp.callsign[i];
-               end;
-               for i := 0 to 6 do
-               begin
-                    heard.pubSP.grid1[i] := sp.grid1[i];
-                    heard.pubSP.grid2[i] := sp.grid2[i];
-                    heard.pubSP.grid3[i] := sp.grid3[i];
-                    heard.pubSP.grid4[i] := sp.grid4[i];
-               end;
-               heard.pubSP.count := sp.count;
-               heard.pubSP.first := sp.first;
-               heard.pubSP.last := sp.last;
-               heard.pubSP.b160 := sp.b160;
-               heard.pubSP.b80 := sp.b80;
-               heard.pubSP.b40 := sp.b40;
-               heard.pubSP.b30 := sp.b30;
-               heard.pubSP.b20 := sp.b20;
-               heard.pubSP.b17 := sp.b17;
-               heard.pubSP.b15 := sp.b15;
-               heard.pubSP.b12 := sp.b12;
-               heard.pubSP.b10 := sp.b10;
-               heard.pubSP.b6 := sp.b6;
-               heard.pubSP.b2 := sp.b2;
-               heard.pubSP.wb160 := sp.wb160;
-               heard.pubSP.wb80 := sp.wb80;
-               heard.pubSP.wb40 := sp.wb40;
-               heard.pubSP.wb30 := sp.wb30;
-               heard.pubSP.wb20 := sp.wb20;
-               heard.pubSP.wb17 := sp.wb17;
-               heard.pubSP.wb15 := sp.wb15;
-               heard.pubSP.wb12 := sp.wb12;
-               heard.pubSP.wb10 := sp.wb10;
-               heard.pubSP.wb6 := sp.wb6;
-               heard.pubSP.wb2 := sp.wb2;
-               heard.pubhaveDB := true;
-               heard.pubfailDB := false;
-          end
-          else
-          begin
-               heard.pubfailDB := true;
-               heard.pubhaveDB := false;
-          end;
      end;
 end;
 
