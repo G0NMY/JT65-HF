@@ -45,7 +45,6 @@ Type: filesandordirs; Name: "{app}\optfft"
 
 [Files]
 Source: "jt65-hf.exe"; DestDir: "{app}"
-Source: "sg-jt65-hf.exe"; DestDir: "{app}"
 Source: "KVASD_g95.EXE"; DestDir: "{app}"
 Source: "jl_libfftw3f-3.dll"; DestDir: "{app}"
 Source: "libfftw3f-3.dll"; DestDir: "{app}"
@@ -68,7 +67,6 @@ Filename: "{app}\optFFT\jt65-hf.exe"; Flags: postinstall; Description: "Setup in
 
 [Icons]
 Name: "{group}\JT65-HF"; Filename: "{app}\jt65-hf.exe"
-Name: "{group}\JT65-HF Small GUI"; Filename: "{app}\sg-jt65-hf.exe"
 Name: "{group}\JT65-HF Configuration Repair"; Filename: "{app}\jt65repair.exe"
 Name: "{group}\Uninstall JT65-HF"; Filename: "{uninstallexe}"
 Name: "{group}\Documentation"; Filename: "{app}\jt65-hf-setup.pdf"

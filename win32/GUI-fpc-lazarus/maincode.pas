@@ -33,7 +33,7 @@ interface
 uses
   Classes, SysUtils, LResources, Forms, Controls, Graphics, Dialogs,
   StdCtrls, CTypes, StrUtils, Math, portaudio, ExtCtrls, ComCtrls, Spin,
-  DateUtils, encode65, globalData, XMLPropStorage, adc,
+  DateUtils, encode65, globalData, XMLPropStorage, adc, FileUtil,
   dac, ClipBrd, dlog, rawdec, cfgvtwo, guiConfig, verHolder,
   catControl, Menus, synaser, log, diagout, synautil, waterfall, d65,
   spectrum, {$IFDEF WIN32}windows, {$ENDIF}{$IFDEF LINUX}unix, {$ENDIF}
@@ -627,32 +627,17 @@ Begin
      if needLog Then
      begin
           Try
-             {$IFDEF win32}
-               fname := cfgvtwo.Form6.DirectoryEdit1.Directory + '\JT65hf-log.csv';
-               AssignFile(logFile, fname);
-               If FileExists(fname) Then
-               Begin
-                    Append(logFile);
-               End
-               Else
-               Begin
-                    Rewrite(logFile);
-                    WriteLn(logFile,'"Date","Time","QRG","Sync","DB","DT","DF","Decoder","Exchange"');
-               End;
-             {$ENDIF}
-             {$IFDEF linux}
-               fname := cfgvtwo.Form6.DirectoryEdit1.Directory + 'JT65hf-log.csv';
-               AssignFile(logFile, fname);
-               If FileExists(fname) Then
-               Begin
-                    Append(logFile);
-               End
-               Else
-               Begin
-                    Rewrite(logFile);
-                    WriteLn(logFile,'"Date","Time","QRG","Sync","DB","DT","DF","Decoder","Exchange"');
-               End;
-             {$ENDIF}
+             fname := TrimFileName(cfgvtwo.Form6.DirectoryEdit1.Directory + PathDelim + 'JT65hf-log.csv');
+             AssignFile(logFile, fname);
+             If FileExists(fname) Then
+             Begin
+                  Append(logFile);
+             End
+             Else
+             Begin
+                  Rewrite(logFile);
+                  WriteLn(logFile,'"Date","Time","QRG","Sync","DB","DT","DF","Decoder","Exchange"');
+             End;
              // Write the record
              for i := 0 to 99 do
              begin
@@ -2015,8 +2000,6 @@ Var
 begin
      // Create and initialize TWaterfallControl
      Waterfall := TWaterfallControl.Create(Self);
-     //if verholder.guiSize = 'Normal' then Waterfall.Height := 180;
-     //if verholder.guiSize = 'Small' then Waterfall.Height := 160;
      Waterfall.Height := 180;
      Waterfall.Width  := 750;
      Waterfall.Top    := 25;
@@ -2026,7 +2009,7 @@ begin
      Waterfall.DoubleBuffered := True;
      cfgError := True;
      Try
-        fname := GetAppConfigDir(False)+'station1.xml';
+        fname := TrimFileName(GetAppConfigDir(False) + PathDelim + 'station1.xml');
         cfg.FileName := fname;
         cfgError := False;
      Except
@@ -3852,7 +3835,7 @@ Begin
           halt;
      End;
 
-     fname := GetAppConfigDir(False)+'station1.xml';
+     fname := TrimFileName(GetAppConfigDir(False) + PathDelim + 'station1.xml');
      if not fileExists(fname) Then
      Begin
           cfgvtwo.glmustConfig := True;
@@ -4564,7 +4547,7 @@ Begin
      d65.glfftSWisdom := 0;
      if not cfgvtwo.Form6.chkNoOptFFT.Checked Then
      Begin
-          fname := GetAppConfigDir(False)+'wisdom2.dat';
+          fname := TrimFileName(GetAppConfigDir(False) + PathDelim + 'wisdom2.dat');
           if FileExists(fname) Then
           Begin
                // I have data for FFTW_MEASURE metrics use ical settings in

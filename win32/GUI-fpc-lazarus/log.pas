@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, LResources, Forms, Controls, Graphics,
-  Dialogs, StdCtrls, adif, EditBtn;
+  Dialogs, StdCtrls, adif, EditBtn, FileUtil;
 
 type
 
@@ -67,7 +67,7 @@ begin
                             edLogRReport.Text,edLogSReport.Text,edLogSTime.Text,
                             edLogETime.Text,edLogPower.Text,edLogDate.Text,edLogComment.Text,
                             logmycall, logmygrid);
-     fname := Form2.DirectoryEdit1.Directory + '\jt65hf_log.adi';
+     fname := TrimFileName(Form2.DirectoryEdit1.Directory + PathDelim + 'jt65hf_log.adi');
      AssignFile(lfile, fname);
      If FileExists(fname) Then
      Begin

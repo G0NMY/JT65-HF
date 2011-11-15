@@ -1,11 +1,11 @@
 object Form1: TForm1
   Left = 1
-  Height = 693
+  Height = 550
   Top = 0
   Width = 935
   ActiveControl = btnReDecode
   Caption = 'JT65-HF'
-  ClientHeight = 673
+  ClientHeight = 530
   ClientWidth = 935
   Constraints.MaxHeight = 900
   Constraints.MaxWidth = 935
@@ -843,7 +843,7 @@ object Form1: TForm1
     AnchorSideBottom.Control = Owner
     AnchorSideBottom.Side = asrBottom
     Left = 4
-    Height = 318
+    Height = 175
     Top = 350
     Width = 548
     Anchors = [akTop, akLeft, akBottom]

@@ -26,7 +26,7 @@ interface
 
 uses
   Classes, SysUtils, CTypes, globalData, samplerate, math, Process, diagout,
-  Types, StrUtils, rawDec;
+  Types, StrUtils, rawDec, FileUtil;
 
 Const
   JT_DLL = 'jt65.dll';
@@ -207,7 +207,7 @@ Begin
              // read kvasd.dat
              AssignFile(kvFile, 'KVASD.DAT');
              Reset(kvFile);
-             If FileSize(kvfile) > 256 Then
+             If System.FileSize(kvfile) > 256 Then
              Begin
                   // Seek to nsec2 (256)
                   Seek(kvFile,256);
@@ -260,6 +260,19 @@ Begin
           Result := False;
           kdec := '';
      End;
+     // Attempt to be absolutely sure KVASD.DAT was closed so it can be properly
+     // deleted.
+     Try
+        CloseFile(kvFile);
+     except
+        // No action required.
+     end;
+     // First try to delete KVASD.DAT
+     try
+        DeleteFile('KVASD.DAT');
+     except
+        // No action required
+     end;
 end;
 
 procedure doDecode(bStart, bEnd : Integer);
@@ -307,7 +320,8 @@ begin
          glmcall := StrAlloc(12);
          glmyline := StrAlloc(43);
          glkvs := StrAlloc(22);
-         glwisfile := StrAlloc(Length(GetAppConfigDir(False)+'wisdom2.dat')+1);
+         foo := TrimFileName(GetAppConfigDir(False) + PathDelim + 'wisdom2.dat');
+         glwisfile := StrAlloc(Length(foo)+1);
          glkvfname := StrAlloc(Length('KVASD.DAT')+1);
          gldecOut := TStringList.Create;
          glrawOut := TStringList.Create;
@@ -355,7 +369,8 @@ begin
     diagout.Form3.ListBox2.Clear;
     diagout.Form3.ListBox3.Clear;
     strPcopy(glkvfname,'KVASD.DAT');
-    strPcopy(glwisfile,GetAppConfigDir(False)+'wisdom2.dat');
+    foo := TrimFileName(GetAppConfigDir(False) + PathDelim + 'wisdom2.dat');
+    strPcopy(glwisfile,foo);
     glmline := '                                                                        ';
     glmcall := '            ';
     glmyline := '                                           ';
