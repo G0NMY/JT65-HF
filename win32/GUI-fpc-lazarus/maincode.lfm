@@ -16,15 +16,19 @@ object Form1: TForm1
   Menu = MainMenu1
   OnClose = FormClose
   OnCreate = FormCreate
+  OnResize = FormResize
   SessionProperties = 'Left;Top'
   ShowHint = True
   LCLVersion = '0.9.30.2'
   Visible = True
   object Label6: TLabel
+    AnchorSideTop.Control = Bevel3
+    AnchorSideTop.Side = asrBottom
     Left = 792
     Height = 15
-    Top = 432
+    Top = 423
     Width = 79
+    BorderSpacing.Top = 10
     Caption = 'TX to Call Sign'
     Font.Height = -11
     Font.Name = 'Arial'
@@ -35,7 +39,7 @@ object Form1: TForm1
   object Label21: TLabel
     Left = 5
     Height = 17
-    Top = 279
+    Top = 308
     Width = 481
     Caption = 'Double click an entry in list to begin a QSO.  Right click copies to clipboard.'
     Font.Color = clRed
@@ -46,10 +50,13 @@ object Form1: TForm1
     ParentFont = False
   end
   object Label3: TLabel
+    AnchorSideTop.Control = edMsg
+    AnchorSideTop.Side = asrBottom
     Left = 556
     Height = 17
-    Top = 344
+    Top = 313
     Width = 173
+    BorderSpacing.Top = 5
     Caption = 'Call CQ and answer callers'
     Font.Height = -13
     Font.Name = 'Arial'
@@ -58,10 +65,13 @@ object Form1: TForm1
     ParentFont = False
   end
   object Label15: TLabel
+    AnchorSideTop.Control = Bevel1
+    AnchorSideTop.Side = asrBottom
     Left = 556
     Height = 17
-    Top = 389
+    Top = 365
     Width = 91
+    BorderSpacing.Top = 2
     Caption = 'Answering CQ'
     Font.Height = -13
     Font.Name = 'Arial'
@@ -72,22 +82,10 @@ object Form1: TForm1
   object Label16: TLabel
     Left = 736
     Height = 15
-    Top = 208
+    Top = 173
     Width = 87
     Caption = 'RX/TX Progress'
     Font.CharSet = 15
-    Font.Height = -11
-    Font.Name = 'Arial'
-    Font.Style = [fsBold]
-    ParentColor = False
-    ParentFont = False
-  end
-  object Label24: TLabel
-    Left = 496
-    Height = 15
-    Top = 208
-    Width = 110
-    Caption = 'Current Operation:  '
     Font.Height = -11
     Font.Name = 'Arial'
     Font.Style = [fsBold]
@@ -163,10 +161,13 @@ object Form1: TForm1
     ParentFont = False
   end
   object Label36: TLabel
+    AnchorSideTop.Control = Bevel3
+    AnchorSideTop.Side = asrBottom
     Left = 884
     Height = 15
-    Top = 432
+    Top = 423
     Width = 40
+    BorderSpacing.Top = 10
     Caption = 'Rpt (-#)'
     Font.Height = -11
     Font.Name = 'Arial'
@@ -175,10 +176,13 @@ object Form1: TForm1
     ParentFont = False
   end
   object Label26: TLabel
+    AnchorSideTop.Control = Bevel3
+    AnchorSideTop.Side = asrBottom
     Left = 616
     Height = 15
-    Top = 432
+    Top = 415
     Width = 31
+    BorderSpacing.Top = 2
     Caption = 'RX DF'
     Font.Height = -11
     Font.Name = 'Arial'
@@ -187,10 +191,13 @@ object Form1: TForm1
     ParentFont = False
   end
   object Label37: TLabel
+    AnchorSideTop.Control = Bevel3
+    AnchorSideTop.Side = asrBottom
     Left = 556
     Height = 15
-    Top = 432
+    Top = 415
     Width = 31
+    BorderSpacing.Top = 2
     Caption = 'TX DF'
     Font.Height = -11
     Font.Name = 'Arial'
@@ -199,10 +206,13 @@ object Form1: TForm1
     ParentFont = False
   end
   object Label8: TLabel
+    AnchorSideTop.Control = ProgressBar3
+    AnchorSideTop.Side = asrBottom
     Left = 556
     Height = 20
-    Top = 225
+    Top = 190
     Width = 330
+    BorderSpacing.Top = 2
     Caption = 'Message To TX:  1234567890123456789012'
     Font.Height = -16
     Font.Name = 'Arial'
@@ -212,10 +222,13 @@ object Form1: TForm1
     Visible = False
   end
   object Label50: TLabel
+    AnchorSideTop.Control = Label8
+    AnchorSideTop.Side = asrBottom
     Left = 752
     Height = 23
-    Top = 244
+    Top = 212
     Width = 71
+    BorderSpacing.Top = 2
     Caption = 'TX OFF'
     Font.Color = clRed
     Font.Height = -19
@@ -225,10 +238,13 @@ object Form1: TForm1
     ParentFont = False
   end
   object Label13: TLabel
+    AnchorSideTop.Control = btnZeroTX
+    AnchorSideTop.Side = asrBottom
     Left = 556
     Height = 15
-    Top = 487
+    Top = 480
     Width = 55
+    BorderSpacing.Top = 10
     Caption = 'Single BW'
     Font.Height = -11
     Font.Name = 'Arial'
@@ -237,10 +253,13 @@ object Form1: TForm1
     ParentFont = False
   end
   object Label39: TLabel
-    Left = 701
+    AnchorSideTop.Control = Bevel3
+    AnchorSideTop.Side = asrBottom
+    Left = 710
     Height = 15
-    Top = 433
+    Top = 416
     Width = 73
+    BorderSpacing.Top = 3
     Caption = 'TX DF = RX DF'
     Font.Color = clRed
     Font.Height = -11
@@ -277,11 +296,14 @@ object Form1: TForm1
     OnDblClick = Label30DblClick
   end
   object edMsg: TEdit
+    AnchorSideTop.Control = rbGenMsg
+    AnchorSideTop.Side = asrBottom
     Left = 556
     Height = 24
     Hint = 'Double click to clear.'
-    Top = 312
+    Top = 284
     Width = 191
+    BorderSpacing.Top = 2
     CharCase = ecUppercase
     Font.Height = -13
     Font.Name = 'Arial'
@@ -293,10 +315,13 @@ object Form1: TForm1
     TabOrder = 0
   end
   object edHisCall: TEdit
+    AnchorSideTop.Control = Label6
+    AnchorSideTop.Side = asrBottom
     Left = 792
     Height = 24
-    Top = 448
+    Top = 441
     Width = 85
+    BorderSpacing.Top = 3
     CharCase = ecUppercase
     Font.Height = -13
     Font.Name = 'Arial'
@@ -324,10 +349,13 @@ object Form1: TForm1
     Visible = False
   end
   object buttonCQ: TButton
+    AnchorSideTop.Control = Label3
+    AnchorSideTop.Side = asrBottom
     Left = 556
     Height = 23
-    Top = 361
+    Top = 333
     Width = 72
+    BorderSpacing.Top = 3
     Caption = 'Call CQ'
     Font.Height = -13
     Font.Name = 'Arial'
@@ -337,10 +365,13 @@ object Form1: TForm1
     TabOrder = 3
   end
   object buttonAnswerCQ: TButton
+    AnchorSideTop.Control = Label15
+    AnchorSideTop.Side = asrBottom
     Left = 556
     Height = 23
-    Top = 405
+    Top = 384
     Width = 104
+    BorderSpacing.Top = 2
     Caption = 'Answer CQ'
     Font.Height = -13
     Font.Name = 'Arial'
@@ -350,10 +381,13 @@ object Form1: TForm1
     TabOrder = 4
   end
   object buttonSendReport: TButton
+    AnchorSideTop.Control = Label3
+    AnchorSideTop.Side = asrBottom
     Left = 635
     Height = 23
-    Top = 361
+    Top = 333
     Width = 104
+    BorderSpacing.Top = 3
     Caption = 'Answer Caller'
     Font.Height = -13
     Font.Name = 'Arial'
@@ -363,10 +397,13 @@ object Form1: TForm1
     TabOrder = 5
   end
   object buttonAckReport1: TButton
+    AnchorSideTop.Control = Label3
+    AnchorSideTop.Side = asrBottom
     Left = 748
     Height = 23
-    Top = 361
+    Top = 333
     Width = 100
+    BorderSpacing.Top = 3
     Caption = 'Send RRR'
     Font.Height = -13
     Font.Name = 'Arial'
@@ -376,10 +413,13 @@ object Form1: TForm1
     TabOrder = 6
   end
   object buttonAckReport2: TButton
+    AnchorSideTop.Control = Label15
+    AnchorSideTop.Side = asrBottom
     Left = 672
     Height = 23
-    Top = 405
+    Top = 384
     Width = 100
+    BorderSpacing.Top = 2
     Caption = 'Send Report'
     Font.Height = -13
     Font.Name = 'Arial'
@@ -389,10 +429,13 @@ object Form1: TForm1
     TabOrder = 7
   end
   object btnHaltTx: TButton
-    Left = 849
+    AnchorSideTop.Control = Label50
+    AnchorSideTop.Side = asrBottom
+    Left = 848
     Height = 23
-    Top = 266
+    Top = 236
     Width = 80
+    BorderSpacing.Top = 1
     Caption = 'Halt TX'
     Enabled = False
     Font.Height = -15
@@ -403,10 +446,13 @@ object Form1: TForm1
     TabOrder = 8
   end
   object btnEngageTx: TButton
+    AnchorSideTop.Control = Label50
+    AnchorSideTop.Side = asrBottom
     Left = 752
     Height = 23
-    Top = 266
+    Top = 236
     Width = 94
+    BorderSpacing.Top = 1
     Caption = 'Enable TX'
     Enabled = False
     Font.Height = -15
@@ -417,16 +463,15 @@ object Form1: TForm1
     TabOrder = 9
   end
   object buttonClearList: TButton
-    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Side = asrBottom
     AnchorSideBottom.Control = Owner
     AnchorSideBottom.Side = asrBottom
-    Left = 4
+    Left = 5
     Height = 26
-    Top = 497
+    Top = 280
     Width = 108
-    Anchors = [akLeft, akBottom]
     BorderSpacing.Left = 4
-    BorderSpacing.Bottom = 7
+    BorderSpacing.Bottom = 5
     Caption = 'Clear Decodes'
     Constraints.MaxHeight = 26
     Font.Height = -13
@@ -437,10 +482,13 @@ object Form1: TForm1
     TabOrder = 10
   end
   object buttonEndQSO2: TButton
+    AnchorSideTop.Control = Label3
+    AnchorSideTop.Side = asrBottom
     Left = 856
-    Height = 84
-    Top = 344
+    Height = 74
+    Top = 333
     Width = 71
+    BorderSpacing.Top = 3
     Caption = 'Send 73'
     Font.Height = -13
     Font.Name = 'Arial'
@@ -452,7 +500,7 @@ object Form1: TForm1
   object ProgressBar3: TProgressBar
     Left = 827
     Height = 15
-    Top = 208
+    Top = 173
     Width = 102
     Max = 533504
     Smooth = True
@@ -460,11 +508,14 @@ object Form1: TForm1
     TabOrder = 12
   end
   object edFreeText: TEdit
+    AnchorSideTop.Control = rbFreeMsg
+    AnchorSideTop.Side = asrBottom
     Left = 556
     Height = 24
     Hint = 'Right click for menu, double click to clear.'
-    Top = 264
+    Top = 236
     Width = 191
+    BorderSpacing.Top = 4
     CharCase = ecUppercase
     Font.Height = -13
     Font.Name = 'Arial'
@@ -815,10 +866,11 @@ object Form1: TForm1
     AnchorSideLeft.Control = Owner
     AnchorSideTop.Control = ListBox2
     AnchorSideTop.Side = asrBottom
-    AnchorSideBottom.Control = buttonClearList
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
     Left = 4
-    Height = 171
-    Top = 321
+    Height = 175
+    Top = 350
     Width = 548
     Anchors = [akTop, akLeft, akBottom]
     BorderSpacing.Left = 4
@@ -837,7 +889,7 @@ object Form1: TForm1
   object ListBox2: TListBox
     Left = 4
     Height = 24
-    Top = 297
+    Top = 326
     Width = 548
     Enabled = False
     Font.Height = -19
@@ -851,10 +903,13 @@ object Form1: TForm1
     TabOrder = 17
   end
   object edSigRep: TEdit
+    AnchorSideTop.Control = Label6
+    AnchorSideTop.Side = asrBottom
     Left = 884
     Height = 24
-    Top = 448
+    Top = 441
     Width = 45
+    BorderSpacing.Top = 3
     Font.Height = -13
     Font.Name = 'Arial'
     Font.Style = [fsBold]
@@ -878,11 +933,14 @@ object Form1: TForm1
     Visible = False
   end
   object chkAutoTxDF: TCheckBox
-    Left = 679
+    AnchorSideTop.Control = Bevel3
+    AnchorSideTop.Side = asrBottom
+    Left = 688
     Height = 17
     Hint = 'If Checked TX and RX DF will always be same.'
-    Top = 432
+    Top = 415
     Width = 18
+    BorderSpacing.Top = 2
     Checked = True
     Font.Height = -12
     Font.Name = 'Arial'
@@ -893,10 +951,13 @@ object Form1: TForm1
     TabOrder = 20
   end
   object spinDecoderCF: TSpinEdit
+    AnchorSideTop.Control = Label37
+    AnchorSideTop.Side = asrBottom
     Left = 616
     Height = 22
-    Top = 446
+    Top = 431
     Width = 55
+    BorderSpacing.Top = 1
     Font.Height = -11
     Font.Name = 'Arial'
     Font.Style = [fsBold]
@@ -908,10 +969,13 @@ object Form1: TForm1
     TabOrder = 21
   end
   object spinTXCF: TSpinEdit
+    AnchorSideTop.Control = Label37
+    AnchorSideTop.Side = asrBottom
     Left = 556
     Height = 22
-    Top = 446
+    Top = 431
     Width = 55
+    BorderSpacing.Top = 1
     Font.Height = -11
     Font.Name = 'Arial'
     Font.Style = [fsBold]
@@ -923,10 +987,13 @@ object Form1: TForm1
     TabOrder = 22
   end
   object btnZeroRX: TButton
+    AnchorSideTop.Control = spinTXCF
+    AnchorSideTop.Side = asrBottom
     Left = 616
     Height = 16
-    Top = 470
+    Top = 454
     Width = 55
+    BorderSpacing.Top = 1
     Caption = 'Zero'
     Font.Height = -8
     Font.Name = 'Arial'
@@ -935,10 +1002,13 @@ object Form1: TForm1
     TabOrder = 23
   end
   object btnZeroTX: TButton
+    AnchorSideTop.Control = spinTXCF
+    AnchorSideTop.Side = asrBottom
     Left = 556
     Height = 16
-    Top = 470
+    Top = 454
     Width = 55
+    BorderSpacing.Top = 1
     Caption = 'Zero'
     Font.Height = -8
     Font.Name = 'Arial'
@@ -947,10 +1017,14 @@ object Form1: TForm1
     TabOrder = 24
   end
   object spinDecoderBW: TSpinEdit
+    AnchorSideTop.Control = Label13
+    AnchorSideTop.Side = asrBottom
+    AnchorSideBottom.Side = asrBottom
     Left = 595
     Height = 24
-    Top = 502
+    Top = 498
     Width = 22
+    BorderSpacing.Top = 3
     Font.Height = -13
     Font.Name = 'Arial'
     MaxValue = 4
@@ -961,10 +1035,13 @@ object Form1: TForm1
     Value = 4
   end
   object chkNB: TCheckBox
-    Left = 679
+    AnchorSideTop.Control = chkAFC
+    AnchorSideTop.Side = asrBottom
+    Left = 688
     Height = 18
-    Top = 466
+    Top = 454
     Width = 82
+    BorderSpacing.Top = 2
     Caption = 'Noise Blank'
     Font.Height = -11
     Font.Name = 'Arial'
@@ -974,23 +1051,31 @@ object Form1: TForm1
     TabOrder = 26
   end
   object chkAFC: TCheckBox
-    Left = 679
+    AnchorSideTop.Control = Label39
+    AnchorSideTop.Side = asrBottom
+    Left = 688
     Height = 18
-    Top = 449
+    Top = 434
     Width = 40
+    BorderSpacing.Top = 3
     Caption = 'AFC'
+    Checked = True
     Font.Height = -11
     Font.Name = 'Arial'
     Font.Style = [fsBold]
     OnChange = chkAFCChange
     ParentFont = False
+    State = cbChecked
     TabOrder = 27
   end
   object chkMultiDecode: TCheckBox
-    Left = 679
+    AnchorSideTop.Control = chkNB
+    AnchorSideTop.Side = asrBottom
+    Left = 688
     Height = 18
-    Top = 484
+    Top = 474
     Width = 84
+    BorderSpacing.Top = 2
     Caption = 'Enable Multi'
     Checked = True
     Font.Height = -11
@@ -1002,11 +1087,14 @@ object Form1: TForm1
     TabOrder = 28
   end
   object RadioGroup1: TRadioGroup
+    AnchorSideTop.Control = edFreeText
+    AnchorSideTop.Side = asrBottom
     Left = 752
-    Height = 49
-    Top = 290
+    Height = 46
+    Top = 262
     Width = 177
     AutoFill = True
+    BorderSpacing.Top = 2
     ChildSizing.LeftRightSpacing = 6
     ChildSizing.TopBottomSpacing = 6
     ChildSizing.EnlargeHorizontal = crsHomogenousChildResize
@@ -1015,13 +1103,13 @@ object Form1: TForm1
     ChildSizing.ShrinkVertical = crsScaleChilds
     ChildSizing.Layout = cclLeftToRightThenTopToBottom
     ChildSizing.ControlsPerLine = 2
-    ClientHeight = 31
+    ClientHeight = 28
     ClientWidth = 173
     Columns = 2
     TabOrder = 29
     object rbTX1: TRadioButton
       Left = 6
-      Height = 19
+      Height = 16
       Top = 6
       Width = 83
       Caption = 'TX Even'
@@ -1037,7 +1125,7 @@ object Form1: TForm1
     end
     object rbTX2: TRadioButton
       Left = 89
-      Height = 19
+      Height = 16
       Top = 6
       Width = 78
       Caption = 'TX Odd'
@@ -1050,10 +1138,13 @@ object Form1: TForm1
     end
   end
   object rbFreeMsg: TRadioButton
+    AnchorSideTop.Control = Label8
+    AnchorSideTop.Side = asrBottom
     Left = 556
     Height = 20
-    Top = 244
+    Top = 212
     Width = 165
+    BorderSpacing.Top = 2
     Caption = 'TX Text (13 Characters)'
     Font.Height = -13
     Font.Name = 'Arial'
@@ -1063,10 +1154,13 @@ object Form1: TForm1
     TabOrder = 30
   end
   object rbGenMsg: TRadioButton
+    AnchorSideTop.Control = edFreeText
+    AnchorSideTop.Side = asrBottom
     Left = 556
     Height = 20
-    Top = 290
+    Top = 262
     Width = 106
+    BorderSpacing.Top = 2
     Caption = 'TX Generated'
     Checked = True
     Font.Color = clRed
@@ -1079,20 +1173,17 @@ object Form1: TForm1
     TabStop = True
   end
   object btnDefaults: TButton
-    AnchorSideLeft.Control = Label32
     AnchorSideLeft.Side = asrBottom
-    AnchorSideTop.Control = Owner
     AnchorSideTop.Side = asrBottom
     AnchorSideBottom.Control = Owner
     AnchorSideBottom.Side = asrBottom
-    Left = 427
+    Left = 384
     Height = 26
-    Top = 497
-    Width = 125
-    Anchors = [akLeft, akBottom]
+    Top = 280
+    Width = 137
     BorderSpacing.Left = 11
     BorderSpacing.Top = 1
-    BorderSpacing.Bottom = 7
+    BorderSpacing.Bottom = 5
     Caption = 'Restore Defaults'
     Font.Height = -13
     Font.Name = 'Arial'
@@ -1104,11 +1195,12 @@ object Form1: TForm1
   object btnLogQSO: TButton
     AnchorSideTop.Control = edHisCall
     AnchorSideTop.Side = asrBottom
+    AnchorSideBottom.Side = asrBottom
     Left = 792
-    Height = 32
-    Top = 475
+    Height = 26
+    Top = 474
     Width = 138
-    BorderSpacing.Top = 3
+    BorderSpacing.Top = 9
     Caption = 'Log QSO'
     Font.Height = -13
     Font.Name = 'Arial'
@@ -1140,10 +1232,14 @@ object Form1: TForm1
     TabOrder = 35
   end
   object Edit2: TEdit
+    AnchorSideTop.Control = Label13
+    AnchorSideTop.Side = asrBottom
+    AnchorSideBottom.Side = asrBottom
     Left = 556
     Height = 24
-    Top = 502
+    Top = 498
     Width = 40
+    BorderSpacing.Top = 3
     Font.Height = -13
     Font.Name = 'Arial'
     Font.Style = [fsBold]
@@ -1155,17 +1251,15 @@ object Form1: TForm1
     Text = '100'
   end
   object btnReDecode: TButton
-    AnchorSideLeft.Control = buttonClearList
     AnchorSideLeft.Side = asrBottom
     AnchorSideBottom.Control = Owner
     AnchorSideBottom.Side = asrBottom
-    Left = 127
+    Left = 128
     Height = 26
-    Top = 497
-    Width = 115
-    Anchors = [akLeft, akBottom]
+    Top = 280
+    Width = 104
     BorderSpacing.Left = 15
-    BorderSpacing.Bottom = 7
+    BorderSpacing.Bottom = 5
     Caption = 'Decode Again'
     Constraints.MaxHeight = 26
     Font.Height = -13
@@ -1176,28 +1270,32 @@ object Form1: TForm1
     TabOrder = 37
   end
   object Bevel1: TBevel
+    AnchorSideTop.Control = buttonCQ
+    AnchorSideTop.Side = asrBottom
     Left = 556
     Height = 3
-    Top = 385
+    Top = 360
     Width = 292
-  end
-  object Bevel2: TBevel
-    Left = 556
-    Height = 3
-    Top = 341
-    Width = 292
+    BorderSpacing.Top = 4
   end
   object Bevel3: TBevel
+    AnchorSideTop.Control = buttonAnswerCQ
+    AnchorSideTop.Side = asrBottom
     Left = 556
     Height = 3
-    Top = 429
+    Top = 410
     Width = 292
+    BorderSpacing.Top = 3
   end
   object Edit3: TEdit
+    AnchorSideTop.Control = Label13
+    AnchorSideTop.Side = asrBottom
+    AnchorSideBottom.Side = asrBottom
     Left = 624
     Height = 24
-    Top = 502
+    Top = 498
     Width = 40
+    BorderSpacing.Top = 3
     Font.Height = -13
     Font.Name = 'Arial'
     Font.Style = [fsBold]
@@ -1209,10 +1307,14 @@ object Form1: TForm1
     Text = '100'
   end
   object spinDecoderBin: TSpinEdit
+    AnchorSideTop.Control = Label13
+    AnchorSideTop.Side = asrBottom
+    AnchorSideBottom.Side = asrBottom
     Left = 663
     Height = 24
-    Top = 502
+    Top = 498
     Width = 22
+    BorderSpacing.Top = 3
     Font.Height = -13
     Font.Name = 'Arial'
     MaxValue = 4
@@ -1223,10 +1325,13 @@ object Form1: TForm1
     Value = 4
   end
   object Label18: TLabel
+    AnchorSideTop.Control = btnZeroTX
+    AnchorSideTop.Side = asrBottom
     Left = 624
     Height = 15
-    Top = 487
+    Top = 480
     Width = 48
+    BorderSpacing.Top = 10
     Caption = 'Multi BW'
     Font.Height = -11
     Font.Name = 'Arial'
@@ -1248,34 +1353,30 @@ object Form1: TForm1
     Visible = False
   end
   object SpinDT: TSpinEdit
-    AnchorSideLeft.Control = btnReDecode
     AnchorSideLeft.Side = asrBottom
     AnchorSideBottom.Control = Owner
     AnchorSideBottom.Side = asrBottom
-    Left = 257
+    Left = 248
     Height = 24
-    Top = 497
+    Top = 281
     Width = 49
-    Anchors = [akLeft, akBottom]
     BorderSpacing.Left = 15
-    BorderSpacing.Bottom = 9
+    BorderSpacing.Bottom = 5
     MaxValue = 5
     MinValue = -5
     TabOrder = 40
   end
   object Label32: TLabel
-    AnchorSideLeft.Control = SpinDT
     AnchorSideLeft.Side = asrBottom
     AnchorSideBottom.Control = Owner
     AnchorSideBottom.Side = asrBottom
-    Left = 311
+    Left = 300
     Height = 17
-    Top = 501
-    Width = 105
-    Anchors = [akLeft, akBottom]
+    Top = 284
+    Width = 55
     BorderSpacing.Left = 5
-    BorderSpacing.Bottom = 12
-    Caption = 'Timing (DT Offset)'
+    BorderSpacing.Bottom = 9
+    Caption = 'DT Offset'
     ParentColor = False
     OnDblClick = Label32DblClick
   end

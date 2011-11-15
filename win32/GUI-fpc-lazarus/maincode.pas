@@ -47,7 +47,6 @@ type
 
   TForm1 = class(TForm)
     Bevel1 : TBevel;
-    Bevel2 : TBevel;
     Bevel3 : TBevel;
     btnHaltTx: TButton;
     btnEngageTx: TButton;
@@ -95,7 +94,6 @@ type
     Label19: TLabel;
     Label20: TLabel;
     Label22: TLabel;
-    Label24: TLabel;
     Label25: TLabel;
     Label26: TLabel;
     Label27: TLabel;
@@ -228,6 +226,7 @@ type
     procedure edSigRepKeyPress (Sender : TObject ; var Key : char );
     procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
     procedure FormCreate(Sender: TObject);
+    procedure FormResize(Sender: TObject);
     procedure Label17DblClick(Sender: TObject);
     procedure Label19DblClick(Sender: TObject);
     procedure Label22DblClick(Sender: TObject);
@@ -264,7 +263,6 @@ type
     procedure TrackBar1Change(Sender: TObject);
     procedure TrackBar2Change(Sender: TObject);
     procedure updateAudio();
-    procedure updateStatus(i : Integer);
     procedure DisableFloatingPointExceptions();
     procedure initializerCode();
     procedure audioChange();
@@ -2018,6 +2016,17 @@ Var
    fname       : String;
    pfname      : PChar;
 begin
+     // Create and initialize TWaterfallControl
+     Waterfall := TWaterfallControl.Create(Self);
+     //if verholder.guiSize = 'Normal' then Waterfall.Height := 180;
+     //if verholder.guiSize = 'Small' then Waterfall.Height := 160;
+     Waterfall.Height := 180;
+     Waterfall.Width  := 750;
+     Waterfall.Top    := 25;
+     Waterfall.Left   := 177;
+     Waterfall.Parent := Self;
+     Waterfall.OnMouseDown := waterfallMouseDown;
+     Waterfall.DoubleBuffered := True;
      cfgError := True;
      Try
         fname := GetAppConfigDir(False)+'station1.xml';
@@ -2039,6 +2048,21 @@ begin
              cfgRecover := True;
         End;
      End;
+end;
+
+procedure TForm1.FormResize(Sender: TObject);
+begin
+     If Form1.Height < 660 then waterfall.Height := 145 else waterfall.Height := 180;
+     If Form1.Height > 659 then
+     begin
+          Label16.Top := 210;
+          ProgressBar3.Top := 210;
+     end
+     else
+     begin
+          Label16.Top := 173;
+          ProgressBar3.Top := 173;
+     end;
 end;
 
 procedure TForm1.Label17DblClick(Sender: TObject);
@@ -3644,45 +3668,6 @@ Begin
      end;
 End;
 
-procedure TForm1.updateStatus(i : Integer);
-Var
-   foo : String;
-begin
-     If i = 1 Then
-     Begin
-          foo := 'Current Operation:  Initializing';
-          if Form1.Label24.Caption <> foo Then
-          Form1.Label24.Caption := foo;
-     End;
-     If i = 2 then
-     Begin
-          foo := 'Current Operation:  Receiving';
-          if Form1.Label24.Caption <> foo Then
-          Form1.Label24.Caption := foo;
-     End;
-     If i = 3 then
-     Begin
-          foo := 'Current Operation:  Transmitting';
-          if Form1.Label24.Caption <> foo Then
-          Form1.Label24.Caption := foo;
-     End;
-     If i = 4 then
-     Begin
-          foo := 'Current Operation:  Starting Decoder';
-          if Form1.Label24.Caption <> foo Then
-          Form1.Label24.Caption := foo;
-     End;
-     If i = 5 then
-     Begin
-          if d65.glinProg Then
-             foo := 'Current Operation:  Decoding pass ' + IntToStr(d65.gldecoderPass+1)
-          else
-             foo := 'Current Operation:  Idle';
-          if Form1.Label24.Caption <> foo Then
-          Form1.Label24.Caption := foo;
-     End;
-end;
-
 procedure TForm1.rbcCheck();
 Var
    foo          : String;
@@ -4887,17 +4872,6 @@ Begin
                showmessage(foo);
           end;
      end;
-     // Create and initialize TWaterfallControl
-     Waterfall := TWaterfallControl.Create(Self);
-     if verholder.guiSize = 'Normal' then Waterfall.Height := 180;
-     if verholder.guiSize = 'Small' then Waterfall.Height := 160;
-     Waterfall.Width  := 750;
-     Waterfall.Top    := 25;
-     Waterfall.Left   := 177;
-     Waterfall.Parent := Self;
-     Waterfall.OnMouseDown := waterfallMouseDown;
-     Waterfall.DoubleBuffered := True;
-
      // Create the decoder thread with param False so it starts.
      d65.glinProg := False;
      decoderThread := decodeThread.Create(False);
@@ -6596,8 +6570,6 @@ Begin
                   Format('%2.2D',[st.Hour]) + ':' +
                   Format('%2.2D',[st.Minute]) + ':' +
                   Format('%2.2D',[st.Second]) + ' UTC';
-     // Display current action in status panel
-     updateStatus(thisAction);
      // rbc control
      // Check whether to enable/disable chkRBenable
      if not primed then rbcCheck();
