@@ -91,7 +91,7 @@ type
     Label16: TLabel;
     Label17: TLabel;
     Label18 : TLabel;
-    Label19: TLabel;
+    Label2: TLabel;
     Label20: TLabel;
     Label22: TLabel;
     Label25: TLabel;
@@ -100,7 +100,6 @@ type
     Label28: TLabel;
     Label29: TLabel;
     Label3: TLabel;
-    Label30: TLabel;
     Label31: TLabel;
     Label32 : TLabel ;
     Label33: TLabel;
@@ -114,6 +113,7 @@ type
     Label50: TLabel;
     Label6: TLabel;
     Label21: TLabel;
+    Label7: TLabel;
     Label8: TLabel;
     Label9: TLabel;
     ListBox1: TListBox;
@@ -228,9 +228,7 @@ type
     procedure FormCreate(Sender: TObject);
     procedure FormResize(Sender: TObject);
     procedure Label17DblClick(Sender: TObject);
-    procedure Label19DblClick(Sender: TObject);
     procedure Label22DblClick(Sender: TObject);
-    procedure Label30DblClick(Sender: TObject);
     procedure Label31DblClick(Sender: TObject);
     procedure Label32DblClick (Sender : TObject );
     procedure Label39Click(Sender: TObject);
@@ -1811,6 +1809,10 @@ Begin
           foo := foo + IntToStr(cfgvtwo.Form6.qsyMinute5.Value);
      end;
      cfg.StoredValue['autoQSYUTC5'] := foo;
+     cfg.StoredValue['high'] := IntToStr(Form1.Height);
+     cfg.StoredValue['wide'] := IntToStr(Form1.Width);
+     cfg.StoredValue['showonce'] := '1';
+     if log.Form2.CheckBox1.Checked then cfg.StoredValue['lognotes'] := '0' else cfg.StoredValue['lognotes'] := '1';
      cfg.Save;
 end;
 
@@ -2052,7 +2054,13 @@ end;
 
 procedure TForm1.FormResize(Sender: TObject);
 begin
+     // The following is for Wine with Linux/OS X as it doesn't honor the min/max
+     // form height/width.
+     If Form1.Height < 550 then Form1.Height:=550;
+     If (Form1.Width < 935) or (Form1.Width > 935) Then Form1.Width:=935;
+     // Scale waterfall size depending upon available form height.
      If Form1.Height < 660 then waterfall.Height := 145 else waterfall.Height := 180;
+     // Place Prgress bar position for compact versus expanded layout.
      If Form1.Height > 659 then
      begin
           Label16.Top := 210;
@@ -2077,18 +2085,6 @@ begin
      // Zero contrast
      Form1.tbContrast.Position := 0;
      spectrum.specContrast := 0;
-end;
-
-procedure TForm1.Label19DblClick(Sender: TObject);
-begin
-     // Disable PSKR reportings
-     cbEnPSKR.checked := False;
-end;
-
-procedure TForm1.Label30DblClick(Sender: TObject);
-begin
-     // Disbale RB Reportings
-     cbEnRB.Checked := False;
 end;
 
 procedure TForm1.Label31DblClick(Sender: TObject);
@@ -3130,6 +3126,7 @@ begin
      log.Form2.edLogFrequency.Text := sqrg;
      log.logmycall := globalData.fullcall;
      log.logmygrid := cfgvtwo.Form6.edMyGrid.Text;
+     if log.Form2.CheckBox1.Checked Then log.Form2.edLogComment.Text:='';
      log.Form2.Visible := True;
      log.Form2.Show;
      log.Form2.BringToFront;
@@ -3675,13 +3672,13 @@ begin
      // Update form title with rb info.
      If cbEnRB.Checked Then
      Begin
-          foo := 'JT65-HF Version ' + verHolder.verReturn + '  [RB Enabled, ';
-          If globalData.rbLoggedIn Then foo := foo + 'logged in.  QRG = ' + Form1.editManQRG.Text + ' KHz]' Else foo := foo + 'not logged in.  QRG = ' + Form1.editManQRG.Text + ' KHz]';
-          foo := foo + ' [ ' + globalData.fullcall + ' QRV]';
+          foo := 'JT65-HF Version ' + verHolder.verReturn + '  [ RB Enabled, ';
+          If globalData.rbLoggedIn Then foo := foo + 'logged in.  QRG = ' + Form1.editManQRG.Text + ' KHz ]' Else foo := foo + 'not logged in.  QRG = ' + Form1.editManQRG.Text + ' KHz ]';
+          foo := foo + ' [ ' + globalData.fullcall + ' QRV ]';
      End
      Else
      Begin
-          foo := 'JT65-HF Version ' + verHolder.verReturn + '  [ ' + globalData.fullcall + ' QRV]';
+          foo := 'JT65-HF Version ' + verHolder.verReturn + '  [ ' + globalData.fullcall + ' QRV ]';
      End;
      if Form1.Caption <> foo Then Form1.Caption := foo;
 end;
@@ -3853,13 +3850,7 @@ Begin
      End;
 
      fname := GetAppConfigDir(False)+'station1.xml';
-     {$IFDEF win32}
-       if not fileExists(fname) Then
-     {$ENDIF}
-     {$IFDEF linux}
-       if not directoryExists(GetAppConfigDir(False) Then createDir(appConfigDir(False));
-       if not fileExists(fname) Then
-     {$ENDIF}
+     if not fileExists(fname) Then
      Begin
           cfgvtwo.glmustConfig := True;
           // Setup default sane value for config form.
@@ -3948,190 +3939,18 @@ Begin
                 Application.ProcessMessages
           until not cfgvtwo.glmustConfig;
           cfgvtwo.Form6.Visible := False;
-          cfg.StoredValue['call']         := UpperCase(cfgvtwo.glmycall);
-          cfg.StoredValue['pfx']          := IntToStr(cfgvtwo.Form6.comboPrefix.ItemIndex);
-          cfg.StoredValue['sfx']          := IntToStr(cfgvtwo.Form6.comboSuffix.ItemIndex);
-          cfg.StoredValue['grid']         := cfgvtwo.Form6.edMyGrid.Text;
-          cfg.StoredValue['soundin']      := IntToStr(cfgvtwo.Form6.cbAudioIn.ItemIndex);
-          cfg.StoredValue['soundout']     := IntToStr(cfgvtwo.Form6.cbAudioOut.ItemIndex);
-          cfg.StoredValue['ldgain']       := IntToStr(Form1.TrackBar1.Position);
-          cfg.StoredValue['rdgain']       := IntToStr(Form1.TrackBar2.Position);
-          cfg.StoredValue['samfacin']     := cfgvtwo.Form6.edRXSRCor.Text;
-          cfg.StoredValue['samfacout']    := cfgvtwo.Form6.edTXSRCor.Text;
-          if Form1.rbUseLeft.Checked Then cfg.StoredValue['audiochan'] := 'L' Else cfg.StoredValue['audiochan'] := 'R';
-          If cfgvtwo.Form6.chkEnableAutoSR.Checked Then cfg.StoredValue['autoSR'] := '1' else cfg.StoredValue['autoSR'] := '0';
-          cfg.StoredValue['pttPort']      := UpperCase(cfgvtwo.Form6.editUserDefinedPort1.Text);
-          if Form1.chkAFC.Checked Then cfg.StoredValue['afc'] := '1' Else cfg.StoredValue['afc'] := '0';
-          If Form1.chkNB.Checked Then cfg.StoredValue['noiseblank'] := '1' Else cfg.StoredValue['noiseblank'] := '0';
-          cfg.StoredValue['brightness']   := IntToStr(Form1.tbBright.Position);
-          cfg.StoredValue['contrast']     := IntToStr(Form1.tbContrast.Position );
-          cfg.StoredValue['colormap']     := IntToStr(Form1.cbSpecPal.ItemIndex);
-          cfg.StoredValue['specspeed']    := IntToStr(Form1.SpinEdit1.Value);
-          cfg.StoredValue['txCF']         := '0';
-          cfg.StoredValue['rxCF']         := '0';
-          If cfgvtwo.Form6.cbSaveCSV.Checked Then cfg.StoredValue['saveCSV'] := '1' Else cfg.StoredValue['saveCSV'] := '0';
-          cfg.StoredValue['csvPath'] := cfgvtwo.Form6.DirectoryEdit1.Directory;
-          cfg.StoredValue['adiPath'] := log.Form2.DirectoryEdit1.Directory;
-          cfg.StoredValue['version'] := verHolder.verReturn;
-          cfg.StoredValue['cqColor'] := IntToStr(cfgvtwo.Form6.ComboBox1.ItemIndex);
-          cfg.StoredValue['callColor'] := IntToStr(cfgvtwo.Form6.ComboBox2.ItemIndex);
-          cfg.StoredValue['qsoColor'] := IntToStr(cfgvtwo.Form6.ComboBox3.ItemIndex);
-          cfg.StoredValue['catBy'] := cfgvtwo.glcatBy;
-          if cfgvtwo.Form6.editPSKRCall.Text = '' Then cfgvtwo.Form6.editPSKRCall.Text := cfgvtwo.Form6.edMyCall.Text;
-          if cbEnPSKR.Checked Then cfg.StoredValue['usePSKR'] := 'yes' else cfg.StoredValue['usePSKR'] := 'no';
-          if cbEnRB.Checked Then cfg.StoredValue['useRB'] := 'yes' else cfg.StoredValue['useRB'] := 'no';
-          cfg.StoredValue['pskrCall'] := cfgvtwo.Form6.editPSKRCall.Text;
-          cfg.StoredValue['pskrAntenna'] := cfgvtwo.Form6.editPSKRAntenna.Text;
-          if cfgvtwo.Form6.chkNoOptFFT.Checked Then cfg.StoredValue['optFFT'] := 'off' else cfg.StoredValue['optFFT'] := 'on';
-          if cfgvtwo.Form6.cbUseAltPTT.Checked Then cfg.StoredValue['useAltPTT'] := 'yes' else cfg.StoredValue['useAltPTT'] := 'no';
-          if cfgvtwo.Form6.chkHRDPTT.Checked Then cfg.StoredValue['useHRDPTT'] := 'yes' else cfg.StoredValue['useHRDPTT'] := 'no';
-          cfg.StoredValue['userQRG1'] := cfgvtwo.Form6.edUserQRG1.Text;
-          cfg.StoredValue['userQRG2'] := cfgvtwo.Form6.edUserQRG2.Text;
-          cfg.StoredValue['userQRG3'] := cfgvtwo.Form6.edUserQRG3.Text;
-          cfg.StoredValue['userQRG4'] := cfgvtwo.Form6.edUserQRG4.Text;
-          cfg.StoredValue['userQRG5'] := cfgvtwo.Form6.edUserQRG5.Text;
-          cfg.StoredValue['userQRG6'] := cfgvtwo.Form6.edUserQRG6.Text;
-          cfg.StoredValue['userQRG7'] := cfgvtwo.Form6.edUserQRG7.Text;
-          cfg.StoredValue['userQRG8'] := cfgvtwo.Form6.edUserQRG8.Text;
-          cfg.StoredValue['userQRG9'] := cfgvtwo.Form6.edUserQRG9.Text;
-          cfg.StoredValue['userQRG10'] := cfgvtwo.Form6.edUserQRG10.Text;
-          cfg.StoredValue['userQRG11'] := cfgvtwo.Form6.edUserQRG11.Text;
-          cfg.StoredValue['userQRG12'] := cfgvtwo.Form6.edUserQRG12.Text;
-          cfg.StoredValue['userQRG13'] := cfgvtwo.Form6.edUserQRG13.Text;
-          cfg.StoredValue['usrMsg1'] := cfgvtwo.Form6.edUserMsg4.Text;
-          cfg.StoredValue['usrMsg2'] := cfgvtwo.Form6.edUserMsg5.Text;
-          cfg.StoredValue['usrMsg3'] := cfgvtwo.Form6.edUserMsg6.Text;
-          cfg.StoredValue['usrMsg4'] := cfgvtwo.Form6.edUserMsg7.Text;
-          cfg.StoredValue['usrMsg5'] := cfgvtwo.Form6.edUserMsg8.Text;
-          cfg.StoredValue['usrMsg6'] := cfgvtwo.Form6.edUserMsg9.Text;
-          cfg.StoredValue['usrMsg7'] := cfgvtwo.Form6.edUserMsg10.Text;
-          cfg.StoredValue['usrMsg8'] := cfgvtwo.Form6.edUserMsg11.Text;
-          cfg.StoredValue['usrMsg9'] := cfgvtwo.Form6.edUserMsg12.Text;
-          cfg.StoredValue['usrMsg10'] := cfgvtwo.Form6.edUserMsg13.Text;
-          cfg.StoredValue['usrMsg11'] := cfgvtwo.Form6.edUserMsg14.Text;
-          cfg.StoredValue['usrMsg12'] := cfgvtwo.Form6.edUserMsg15.Text;
-          cfg.StoredValue['usrMsg13'] := cfgvtwo.Form6.edUserMsg16.Text;
-          cfg.StoredValue['usrMsg14'] := cfgvtwo.Form6.edUserMsg17.Text;
-          cfg.StoredValue['usrMsg15'] := cfgvtwo.Form6.edUserMsg18.Text;
-          cfg.StoredValue['usrMsg16'] := cfgvtwo.Form6.edUserMsg19.Text;
-          cfg.StoredValue['usrMsg17'] := cfgvtwo.Form6.edUserMsg20.Text;
-          cfg.StoredValue['binspace'] := '100';
-          if Form1.cbSmooth.Checked Then cfg.StoredValue['smooth'] := 'on' else cfg.StoredValue['smooth'] := 'off';
-          if cfgvtwo.Form6.cbRestoreMulti.Checked Then cfg.StoredValue['restoreMulti'] := 'on' else cfg.StoredValue['restoreMulti'] := 'off';
-          cfg.StoredValue['specVGain'] := IntToStr(spinGain.Value);
-          cfg.StoredValue['si570ptt'] := 'n';
-          if cfgvtwo.Form6.cbCWID.Checked Then cfg.StoredValue['useCWID'] := 'y' else cfg.StoredValue['useCWID'] := 'n';
-          if cfgvtwo.Form6.chkTxDFVFO.Checked Then cfg.StoredValue['useCATTxDF'] := 'yes' else cfg.StoredValue['useCATTxDF'] := 'no';
-          if cfgvtwo.Form6.cbEnableQSY1.Checked Then cfg.StoredValue['enAutoQSY1'] := 'yes' else cfg.StoredValue['enAutoQSY1'] := 'no';
-          if cfgvtwo.Form6.cbEnableQSY2.Checked Then cfg.StoredValue['enAutoQSY2'] := 'yes' else cfg.StoredValue['enAutoQSY2'] := 'no';
-          if cfgvtwo.Form6.cbEnableQSY3.Checked Then cfg.StoredValue['enAutoQSY3'] := 'yes' else cfg.StoredValue['enAutoQSY3'] := 'no';
-          if cfgvtwo.Form6.cbEnableQSY4.Checked Then cfg.StoredValue['enAutoQSY4'] := 'yes' else cfg.StoredValue['enAutoQSY4'] := 'no';
-          if cfgvtwo.Form6.cbEnableQSY5.Checked Then cfg.StoredValue['enAutoQSY5'] := 'yes' else cfg.StoredValue['enAutoQSY5'] := 'no';
-          if cfgvtwo.Form6.cbATQSY1.Checked Then cfg.StoredValue['autoQSYAT1'] := 'yes' else cfg.StoredValue['autoQSYAT1'] := 'no';
-          if cfgvtwo.Form6.cbATQSY2.Checked Then cfg.StoredValue['autoQSYAT2'] := 'yes' else cfg.StoredValue['autoQSYAT2'] := 'no';
-          if cfgvtwo.Form6.cbATQSY3.Checked Then cfg.StoredValue['autoQSYAT3'] := 'yes' else cfg.StoredValue['autoQSYAT3'] := 'no';
-          if cfgvtwo.Form6.cbATQSY4.Checked Then cfg.StoredValue['autoQSYAT4'] := 'yes' else cfg.StoredValue['autoQSYAT4'] := 'no';
-          if cfgvtwo.Form6.cbATQSY5.Checked Then cfg.StoredValue['autoQSYAT5'] := 'yes' else cfg.StoredValue['autoQSYAT5'] := 'no';
-          cfg.StoredValue['autoQSYQRG1'] := cfgvtwo.Form6.edQRGQSY1.Text;
-          cfg.StoredValue['autoQSYQRG2'] := cfgvtwo.Form6.edQRGQSY2.Text;
-          cfg.StoredValue['autoQSYQRG3'] := cfgvtwo.Form6.edQRGQSY3.Text;
-          cfg.StoredValue['autoQSYQRG4'] := cfgvtwo.Form6.edQRGQSY4.Text;
-          cfg.StoredValue['autoQSYQRG5'] := cfgvtwo.Form6.edQRGQSY5.Text;
-          if cfgvtwo.Form6.qsyHour1.Value < 10 Then
-          Begin
-               foo := '0' + IntToStr(cfgvtwo.Form6.qsyHour1.Value);
-          End
-          Else
-          Begin
-               foo := IntToStr(cfgvtwo.Form6.qsyHour1.Value);
-          end;
-          if cfgvtwo.Form6.qsyMinute1.Value < 10 Then
-          Begin
-               foo := foo + '0' + IntToStr(cfgvtwo.Form6.qsyMinute1.Value);
-          End
-          Else
-          Begin
-               foo := foo + IntToStr(cfgvtwo.Form6.qsyMinute1.Value);
-          end;
-          cfg.StoredValue['autoQSYUTC1'] := foo;
-
-          if cfgvtwo.Form6.qsyHour2.Value < 10 Then
-          Begin
-               foo := '0' + IntToStr(cfgvtwo.Form6.qsyHour2.Value);
-          End
-          Else
-          Begin
-               foo := IntToStr(cfgvtwo.Form6.qsyHour2.Value);
-          end;
-          if cfgvtwo.Form6.qsyMinute2.Value < 10 Then
-          Begin
-               foo := foo + '0' + IntToStr(cfgvtwo.Form6.qsyMinute2.Value);
-          End
-          Else
-          Begin
-               foo := foo + IntToStr(cfgvtwo.Form6.qsyMinute2.Value);
-          end;
-          cfg.StoredValue['autoQSYUTC2'] := foo;
-
-          if cfgvtwo.Form6.qsyHour3.Value < 10 Then
-          Begin
-               foo := '0' + IntToStr(cfgvtwo.Form6.qsyHour3.Value);
-          End
-          Else
-          Begin
-               foo := IntToStr(cfgvtwo.Form6.qsyHour3.Value);
-          end;
-          if cfgvtwo.Form6.qsyMinute3.Value < 10 Then
-          Begin
-               foo := foo + '0' + IntToStr(cfgvtwo.Form6.qsyMinute3.Value);
-          End
-          Else
-          Begin
-               foo := foo + IntToStr(cfgvtwo.Form6.qsyMinute3.Value);
-          end;
-          cfg.StoredValue['autoQSYUTC3'] := foo;
-
-          if cfgvtwo.Form6.qsyHour4.Value < 10 Then
-          Begin
-               foo := '0' + IntToStr(cfgvtwo.Form6.qsyHour4.Value);
-          End
-          Else
-          Begin
-               foo := IntToStr(cfgvtwo.Form6.qsyHour4.Value);
-          end;
-          if cfgvtwo.Form6.qsyMinute4.Value < 10 Then
-          Begin
-               foo := foo + '0' + IntToStr(cfgvtwo.Form6.qsyMinute4.Value);
-          End
-          Else
-          Begin
-               foo := foo + IntToStr(cfgvtwo.Form6.qsyMinute4.Value);
-          end;
-          cfg.StoredValue['autoQSYUTC4'] := foo;
-
-          if cfgvtwo.Form6.qsyHour5.Value < 10 Then
-          Begin
-               foo := '0' + IntToStr(cfgvtwo.Form6.qsyHour5.Value);
-          End
-          Else
-          Begin
-               foo := IntToStr(cfgvtwo.Form6.qsyHour5.Value);
-          end;
-          if cfgvtwo.Form6.qsyMinute5.Value < 10 Then
-          Begin
-               foo := foo + '0' + IntToStr(cfgvtwo.Form6.qsyMinute5.Value);
-          End
-          Else
-          Begin
-               foo := foo + IntToStr(cfgvtwo.Form6.qsyMinute5.Value);
-          end;
-          cfg.StoredValue['autoQSYUTC5'] := foo;
-          cfg.StoredValue['hrdAddress'] := cfgvtwo.Form6.hrdAddress.Text;
-          cfg.StoredValue['hrdPort'] := cfgvtwo.Form6.hrdPort.Text;
-          cfg.Save;
+          saveConfig;
+          ShowMessage('You can resize the main window! (Taller or shorter.)');
           dlog.fileDebug('Ran initial configuration.');
      End;
      // Read configuration data from XMLpropstorage (cfg.)
+     tstint := 0;
+     if TryStrToInt(cfg.StoredValue['high'],tstint) Then Form1.Height := tstint;
+     tstint := 0;
+     if TryStrToInt(cfg.StoredValue['wide'],tstint) Then Form1.Width := tstint;
+     if Form1.Height < 550 then Form1.Height := 550;
+     if (Form1.Width < 935) or (Form1.Width > 935) Then Form1.Width := 935;
+
      cfgvtwo.glmycall := cfg.StoredValue['call'];
      tstint := 0;
      if TryStrToInt(cfg.storedValue['pfx'],tstint) Then cfgvtwo.Form6.comboPrefix.ItemIndex := tstint else cfgvtwo.Form6.comboPrefix.ItemIndex := 0;
@@ -4744,9 +4563,12 @@ Begin
                 Application.ProcessMessages
           until not cfgvtwo.glmustConfig;
           cfg.StoredValue['version'] := verHolder.verReturn;
-          cfg.Save;
+          saveConfig;
+          ShowMessage('You can resize the main window! (Taller or shorter.)');
           dlog.fileDebug('Ran configuration update.');
      End;
+
+     if cfg.StoredValue['lognotes'] = '0' then log.Form2.CheckBox1.Checked:=true else log.Form2.CheckBox1.Checked:=false;
 
      globalData.mtext := '/Multi%20On%202K%20BW';
 
@@ -6497,11 +6319,11 @@ Begin
      Form1.MenuItem20b.Caption := cfgvtwo.Form6.edUserMsg20.Text;
 
      // Update PSKR Count
-     if cbEnPSKR.Checked Then Label19.Caption := rb.pskrCount;
-     if cbEnPSKR.Checked Then Form1.Label19.Visible := True else Form1.Label19.Visible := False;
+     if cbEnPSKR.Checked Then Label7.Caption := rb.pskrCount;
+     if cbEnPSKR.Checked Then Form1.Label7.Visible := True else Form1.Label7.Visible := False;
      // Update RB Count
-     If cbEnRB.Checked Then Label30.Caption := rb.rbCount;
-     if cbEnRB.Checked Then Form1.Label30.Visible := True else Form1.Label30.Visible := False;
+     If cbEnRB.Checked Then Label2.Caption := rb.rbCount;
+     if cbEnRB.Checked Then Form1.Label2.Visible := True else Form1.Label2.Visible := False;
      // Force Rig control read cycle.
      if (st.Second mod 3 = 0) And not primed Then doCAT := True;
      // Set manual entry ability.
@@ -6518,7 +6340,10 @@ Begin
          Form1.editManQRG.Font.Color := clBlack;
          //Form1.Label23.Font.Color := clBlack;
      end;
-     If globalData.rbLoggedIn Then Form1.Label30.Font.Color := clBlack else Form1.Label30.Font.Color := clRed;
+     If cbEnRB.Checked Then
+     Begin
+          If globalData.rbLoggedIn Then Form1.Label2.Font.Color := clBlack else Form1.Label2.Font.Color := clRed;
+     end;
      // Update AU Levels display
      displayAudio(audioAve1, audioAve2);
      if Form1.chkMultiDecode.Checked Then watchMulti := False;
@@ -6711,6 +6536,8 @@ Begin
      // Only run this block if decoder thread is inactive.
      If not d65.glinProg and d65.gld65HaveDecodes Then
      Begin
+          // Don't insert the decoder period divder when in compact mode.
+          If Form1.Height > 659 Then ListBox1.Items.Insert(0,'--------------------------------------------------');
           for i := 0 to 49 do
           Begin
                if (not d65.gld65decodes[i].dtProcessed) And (not d65.gld65decodes[i].dtDisplayed) Then
@@ -6729,6 +6556,7 @@ Begin
                     d65.gld65decodes[i].dtTimeStamp := '';
                     d65.gld65decodes[i].dtType      := '';
                end;
+               d65.gld65HaveDecodes:= false;
           End;
           if reDecode then reDecode := False;
      End;

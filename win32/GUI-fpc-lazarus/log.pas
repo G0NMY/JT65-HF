@@ -15,6 +15,7 @@ type
   TForm2 = class(TForm)
     btnLogQSO: TButton;
     Button1: TButton;
+    CheckBox1: TCheckBox;
     DirectoryEdit1: TDirectoryEdit;
     edLogComment: TEdit;
     edLogSTime: TEdit;

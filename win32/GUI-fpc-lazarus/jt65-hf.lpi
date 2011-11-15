@@ -20,8 +20,8 @@
       <UseVersionInfo Value="True"/>
       <AutoIncrementBuild Value="True"/>
       <MajorVersionNr Value="1"/>
-      <RevisionNr Value="8"/>
-      <BuildNr Value="34"/>
+      <RevisionNr Value="9"/>
+      <BuildNr Value="1"/>
       <StringTable FileDescription="Amateur Radio communications using JT65A" LegalCopyright="2009..2011 - J C Large - W6CQZ - GPL 2" ProductVersion=""/>
     </VersionInfo>
     <BuildModes Count="1">

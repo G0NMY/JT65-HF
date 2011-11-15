@@ -14,7 +14,8 @@ object Form2: TForm2
   Font.Height = -13
   Font.Name = 'Arial'
   OnCreate = FormCreate
-  LCLVersion = '0.9.30'
+  LCLVersion = '0.9.30.2'
+  Visible = True
   object Label1: TLabel
     Left = 128
     Height = 17
@@ -205,7 +206,6 @@ object Form2: TForm2
     Top = 88
     Width = 34
     TabOrder = 4
-    Text = '-23'
   end
   object edLogRReport: TEdit
     Left = 164
@@ -278,5 +278,15 @@ object Form2: TForm2
     Top = 162
     Width = 320
     TabOrder = 12
+  end
+  object CheckBox1: TCheckBox
+    Left = 8
+    Height = 20
+    Top = 296
+    Width = 194
+    Caption = 'Clear notes for each new QSO'
+    Checked = True
+    State = cbChecked
+    TabOrder = 13
   end
 end

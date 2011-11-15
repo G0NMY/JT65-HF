@@ -24,7 +24,7 @@ object Form1: TForm1
   object Label6: TLabel
     AnchorSideTop.Control = Bevel3
     AnchorSideTop.Side = asrBottom
-    Left = 792
+    Left = 800
     Height = 15
     Top = 423
     Width = 79
@@ -80,7 +80,7 @@ object Form1: TForm1
     ParentFont = False
   end
   object Label16: TLabel
-    Left = 736
+    Left = 734
     Height = 15
     Top = 173
     Width = 87
@@ -163,7 +163,7 @@ object Form1: TForm1
   object Label36: TLabel
     AnchorSideTop.Control = Bevel3
     AnchorSideTop.Side = asrBottom
-    Left = 884
+    Left = 887
     Height = 15
     Top = 423
     Width = 40
@@ -178,7 +178,7 @@ object Form1: TForm1
   object Label26: TLabel
     AnchorSideTop.Control = Bevel3
     AnchorSideTop.Side = asrBottom
-    Left = 616
+    Left = 620
     Height = 15
     Top = 415
     Width = 31
@@ -242,9 +242,9 @@ object Form1: TForm1
     AnchorSideTop.Side = asrBottom
     Left = 556
     Height = 15
-    Top = 480
+    Top = 483
     Width = 55
-    BorderSpacing.Top = 10
+    BorderSpacing.Top = 13
     Caption = 'Single BW'
     Font.Height = -11
     Font.Name = 'Arial'
@@ -255,7 +255,7 @@ object Form1: TForm1
   object Label39: TLabel
     AnchorSideTop.Control = Bevel3
     AnchorSideTop.Side = asrBottom
-    Left = 710
+    Left = 711
     Height = 15
     Top = 416
     Width = 73
@@ -268,32 +268,6 @@ object Form1: TForm1
     ParentColor = False
     ParentFont = False
     OnClick = Label39Click
-  end
-  object Label19: TLabel
-    Left = 406
-    Height = 15
-    Hint = 'Double click to disable PSKR'
-    Top = 210
-    Width = 7
-    Caption = '0'
-    Font.Height = -11
-    Font.Name = 'Arial'
-    ParentColor = False
-    ParentFont = False
-    OnDblClick = Label19DblClick
-  end
-  object Label30: TLabel
-    Left = 264
-    Height = 15
-    Hint = 'Double click to disable RB'
-    Top = 210
-    Width = 7
-    Caption = '0'
-    Font.Height = -11
-    Font.Name = 'Arial'
-    ParentColor = False
-    ParentFont = False
-    OnDblClick = Label30DblClick
   end
   object edMsg: TEdit
     AnchorSideTop.Control = rbGenMsg
@@ -317,10 +291,10 @@ object Form1: TForm1
   object edHisCall: TEdit
     AnchorSideTop.Control = Label6
     AnchorSideTop.Side = asrBottom
-    Left = 792
+    Left = 800
     Height = 24
     Top = 441
-    Width = 85
+    Width = 77
     BorderSpacing.Top = 3
     CharCase = ecUppercase
     Font.Height = -13
@@ -431,10 +405,10 @@ object Form1: TForm1
   object btnHaltTx: TButton
     AnchorSideTop.Control = Label50
     AnchorSideTop.Side = asrBottom
-    Left = 848
+    Left = 854
     Height = 23
     Top = 236
-    Width = 80
+    Width = 73
     BorderSpacing.Top = 1
     Caption = 'Halt TX'
     Enabled = False
@@ -498,7 +472,7 @@ object Form1: TForm1
     TabOrder = 11
   end
   object ProgressBar3: TProgressBar
-    Left = 827
+    Left = 825
     Height = 15
     Top = 173
     Width = 102
@@ -905,7 +879,7 @@ object Form1: TForm1
   object edSigRep: TEdit
     AnchorSideTop.Control = Label6
     AnchorSideTop.Side = asrBottom
-    Left = 884
+    Left = 882
     Height = 24
     Top = 441
     Width = 45
@@ -935,7 +909,7 @@ object Form1: TForm1
   object chkAutoTxDF: TCheckBox
     AnchorSideTop.Control = Bevel3
     AnchorSideTop.Side = asrBottom
-    Left = 688
+    Left = 693
     Height = 17
     Hint = 'If Checked TX and RX DF will always be same.'
     Top = 415
@@ -953,7 +927,7 @@ object Form1: TForm1
   object spinDecoderCF: TSpinEdit
     AnchorSideTop.Control = Label37
     AnchorSideTop.Side = asrBottom
-    Left = 616
+    Left = 620
     Height = 22
     Top = 431
     Width = 55
@@ -989,7 +963,7 @@ object Form1: TForm1
   object btnZeroRX: TButton
     AnchorSideTop.Control = spinTXCF
     AnchorSideTop.Side = asrBottom
-    Left = 616
+    Left = 620
     Height = 16
     Top = 454
     Width = 55
@@ -1022,7 +996,7 @@ object Form1: TForm1
     AnchorSideBottom.Side = asrBottom
     Left = 595
     Height = 24
-    Top = 498
+    Top = 501
     Width = 22
     BorderSpacing.Top = 3
     Font.Height = -13
@@ -1037,9 +1011,9 @@ object Form1: TForm1
   object chkNB: TCheckBox
     AnchorSideTop.Control = chkAFC
     AnchorSideTop.Side = asrBottom
-    Left = 688
+    Left = 693
     Height = 18
-    Top = 454
+    Top = 456
     Width = 82
     BorderSpacing.Top = 2
     Caption = 'Noise Blank'
@@ -1053,11 +1027,11 @@ object Form1: TForm1
   object chkAFC: TCheckBox
     AnchorSideTop.Control = Label39
     AnchorSideTop.Side = asrBottom
-    Left = 688
+    Left = 693
     Height = 18
-    Top = 434
+    Top = 436
     Width = 40
-    BorderSpacing.Top = 3
+    BorderSpacing.Top = 5
     Caption = 'AFC'
     Checked = True
     Font.Height = -11
@@ -1071,11 +1045,11 @@ object Form1: TForm1
   object chkMultiDecode: TCheckBox
     AnchorSideTop.Control = chkNB
     AnchorSideTop.Side = asrBottom
-    Left = 688
+    Left = 693
     Height = 18
-    Top = 474
+    Top = 480
     Width = 84
-    BorderSpacing.Top = 2
+    BorderSpacing.Top = 6
     Caption = 'Enable Multi'
     Checked = True
     Font.Height = -11
@@ -1092,7 +1066,7 @@ object Form1: TForm1
     Left = 752
     Height = 46
     Top = 262
-    Width = 177
+    Width = 175
     AutoFill = True
     BorderSpacing.Top = 2
     ChildSizing.LeftRightSpacing = 6
@@ -1104,14 +1078,14 @@ object Form1: TForm1
     ChildSizing.Layout = cclLeftToRightThenTopToBottom
     ChildSizing.ControlsPerLine = 2
     ClientHeight = 28
-    ClientWidth = 173
+    ClientWidth = 171
     Columns = 2
     TabOrder = 29
     object rbTX1: TRadioButton
       Left = 6
       Height = 16
       Top = 6
-      Width = 83
+      Width = 82
       Caption = 'TX Even'
       Checked = True
       Font.Color = clRed
@@ -1124,10 +1098,10 @@ object Form1: TForm1
       TabStop = True
     end
     object rbTX2: TRadioButton
-      Left = 89
+      Left = 88
       Height = 16
       Top = 6
-      Width = 78
+      Width = 77
       Caption = 'TX Odd'
       Font.Height = -13
       Font.Name = 'Arial'
@@ -1196,11 +1170,11 @@ object Form1: TForm1
     AnchorSideTop.Control = edHisCall
     AnchorSideTop.Side = asrBottom
     AnchorSideBottom.Side = asrBottom
-    Left = 792
+    Left = 800
     Height = 26
-    Top = 474
-    Width = 138
-    BorderSpacing.Top = 9
+    Top = 469
+    Width = 127
+    BorderSpacing.Top = 4
     Caption = 'Log QSO'
     Font.Height = -13
     Font.Name = 'Arial'
@@ -1210,10 +1184,13 @@ object Form1: TForm1
     TabOrder = 33
   end
   object cbEnRB: TCheckBox
-    Left = 183
+    AnchorSideTop.Control = chkMultiDecode
+    AnchorSideTop.Side = asrBottom
+    Left = 693
     Height = 18
-    Top = 208
+    Top = 507
     Width = 67
+    BorderSpacing.Top = 9
     Caption = 'Enable RB'
     Font.Height = -11
     Font.Name = 'Arial'
@@ -1221,10 +1198,13 @@ object Form1: TForm1
     TabOrder = 34
   end
   object cbEnPSKR: TCheckBox
-    Left = 305
+    AnchorSideTop.Control = chkMultiDecode
+    AnchorSideTop.Side = asrBottom
+    Left = 776
     Height = 18
-    Top = 208
+    Top = 507
     Width = 80
+    BorderSpacing.Top = 9
     Caption = 'Enable PSKR'
     Font.Height = -11
     Font.Name = 'Arial'
@@ -1237,7 +1217,7 @@ object Form1: TForm1
     AnchorSideBottom.Side = asrBottom
     Left = 556
     Height = 24
-    Top = 498
+    Top = 501
     Width = 40
     BorderSpacing.Top = 3
     Font.Height = -13
@@ -1293,7 +1273,7 @@ object Form1: TForm1
     AnchorSideBottom.Side = asrBottom
     Left = 624
     Height = 24
-    Top = 498
+    Top = 501
     Width = 40
     BorderSpacing.Top = 3
     Font.Height = -13
@@ -1312,7 +1292,7 @@ object Form1: TForm1
     AnchorSideBottom.Side = asrBottom
     Left = 663
     Height = 24
-    Top = 498
+    Top = 501
     Width = 22
     BorderSpacing.Top = 3
     Font.Height = -13
@@ -1329,9 +1309,9 @@ object Form1: TForm1
     AnchorSideTop.Side = asrBottom
     Left = 624
     Height = 15
-    Top = 480
+    Top = 483
     Width = 48
-    BorderSpacing.Top = 10
+    BorderSpacing.Top = 13
     Caption = 'Multi BW'
     Font.Height = -11
     Font.Name = 'Arial'
@@ -1379,6 +1359,28 @@ object Form1: TForm1
     Caption = 'DT Offset'
     ParentColor = False
     OnDblClick = Label32DblClick
+  end
+  object Label2: TLabel
+    AnchorSideTop.Control = cbEnRB
+    AnchorSideTop.Side = asrBottom
+    Left = 693
+    Height = 17
+    Top = 530
+    Width = 8
+    BorderSpacing.Top = 5
+    Caption = '0'
+    ParentColor = False
+  end
+  object Label7: TLabel
+    AnchorSideTop.Control = cbEnRB
+    AnchorSideTop.Side = asrBottom
+    Left = 776
+    Height = 17
+    Top = 530
+    Width = 8
+    BorderSpacing.Top = 5
+    Caption = '0'
+    ParentColor = False
   end
   object Timer1: TTimer
     Interval = 220
@@ -1821,6 +1823,22 @@ object Form1: TForm1
       end    
       item
         Name = 'LogComment'
+      end    
+      item
+        Name = 'high'
+        Value = '550'
+      end    
+      item
+        Name = 'wide'
+        Value = '935'
+      end    
+      item
+        Name = 'showonce'
+        Value = '0'
+      end    
+      item
+        Name = 'lognotes'
+        Value = '0'
       end>
     FileName = 'station.xml'
     left = 704
