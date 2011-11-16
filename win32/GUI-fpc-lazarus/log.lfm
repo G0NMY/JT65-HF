@@ -15,7 +15,6 @@ object Form2: TForm2
   Font.Name = 'Arial'
   OnCreate = FormCreate
   LCLVersion = '0.9.30.2'
-  Visible = True
   object Label1: TLabel
     Left = 128
     Height = 17
