@@ -59,6 +59,7 @@ type
     cbMultiAutoEnable : TCheckBox ;
     cbRestoreMulti : TCheckBox ;
     cbSaveCSV : TCheckBox ;
+    cbDecodeDivider: TCheckBox;
     cbTXWatchDog : TCheckBox ;
     cbUseAltPTT : TCheckBox ;
     chkEnableAutoSR : TCheckBox ;

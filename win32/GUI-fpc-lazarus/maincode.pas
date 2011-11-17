@@ -114,6 +114,7 @@ type
     Label38: TLabel;
     Label39: TLabel;
     Label4: TLabel;
+    Label40: TLabel;
     Label5 : TLabel ;
     Label50: TLabel;
     Label6: TLabel;
@@ -302,6 +303,7 @@ type
     function  genNormalMessage(const exchange : String; var Msg : String; var err : String; var doQSO : Boolean; const lsiglevel : String) : Boolean;
     function  genSlashedMessage(const exchange : String; var Msg : String; var err : String; var doQSO : Boolean; const lsiglevel : String) : Boolean;
     procedure SaveConfig;
+    procedure updateStatus(i : Integer);
 
   private
     { private declarations }
@@ -1793,6 +1795,7 @@ Begin
      cfg.StoredValue['wide'] := IntToStr(Form1.Width);
      cfg.StoredValue['showonce'] := '1';
      if log.Form2.CheckBox1.Checked then cfg.StoredValue['lognotes'] := '0' else cfg.StoredValue['lognotes'] := '1';
+     if cfgvtwo.Form6.cbDecodeDivider.Checked then cfg.StoredValue['divider'] := 'y' else cfg.StoredValue['divider'] := 'n';
      cfg.Save;
 end;
 
@@ -2037,7 +2040,7 @@ begin
      If Form1.Height < 550 then Form1.Height:=550;
      If (Form1.Width < 935) or (Form1.Width > 935) Then Form1.Width:=935;
      // Scale waterfall size depending upon available form height.
-     If Form1.Height < 660 then waterfall.Height := 145 else waterfall.Height := 180;
+     If Form1.Height < 660 then waterfall.Height := 145 else waterfall.Height := 178;
      // Place Prgress bar position for compact versus expanded layout.
      If Form1.Height > 659 then
      begin
@@ -3686,7 +3689,8 @@ var
 Begin
      Timer1.Enabled := False;
      Timer2.Enabled := False;
-
+     cfgvtwo.Form6.Visible := false;
+     log.Form2.Visible := false;
      kverr := 0;
      while FileExists('KVASD.DAT') do
      begin
@@ -4517,7 +4521,7 @@ Begin
      end;
 
      if Length(cfg.StoredValue['LogComment'])>0 Then log.Form2.edLogComment.Text := cfg.StoredValue['LogComment'];
-
+     if cfg.StoredValue['divider'] = 'y' then cfgvtwo.Form6.cbDecodeDivider.Checked := true else cfgvtwo.Form6.cbDecodeDivider.Checked := false;
      if cfg.StoredValue['version'] <> verHolder.verReturn Then verUpdate := True else verUpdate := False;
 
      if verUpdate Then
@@ -6255,6 +6259,45 @@ Begin
      end;
 End;
 
+procedure TForm1.updateStatus(i : Integer);
+Var
+   foo : String;
+begin
+     If i = 1 Then
+     Begin
+          foo := 'Current Operation:  Initializing';
+          if Form1.Label40.Caption <> foo Then
+          Form1.Label40.Caption := foo;
+     End;
+     If i = 2 then
+     Begin
+          foo := 'Current Operation:  Receiving';
+          if Form1.Label40.Caption <> foo Then
+          Form1.Label40.Caption := foo;
+     End;
+     If i = 3 then
+     Begin
+          foo := 'Current Operation:  Transmitting';
+          if Form1.Label40.Caption <> foo Then
+          Form1.Label40.Caption := foo;
+     End;
+     If i = 4 then
+     Begin
+          foo := 'Current Operation:  Starting Decoder';
+          if Form1.Label40.Caption <> foo Then
+          Form1.Label40.Caption := foo;
+     End;
+     If i = 5 then
+     Begin
+          if d65.glinProg Then
+             foo := 'Current Operation:  Decoding pass ' + IntToStr(d65.gldecoderPass+1)
+          else
+             foo := 'Current Operation:  Idle';
+          if Form1.Label40.Caption <> foo Then
+          Form1.Label40.Caption := foo;
+     End;
+end;
+
 procedure TForm1.processOncePerSecond(st : TSystemTime);
 Var
    foo  : String;
@@ -6367,6 +6410,8 @@ Begin
                   Format('%2.2D',[st.Hour]) + ':' +
                   Format('%2.2D',[st.Minute]) + ':' +
                   Format('%2.2D',[st.Second]) + ' UTC';
+     // Display current action in status panel
+     updateStatus(thisAction);
      // rbc control
      // Check whether to enable/disable chkRBenable
      if not primed then rbcCheck();
@@ -6445,8 +6490,11 @@ Begin
      // Only run this block if decoder thread is inactive.
      If not d65.glinProg and d65.gld65HaveDecodes Then
      Begin
-          // Don't insert the decoder period divder when in compact mode.
-          If Form1.Height > 659 Then ListBox1.Items.Insert(0,'--------------------------------------------------');
+          // Don't insert the decoder period divder when in compact mode or if user doesn't want it.
+          if cfgvtwo.Form6.cbDecodeDivider.Checked Then
+          Begin
+               If Form1.Height > 659 Then ListBox1.Items.Insert(0,'---------------------------------------------');
+          end;
           for i := 0 to 49 do
           Begin
                if (not d65.gld65decodes[i].dtProcessed) And (not d65.gld65decodes[i].dtDisplayed) Then

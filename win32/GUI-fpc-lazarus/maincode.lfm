@@ -26,9 +26,9 @@ object Form1: TForm1
     AnchorSideTop.Side = asrBottom
     Left = 800
     Height = 15
-    Top = 423
+    Top = 425
     Width = 79
-    BorderSpacing.Top = 10
+    BorderSpacing.Top = 4
     Caption = 'TX to Call Sign'
     Font.Height = -11
     Font.Name = 'Arial'
@@ -54,9 +54,9 @@ object Form1: TForm1
     AnchorSideTop.Side = asrBottom
     Left = 556
     Height = 17
-    Top = 313
+    Top = 321
     Width = 173
-    BorderSpacing.Top = 5
+    BorderSpacing.Top = 13
     Caption = 'Call CQ and answer callers'
     Font.Height = -13
     Font.Name = 'Arial'
@@ -69,7 +69,7 @@ object Form1: TForm1
     AnchorSideTop.Side = asrBottom
     Left = 556
     Height = 17
-    Top = 365
+    Top = 373
     Width = 91
     BorderSpacing.Top = 2
     Caption = 'Answering CQ'
@@ -165,9 +165,9 @@ object Form1: TForm1
     AnchorSideTop.Side = asrBottom
     Left = 887
     Height = 15
-    Top = 423
+    Top = 425
     Width = 40
-    BorderSpacing.Top = 10
+    BorderSpacing.Top = 4
     Caption = 'Rpt (-#)'
     Font.Height = -11
     Font.Name = 'Arial'
@@ -180,7 +180,7 @@ object Form1: TForm1
     AnchorSideTop.Side = asrBottom
     Left = 620
     Height = 15
-    Top = 415
+    Top = 423
     Width = 31
     BorderSpacing.Top = 2
     Caption = 'RX DF'
@@ -195,7 +195,7 @@ object Form1: TForm1
     AnchorSideTop.Side = asrBottom
     Left = 556
     Height = 15
-    Top = 415
+    Top = 423
     Width = 31
     BorderSpacing.Top = 2
     Caption = 'TX DF'
@@ -244,7 +244,7 @@ object Form1: TForm1
     Height = 15
     Top = 483
     Width = 55
-    BorderSpacing.Top = 13
+    BorderSpacing.Top = 5
     Caption = 'Single BW'
     Font.Height = -11
     Font.Name = 'Arial'
@@ -255,9 +255,9 @@ object Form1: TForm1
   object Label39: TLabel
     AnchorSideTop.Control = Bevel3
     AnchorSideTop.Side = asrBottom
-    Left = 711
+    Left = 714
     Height = 15
-    Top = 416
+    Top = 424
     Width = 73
     BorderSpacing.Top = 3
     Caption = 'TX DF = RX DF'
@@ -293,7 +293,7 @@ object Form1: TForm1
     AnchorSideTop.Side = asrBottom
     Left = 800
     Height = 24
-    Top = 441
+    Top = 443
     Width = 77
     BorderSpacing.Top = 3
     CharCase = ecUppercase
@@ -327,7 +327,7 @@ object Form1: TForm1
     AnchorSideTop.Side = asrBottom
     Left = 556
     Height = 23
-    Top = 333
+    Top = 341
     Width = 72
     BorderSpacing.Top = 3
     Caption = 'Call CQ'
@@ -341,9 +341,9 @@ object Form1: TForm1
   object buttonAnswerCQ: TButton
     AnchorSideTop.Control = Label15
     AnchorSideTop.Side = asrBottom
-    Left = 556
+    Left = 635
     Height = 23
-    Top = 384
+    Top = 392
     Width = 104
     BorderSpacing.Top = 2
     Caption = 'Answer CQ'
@@ -359,7 +359,7 @@ object Form1: TForm1
     AnchorSideTop.Side = asrBottom
     Left = 635
     Height = 23
-    Top = 333
+    Top = 341
     Width = 104
     BorderSpacing.Top = 3
     Caption = 'Answer Caller'
@@ -375,7 +375,7 @@ object Form1: TForm1
     AnchorSideTop.Side = asrBottom
     Left = 748
     Height = 23
-    Top = 333
+    Top = 341
     Width = 100
     BorderSpacing.Top = 3
     Caption = 'Send RRR'
@@ -389,9 +389,9 @@ object Form1: TForm1
   object buttonAckReport2: TButton
     AnchorSideTop.Control = Label15
     AnchorSideTop.Side = asrBottom
-    Left = 672
+    Left = 748
     Height = 23
-    Top = 384
+    Top = 392
     Width = 100
     BorderSpacing.Top = 2
     Caption = 'Send Report'
@@ -460,7 +460,7 @@ object Form1: TForm1
     AnchorSideTop.Side = asrBottom
     Left = 856
     Height = 74
-    Top = 333
+    Top = 341
     Width = 71
     BorderSpacing.Top = 3
     Caption = 'Send 73'
@@ -881,7 +881,7 @@ object Form1: TForm1
     AnchorSideTop.Side = asrBottom
     Left = 882
     Height = 24
-    Top = 441
+    Top = 443
     Width = 45
     BorderSpacing.Top = 3
     Font.Height = -13
@@ -912,7 +912,7 @@ object Form1: TForm1
     Left = 693
     Height = 17
     Hint = 'If Checked TX and RX DF will always be same.'
-    Top = 415
+    Top = 423
     Width = 18
     BorderSpacing.Top = 2
     Checked = True
@@ -929,7 +929,7 @@ object Form1: TForm1
     AnchorSideTop.Side = asrBottom
     Left = 620
     Height = 22
-    Top = 431
+    Top = 439
     Width = 55
     BorderSpacing.Top = 1
     Font.Height = -11
@@ -947,7 +947,7 @@ object Form1: TForm1
     AnchorSideTop.Side = asrBottom
     Left = 556
     Height = 22
-    Top = 431
+    Top = 439
     Width = 55
     BorderSpacing.Top = 1
     Font.Height = -11
@@ -965,7 +965,7 @@ object Form1: TForm1
     AnchorSideTop.Side = asrBottom
     Left = 620
     Height = 16
-    Top = 454
+    Top = 462
     Width = 55
     BorderSpacing.Top = 1
     Caption = 'Zero'
@@ -980,7 +980,7 @@ object Form1: TForm1
     AnchorSideTop.Side = asrBottom
     Left = 556
     Height = 16
-    Top = 454
+    Top = 462
     Width = 55
     BorderSpacing.Top = 1
     Caption = 'Zero'
@@ -1013,7 +1013,7 @@ object Form1: TForm1
     AnchorSideTop.Side = asrBottom
     Left = 693
     Height = 18
-    Top = 456
+    Top = 464
     Width = 82
     BorderSpacing.Top = 2
     Caption = 'Noise Blank'
@@ -1029,7 +1029,7 @@ object Form1: TForm1
     AnchorSideTop.Side = asrBottom
     Left = 693
     Height = 18
-    Top = 436
+    Top = 444
     Width = 40
     BorderSpacing.Top = 5
     Caption = 'AFC'
@@ -1047,9 +1047,9 @@ object Form1: TForm1
     AnchorSideTop.Side = asrBottom
     Left = 693
     Height = 18
-    Top = 480
+    Top = 486
     Width = 84
-    BorderSpacing.Top = 6
+    BorderSpacing.Top = 4
     Caption = 'Enable Multi'
     Checked = True
     Font.Height = -11
@@ -1172,9 +1172,9 @@ object Form1: TForm1
     AnchorSideBottom.Side = asrBottom
     Left = 800
     Height = 26
-    Top = 469
+    Top = 478
     Width = 127
-    BorderSpacing.Top = 4
+    BorderSpacing.Top = 11
     Caption = 'Log QSO'
     Font.Height = -13
     Font.Name = 'Arial'
@@ -1188,9 +1188,9 @@ object Form1: TForm1
     AnchorSideTop.Side = asrBottom
     Left = 693
     Height = 18
-    Top = 507
+    Top = 509
     Width = 67
-    BorderSpacing.Top = 9
+    BorderSpacing.Top = 5
     Caption = 'Enable RB'
     Font.Height = -11
     Font.Name = 'Arial'
@@ -1202,9 +1202,9 @@ object Form1: TForm1
     AnchorSideTop.Side = asrBottom
     Left = 776
     Height = 18
-    Top = 507
+    Top = 509
     Width = 80
-    BorderSpacing.Top = 9
+    BorderSpacing.Top = 5
     Caption = 'Enable PSKR'
     Font.Height = -11
     Font.Name = 'Arial'
@@ -1254,7 +1254,7 @@ object Form1: TForm1
     AnchorSideTop.Side = asrBottom
     Left = 556
     Height = 3
-    Top = 360
+    Top = 368
     Width = 292
     BorderSpacing.Top = 4
   end
@@ -1263,7 +1263,7 @@ object Form1: TForm1
     AnchorSideTop.Side = asrBottom
     Left = 556
     Height = 3
-    Top = 410
+    Top = 418
     Width = 292
     BorderSpacing.Top = 3
   end
@@ -1311,7 +1311,7 @@ object Form1: TForm1
     Height = 15
     Top = 483
     Width = 48
-    BorderSpacing.Top = 13
+    BorderSpacing.Top = 5
     Caption = 'Multi BW'
     Font.Height = -11
     Font.Name = 'Arial'
@@ -1365,7 +1365,7 @@ object Form1: TForm1
     AnchorSideTop.Side = asrBottom
     Left = 693
     Height = 17
-    Top = 530
+    Top = 532
     Width = 8
     BorderSpacing.Top = 5
     Caption = '0'
@@ -1376,7 +1376,7 @@ object Form1: TForm1
     AnchorSideTop.Side = asrBottom
     Left = 776
     Height = 17
-    Top = 530
+    Top = 532
     Width = 8
     BorderSpacing.Top = 5
     Caption = '0'
@@ -1439,11 +1439,24 @@ object Form1: TForm1
     AnchorSideTop.Side = asrBottom
     Left = 582
     Height = 17
-    Top = 530
+    Top = 532
     Width = 104
     BorderSpacing.Top = 5
     Caption = 'RB/PSKR Counts'
     ParentColor = False
+  end
+  object Label40: TLabel
+    AnchorSideTop.Side = asrBottom
+    Left = 177
+    Height = 19
+    Top = 204
+    Width = 252
+    Caption = 'Current Operation:  Decoding pass '
+    Font.Height = -15
+    Font.Name = 'Arial'
+    Font.Style = [fsBold]
+    ParentColor = False
+    ParentFont = False
   end
   object Timer1: TTimer
     Interval = 220
@@ -1902,6 +1915,10 @@ object Form1: TForm1
       item
         Name = 'lognotes'
         Value = '0'
+      end    
+      item
+        Name = 'divider'
+        Value = 'y'
       end>
     FileName = 'station.xml'
     left = 704
