@@ -30,9 +30,8 @@ uses
   Classes, SysUtils, LResources, Forms, Controls, Graphics, Dialogs, FileUtil,
   StdCtrls, CTypes, StrUtils, Math, portaudio, ExtCtrls, ComCtrls, Spin,
   DateUtils, encode65, globalData, XMLPropStorage, adc, waterfall, dac, ClipBrd,
-  dlog, cfgvtwo, guiConfig, verHolder, Menus, synaser, log, synautil, d65,
-  spectrum, unix, about, spot, valobject, lconvencoding, lclintf, DBGrids,
-  DbCtrls, types, BufDataset, db, dbf;
+  cfgvtwo, guiConfig, verHolder, Menus, synaser, log, synautil, d65,
+  spectrum, unix, about, spot, valobject, lconvencoding, lclintf;
 
 Const
   {$IFDEF WIN32}
@@ -52,6 +51,9 @@ type
     Bevel1 : TBevel;
     Bevel2 : TBevel;
     Bevel3 : TBevel;
+    Bevel4: TBevel;
+    Bevel5: TBevel;
+    Bevel6: TBevel;
     btnHaltTx: TButton;
     btnEngageTx: TButton;
     btnDefaults: TButton;
@@ -74,14 +76,6 @@ type
     chkEnTX: TCheckBox;
     chkMultiDecode: TCheckBox;
     chkNB: TCheckBox;
-    Datasource1: TDatasource;
-    Dbf1: TDbf;
-    Dbf1Callsign1: TStringField;
-    Dbf1Count1: TLongintField;
-    Dbf1First1: TDateTimeField;
-    Dbf1id1: TAutoIncField;
-    Dbf1Last1: TDateTimeField;
-    DBGrid1: TDBGrid;
     edFreeText: TEdit;
     Edit2: TEdit;
     Edit3 : TEdit;
@@ -101,10 +95,8 @@ type
     Label16: TLabel;
     Label17: TLabel;
     Label18 : TLabel;
-    Label2: TLabel;
     Label20: TLabel;
     Label22: TLabel;
-    Label23: TLabel;
     Label24: TLabel;
     Label26: TLabel;
     Label27: TLabel;
@@ -508,7 +500,6 @@ begin
                     sleep(100);
                     globalData.rbLoggedIn := rb.loginRB;
                     sleep(100);
-                    //dlog.fileDebug('RB QSY request.');
                end;
                rb.myQRG  := eQRG;
                // Set status for RB/PSKR use
@@ -517,21 +508,18 @@ begin
                if (rb.useRB) and (not rb.rbOn) and (not rb.busy) then
                begin
                     globalData.rbLoggedIn := rb.loginRB;
-                    //dlog.fileDebug('RB login request.');
                     sleep(100);
                end;
                // Check to see if I need a logout cycle
                if (not rb.useRB) and (rb.rbOn) and (not rb.busy) then
                begin
                     globalData.rbLoggedIn := rb.logoutRB;
-                    //dlog.fileDebug('RB logout request.');
                     sleep(100);
                end;
                if (rbcPing) And (not rb.busy) Then
                Begin
                     globalData.rbLoggedIn := rb.loginRB;
                     rbcPing := False;
-                    //dlog.fileDebug('Refreshed RB login.');
                     sleep(100);
                end;
 
@@ -566,7 +554,6 @@ begin
                d65doDecodePass := False;
           End;
           Except
-             dlog.fileDebug('Exception in decoder thread');
              if reDecode then reDecode := False;
           end;
           kverr := 0;
@@ -630,7 +617,6 @@ Begin
              // Close the file
              CloseFile(logFile);
           except
-             dlog.fileDebug('Exception in write csv log');
           end;
      end;
 end;
@@ -688,7 +674,6 @@ begin
              end;
              catInProgress := False;
           except
-             dlog.fileDebug('Exception in rig thread');
              globalData.gqrg := 0.0;
              globalData.iqrg := 0;
              globalData.strqrg := '0';
@@ -751,7 +736,6 @@ Begin
                   mnpttSerial.Config(9600,8,'N',0,false,true);
                   mnpttOpened := True;
                except
-                  dlog.fileDebug('PTT Port [' + mnnport + '] failed to key up.');
                end;
           End
           Else
@@ -766,7 +750,6 @@ Begin
                        mnpttSerial.Config(9600,8,'N',0,false,true);
                        mnpttOpened := True;
                     Except
-                       dlog.fileDebug('PTT Port [COM' + IntToStr(np) + '] failed to key up.');
                     End;
                End
                Else
@@ -796,11 +779,8 @@ Var
 Begin
      if not d65.glinprog Then
      Begin
-          if cfgvtwo.Form6.chkNoOptFFT.Checked Then
-          Begin
-               d65.glfftFWisdom := 0;
-               d65.glfftSWisdom := 0;
-          End;
+          d65.glfftFWisdom := 0;
+          d65.glfftSWisdom := 0;
           bStart := 0;
           bEnd := 533504;
           for i := bStart to bEnd do
@@ -1428,7 +1408,7 @@ Begin
      cfg.StoredValue['usrMsg17'] := cfgvtwo.Form6.edUserMsg20.Text;
      if Form1.cbSmooth.Checked Then cfg.StoredValue['smooth'] := 'on' else cfg.StoredValue['smooth'] := 'off';
      if cfgvtwo.Form6.cbRestoreMulti.Checked Then cfg.StoredValue['restoreMulti'] := 'on' else cfg.StoredValue['restoreMulti'] := 'off';
-     if cfgvtwo.Form6.chkNoOptFFT.Checked Then cfg.StoredValue['optFFT'] := 'off' else cfg.StoredValue['optFFT'] := 'on';
+     cfg.StoredValue['optFFT'] := 'off';
      cfg.StoredValue['useAltPTT'] := 'yes';
      cfg.StoredValue['useHRDPTT'] := 'no';
      cfg.StoredValue['specVGain'] := IntToStr(spinGain.Value);
@@ -1455,6 +1435,8 @@ Begin
      cfg.StoredValue['autoQSYQRG3'] := '';
      cfg.StoredValue['autoQSYQRG4'] := '';
      cfg.StoredValue['autoQSYQRG5'] := '';
+     cfg.StoredValue['high'] := IntToStr(Form1.Height);
+     cfg.StoredValue['wide'] := IntToStr(Form1.Width);
      if length(log.Form2.edLogComment.Text)>0 Then cfg.StoredValue['LogComment'] := log.Form2.edLogComment.Text else cfg.StoredValue['LogComment'] := '';
      if log.Form2.cbXLog.Checked Then cfg.StoredValue['directXLog'] := 'y' else cfg.StoredValue['directXLog'] := 'n';
      cfg.Save;
@@ -1463,7 +1445,7 @@ end;
 procedure TForm1.FormClose(Sender: TObject; var CloseAction: TCloseAction);
 var
    termcount : Integer;
-   foo          : String;
+   //foo          : String;
    kverr     : Integer;
 begin
      Form1.Timer1.Enabled := False;
@@ -1471,7 +1453,7 @@ begin
      if CloseAction = caFree Then
      Begin
           saveConfig;
-          Dbf1.Close;
+          //Dbf1.Close;
           kverr := 0;
           while FileExists('kvasd.dat') do
           begin
@@ -1492,7 +1474,7 @@ begin
                inc(termcount);
                if termcount > 9 then break;
           end;
-          portaudio.Pa_Terminate();
+          //portaudio.Pa_Terminate();
      End;
 end;
 
@@ -1595,7 +1577,7 @@ end;
 
 procedure TForm1.FormResize(Sender: TObject);
 begin
-     If Self.Height > 760 Then lbRawDecoder.Visible := true else lbRawDecoder.Visible := False;
+     If Self.Height > 670 Then lbRawDecoder.Visible := true else lbRawDecoder.Visible := False;
 end;
 
 procedure TForm1.Label17DblClick(Sender: TObject);
@@ -2546,7 +2528,7 @@ begin
      lineMyCall := False;
      if Index > -1 Then
      Begin
-          if index = Form1.ListBox1.ItemIndex Then
+          if (index = Form1.ListBox1.ItemIndex) and globalData.hilitehack Then
           begin
                foo := Form1.ListBox1.Items[Index];
                myBrush := TBrush.Create;
@@ -2704,11 +2686,8 @@ begin
      Begin
           if not d65.glinprog Then
           Begin
-               if cfgvtwo.Form6.chkNoOptFFT.Checked Then
-               Begin
-                    d65.glfftFWisdom := 0;
-                    d65.glfftSWisdom := 0;
-               End;
+               d65.glfftFWisdom := 0;
+               d65.glfftSWisdom := 0;
                bStart := 0;
                bEnd := 533504;
                for i := bStart to bEnd do
@@ -2869,6 +2848,7 @@ Begin
           // Exchange
           rpt := rpt + TrimLeft(TrimRight(d65.gld65decodes[i].dtDecoded));
           csvstr := csvstr + '"' + d65.gld65decodes[i].dtDecoded + '","65A"';
+          writeLn('# ' + csvstr);
           // csvstr now contains a possible report to file if user wishes.
           // Do actual display
           Form1.ListBox1.Items.Insert(1,rpt);
@@ -3230,13 +3210,13 @@ begin
      // Update form title with rb info.
      If cbEnRB.Checked Then
      Begin
-          foo := 'JT65-HF Version ' + verHolder.verReturn + '  [RB Enabled, ';
+          foo := 'JT65-HF Version ' + verHolder.verReturn + ' DEBUG VERSION  [RB Enabled, ';
           If globalData.rbLoggedIn Then foo := foo + 'logged in.  QRG = ' + Form1.editManQRG.Text + ' KHz]' Else foo := foo + 'not logged in.  QRG = ' + Form1.editManQRG.Text + ' KHz]';
           foo := foo + ' [ ' + globalData.fullcall + ' QRV ]';
      End
      Else
      Begin
-          foo := 'JT65-HF Version ' + verHolder.verReturn + '  [ ' + globalData.fullcall + ' QRV ]';
+          foo := 'JT65-HF Version ' + verHolder.verReturn + ' DEBUG VERSION  [ ' + globalData.fullcall + ' QRV ]';
      End;
      if Form1.Caption <> foo Then Form1.Caption := foo;
 end;
@@ -3252,14 +3232,16 @@ var
    vstr                   : PChar;
    st                     : TSYSTEMTIME;
    fname                  : String;
-   verUpdate, cont, tbool : Boolean;
+   verUpdate, cont        : Boolean;
    havepulsei, havepulseo : Boolean;
    ain, aout, din, dout   : Integer;
-   ifoo                   : Integer;
 Begin
      Timer1.Enabled := False;
      Timer2.Enabled := False;
-
+     cfgvtwo.Form6.Visible := False;
+     log.Form2.Visible := False;
+     writeln('Entering Initializer Code');
+     writeln('');
      kverr := 0;
      while FileExists('kvasd.dat') do
      begin
@@ -3276,7 +3258,6 @@ Begin
           Halt;
      End;
      if cfgRecover then ShowMessage('Configuration file erased due to unrecoverable error.  Please reconfigure.');
-     dlog.fileDebug('Entering initializer code.');
      // Check dll version.
      vstr   := StrAlloc(7);
      vint := 0;
@@ -3284,24 +3265,24 @@ Begin
      ver(@vint, vstr);
      if vint <> verHolder.dllReturn Then showMessage('wsjt.dll incorrect version.  Program halted.');
      if vint <> verHolder.dllReturn Then halt;
-     dlog.fileDebug('JT65.dll version check OK.');
+     writeln('Shared Library version check is good.');
 
      // Setup internal database
-     DBGrid1.Enabled := False;
-     DataSource1.Enabled := False;
-     Dbf1.Active := False;
-     DBGrid1.Clear;
-     Dbf1.FilePathFull := GetAppConfigDir(false); //Directory where all .dbf files will be stored
-     Dbf1.TableLevel := 7; //Visual dBase VII
-     Dbf1.TableName := 'jt65hf.dbf'; // note: is the .dbf really required?
-     Dbf1.Exclusive := True;
-     Dbf1.Open;
-     Dbf1.Active := true;
-     DataSource1.DataSet := Dbf1;
-     DataSource1.Enabled := True;
-     DBGrid1.Enabled := True;
-     DBGrid1.DataSource.DataSet := Dbf1;
-     DBGrid1.Refresh;
+     //DBGrid1.Enabled := False;
+     //DataSource1.Enabled := False;
+     //Dbf1.Active := False;
+     //DBGrid1.Clear;
+     //Dbf1.FilePathFull := GetAppConfigDir(false); //Directory where all .dbf files will be stored
+     //Dbf1.TableLevel := 7; //Visual dBase VII
+     //Dbf1.TableName := 'jt65hf.dbf'; // note: is the .dbf really required?
+     //Dbf1.Exclusive := True;
+     //Dbf1.Open;
+     //Dbf1.Active := true;
+     //DataSource1.DataSet := Dbf1;
+     //DataSource1.Enabled := True;
+     //DBGrid1.Enabled := True;
+     //DBGrid1.DataSource.DataSet := Dbf1;
+     //DBGrid1.Refresh;
      // Uncomment to dump database at program start.
      //rb.dbToCSV(rb.logdir + 'spots.csv');
 
@@ -3319,6 +3300,7 @@ Begin
      Form1.Caption := 'JT65-HF V' + verHolder.verReturn + ' (c) 2009...2011 W6CQZ.  Free to use/modify/distribute under GPL 2.0 License.';
      // See comments in procedure code to understand why this is a MUST to use.
      DisableFloatingPointExceptions();
+     writeln('Setup floating point exception mask is good.');
      //
      // Initialize various form items to startup values
      //
@@ -3344,7 +3326,7 @@ Begin
      // Init PA.  If this doesn't work there's no reason to continue.
      PaResult := portaudio.Pa_Initialize();
      If PaResult <> 0 Then ShowMessage('Fatal Error.  Could not initialize portaudio.');
-     If PaResult = 0 Then dlog.fileDebug('Portaudio initialized OK.');
+     If PaResult = 0 Then writeln('PortAudio initialized.');
      // Now I need to populate the Sound In/Out pulldowns.  First I'm going to get
      // a list of the portaudio API descriptions.  For now I'm going to stick with
      // the default windows interface.
@@ -3416,17 +3398,16 @@ Begin
                ShowMessage('FATAL:  Pulse Audio device not found.  Program closing.');
                halt;
           end;
-          dlog.fileDebug('Audio Devices found.');
      End
      Else
      Begin
           // This is yet another fatal error as portaudio can't function if it
           // can't provide a default API value >= 0.  TODO Handle this should it
           // happen.
-          dlog.fileDebug('FATAL:  Portaudio DID NOT INIT.  No defapi found.');
           ShowMessage('FATAL:  Portaudio DID NOT initialize.  No default API found, program closing.');
           halt;
      End;
+     writeln('PortAudio configured.');
 
      fname := GetAppConfigDir(False)+'station1.xml';
      {$IFDEF win32}
@@ -3437,6 +3418,7 @@ Begin
        if not fileExists(fname) Then
      {$ENDIF}
      Begin
+          writeln('No configuration present -- starting new one.');
           cfgvtwo.glmustConfig := True;
           // Setup default sane value for config form.
           cfgvtwo.Form6.edMyCall.Clear;
@@ -3459,7 +3441,6 @@ Begin
           cfgvtwo.glcallColor := clRed;
           cfgvtwo.glqsoColor := clSilver;
           Form1.spinGain.Value := 0;
-          cfgvtwo.Form6.chkNoOptFFT.Checked := False;
           cfgvtwo.glcatBy := 'none';
           Form1.spinTXCF.Value := 0;
           Form1.spinDecoderCF.Value := 0;
@@ -3488,9 +3469,14 @@ Begin
           until not cfgvtwo.glmustConfig;
           cfgvtwo.Form6.Visible := False;
           saveConfig;
-          dlog.fileDebug('Ran initial configuration.');
      End;
      // Read configuration data from XMLpropstorage (cfg.)
+     writeln('Reading configuration.');
+     // Restore main window size
+     tstint := 0;
+     if TryStrToInt(cfg.storedValue['high'],tstint) Then Form1.Height := tstint;
+     tstint := 0;
+     if TryStrToInt(cfg.StoredValue['wide'],tstint) Then Form1.Width := tstint;
      cfgvtwo.glmycall := cfg.StoredValue['call'];
      tstint := 0;
      if TryStrToInt(cfg.storedValue['pfx'],tstint) Then cfgvtwo.Form6.comboPrefix.ItemIndex := tstint else cfgvtwo.Form6.comboPrefix.ItemIndex := 0;
@@ -3753,7 +3739,6 @@ Begin
      if cfg.StoredValue['pskrCall'] = '' Then cfgvtwo.Form6.editPSKRCall.Text := cfgvtwo.Form6.edMyCall.Text else cfgvtwo.Form6.editPSKRCall.Text := cfg.StoredValue['pskrCall'];
      if cfg.StoredValue['useRB'] = 'yes' Then cbEnRB.Checked := True else cbEnRB.Checked := False;
      cfgvtwo.Form6.editPSKRAntenna.Text := cfg.StoredValue['pskrAntenna'];
-     if cfg.StoredValue['optFFT'] = 'on' Then cfgvtwo.Form6.chkNoOptFFT.Checked := False else cfgvtwo.Form6.chkNoOptFFT.Checked := True;
 
      cfgvtwo.Form6.edUserQRG1.Text := cfg.StoredValue['userQRG1'];
      cfgvtwo.Form6.edUserQRG2.Text := cfg.StoredValue['userQRG2'];
@@ -3862,8 +3847,8 @@ Begin
           until not cfgvtwo.glmustConfig;
           cfg.StoredValue['version'] := verHolder.verReturn;
           cfg.Save;
-          dlog.fileDebug('Ran configuration update.');
      End;
+     writeln('Configuration complete.');
 
      globalData.mtext := '/Multi%20On%202K%20BW';
 
@@ -3880,20 +3865,18 @@ Begin
      //          // decode65 for measure.
      //          d65.glfftFWisdom := 1;  // Causes measure wisdom to be loaded on first pass of decode65
      //          d65.glfftSWisdom := 11; // uses measure wisdom (no load/no save) on != first pass of decode65
-     //          dlog.fileDebug('Imported FFTW3 Wisdom.');
      //     End
      //     Else
      //     Begin
-     //          //dlog.fileDebug('FFT Wisdom missing... you should run optfft');
      //     End;
      //End
      //Else
      //Begin
      //     d65.glfftFWisdom := 0;
      //     d65.glfftSWisdom := 0;
-     //     dlog.fileDebug('Running without optimal FFT enabled by user request.');
      //End;
 
+     writeln('Opening audio devices.');
      // These need to be pulse audio device ID for in/out.
      // Call audio setup
      cont := False;
@@ -3937,6 +3920,7 @@ Begin
                halt;
           end;
      end;
+     writeln('Opened audio devices.');
 
      // Check callsign and grid for validity.
      cont := False;
@@ -3979,6 +3963,7 @@ Begin
                showmessage(foo);
           end;
      end;
+     writeln('Callsign and Grid check passed.');
      // Create and initialize TWaterfallControl
      wf := TWaterfallControl.Create(Self);
      if verholder.guiSize = 'Normal' then wf.Height := 180;
@@ -3989,19 +3974,25 @@ Begin
      wf.Parent := Self;
      wf.OnMouseDown := waterfallMouseDown;
      wf.DoubleBuffered := True;
+     writeln('Waterfall initialized and active.');
 
      // Create the decoder thread with param False so it starts.
      d65.glinProg := False;
      decoderThread := decodeThread.Create(False);
+     writeln('Decoder thread initialized and active.');
 
      // Create the CAT control thread with param False so it starts.
      rigThread := catThread.Create(False);
+     writeln('CAT thread initialized and active.');
 
      // Create the RB thread with param False so it starts.
      cfgvtwo.glrbcLogin := False;
      cfgvtwo.glrbcLogout := False;
      rbcPing := False;
      rbThread := rbcThread.Create(False);
+     writeln('RB thread initialized and active.');
+     writeln('Initializer code complete entering main loop.');
+
 End;
 
 function TForm1.SetAudio(auin : Integer; auout : Integer) : Boolean;
@@ -4011,7 +4002,6 @@ Begin
      ingood  := false;
      outgood := false;
      // Setup input device
-     dlog.fileDebug('Setting up ADC/DAC.  ADC:  ' + IntToStr(auin) + ' DAC:  ' + IntToStr(auout));
      // Set parameters before call to start
      // Input
      paInParams.channelCount := 2;
@@ -5461,6 +5451,16 @@ Begin
                     d65.gld65decodes[i].dtType      := '';
                end;
           End;
+          // Display and errors from decoder thread.
+          for i := 0 to 99 do
+          begin
+               if not d65.gld65errrors[i].edisplayed then
+               begin
+                    writeLn(d65.gld65errrors[i].emessage);
+                    d65.gld65errrors[i].edisplayed:=true;
+                    d65.gld65errrors[i].emessage:='';
+               end;
+          end;
           d65.gld65HaveDecodes := False;
           {TODO Pick up raw decodes for main form display}
           if d65.glrawOut.Count > 0 Then
@@ -5542,7 +5542,6 @@ begin
           initializerCode();
 
           runOnce := False;
-          dlog.fileDebug('Initializer code complete.  Entering main timing loop.');
           //ShowMessage('Initializer code completed entering main execution loop...');
 
           Form1.Timer1.Enabled := True;
@@ -5763,5 +5762,7 @@ initialization
   // Create spotting class object.
   rb   := spot.TSpot.create(); // Used even if spotting is disabled
   mval := valobject.TValidator.create(); // This creates a access point to validation routines needed for new RB code
+  {TODO Make the following a variable set as needed, not hardcoded. }
+  globaldata.hilitehack := true;
 end.
 

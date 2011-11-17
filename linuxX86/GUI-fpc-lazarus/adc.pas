@@ -25,7 +25,7 @@ unit adc;
 interface
 
 uses
-  Classes, SysUtils, PortAudio, globalData, spectrum, math, CTypes, dlog;
+  Classes, SysUtils, PortAudio, globalData, spectrum, math, CTypes;
 
   function adcCallback(input: Pointer; output: Pointer; frameCount: Longword;
                        timeInfo: PPaStreamCallbackTimeInfo;
@@ -64,7 +64,6 @@ Var
 Begin
      // Set ADC entry timestamp
      if adcRunning Then inc(adcECount);
-     if adcRunning Then dlog.fileDebug('ADC overlap. ECount = ' + IntToStr(adcECount));
      adcRunning := True;
      // Move paAudio Buffer to d65rxBuffer (d65rxBufferIdx ranges 0..661503)
      inptr := input;

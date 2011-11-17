@@ -27,7 +27,7 @@ unit waterfall;
 interface
 
 uses
-  Classes, SysUtils, Controls, Graphics, LCLType, globalData, dlog;
+  Classes, SysUtils, Controls, Graphics, LCLType, globalData;
 
 type
   TWaterfallControl = class(TCustomControl)
@@ -63,11 +63,10 @@ implementation
              Bitmap.Free;
           Except
              // Do nothing for now...
-             dlog.fileDebug('Exception raised in waterfall unit');
              inherited Paint;
              Bitmap.Free;
           End;
      End;
   end;
 end.
-
+

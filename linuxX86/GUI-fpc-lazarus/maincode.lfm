@@ -1,19 +1,18 @@
 object Form1: TForm1
-  Left = 0
-  Height = 690
+  Left = 10
+  Height = 590
   Top = 24
   Width = 935
   HorzScrollBar.Visible = False
   VertScrollBar.Visible = False
   ActiveControl = btnReDecode
-  Anchors = [akTop, akLeft, akRight]
   BorderIcons = [biSystemMenu, biMinimize]
   Caption = 'JT65-HF'
-  ClientHeight = 663
+  ClientHeight = 563
   ClientWidth = 935
   Constraints.MaxHeight = 900
   Constraints.MaxWidth = 1400
-  Constraints.MinHeight = 690
+  Constraints.MinHeight = 590
   Constraints.MinWidth = 935
   Font.Height = -13
   Font.Name = 'arial [monotype]'
@@ -26,9 +25,9 @@ object Form1: TForm1
   LCLVersion = '0.9.30'
   Visible = True
   object Label6: TLabel
-    Left = 790
+    Left = 791
     Height = 14
-    Top = 472
+    Top = 447
     Width = 81
     Caption = 'TX to Call Sign'
     Font.Height = -10
@@ -40,7 +39,7 @@ object Form1: TForm1
   object Label21: TLabel
     Left = 6
     Height = 15
-    Top = 283
+    Top = 313
     Width = 477
     Caption = 'Double click an entry in list to begin a QSO.  Right click copies to clipboard.'
     Font.Color = clRed
@@ -53,7 +52,7 @@ object Form1: TForm1
   object Label3: TLabel
     Left = 557
     Height = 15
-    Top = 361
+    Top = 352
     Width = 165
     Caption = 'Call CQ and answer callers'
     Font.Height = -11
@@ -65,7 +64,7 @@ object Form1: TForm1
   object Label15: TLabel
     Left = 557
     Height = 15
-    Top = 416
+    Top = 397
     Width = 88
     Caption = 'Answering CQ'
     Font.Height = -11
@@ -170,7 +169,7 @@ object Form1: TForm1
   object Label36: TLabel
     Left = 884
     Height = 14
-    Top = 472
+    Top = 447
     Width = 46
     Caption = 'Rpt (-#)'
     Font.Height = -10
@@ -182,7 +181,7 @@ object Form1: TForm1
   object Label26: TLabel
     Left = 617
     Height = 15
-    Top = 499
+    Top = 470
     Width = 38
     Caption = 'RX DF'
     Font.Height = -11
@@ -194,7 +193,7 @@ object Form1: TForm1
   object Label37: TLabel
     Left = 557
     Height = 15
-    Top = 499
+    Top = 470
     Width = 38
     Caption = 'TX DF'
     Font.Height = -11
@@ -232,9 +231,8 @@ object Form1: TForm1
   object Label13: TLabel
     Left = 557
     Height = 14
-    Top = 570
+    Top = 528
     Width = 56
-    Anchors = [akLeft, akBottom]
     Caption = 'Single BW'
     Font.Height = -10
     Font.Name = 'arial [monotype]'
@@ -245,7 +243,7 @@ object Form1: TForm1
   object Label39: TLabel
     Left = 581
     Height = 14
-    Top = 477
+    Top = 452
     Width = 82
     Caption = 'TX DF = RX DF'
     Font.Color = clRed
@@ -256,39 +254,13 @@ object Form1: TForm1
     ParentFont = False
     OnClick = Label39Click
   end
-  object Label12: TLabel
-    Left = 815
-    Height = 15
-    Top = 587
-    Width = 83
-    Anchors = [akLeft, akBottom]
-    Caption = 'Dial QRG KHz'
-    Font.Height = -11
-    Font.Name = 'arial [monotype]'
-    Font.Style = [fsBold]
-    ParentColor = False
-    ParentFont = False
-  end
-  object Label23: TLabel
-    Left = 799
-    Height = 15
-    Top = 647
-    Width = 114
-    Anchors = [akLeft, akBottom]
-    Caption = 'Right Click for Menu'
-    Font.Height = -11
-    Font.Name = 'arial [monotype]'
-    ParentColor = False
-    ParentFont = False
-    PopupMenu = popupQRG
-  end
   object Label30: TLabel
-    Left = 498
+    AnchorSideBottom.Side = asrBottom
+    Left = 790
     Height = 18
     Hint = 'Double click to disable RB'
-    Top = 638
+    Top = 538
     Width = 10
-    Anchors = [akLeft, akBottom]
     Caption = '0'
     Font.Height = -13
     Font.Name = 'arial [monotype]'
@@ -297,24 +269,11 @@ object Form1: TForm1
     ParentFont = False
     OnDblClick = Label30DblClick
   end
-  object Label2: TLabel
-    Left = 392
-    Height = 18
-    Top = 638
-    Width = 96
-    Anchors = [akLeft, akBottom]
-    Caption = 'Reports Sent'
-    Font.Height = -13
-    Font.Name = 'arial [monotype]'
-    Font.Style = [fsBold]
-    ParentColor = False
-    ParentFont = False
-  end
   object edMsg: TEdit
     Left = 557
     Height = 24
     Hint = 'Double click to clear.'
-    Top = 326
+    Top = 322
     Width = 191
     CharCase = ecUppercase
     Font.Height = -11
@@ -328,10 +287,10 @@ object Form1: TForm1
     TabOrder = 0
   end
   object edHisCall: TEdit
-    Left = 785
+    Left = 791
     Height = 24
-    Top = 491
-    Width = 93
+    Top = 461
+    Width = 83
     CharCase = ecUppercase
     Font.Height = -11
     Font.Name = 'arial [monotype]'
@@ -361,7 +320,7 @@ object Form1: TForm1
   object buttonCQ: TButton
     Left = 557
     Height = 23
-    Top = 380
+    Top = 368
     Width = 72
     Caption = 'Call CQ'
     Font.Height = -11
@@ -374,7 +333,7 @@ object Form1: TForm1
   object buttonAnswerCQ: TButton
     Left = 557
     Height = 23
-    Top = 436
+    Top = 413
     Width = 104
     Caption = 'Answer CQ'
     Font.Height = -11
@@ -387,7 +346,7 @@ object Form1: TForm1
   object buttonSendReport: TButton
     Left = 636
     Height = 23
-    Top = 380
+    Top = 368
     Width = 104
     Caption = 'Answer Caller'
     Font.Height = -11
@@ -400,7 +359,7 @@ object Form1: TForm1
   object buttonAckReport1: TButton
     Left = 749
     Height = 23
-    Top = 380
+    Top = 368
     Width = 100
     Caption = 'Send RRR'
     Font.Height = -11
@@ -413,7 +372,7 @@ object Form1: TForm1
   object buttonAckReport2: TButton
     Left = 673
     Height = 23
-    Top = 436
+    Top = 413
     Width = 100
     Caption = 'Send Report'
     Font.Height = -11
@@ -424,7 +383,7 @@ object Form1: TForm1
     TabOrder = 7
   end
   object btnHaltTx: TButton
-    Left = 858
+    Left = 860
     Height = 32
     Top = 272
     Width = 70
@@ -452,11 +411,11 @@ object Form1: TForm1
     TabOrder = 9
   end
   object buttonClearList: TButton
-    Left = 5
+    AnchorSideBottom.Side = asrBottom
+    Left = 6
     Height = 25
-    Top = 637
+    Top = 284
     Width = 108
-    Anchors = [akLeft, akBottom]
     Caption = 'Clear Decodes'
     Font.Height = -11
     Font.Name = 'arial [monotype]'
@@ -466,9 +425,9 @@ object Form1: TForm1
     TabOrder = 10
   end
   object buttonEndQSO2: TButton
-    Left = 857
-    Height = 110
-    Top = 355
+    Left = 859
+    Height = 84
+    Top = 352
     Width = 71
     Caption = 'Send 73'
     Font.Height = -11
@@ -517,9 +476,9 @@ object Form1: TForm1
     ParentFont = False
     TabOrder = 14
     object Label1: TLabel
-      Left = 6
+      Left = 5
       Height = 37
-      Top = 234
+      Top = 156
       Width = 151
       Caption = '16:10:05'
       Font.Height = -30
@@ -529,12 +488,12 @@ object Form1: TForm1
       ParentFont = False
     end
     object Label9: TLabel
-      Left = 23
-      Height = 20
-      Top = 213
-      Width = 116
+      Left = 14
+      Height = 24
+      Top = 125
+      Width = 136
       Caption = '2009-Mar-30'
-      Font.Height = -16
+      Font.Height = -19
       Font.Name = 'arial [monotype]'
       Font.Style = [fsBold]
       ParentColor = False
@@ -607,13 +566,55 @@ object Form1: TForm1
       Smooth = True
       TabOrder = 3
     end
+    object editManQRG: TEdit
+      Left = 4
+      Height = 40
+      Top = 230
+      Width = 156
+      Alignment = taCenter
+      Anchors = []
+      Font.Height = -25
+      Font.Name = 'arial [monotype]'
+      Font.Style = [fsBold]
+      OnChange = editManQRGChange
+      OnKeyPress = editManQRGKeyPress
+      ParentFont = False
+      PopupMenu = popupQRG
+      TabOrder = 4
+      Text = '0'
+    end
+    object Label12: TLabel
+      Left = 24
+      Height = 19
+      Top = 209
+      Width = 114
+      Anchors = []
+      Caption = 'Dial QRG KHz'
+      Font.Height = -15
+      Font.Name = 'arial [monotype]'
+      Font.Style = [fsBold]
+      ParentColor = False
+      ParentFont = False
+    end
+    object Bevel4: TBevel
+      Left = 1
+      Height = 3
+      Top = 112
+      Width = 160
+    end
+    object Bevel5: TBevel
+      Left = 1
+      Height = 3
+      Top = 200
+      Width = 160
+    end
   end
   object GroupBox4: TGroupBox
     Left = 177
-    Height = 57
-    Top = 224
+    Height = 50
+    Top = 231
     Width = 376
-    ClientHeight = 53
+    ClientHeight = 46
     ClientWidth = 372
     Font.Height = -11
     Font.Name = 'arial [monotype]'
@@ -622,7 +623,7 @@ object Form1: TForm1
     object Label14: TLabel
       Left = 2
       Height = 14
-      Top = 3
+      Top = 1
       Width = 58
       Caption = 'Color-map'
       Font.Height = -10
@@ -634,7 +635,7 @@ object Form1: TForm1
     object Label20: TLabel
       Left = 207
       Height = 14
-      Top = 3
+      Top = 1
       Width = 36
       Caption = 'Speed'
       Font.Height = -10
@@ -647,7 +648,7 @@ object Form1: TForm1
       Left = 69
       Height = 14
       Hint = 'Double Click Label to Set Center'
-      Top = 3
+      Top = 1
       Width = 62
       Caption = 'Brightness'
       Font.Height = -10
@@ -661,7 +662,7 @@ object Form1: TForm1
       Left = 146
       Height = 14
       Hint = 'Double Click Label to Set Center'
-      Top = 3
+      Top = 1
       Width = 50
       Caption = 'Contrast'
       Font.Height = -10
@@ -675,7 +676,7 @@ object Form1: TForm1
       Left = 253
       Height = 14
       Hint = 'Double Click For 0'
-      Top = 3
+      Top = 1
       Width = 26
       Caption = 'Gain'
       Font.Height = -10
@@ -688,7 +689,7 @@ object Form1: TForm1
     object cbSpecPal: TComboBox
       Left = 2
       Height = 27
-      Top = 22
+      Top = 18
       Width = 66
       Font.Height = -10
       Font.Name = 'arial [monotype]'
@@ -708,8 +709,8 @@ object Form1: TForm1
     end
     object tbBright: TTrackBar
       Left = 72
-      Height = 36
-      Top = 14
+      Height = 41
+      Top = 10
       Width = 60
       Max = 100
       Min = -100
@@ -720,8 +721,8 @@ object Form1: TForm1
     end
     object tbContrast: TTrackBar
       Left = 141
-      Height = 36
-      Top = 14
+      Height = 41
+      Top = 10
       Width = 60
       Max = 100
       Min = -100
@@ -733,7 +734,7 @@ object Form1: TForm1
     object SpinEdit1: TSpinEdit
       Left = 207
       Height = 23
-      Top = 22
+      Top = 18
       Width = 38
       Font.Height = -10
       Font.Name = 'arial [monotype]'
@@ -746,7 +747,7 @@ object Form1: TForm1
     object cbSmooth: TCheckBox
       Left = 296
       Height = 22
-      Top = 22
+      Top = 17
       Width = 67
       Caption = 'Smooth'
       Font.Height = -10
@@ -759,7 +760,7 @@ object Form1: TForm1
     object spinGain: TSpinEdit
       Left = 253
       Height = 23
-      Top = 22
+      Top = 18
       Width = 36
       Font.Height = -10
       Font.Name = 'arial [monotype]'
@@ -777,16 +778,15 @@ object Form1: TForm1
     AnchorSideTop.Side = asrBottom
     AnchorSideRight.Control = ListBox2
     AnchorSideRight.Side = asrBottom
-    AnchorSideBottom.Control = buttonClearList
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
     Left = 5
-    Height = 301
-    Top = 331
+    Height = 201
+    Top = 361
     Width = 548
     Anchors = [akTop, akLeft, akRight, akBottom]
-    BorderSpacing.Bottom = 5
-    Constraints.MaxHeight = 448
+    BorderSpacing.Bottom = 1
     Constraints.MaxWidth = 548
-    Constraints.MinHeight = 300
     Constraints.MinWidth = 548
     Font.Height = -19
     Font.Name = 'courier new'
@@ -804,7 +804,7 @@ object Form1: TForm1
   object ListBox2: TListBox
     Left = 5
     Height = 31
-    Top = 300
+    Top = 330
     Width = 548
     Enabled = False
     Font.Height = -19
@@ -820,7 +820,7 @@ object Form1: TForm1
   object edSigRep: TEdit
     Left = 885
     Height = 24
-    Top = 491
+    Top = 461
     Width = 45
     Font.Height = -11
     Font.Name = 'arial [monotype]'
@@ -848,7 +848,7 @@ object Form1: TForm1
     Left = 557
     Height = 22
     Hint = 'If Checked TX and RX DF will always be same.'
-    Top = 472
+    Top = 447
     Width = 24
     Checked = True
     Font.Height = -12
@@ -862,7 +862,7 @@ object Form1: TForm1
   object spinDecoderCF: TSpinEdit
     Left = 617
     Height = 23
-    Top = 516
+    Top = 484
     Width = 55
     Font.Height = -10
     Font.Name = 'arial [monotype]'
@@ -877,7 +877,7 @@ object Form1: TForm1
   object spinTXCF: TSpinEdit
     Left = 557
     Height = 23
-    Top = 516
+    Top = 484
     Width = 55
     Font.Height = -10
     Font.Name = 'arial [monotype]'
@@ -892,7 +892,7 @@ object Form1: TForm1
   object btnZeroRX: TButton
     Left = 617
     Height = 16
-    Top = 545
+    Top = 508
     Width = 55
     Caption = 'Zero'
     Font.Height = -8
@@ -904,7 +904,7 @@ object Form1: TForm1
   object btnZeroTX: TButton
     Left = 557
     Height = 16
-    Top = 545
+    Top = 508
     Width = 55
     Caption = 'Zero'
     Font.Height = -8
@@ -914,11 +914,10 @@ object Form1: TForm1
     TabOrder = 24
   end
   object spinDecoderBW: TSpinEdit
-    Left = 595
+    Left = 594
     Height = 23
-    Top = 586
+    Top = 544
     Width = 17
-    Anchors = [akLeft, akBottom]
     Font.Height = -10
     Font.Name = 'arial [monotype]'
     MaxValue = 4
@@ -929,9 +928,9 @@ object Form1: TForm1
     Value = 4
   end
   object chkNB: TCheckBox
-    Left = 686
+    Left = 680
     Height = 22
-    Top = 496
+    Top = 469
     Width = 90
     Caption = 'Noise Blank'
     Font.Height = -10
@@ -942,9 +941,9 @@ object Form1: TForm1
     TabOrder = 26
   end
   object chkAFC: TCheckBox
-    Left = 686
+    Left = 680
     Height = 22
-    Top = 472
+    Top = 447
     Width = 46
     Caption = 'AFC'
     Checked = True
@@ -957,12 +956,11 @@ object Form1: TForm1
     TabOrder = 27
   end
   object chkMultiDecode: TCheckBox
-    Left = 557
+    Left = 680
     Height = 22
-    Top = 613
-    Width = 143
-    Anchors = [akLeft, akBottom]
-    Caption = 'Enable Multi-decoder'
+    Top = 491
+    Width = 102
+    Caption = 'Multi-decoder'
     Checked = True
     Font.Height = -10
     Font.Name = 'arial [monotype]'
@@ -1036,7 +1034,7 @@ object Form1: TForm1
   object rbGenMsg: TRadioButton
     Left = 557
     Height = 22
-    Top = 302
+    Top = 298
     Width = 125
     Caption = 'TX Generated'
     Checked = True
@@ -1050,11 +1048,10 @@ object Form1: TForm1
     TabStop = True
   end
   object btnDefaults: TButton
-    Left = 784
-    Height = 27
-    Top = 557
-    Width = 146
-    Anchors = [akLeft, akBottom]
+    Left = 272
+    Height = 25
+    Top = 284
+    Width = 144
     Caption = 'Restore Defaults'
     Font.Height = -13
     Font.Name = 'arial [monotype]'
@@ -1063,55 +1060,37 @@ object Form1: TForm1
     ParentFont = False
     TabOrder = 32
   end
-  object editManQRG: TEdit
-    Left = 784
-    Height = 35
-    Top = 606
-    Width = 146
-    Alignment = taCenter
-    Anchors = [akLeft, akBottom]
-    Font.Height = -21
-    Font.Name = 'arial [monotype]'
-    Font.Style = [fsBold]
-    OnChange = editManQRGChange
-    OnKeyPress = editManQRGKeyPress
-    ParentFont = False
-    PopupMenu = popupQRG
-    TabOrder = 33
-    Text = '0'
-  end
   object btnLogQSO: TButton
-    Left = 784
+    Left = 791
     Height = 32
-    Top = 520
-    Width = 146
+    Top = 488
+    Width = 139
     Caption = 'Log QSO'
     Font.Height = -13
     Font.Name = 'arial [monotype]'
     Font.Style = [fsBold]
     OnClick = btnLogQSOClick
     ParentFont = False
-    TabOrder = 34
+    TabOrder = 33
   end
   object cbEnRB: TCheckBox
-    Left = 272
+    AnchorSideBottom.Side = asrBottom
+    Left = 680
     Height = 22
-    Top = 637
+    Top = 536
     Width = 98
-    Anchors = [akLeft, akBottom]
     Caption = 'Enable RB'
     Font.Height = -13
     Font.Name = 'arial [monotype]'
     Font.Style = [fsBold]
     ParentFont = False
-    TabOrder = 35
+    TabOrder = 34
   end
   object Edit2: TEdit
     Left = 557
     Height = 23
-    Top = 586
+    Top = 544
     Width = 40
-    Anchors = [akLeft, akBottom]
     Font.Height = -10
     Font.Name = 'arial [monotype]'
     Font.Style = [fsBold]
@@ -1119,47 +1098,46 @@ object Form1: TForm1
     ParentFont = False
     ReadOnly = True
     TabStop = False
-    TabOrder = 36
+    TabOrder = 35
     Text = '100'
   end
   object btnReDecode: TButton
-    Left = 130
+    AnchorSideBottom.Side = asrBottom
+    Left = 136
     Height = 25
-    Top = 637
+    Top = 284
     Width = 115
-    Anchors = [akLeft, akBottom]
     Caption = 'Decode Again'
     Font.Height = -11
     Font.Name = 'arial [monotype]'
     Font.Style = [fsBold]
     OnClick = btnReDecodeClick
     ParentFont = False
-    TabOrder = 37
+    TabOrder = 36
   end
   object Bevel1: TBevel
     Left = 557
     Height = 3
-    Top = 408
+    Top = 394
     Width = 292
   end
   object Bevel2: TBevel
     Left = 557
     Height = 3
-    Top = 355
+    Top = 349
     Width = 292
   end
   object Bevel3: TBevel
     Left = 557
     Height = 3
-    Top = 464
+    Top = 440
     Width = 292
   end
   object Edit3: TEdit
-    Left = 626
+    Left = 617
     Height = 23
-    Top = 586
+    Top = 544
     Width = 40
-    Anchors = [akLeft, akBottom]
     Font.Height = -10
     Font.Name = 'arial [monotype]'
     Font.Style = [fsBold]
@@ -1167,30 +1145,28 @@ object Form1: TForm1
     ParentFont = False
     ReadOnly = True
     TabStop = False
-    TabOrder = 38
+    TabOrder = 37
     Text = '100'
   end
   object spinDecoderBin: TSpinEdit
-    Left = 664
+    Left = 655
     Height = 23
-    Top = 586
+    Top = 544
     Width = 17
-    Anchors = [akLeft, akBottom]
     Font.Height = -10
     Font.Name = 'arial [monotype]'
     MaxValue = 4
     MinValue = 1
     OnChange = spinDecoderBinChange
     ParentFont = False
-    TabOrder = 39
+    TabOrder = 38
     Value = 4
   end
   object Label18: TLabel
-    Left = 626
+    Left = 618
     Height = 14
-    Top = 570
+    Top = 528
     Width = 50
-    Anchors = [akLeft, akBottom]
     Caption = 'Multi BW'
     Font.Height = -10
     Font.Name = 'arial [monotype]'
@@ -1212,26 +1188,26 @@ object Form1: TForm1
     Visible = False
   end
   object SpinDT: TSpinEdit
-    Left = 557
+    AnchorSideBottom.Side = asrBottom
+    Left = 434
     Height = 24
-    Top = 640
+    Top = 284
     Width = 49
-    Anchors = [akLeft, akBottom]
     Font.Height = -11
     Font.Name = 'arial [monotype]'
     Font.Style = [fsBold]
     MaxValue = 5
     MinValue = -5
     ParentFont = False
-    TabOrder = 40
+    TabOrder = 39
   end
   object Label32: TLabel
-    Left = 610
+    AnchorSideBottom.Side = asrBottom
+    Left = 488
     Height = 14
-    Top = 646
-    Width = 143
-    Anchors = [akLeft, akBottom]
-    Caption = 'Adjust Timing (DT Offset)'
+    Top = 290
+    Width = 54
+    Caption = 'DT Offset'
     Font.Height = -10
     Font.Name = 'arial [monotype]'
     Font.Style = [fsBold]
@@ -1244,13 +1220,13 @@ object Form1: TForm1
     AnchorSideRight.Side = asrBottom
     AnchorSideBottom.Control = Owner
     AnchorSideBottom.Side = asrBottom
-    Left = 936
-    Height = 202
+    Left = 953
+    Height = 106
     Top = 456
     Width = 300
     Anchors = [akTop, akLeft, akRight, akBottom]
     BorderSpacing.Right = 10
-    BorderSpacing.Bottom = 5
+    BorderSpacing.Bottom = 1
     Constraints.MaxWidth = 445
     Constraints.MinHeight = 100
     Constraints.MinWidth = 300
@@ -1262,28 +1238,35 @@ object Form1: TForm1
     ItemHeight = 24
     OnDblClick = lbTXLogDblClick
     ParentFont = False
-    TabOrder = 41
+    TabOrder = 40
   end
   object lbRawDecoder: TListBox
-    AnchorSideBottom.Control = btnDefaults
+    AnchorSideLeft.Control = ListBox1
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = Edit2
+    AnchorSideTop.Side = asrBottom
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
     Left = 557
     Height = 1
-    Top = 568
+    Top = 572
     Width = 371
     Anchors = [akTop, akLeft, akBottom]
-    BorderSpacing.Bottom = 10
+    BorderSpacing.Left = 4
+    BorderSpacing.Top = 5
+    BorderSpacing.Bottom = 1
     Items.Strings = (
       'Unprocessed decoder output'
     )
     ItemHeight = 23
     OnDblClick = lbRawDecoderDblClick
     ParentShowHint = False
-    TabOrder = 42
+    TabOrder = 41
     TabStop = False
     Visible = False
   end
   object Label7: TLabel
-    Left = 936
+    Left = 953
     Height = 19
     Top = 3
     Width = 237
@@ -1295,7 +1278,7 @@ object Form1: TForm1
     ParentFont = False
   end
   object Label10: TLabel
-    Left = 936
+    Left = 953
     Height = 19
     Top = 436
     Width = 120
@@ -1306,65 +1289,15 @@ object Form1: TForm1
     ParentColor = False
     ParentFont = False
   end
-  object DBGrid1: TDBGrid
-    AnchorSideTop.Control = Label7
-    AnchorSideTop.Side = asrBottom
-    AnchorSideRight.Control = Owner
-    AnchorSideRight.Side = asrBottom
-    AnchorSideBottom.Control = Label10
-    Left = 936
-    Height = 406
-    Top = 25
-    Width = 300
-    Anchors = [akTop, akLeft, akRight, akBottom]
-    BorderSpacing.Top = 3
-    BorderSpacing.Right = 10
-    BorderSpacing.Bottom = 5
-    Color = clWindow
-    Columns = <    
-      item
-        Title.Alignment = taCenter
-        Title.Caption = 'Callsign'
-        Title.Font.Height = -13
-        Title.Font.Name = 'arial [monotype]'
-        Title.Font.Style = [fsBold]
-        Width = 120
-        FieldName = 'Callsign'
-      end    
-      item
-        Title.Alignment = taCenter
-        Title.Caption = 'First'
-        Title.Font.Height = -13
-        Title.Font.Name = 'arial [monotype]'
-        Title.Font.Style = [fsBold]
-        Width = 120
-        FieldName = 'First'
-      end    
-      item
-        Title.Alignment = taCenter
-        Title.Caption = 'Last'
-        Title.Font.Height = -13
-        Title.Font.Name = 'arial [monotype]'
-        Title.Font.Style = [fsBold]
-        Width = 120
-        FieldName = 'Last'
-      end    
-      item
-        Title.Alignment = taCenter
-        Title.Caption = 'Count'
-        Title.Font.Height = -13
-        Title.Font.Name = 'arial [monotype]'
-        Title.Font.Style = [fsBold]
-        Width = 50
-        FieldName = 'Count'
-      end>
-    Constraints.MaxWidth = 445
-    Constraints.MinWidth = 300
-    DataSource = Datasource1
-    ReadOnly = True
-    TabOrder = 43
-    TitleFont.Height = -13
-    TitleFont.Name = 'arial [monotype]'
+  object Bevel6: TBevel
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 940
+    Height = 562
+    Top = 0
+    Width = 3
+    Anchors = [akTop, akLeft, akBottom]
+    BorderSpacing.Bottom = 1
   end
   object Timer1: TTimer
     Interval = 220
@@ -1811,6 +1744,14 @@ object Form1: TForm1
       item
         Name = 'directXLog'
         Value = 'n'
+      end    
+      item
+        Name = 'wide'
+        Value = '935'
+      end    
+      item
+        Name = 'high'
+        Value = '590'
       end>
     FileName = 'station.xml'
     left = 705
@@ -2060,81 +2001,5 @@ object Form1: TForm1
     OnTimer = Timer2Timer
     left = 841
     top = 72
-  end
-  object Dbf1: TDbf
-    Exclusive = True
-    FilePath = '/home/jlarge/.config/JT65-HF/'
-    IndexDefs = <    
-      item
-        IndexFile = 'IDX_ID'
-        SortField = 'ID'
-        Options = [ixPrimary]
-      end    
-      item
-        IndexFile = 'IDX_CALLSIGN'
-        SortField = 'CALLSIGN'
-        Options = [ixUnique, ixCaseInsensitive]
-      end>
-    TableName = 'jt65hf.dbf'
-    TableLevel = 7
-    FilterOptions = [foCaseInsensitive]
-    left = 440
-    top = 96
-    object Dbf1id1: TAutoIncField
-      DisplayWidth = 10
-      FieldKind = fkData
-      FieldName = 'id'
-      Index = 0
-      LookupCache = False
-      ProviderFlags = [pfInWhere]
-      ReadOnly = True
-      Required = False
-    end
-    object Dbf1Callsign1: TStringField
-      DisplayWidth = 32
-      FieldKind = fkData
-      FieldName = 'Callsign'
-      Index = 1
-      LookupCache = False
-      ProviderFlags = [pfInUpdate, pfInWhere]
-      ReadOnly = False
-      Required = False
-      Size = 32
-    end
-    object Dbf1First1: TDateTimeField
-      DisplayWidth = 10
-      FieldKind = fkData
-      FieldName = 'First'
-      Index = 2
-      LookupCache = False
-      ProviderFlags = [pfInUpdate, pfInWhere]
-      ReadOnly = False
-      Required = False
-    end
-    object Dbf1Last1: TDateTimeField
-      DisplayWidth = 10
-      FieldKind = fkData
-      FieldName = 'Last'
-      Index = 3
-      LookupCache = False
-      ProviderFlags = [pfInUpdate, pfInWhere]
-      ReadOnly = False
-      Required = False
-    end
-    object Dbf1Count1: TLongintField
-      DisplayWidth = 10
-      FieldKind = fkData
-      FieldName = 'Count'
-      Index = 4
-      LookupCache = False
-      ProviderFlags = [pfInUpdate, pfInWhere]
-      ReadOnly = False
-      Required = False
-    end
-  end
-  object Datasource1: TDatasource
-    Enabled = False
-    left = 496
-    top = 96
   end
 end

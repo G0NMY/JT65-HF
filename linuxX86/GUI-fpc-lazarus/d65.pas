@@ -1,6 +1,6 @@
 unit d65;
 //
-// Copyright (c) 2008,2009 J C Large - W6CQZ
+// Copyright (c) 2008,2009, 2010, 2011 J C Large - W6CQZ
 //
 //
 // JT65-HF is the legal property of its developer.
@@ -69,6 +69,11 @@ Type
       dtType      : String;
     end;
 
+    d65error = Record
+      emessage   : String;
+      edisplayed : Boolean;
+    end;
+
 Var
    glmyline, glwisfile, glkvs    : PChar;
    glmcall, glmline, glkvfname   : PChar;
@@ -86,19 +91,23 @@ Var
    glf1Buffer, glf2Buffer        : Array[0..661503] of CTypes.cfloat;
    glf3Buffer, gllpfM            : Array[0..661503] of CTypes.cfloat;
    gld65decodes                  : Array[0..49] of d65Result;
+   gld65errrors                  : Array[0..99] of d65error;
 
 procedure doDecode(bStart, bEnd : Integer);
 
 implementation
 // This unit provides decoding of JT65 signals in a thread.  The thread is
 // initialized and started in maincode and runs from program start to end
-// controlled by var doDecodePass, but must be suspended when not in active
-// use... if left looping it will consume 100% CPU in its infinite do nothing
-// loop.
+// controlled by var doDecodePass.
 //
 // When doDecodePass = True the thread will execute doDecode() returning any
 // decodes to array of decodeResult record which maincode will poll to pick up
 // any decode(s).  Var inProgress indicates the decoder is actually running.
+
+// NOTE TO SELF
+// This is a thread process.  You CAN NOT do anything to the GUI from here or
+// even call a writeln().  If something needs to be displayed from here it must
+// be read from maincode and handled there -- NOT HERE.
 
 procedure  set65(
                 ); cdecl; external JT_DLL name 'setup65_';
@@ -244,10 +253,28 @@ Begin
                   CloseFile(kvFile);
                   Result := False;
                   kdec := '';
+                  for i := 0 to 99 do
+                  begin
+                       if gld65errrors[i].edisplayed then
+                       begin
+                            gld65errrors[i].edisplayed := False;
+                            gld65errrors[i].emessage   := 'kvasd.dat File size incorrect.';
+                            break;
+                       end;
+                  end;
              End;
           except
              Result := False;
              kdec := '';
+             for i := 0 to 99 do
+             begin
+                  if gld65errrors[i].edisplayed then
+                  begin
+                       gld65errrors[i].edisplayed := False;
+                       gld65errrors[i].emessage   := 'Exception in kvasd.dat processing.';
+                       break;
+                  end;
+             end;
           end;
      End
      Else
@@ -255,6 +282,15 @@ Begin
           // No decode, error status returned from kvasd.exe
           Result := False;
           kdec := '';
+          for i := 0 to 99 do
+          begin
+               if gld65errrors[i].edisplayed then
+               begin
+                    gld65errrors[i].edisplayed := False;
+                    gld65errrors[i].emessage   := 'Execution of kvasd returns error status.';
+                    break;
+               end;
+          end;
      End;
      kvProc.Destroy;
      kdec := TrimLeft(TrimRight(StrPas(glkvs)));
@@ -273,7 +309,15 @@ Begin
           Try
              DeleteFile('kvasd.dat');
           Except
-             //
+             for i := 0 to 99 do
+             begin
+                  if gld65errrors[i].edisplayed then
+                  begin
+                       gld65errrors[i].edisplayed := False;
+                       gld65errrors[i].emessage   := 'Failed to delete kvasd.dat in evalKV';
+                       break;
+                  end;
+             end;
           end;
      end;
 end;
@@ -281,7 +325,7 @@ end;
 procedure doDecode(bStart, bEnd : Integer);
 
 Var
-   i, k, n, iderrsh, idriftsh    : CTypes.cint;
+   i, k, n, iderrsh, idriftsh, j : CTypes.cint;
    jz, nave, idfsh, nwsh         : CTypes.cint;
    ifoo, ndec                    : CTypes.cint;
    foo, kdec                     : String;
@@ -292,7 +336,7 @@ Var
    ffoo, snrsh, dfsh             : CTypes.cfloat;
    lical, idf                    : CTypes.cint;
    bw, afc                       : CTypes.cint;
-   lmousedf, mousedf2, jz2, j    : CTypes.cint;
+   lmousedf, mousedf2, jz2, z    : CTypes.cint;
    decArray                      : Array[0..99] Of String;
    wcount, strongest, nstest     : CTypes.cint;
    dupeFoo                       : String;
@@ -310,6 +354,12 @@ begin
      gld65HaveDecodes := False;
      if glnd65FirstRun Then
      Begin
+          // Clear the error holder array
+          for i := 0 to 99 do
+          begin
+               gld65errrors[i].edisplayed := true;
+               gld65errrors[i].emessage   := '';
+          end;
          //
          // ical =  0 = FFTW_ESTIMATE set, no load/no save wisdom.  Use ical = 0 when all else fails.
          // ical =  1 = FFTW_MEASURE set, yes load/no save wisdom.  Use ical = 1 to load saved wisdom.
@@ -965,6 +1015,7 @@ begin
                              foo := StrPas(glmline);
                              if i < 10 then foo := '0' + IntToStr(i) + ',' + foo else foo := IntToStr(i) + ',' + foo;
                              glrawOut.Add(TrimLeft(TrimRight(foo)));
+                             //writeln(foo);
                              if tryStrToInt(ExtractWord(3,foo,CsvDelim),ifoo) Then
                              Begin
                                   if ifoo > 0 Then
@@ -1003,11 +1054,35 @@ begin
                                                            end;
                                                       end;
                                                       kverr := 0;
+                                                      if FileExists('kvasd.dat') Then
+                                                      Begin
+                                                           for z := 0 to 99 do
+                                                           begin
+                                                                if gld65errrors[z].edisplayed then
+                                                                begin
+                                                                     gld65errrors[z].edisplayed := False;
+                                                                     gld65errrors[z].emessage   := 'kvasd.dat persists -- Attempting brute force delete.';
+                                                                     break;
+                                                                end;
+                                                           end;
+                                                      end;
                                                       while FileExists('kvasd.dat') do
                                                       begin
                                                            DeleteFile('kvasd.dat');
                                                            inc(kverr);
                                                            if kverr > 10000 then break;
+                                                      end;
+                                                      if FileExists('kvasd.dat') Then
+                                                      Begin
+                                                           for z := 0 to 99 do
+                                                           begin
+                                                                if gld65errrors[z].edisplayed then
+                                                                begin
+                                                                     gld65errrors[z].edisplayed := False;
+                                                                     gld65errrors[z].emessage   := 'kvasd.dat persists -- Brute force delete fails.';
+                                                                     break;
+                                                                end;
+                                                           end;
                                                       end;
                                                  end
                                                  else

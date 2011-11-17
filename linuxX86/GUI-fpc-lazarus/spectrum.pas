@@ -25,7 +25,7 @@ unit spectrum;
 interface
 
 uses
-  Classes, SysUtils, CTypes, cmaps, fftw_jl, globalData, graphics, Math, dlog;//,
+  Classes, SysUtils, CTypes, cmaps, fftw_jl, globalData, graphics, Math;//,
   //FPimage, FPImgCanv, FPWritePNG, FPCanvas;
 
 Type
@@ -245,7 +245,6 @@ Begin
         End;
         Result := trunc(flevel);
      Except
-        dlog.fileDebug('Exception raised in audio level computation');
         Result := 0;
      End;
      globalData.audioComputing := False;
@@ -518,7 +517,6 @@ Begin
              End;
         end;
      Except
-        dlog.fileDebug('Exception raised in spectrum computation');
         globalData.specNewSpec65 := False;
      End;
      globalData.spectrumComputing65 := False;

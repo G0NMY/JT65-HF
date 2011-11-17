@@ -23,13 +23,18 @@ program jt65hf;
 {$mode objfpc}{$H+}
 
 uses
-  cmem, cthreads, Interfaces, Forms, dbflaz, maincode, portaudio, encode65,
-  globalData, spectrum, cmaps, fftw_jl, adc, dac, dlog, cfgvtwo, guiConfig,
+  cthreads, Interfaces, Forms, maincode, portaudio, encode65,
+  globalData, spectrum, cmaps, fftw_jl, adc, dac, cfgvtwo, guiConfig,
   verHolder, synaser, adif, log, waterfall, d65, about, spot, valobject;
 
 {$R *.res}
 
 begin
+  writeln('');
+  writeln('');
+  writeln('JT65-HF Linux 1.0.9 DEBUG VERSION.  EXPIRES 31-November-2011.');
+  writeln('');
+  writeln('');
   Application.Title:='JT65-HF';
   Application.Initialize;
   Application.CreateForm(TForm1, Form1);

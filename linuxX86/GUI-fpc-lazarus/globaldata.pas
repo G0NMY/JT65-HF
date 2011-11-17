@@ -1,6 +1,6 @@
 unit globalData;
 //
-// Copyright (c) 2008,2009 J C Large - W6CQZ
+// Copyright (c) 2008,2009, 2010, 2011 J C Large - W6CQZ
 //
 //
 // JT65-HF is the legal property of its developer.
@@ -27,38 +27,8 @@ interface
 uses
   Classes, SysUtils, Graphics;
 
-Type
-    hrdrigCAP = Record
-     hasAFGain         : Boolean;
-     hasRFGain         : Boolean;
-     hasMicGain        : Boolean;
-     hasPAGain         : Boolean;
-     hasTX             : Boolean;
-     hasSMeter         : Boolean;
-     hasAutoTune       : Boolean;
-     hasAutoTuneDo     : Boolean;
-     hrdAlive          : Boolean;
-     afgControl        : WideString;
-     rfgControl        : WideString;
-     micgControl       : WideString;
-     pagControl        : WideString;
-     txControl         : WideString;
-     smeterControl     : WideString;
-     autotuneControl   : WideString;
-     autotuneControlDo : WideString;
-     radioName         : WideString;
-     radioContext      : WideString;
-     hrdAddress        : WideString;
-     hrdPort           : Word;
-     afgMin, afgMax    : Integer;
-     rfgMin, rfgMax    : Integer;
-     micgMin, micgMax  : Integer;
-     pagMin, pagMax    : Integer;
-    end;
-
 Var
    // Global Vars
-//   d65samfacin             : CTypes.cdouble;
    specMs65                : TMemoryStream;
    spectrumComputing65     : Boolean;
    audioComputing          : Boolean;
@@ -73,10 +43,8 @@ Var
    fullcall                : String;
    gmode                   : Integer; // 65 or 4
    mtext                   : String;
-//   si570ptt                : Boolean;
-//   hrdcatControlcurrentRig : hrdrigCAP;
-//   hrdVersion              : Integer;
    canTX                   : Boolean;
+   hilitehack              : Boolean;
 
    // The variable list above comprises those variables used in more than two
    // units (inclusive of maincode).  Addition of variables to this list should

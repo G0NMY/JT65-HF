@@ -38,7 +38,6 @@ type
   { TForm6 }
 
   TForm6 = class(TForm)
-    btnClearLog : TButton ;
     Button1 : TButton ;
     buttonTestPTT : TButton ;
     cbCWID : TCheckBox ;
@@ -47,7 +46,6 @@ type
     cbRestoreMulti : TCheckBox ;
     cbSaveCSV : TCheckBox ;
     cbTXWatchDog : TCheckBox ;
-    chkNoOptFFT : TCheckBox ;
     ComboBox1 : TComboBox ;
     ComboBox2 : TComboBox ;
     ComboBox3 : TComboBox ;
@@ -104,7 +102,6 @@ type
     Label130 : TLabel ;
     Label131 : TLabel ;
     Label132 : TLabel ;
-    Label19 : TLabel ;
     Label2 : TLabel ;
     Label20 : TLabel ;
     Label26 : TLabel ;
@@ -150,7 +147,6 @@ type
     Label77 : TLabel ;
     Label78 : TLabel ;
     Label9 : TLabel ;
-    lbDiagLog : TListBox ;
     PageControl1 : TPageControl ;
     rigQRG : TEdit ;
     TabSheet1 : TTabSheet ;
@@ -158,8 +154,6 @@ type
     TabSheet3 : TTabSheet ;
     TabSheet4 : TTabSheet ;
     TabSheet6 : TTabSheet ;
-    TabSheet7 : TTabSheet ;
-    procedure btnClearLogClick(Sender: TObject);
     procedure Button1Click(Sender: TObject);
     procedure buttonTestPTTClick(Sender: TObject);
     procedure cbAudioInChange(Sender: TObject);
@@ -223,7 +217,6 @@ Begin
                   cfpttSerial.Config(9600,8,'N',0,false,true);
                   pttOpened := True;
                except
-                  //dlog.fileDebug('PTT Port [' + nport + '] failed to key up.');
                end;
           End
           Else
@@ -238,7 +231,6 @@ Begin
                        cfpttSerial.Config(9600,8,'N',0,false,true);
                        pttOpened := True;
                     Except
-                       //dlog.fileDebug('PTT Port [COM' + IntToStr(np) + '] failed to key up.');
                     End;
                End
                Else
@@ -275,11 +267,6 @@ end;
 procedure TForm6.cbAudioOutChange(Sender: TObject);
 begin
      gld65AudioChange := True;
-end;
-
-procedure TForm6.btnClearLogClick(Sender: TObject);
-begin
-     Form6.lbDiagLog.Clear;
 end;
 
 procedure TForm6.edMyCallChange(Sender: TObject);
