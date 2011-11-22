@@ -6531,7 +6531,7 @@ Begin
           If cbEnRB.Checked And odd(st.Minute) Then rbcPing := True;
      end;
      // Set RX CF to 0 if multi enabled
-     If Form1.chkMultiDecode.Checked Then spinDecoderCF.Value := 0;
+     //If Form1.chkMultiDecode.Checked Then spinDecoderCF.Value := 0;
 end;
 
 procedure TForm1.oncePerTick();
