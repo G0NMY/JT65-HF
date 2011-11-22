@@ -76,6 +76,8 @@ Var
    hrdcatControlcurrentRig : hrdrigCAP;
    hrdVersion              : Integer;
    canTX                   : Boolean;
+   decimalOverride1        : Boolean;
+   decimalOverride2        : Boolean;
 
    // The variable list above comprises those variables used in more than two
    // units (inclusive of maincode).  Addition of variables to this list should

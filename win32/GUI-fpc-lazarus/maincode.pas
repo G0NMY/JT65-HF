@@ -214,6 +214,7 @@ type
     procedure buttonCQClick(Sender: TObject);
     procedure buttonEndQSO1Click(Sender: TObject);
     procedure buttonSendReportClick(Sender: TObject);
+    procedure cbEnPSKRChange(Sender: TObject);
     procedure cbSmoothChange(Sender: TObject);
     procedure chkAFCChange(Sender: TObject);
     procedure chkAutoTxDFChange(Sender: TObject);
@@ -411,6 +412,7 @@ type
      rb                         : spot.TSpot; // Class variable for new spotting code.
      mval                       : valobject.TValidator; // Class variable for validator object.  Needed for QRG conversions.
      inStandby, enteringQRG     : Boolean;
+     eot                        : Integer; // Index to last "real" sample of TX Data
 
 implementation
 
@@ -524,11 +526,11 @@ begin
                     sleep(100);
                     globalData.rbLoggedIn := rb.loginRB;
                     sleep(100);
-                    //dlog.fileDebug('RB QSY request.');
                end;
                rb.myQRG  := eQRG;
                // Set status for RB/PSKR use
                if Form1.cbEnRB.Checked Then rb.useRB  := True else rb.useRB := False;
+
                // Check to see if I need a login cycle
                if (rb.useRB) and (not rb.rbOn) and (not rb.busy) then
                begin
@@ -570,13 +572,18 @@ begin
                     sleep(100);
                end;
 
+               // Give PSKR some processing time
+               if (not rb.busy) and (rb.usePSKR) then
+               begin
+                    rb.pskrTickle;
+               end;
+               sleep(100);
+
                // Push spots, this happens even if all the RB/PSKR function is off just
                // to keep the internal data structures up to date.
                if not rb.busy then rb.pushSpots;
                sleep(100);
-               // Give PSKR some processing time
-               if (not rb.busy) and (rb.usePSKR) then rb.pskrTickle;
-               sleep(100);
+
           end;
           Sleep(100);
      end;
@@ -679,9 +686,9 @@ begin
      // mval.evalQRG() QRG evaluation/conversion/validate routine to set the float, integer and string variables.
      // The string for QRG returned by CAT control method of choice is in qrg : String
 
-     // DO NOT run a rig control cycle if Timer2 is enables as this indicates the user is currently
-     // entering a manual QRG change.
-     while not Terminated And not Suspended And not catInProgress  do
+     // DO NOT run a rig control cycle if Timer2 is enabled as this indicates the user is currently
+     // entering a manual QRG change (Timer2 handler sets enteringQRG = true to handle this need).
+     while not Terminated And not Suspended And not catInProgress do
      begin
           Try
              catInProgress := True;
@@ -751,6 +758,8 @@ begin
                   End;
 
                   // At this point String(qrg) contains "something" for evalQRG to digest.
+                  if globalData.decimalOverride1 then mval.forceDecimal1 := true else mval.forceDecimal1 := False;
+                  if globalData.decimalOverride2 then mval.forceDecimal2 := true else mval.forceDecimal2 := False;
 
                   If not mval.evalQRG(qrg, 'LAX', globalData.gqrg, globalData.iqrg, globalData.strqrg) Then
                   Begin
@@ -760,7 +769,29 @@ begin
                        globalData.strqrg := '0';
                   End;
                   sqrg := globalData.strqrg;
-                  cfgvtwo.Form6.rigQRG.Text := globalData.strqrg;
+                  // OK.. if either override is set above it means there is a 'disagreement' with the OS over which
+                  // characters indicate decimal point and thousands mark.  To keep things in sync I have to get the
+                  // returned display string into correct format before entering it into the QRG control box or it
+                  // may loop back to QRG = 0.
+                  if globalData.decimalOverride1 or globalData.decimalOverride2 Then
+                  Begin
+                       // In decimaloverride1 the decimal point is , and thousands is .
+                       // In decimaloverride2 the decimal point is . and thousands is ,
+                       // Now set the returned string from evalQRG such that it matches
+                       // the forced convention for decimal point.
+                       if globalData.decimalOverride1 Then
+                       Begin
+                            // Replace any . in sqrg with ,
+                            sqrg := StringReplace(sqrg,'.',',',[rfReplaceAll]);
+                       end;
+                       if globalData.decimalOverride2 Then
+                       Begin
+                            // Replace any , in sqrg with .
+                            sqrg := StringReplace(sqrg,',','.',[rfReplaceAll]);
+                       end;
+                  end;
+                  globalData.strqrg := sqrg;
+                  cfgvtwo.Form6.rigQRG.Text := sqrg;
                   Form1.editManQRG.Text := sqrg;
                   doCAT := False;
              end;
@@ -1136,6 +1167,7 @@ begin
        actionSet := False;
        txCount := 0;
   end;
+  if cfgvtwo.Form6.cbMultiAutoEnableHTX.Checked then chkMultiDecode.Checked := true;
 end;
 
 procedure TForm1.btnRawDecoderClick(Sender: TObject);
@@ -1312,6 +1344,12 @@ begin
      end;
 end;
 
+procedure TForm1.cbEnPSKRChange(Sender: TObject);
+begin
+     if cbEnPSKR.Checked then rb.usePSKR := true else rb.usePSKR:=false;
+     if cbEnRB.Checked then rb.useRB := true else rb.useRB := false;
+end;
+
 procedure TForm1.menuRigControlClick(Sender: TObject);
 begin
      cfgvtwo.Form6.PageControl1.ActivePage := cfgvtwo.Form6.TabSheet2;
@@ -1373,7 +1411,7 @@ begin
      if spinDecoderBin.Value = 4 Then d65.glbinspace := 200;
 end;
 
-procedure TForm1 .spinDecoderCFKeyPress (Sender : TObject ; var Key : char );
+procedure TForm1.spinDecoderCFKeyPress (Sender : TObject ; var Key : char );
 Var
    i : Integer;
 begin
@@ -1549,7 +1587,7 @@ begin
      end;
 end;
 
-procedure TForm1 .editManQRGKeyPress (Sender : TObject ; var Key : char );
+procedure TForm1.editManQRGKeyPress (Sender : TObject ; var Key : char );
 Var
    i : Integer;
 begin
@@ -1569,6 +1607,7 @@ begin
      // OK, input was made to the QRG Entry field and seems to be completed so
      // lets try to validate the field.  Do this by firing a rig control cycle.
      enteringQRG := False;
+     catInProgress := False;
      doCat := True;
 end;
 
@@ -1796,6 +1835,12 @@ Begin
      cfg.StoredValue['showonce'] := '1';
      if log.Form2.CheckBox1.Checked then cfg.StoredValue['lognotes'] := '0' else cfg.StoredValue['lognotes'] := '1';
      if cfgvtwo.Form6.cbDecodeDivider.Checked then cfg.StoredValue['divider'] := 'y' else cfg.StoredValue['divider'] := 'n';
+     if cfgvtwo.Form6.cbMultiAutoEnableHTX.Checked then cfg.StoredValue['multihalt'] := 'y' else cfg.StoredValue['multihalt'] := 'n';
+     if cfgvtwo.Form6.cbCWIDFT.Checked then cfg.StoredValue['cwidfree'] := 'y' else cfg.StoredValue['cwidfree'] := 'n';
+     if cfgvtwo.Form6.cbDecodeDividerCompact.Checked then cfg.StoredValue['dividecompact'] := 'y' else cfg.StoredValue['dividecompact'] := 'n';
+     cfg.StoredValue['TXWDCounter'] := IntToStr(cfgvtwo.Form6.SpinTXCount.Value);
+     if cfgvtwo.Form6.CheckBox1.Checked then cfg.StoredValue['decimalForce1'] := 'y' else cfg.StoredValue['decimalForce1'] := 'n';
+     if cfgvtwo.Form6.CheckBox2.Checked then cfg.StoredValue['decimalForce2'] := 'y' else cfg.StoredValue['decimalForce2'] := 'n';
      cfg.Save;
 end;
 
@@ -1949,58 +1994,81 @@ begin
      //   rbsent   : Boolean;
      //   pskrsent : Boolean;
      // end;
-     If cbEnRB.Checked Then
-     Begin
-          if eopQRG = sopQRG then
-          begin
-               // i holds index to data in d65.gld65decodes to spot
-               // m holds mode as integer 65 or 4
-               // OK.. rather than try to convert everything to the new 2.0 QRG handler I have placed the necessary variable for eopQRG into teopWRG
-               // as string for conversion to integer with mval.evalQRG
-               //function evalQRG(const qrg : String; const mode : string; var qrgk : Double; var qrghz : Integer; var asciiqrg : String) : Boolean;
-               foo := '';
-               qrgk := 0.0;
-               eQRG := 0;
-               if mval.evalQRG(teopqrg, 'LAX', qrgk, eQRG, foo) Then
-               Begin
-                    globalData.iqrg := eQRG;
-                    srec.qrg      := eQRG;
-                    srec.date     := d65.gld65decodes[i].dtTimeStamp;
-                    srec.time     := '';
-                    srec.sync     := strToInt(d65.gld65decodes[i].dtNumSync);
-                    srec.db       := strToInt(d65.gld65decodes[i].dtSigLevel);
-                    srec.dt       := strToFloat(d65.gld65decodes[i].dtDeltaTime);
-                    srec.df       := strToInt(d65.gld65decodes[i].dtDeltaFreq);
-                    srec.decoder  := d65.gld65decodes[i].dtType;
-                    srec.exchange := d65.gld65decodes[i].dtDecoded;
-                    if m = 65 then srec.mode := '65A';
-                    srec.rbsent   := false;
-                    srec.pskrsent := false;
-                    srec.dbfsent  := false;
-                    if rb.addSpot(srec) then d65.gld65decodes[i].dtProcessed := True else d65.gld65decodes[i].dtProcessed := false;
-                    //ListBox3.Items.Insert(0,srec.date + ' ' + srec.exchange);
-               end
-               else
-               begin
-                    d65.gld65decodes[i].dtProcessed := True;
-               end;
-          end
-          else
-          begin
-               d65.gld65decodes[i].dtProcessed := True;
+     // Always add to spotting unit... if spotting is disabled it will be handled
+     // properly there.  No need to care about RB or PSKR enabled/not enabled here.
+     if eopQRG = sopQRG then
+     begin
+          // i holds index to data in d65.gld65decodes to spot
+          // m holds mode as integer 65 or 4
+          // OK.. rather than try to convert everything to the new 2.0 QRG handler I have placed the necessary variable for eopQRG into teopWRG
+          // as string for conversion to integer with mval.evalQRG
+          //function evalQRG(const qrg : String; const mode : string; var qrgk : Double; var qrghz : Integer; var asciiqrg : String) : Boolean;
+          foo := '';
+          qrgk := 0.0;
+          eQRG := 0;
+          if mval.evalQRG(teopqrg, 'LAX', qrgk, eQRG, foo) Then
+          Begin
+               globalData.iqrg := eQRG;
+               srec.qrg      := eQRG;
+               srec.date     := d65.gld65decodes[i].dtTimeStamp;
+               srec.time     := '';
+               srec.sync     := strToInt(d65.gld65decodes[i].dtNumSync);
+               srec.db       := strToInt(d65.gld65decodes[i].dtSigLevel);
+               srec.dt       := strToFloat(d65.gld65decodes[i].dtDeltaTime);
+               srec.df       := strToInt(d65.gld65decodes[i].dtDeltaFreq);
+               srec.decoder  := d65.gld65decodes[i].dtType;
+               srec.exchange := d65.gld65decodes[i].dtDecoded;
+               if m = 65 then srec.mode := '65A';
+               srec.rbsent   := false;
+               srec.pskrsent := false;
+               srec.dbfsent  := false;
+               if rb.addSpot(srec) then d65.gld65decodes[i].dtProcessed := True;
           end;
-     End
-     Else
-     Begin
-          d65.gld65decodes[i].dtProcessed := True;
-     End;
+     end;
+     // Mark as processed no matter the outcome above.
+     d65.gld65decodes[i].dtProcessed := True;
 end;
 
 procedure TForm1.FormCreate(Sender: TObject);
 Var
-   fname       : String;
+   fname, foo  : String;
    pfname      : PChar;
+   tstfile     : TextFile;
+   cerr        : Boolean;
+   i           : Integer;
 begin
+     // I need to look at station1.xml for any extended characters to stop the
+     // program can't start due to invalid characters in XML config.  Actually...
+     // I still need to just do away with XML config other than its use as a
+     // holder for the screen positioning.  But not today.
+     // For now it's going to be quick - simple - draconian.  It has an invalid
+     // character?  Delete it and move on.
+     fname := TrimFileName(GetAppConfigDir(False) + PathDelim + 'station1.xml');
+     cerr := False;
+     if FileExists(fname) Then
+     Begin
+          // Test file for invalid characters.
+          AssignFile(tstfile,fname);
+          Reset(tstfile);
+          Repeat
+                Readln(tstfile,foo);
+                for i := 1 to Length(foo) do if ord(foo[i]) > 128 then cerr := true;
+          Until Eof(tstfile);
+          CloseFile(tstfile);
+     end;
+
+     if cerr then
+     begin
+          // XML Config file has an invalid character and it must be removed.  The
+          // entire file -- not the bad character as it is impossible to know what
+          // impact replacing the invalid character might have without tons of branch
+          // coding to evaluate.
+          pfname := StrAlloc(Length(fname)+1);
+          strPcopy(pfname,fname);
+          DeleteFile(pfname);
+          cfgRecover := True;
+     end;
+
      // Create and initialize TWaterfallControl
      Waterfall := TWaterfallControl.Create(Self);
      Waterfall.Height := 180;
@@ -2010,7 +2078,9 @@ begin
      Waterfall.Parent := Self;
      Waterfall.OnMouseDown := waterfallMouseDown;
      Waterfall.DoubleBuffered := True;
+
      cfgError := True;
+
      Try
         fname := TrimFileName(GetAppConfigDir(False) + PathDelim + 'station1.xml');
         cfg.FileName := fname;
@@ -2031,6 +2101,7 @@ begin
              cfgRecover := True;
         End;
      End;
+     pfname := StrAlloc(0);
 end;
 
 procedure TForm1.FormResize(Sender: TObject);
@@ -4522,7 +4593,18 @@ Begin
 
      if Length(cfg.StoredValue['LogComment'])>0 Then log.Form2.edLogComment.Text := cfg.StoredValue['LogComment'];
      if cfg.StoredValue['divider'] = 'y' then cfgvtwo.Form6.cbDecodeDivider.Checked := true else cfgvtwo.Form6.cbDecodeDivider.Checked := false;
+     if cfg.StoredValue['multihalt'] = 'y' then cfgvtwo.Form6.cbMultiAutoEnableHTX.Checked := true else cfgvtwo.Form6.cbMultiAutoEnableHTX.Checked := false;
+     if cfgvtwo.Form6.cbMultiAutoEnableHTX.Checked then cfg.StoredValue['multihalt'] := 'y' else cfg.StoredValue['multihalt'] := 'n';
+     if cfg.StoredValue['cwidfree'] = 'y' then cfgvtwo.Form6.cbCWIDFT.Checked := true else cfgvtwo.Form6.cbCWIDFT.Checked := false;
+     if cfg.StoredValue['dividecompact'] = 'y' then cfgvtwo.Form6.cbDecodeDividerCompact.Checked := true else cfgvtwo.Form6.cbDecodeDividerCompact.Checked := false;
      if cfg.StoredValue['version'] <> verHolder.verReturn Then verUpdate := True else verUpdate := False;
+     if cfg.StoredValue['lognotes'] = '0' then log.Form2.CheckBox1.Checked:=true else log.Form2.CheckBox1.Checked:=false;
+     ifoo := 0;
+     if TryStrToInt(cfg.StoredValue['TXWDCounter'],ifoo) Then cfgvtwo.Form6.SpinTXCount.Value := ifoo else cfgvtwo.Form6.SpinTXCount.Value := 15;
+     if cfg.StoredValue['decimalForce1'] = 'y' then cfgvtwo.Form6.CheckBox1.Checked := true else cfgvtwo.Form6.CheckBox1.Checked := false;
+     if cfg.StoredValue['decimalForce2'] = 'y' then cfgvtwo.Form6.CheckBox2.Checked := true else cfgvtwo.Form6.CheckBox2.Checked := false;
+     if cfgvtwo.Form6.CheckBox1.Checked then globalData.decimalOverride1 := true else globalData.decimalOverride1 := false;
+     if cfgvtwo.Form6.CheckBox2.Checked then globalData.decimalOverride2 := true else globalData.decimalOverride2 := false;
 
      if verUpdate Then
      Begin
@@ -4541,8 +4623,6 @@ Begin
                       'this may not be what you want.  Suggest 100 Hertz (or less)');
           dlog.fileDebug('Ran configuration update.');
      End;
-
-     if cfg.StoredValue['lognotes'] = '0' then log.Form2.CheckBox1.Checked:=true else log.Form2.CheckBox1.Checked:=false;
 
      globalData.mtext := '/Multi%20On%202K%20BW';
 
@@ -5372,7 +5452,7 @@ Begin
      // or 538020 samples (262.7 2K buffers).  Raising upper bound to an
      // even 2K multiple gives me 538624 samples or 263 2K buffers.
 
-     {TODO [1.0.9] No long priority due to strict character validation of input fields.  Return the message that will be TX as returned by libJT65.}
+     eot := 0;
 
      d65sending := StrAlloc(28);
      for i := 0 to 27 do d65sending[i] := ' ';
@@ -5384,7 +5464,7 @@ Begin
      if useBuffer = 1 Then
      Begin
           curMsg := UpCase(padRight(Form1.edFreeText.Text,22));
-          if cfgvtwo.Form6.cbCWID.Checked Then doCWID := True else doCWID := False;
+          if cfgvtwo.Form6.cbCWID.Checked or cfgvtwo.Form6.cbCWIDFT.Checked Then doCWID := True else doCWID := False;
      End;
      if Length(TrimLeft(TrimRight(curMsg)))>1 Then
      Begin
@@ -5409,12 +5489,17 @@ Begin
 
           //
           // Now I want to pad the data to length of txBuffer with silence
-          // so there's no chance of sending anything other than generated
-          // samples or silence...
+          // (or add CW ID then pad with silence) so there's no chance of
+          // sending anything other than generated samples or silence...
           //
           mnlooper := d65nwave;
 
-          {TODO [1.0.9] Rewrite CW ID, if possible in pascal}
+          // At this point mnlooper is pointing at last sample of TX data + 1
+          // and if no CW ID would be the index to stop TX.  If CW ID then
+          // mnlooper would once again hold the index of last sample to TX.
+          // Changing this to use this value as end of TX rather than only time
+          // or fixed point in sample index as stop point.
+          eot := mnlooper;  // EOT (End Of Transmission) marks last sample index to be sent.
 
           // CW ID Handler
           if doCWID Then
@@ -5422,7 +5507,7 @@ Begin
                diagout.Form3.ListBox3.Clear;
                doCWID := False;
                // Add .25s silence between end of JT65 and start of CW ID
-               for mnlooper := mnlooper to mnlooper + 11025 do
+               for mnlooper := mnlooper to mnlooper + 2756 do
                begin
                     dac.d65txBuffer[mnlooper] := 0;
                end;
@@ -5443,7 +5528,7 @@ Begin
                End;
                if freqcw < 300.0 then freqcw := 300.0;
                if freqcw > 2270.0 then freqcw := 2270.0;
-               diagout.Form3.ListBox3.Items.Add('CW ID Au=' + FloatToStr(freqcw) + ' Hz');
+               //diagout.Form3.ListBox3.Items.Add('CW ID Au=' + FloatToStr(freqcw) + ' Hz');
                nwave := 0;
                encode65.genCW(cwidMsg,@freqcw,@encode65.e65cwid[0],@nwave);
                //subroutine gencwid(msg,freqcw,iwave,nwave)
@@ -5455,6 +5540,9 @@ Begin
                          dac.d65txBuffer[mnlooper] := encode65.e65cwid[i];
                          inc(mnlooper);
                     end;
+                    // At this point mnlooper is at the end of TX samples and
+                    // has a good value to mark actual end of TX point.
+                    eot := mnlooper;
                End
                Else
                Begin
@@ -5462,6 +5550,8 @@ Begin
                     for i := mnlooper to 661503 do
                     begin
                          dac.d65txBuffer[i] := 0;
+                         diagout.Form3.ListBox3.Items.Add('CW ID is too long to be sent, disabled.');
+                         cfgvtwo.Form6.cbCWID.Checked:=false;
                     end;
                End;
                // Finish buffer to end with silence.
@@ -5521,7 +5611,7 @@ Begin
      {TODO [1.0.9] would not lead to a DT error as is now. Leave this for 1.0.9}
      // Generate TX samples for a late starting TX Cycle.
 
-     {TODO [1.0.9] No long priority due to strict character validation of input fields.  Return the message that will be TX as returned by libJT65.}
+     eot := 0;
 
      d65sending := StrAlloc(28);
 
@@ -5551,6 +5641,10 @@ Begin
 
           // Now I want to pad the data to length of txBuffer with silence
           mnlooper := d65nwave;
+          // At this point mnlooper is pointing at last sample of TX data + 1
+          // and is the index to stop TX.
+          eot := mnlooper;  // EOT (End Of Transmission) marks last sample index to be sent.
+
           while mnlooper < 661504 do
           begin
                dac.d65txBuffer[mnlooper] := 0;
@@ -5770,6 +5864,7 @@ procedure TForm1.processOngoing();
 Var
    foo : String;
    i   : Integer;
+   nst : TSystemTime;
 Begin
      //
      // I am currently in one of the following states;
@@ -5887,7 +5982,7 @@ Begin
                // generate the txBuffer
                genTX1();
                if not cfgvtwo.Form6.cbTXWatchDog.Checked Then txCount := 0;
-               if txCount < 15 Then
+               if txCount < cfgvtwo.Form6.SpinTXCount.Value Then
                Begin
                     // Flag TX Buffer as valid.
                     lastMsg := curMsg;
@@ -5947,7 +6042,7 @@ Begin
                     txCount := 0;
                     lastTX := '';
                     Form1.chkEnTX.Checked := False;
-                    diagout.Form3.ListBox1.Items.Insert(0,'TX Halted.  Same message sent 15 times.');
+                    diagout.Form3.ListBox1.Items.Insert(0,'TX Halted.  Same message sent ' + IntToStr(cfgvtwo.Form6.SpinTXCount.Value) + ' times.');
                     diagout.Form3.Show;
                     diagout.Form3.BringToFront;
                End;
@@ -5958,7 +6053,16 @@ Begin
                rxInProgress := False;
                if paOutParams.channelCount = 2 Then
                Begin
-                    if (dac.d65txBufferIdx >= d65nwave+11025) Or (dac.d65txBufferIdx >= 661503-(11025 DIV 2)) Then
+                    // This is where CWID is probably getting chopped.  Changing this to
+                    // use the eot variable that is set in message generator.
+                    // To be clear... var eot marks the end of TX samples + 1.  The message
+                    // generator has also 0 padded the txBuffer array beyond eot to end of
+                    // array.  If CW ID is in play then eot could extend upwards toward
+                    // approximately second ~ 58 plus a little.  The callback code works
+                    // in blocks of 2048 samples so lets try this as eot+2048 and see
+                    // what happens.
+                    //if (dac.d65txBufferIdx >= d65nwave+11025) Or (dac.d65txBufferIdx >= 661503-(11025 DIV 2)) Then
+                    if (dac.d65txBufferIdx >= eot+2048) Or (dac.d65txBufferIdx >= 661503-(11025 DIV 2)) Then
                     Begin
                          globalData.txInProgress := False;
                          if getPTTMethod() = 'HRD' Then hrdLowerPTT();
@@ -6002,7 +6106,7 @@ Begin
                TxDirty := True;
                genTX2();
                if not cfgvtwo.Form6.cbTXWatchDog.Checked Then txCount := 0;
-               if txCount < 15 Then
+               if txCount < cfgvtwo.Form6.SpinTXCount.Value Then
                Begin
                     // Flag TX Buffer as valid.
                     lastMsg := curMsg;
@@ -6013,9 +6117,14 @@ Begin
                          Form1.ProgressBar3.Max := 538624;
                          rxInProgress := False;
                          nextAction := 2;
-                         dac.d65txBufferIdx := 0;
 
-                         dac.d65txBufferPtr := @dac.d65txBuffer[0];
+                         // I want to attempt to start the tones where they would NOW be IF
+                         // the TX had STARTED ON TIME
+                         //nst.Minute := 0;
+                         nst := utcTime();
+                         // Calculate offset in samples to this second
+                         dac.d65txBufferIdx := nst.Second * 11025;
+                         dac.d65txBufferPtr := @dac.d65txBuffer[dac.d65txBufferIdx];
 
                          rxCount := 0;
                          if getPTTMethod() = 'HRD' Then hrdRaisePTT();
@@ -6062,7 +6171,7 @@ Begin
                     txCount := 0;
                     lastTX := '';
                     Form1.chkEnTX.Checked := False;
-                    diagout.Form3.ListBox1.Items.Insert(0,'TX Halted.  Same message sent 15 times.');
+                    diagout.Form3.ListBox1.Items.Insert(0,'TX Halted.  Same message sent ' + IntToStr(cfgvtwo.Form6.SpinTXCount.Value) + ' times.');
                     diagout.Form3.Show;
                     diagout.Form3.BringToFront;
                End;
@@ -6074,7 +6183,7 @@ Begin
                rxInProgress := False;
                if paOutParams.channelCount = 2 Then
                Begin
-                    if (dac.d65txBufferIdx >= d65nwave+11025) Or (dac.d65txBufferIdx >= 661503-(11025 DIV 2)) Or (thisSecond > 48) Then
+                    if (dac.d65txBufferIdx >= eot+2048) Or (dac.d65txBufferIdx >= 661503-(11025 DIV 2)) Or (thisSecond > 48) Then
                     Begin
                          // I have a full TX cycle when d65txBufferIdx >= 538624 or thisSecond > 48
                          if getPTTMethod() = 'HRD' Then hrdLowerPTT();
@@ -6421,12 +6530,15 @@ Begin
      Begin
           If cbEnRB.Checked And odd(st.Minute) Then rbcPing := True;
      end;
+     // Set RX CF to 0 if multi enabled
+     If Form1.chkMultiDecode.Checked Then spinDecoderCF.Value := 0;
 end;
 
 procedure TForm1.oncePerTick();
 Var
    i    : Integer;
    cont : Boolean;
+   ccnt : Integer;
 Begin
 
      if rbthread.Suspended then
@@ -6493,7 +6605,7 @@ Begin
           // Don't insert the decoder period divder when in compact mode or if user doesn't want it.
           if cfgvtwo.Form6.cbDecodeDivider.Checked Then
           Begin
-               If Form1.Height > 659 Then ListBox1.Items.Insert(0,'---------------------------------------------');
+               If Form1.Height > 619 Then ListBox1.Items.Insert(0,'---------------------------------------------');
           end;
           for i := 0 to 49 do
           Begin
@@ -6513,9 +6625,44 @@ Begin
                     d65.gld65decodes[i].dtTimeStamp := '';
                     d65.gld65decodes[i].dtType      := '';
                end;
-               d65.gld65HaveDecodes:= false;
           End;
-          if reDecode then reDecode := False;
+          if cfgvtwo.Form6.cbDecodeDividerCompact.Checked Then
+          Begin
+          // Remove extra '---------------------------------------------' lines
+             if ListBox1.Items.Count > 1 Then
+             Begin
+                  // Get count of lines in decoder = '---------------------------------------------'
+                  ccnt := 0;
+                  for i := ListBox1.Items.Count-1 downto 1 do
+                  begin
+                       if ListBox1.Items.Strings[i] = '---------------------------------------------' Then
+                       Begin
+                            ccnt := ccnt+1;
+                       end;
+                  end;
+                  If ccnt > 1 Then
+                  Begin
+                       // Compact :)
+                       repeat
+                             for i := ListBox1.Items.Count-1 downto 1 do
+                             begin
+                                  if ListBox1.Items.Strings[i] = '---------------------------------------------' then
+                                  Begin
+                                       ListBox1.Items.Delete(i);
+                                       break;
+                                  end;
+                             end;
+                             ccnt := 0;
+                             for i := ListBox1.Items.Count-1 downto 1 do
+                             begin
+                                  if ListBox1.Items.Strings[i] = '---------------------------------------------' Then ccnt := ccnt+1;
+                             end;
+                       until ccnt < 2;
+                  end;
+             end;
+          end;
+          reDecode := False;
+          d65.gld65HaveDecodes:= false;
      End;
 End;
 
@@ -6797,5 +6944,7 @@ initialization
   // Create spotting class object.
   rb   := spot.TSpot.create(); // Used even if spotting is disabled
   mval := valobject.TValidator.create(); // This creates a access point to validation routines needed for new RB code
+  globalData.decimalOverride1 := false;
+  globalData.decimalOverride2 := false;
 end.
 

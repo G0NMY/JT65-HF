@@ -50,6 +50,8 @@ type
     cbAudioIn : TComboBox ;
     cbAudioOut : TComboBox ;
     cbCWID : TCheckBox ;
+    cbCWIDFT: TCheckBox;
+    cbDecodeDividerCompact: TCheckBox;
     cbDisableMultiQSO : TCheckBox ;
     cbEnableQSY1 : TCheckBox ;
     cbEnableQSY2 : TCheckBox ;
@@ -57,11 +59,14 @@ type
     cbEnableQSY4 : TCheckBox ;
     cbEnableQSY5 : TCheckBox ;
     cbMultiAutoEnable : TCheckBox ;
+    cbMultiAutoEnableHTX: TCheckBox;
     cbRestoreMulti : TCheckBox ;
     cbSaveCSV : TCheckBox ;
     cbDecodeDivider: TCheckBox;
     cbTXWatchDog : TCheckBox ;
     cbUseAltPTT : TCheckBox ;
+    CheckBox1: TCheckBox;
+    CheckBox2: TCheckBox;
     chkEnableAutoSR : TCheckBox ;
     chkHRDPTT : TCheckBox ;
     chkNoOptFFT : TCheckBox ;
@@ -124,6 +129,7 @@ type
     groupHRD : TGroupBox ;
     hrdAddress : TEdit ;
     hrdPort : TEdit ;
+    Label1: TLabel;
     Label10 : TLabel ;
     Label122 : TLabel ;
     Label123 : TLabel ;
@@ -214,6 +220,7 @@ type
     rbHRD5 : TRadioButton ;
     rigQRG : TEdit ;
     setHRDQRG : TButton ;
+    SpinTXCount: TSpinEdit;
     TabSheet1 : TTabSheet ;
     TabSheet2 : TTabSheet ;
     TabSheet3 : TTabSheet ;
@@ -226,6 +233,10 @@ type
     procedure buttonTestPTTClick(Sender: TObject);
     procedure cbAudioInChange(Sender: TObject);
     procedure cbAudioOutChange(Sender: TObject);
+    procedure cbCWIDChange(Sender: TObject);
+    procedure cbCWIDFTChange(Sender: TObject);
+    procedure CheckBox1Change(Sender: TObject);
+    procedure CheckBox2Change(Sender: TObject);
     procedure chkEnableAutoSRChange(Sender: TObject);
     procedure chkUseCommanderChange(Sender: TObject);
     procedure chkUseHRDChange(Sender: TObject);
@@ -244,6 +255,8 @@ type
     procedure hrdAddressChange(Sender: TObject);
     procedure hrdPortChange(Sender: TObject);
     procedure setHRDQRGClick(Sender: TObject);
+    procedure SpinTXCountKeyDown(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
     procedure testHRDPTTClick(Sender: TObject);
 
   private
@@ -451,6 +464,44 @@ begin
      gld65AudioChange := True;
 end;
 
+procedure TForm6.cbCWIDChange(Sender: TObject);
+begin
+     if cbCWID.Checked Then cbCWIDFT.Checked:=False;
+end;
+
+procedure TForm6.cbCWIDFTChange(Sender: TObject);
+begin
+     if cbCWIDFT.Checked Then cbCWID.Checked:=False;
+end;
+
+procedure TForm6.CheckBox1Change(Sender: TObject);
+begin
+     if CheckBox1.Checked Then
+     Begin
+          globalData.decimalOverride1 := true;
+          globalData.decimalOverride2 := false;
+          CheckBox2.Checked := false;
+     end
+     else
+     begin
+          globalData.decimalOverride1 := false;
+     end;
+end;
+
+procedure TForm6.CheckBox2Change(Sender: TObject);
+begin
+     if CheckBox2.Checked Then
+     Begin
+          globalData.decimalOverride2 := true;
+          globalData.decimalOverride1 := false;
+          CheckBox1.Checked := false;
+     end
+     else
+     begin
+          globalData.decimalOverride2 := false;
+     end;
+end;
+
 procedure TForm6.chkEnableAutoSRChange(Sender: TObject);
 begin
      if Form6.chkEnableAutoSR.Checked Then glautoSR := True else glautoSR := False;
@@ -650,6 +701,12 @@ Begin
           // Need to send a set QRG message
           catControl.writeHRD('[' + globalData.hrdcatControlcurrentRig.radioContext + '] set frequency-hz ' + cfgvtwo.Form6.Edit4.Text);
      end;
+end;
+
+procedure TForm6.SpinTXCountKeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+     {TODO Validate as numeric only}
 end;
 
 procedure TForm6.testHRDPTTClick(Sender: TObject);

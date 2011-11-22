@@ -11,8 +11,11 @@ object Form6: TForm6
   Constraints.MaxWidth = 800
   Constraints.MinHeight = 542
   Constraints.MinWidth = 800
+  Font.Height = -11
+  Font.Name = 'Arial'
   OnCreate = FormCreate
   LCLVersion = '0.9.30.2'
+  Visible = True
   object PageControl1: TPageControl
     Left = 8
     Height = 488
@@ -23,7 +26,7 @@ object Form6: TForm6
     TabOrder = 0
     object TabSheet1: TTabSheet
       Caption = 'Station Setup'
-      ClientHeight = 462
+      ClientHeight = 461
       ClientWidth = 776
       object Label26: TLabel
         Left = 5
@@ -76,7 +79,7 @@ object Form6: TForm6
       object Label53: TLabel
         Left = 5
         Height = 15
-        Top = 160
+        Top = 152
         Width = 86
         Caption = 'RX Sample Rate'
         Font.Height = -11
@@ -88,7 +91,7 @@ object Form6: TForm6
       object Label54: TLabel
         Left = 121
         Height = 15
-        Top = 160
+        Top = 152
         Width = 86
         Caption = 'TX Sample Rate'
         Font.Height = -11
@@ -100,7 +103,7 @@ object Form6: TForm6
       object Label14: TLabel
         Left = 5
         Height = 33
-        Top = 203
+        Top = 194
         Width = 638
         Caption = 'Automatic adjustment may cause some initial skewing of spectrum display until SR settles.  This is harmless.'#13#10'In most cases it is suggested that Automatic sample rate correction be enabled.'
         Font.Height = -13
@@ -109,9 +112,9 @@ object Form6: TForm6
         ParentFont = False
       end
       object Label29: TLabel
-        Left = 5
+        Left = 4
         Height = 15
-        Top = 407
+        Top = 416
         Width = 248
         Caption = 'Location of RX/TX history file (JT65hf-log.csv)'
         Font.Height = -11
@@ -146,11 +149,11 @@ object Form6: TForm6
       end
       object Label70: TLabel
         Left = 284
-        Height = 91
+        Height = 81
         Top = 6
-        Width = 479
+        Width = 428
         Caption = 'Note:  Suffix/Prefix is suggested to only be used in situations where'#13#10'you have a legal requirement to do so.  You may define a suffix OR'#13#10'a prefix but not both.  Suffix/prefix support in the JT65 protocol is a'#13#10'(very) complex issue.  My suggestion is to avoid its use if at all'#13#10'possible.  Suffix/prefix support in JT65-HF is, at best, incomplete.'
-        Font.Height = -15
+        Font.Height = -13
         Font.Name = 'Arial'
         Font.Style = [fsBold]
         ParentColor = False
@@ -219,7 +222,7 @@ object Form6: TForm6
       object edRXSRCor: TEdit
         Left = 5
         Height = 24
-        Top = 176
+        Top = 168
         Width = 63
         Font.Height = -13
         Font.Name = 'Arial'
@@ -231,7 +234,7 @@ object Form6: TForm6
       object edTXSRCor: TEdit
         Left = 121
         Height = 24
-        Top = 176
+        Top = 168
         Width = 63
         Font.Height = -13
         Font.Name = 'Arial'
@@ -243,7 +246,7 @@ object Form6: TForm6
       object chkEnableAutoSR: TCheckBox
         Left = 220
         Height = 18
-        Top = 177
+        Top = 169
         Width = 283
         Caption = 'Enable Automatic RX/TX Sample Rate Correction.'
         Font.Height = -11
@@ -257,29 +260,35 @@ object Form6: TForm6
       end
       object cbTXWatchDog: TCheckBox
         Left = 4
-        Height = 17
-        Top = 240
-        Width = 375
-        Caption = 'Disable TX after sending same message 15 times. (Runaway TX watchdog)'
+        Height = 18
+        Top = 236
+        Width = 402
+        Caption = 'Disable TX after sending same message excessively. (Runaway TX watchdog)'
         Checked = True
+        Font.Height = -11
+        Font.Name = 'Arial'
+        ParentFont = False
         State = cbChecked
         TabOrder = 7
       end
       object cbDisableMultiQSO: TCheckBox
         Left = 4
-        Height = 17
-        Top = 264
-        Width = 433
+        Height = 18
+        Top = 260
+        Width = 437
         Caption = 'Disable Multidecoder while in QSO.  Suggested unless you have a fast CPU (>1.5GHz).'
         Checked = True
+        Font.Height = -11
+        Font.Name = 'Arial'
+        ParentFont = False
         State = cbChecked
         TabOrder = 8
       end
       object cbMultiAutoEnable: TCheckBox
         Left = 4
-        Height = 17
-        Top = 288
-        Width = 379
+        Height = 18
+        Top = 284
+        Width = 376
         Caption = 'Enable Multidecoder after 2 minutes of no TX (If disabled by option above).'
         Checked = True
         State = cbChecked
@@ -287,9 +296,9 @@ object Form6: TForm6
       end
       object cbSaveCSV: TCheckBox
         Left = 4
-        Height = 17
-        Top = 360
-        Width = 243
+        Height = 18
+        Top = 397
+        Width = 245
         Caption = 'Save text of decodes and transmissions to file.'
         Checked = True
         State = cbChecked
@@ -297,20 +306,23 @@ object Form6: TForm6
       end
       object DirectoryEdit1: TDirectoryEdit
         Left = 4
-        Height = 21
-        Top = 425
+        Height = 24
+        Top = 432
         Width = 711
         ShowHidden = False
         ButtonWidth = 23
         NumGlyphs = 0
+        Font.Height = -13
+        Font.Name = 'Arial'
         MaxLength = 0
+        ParentFont = False
         TabOrder = 15
       end
       object cbRestoreMulti: TCheckBox
         Left = 4
-        Height = 17
-        Top = 312
-        Width = 202
+        Height = 18
+        Top = 308
+        Width = 203
         Caption = 'Restore defaults sets Multidecoder On'
         Checked = True
         State = cbChecked
@@ -318,15 +330,18 @@ object Form6: TForm6
       end
       object comboPrefix: TComboBox
         Left = 100
-        Height = 21
+        Height = 22
         Top = 24
         Width = 92
-        ItemHeight = 13
+        Font.Height = -11
+        Font.Name = 'Arial'
+        ItemHeight = 14
         ItemIndex = 0
         Items.Strings = (
           'NONE'
         )
         OnChange = comboPrefixChange
+        ParentFont = False
         Style = csDropDownList
         TabOrder = 13
         TabStop = False
@@ -334,15 +349,18 @@ object Form6: TForm6
       end
       object comboSuffix: TComboBox
         Left = 204
-        Height = 21
+        Height = 22
         Top = 24
         Width = 64
-        ItemHeight = 13
+        Font.Height = -11
+        Font.Name = 'Arial'
+        ItemHeight = 14
         ItemIndex = 0
         Items.Strings = (
           'NONE'
         )
         OnChange = comboPrefixChange
+        ParentFont = False
         Style = csDropDownList
         TabOrder = 14
         TabStop = False
@@ -350,32 +368,80 @@ object Form6: TForm6
       end
       object cbCWID: TCheckBox
         Left = 4
-        Height = 17
-        Top = 336
-        Width = 224
+        Height = 18
+        Top = 332
+        Width = 223
         Caption = 'Send CW ID With 73 or Free Text Message'
+        OnChange = cbCWIDChange
         TabOrder = 11
       end
       object cbDecodeDivider: TCheckBox
         Left = 4
-        Height = 17
-        Top = 384
-        Width = 377
+        Height = 18
+        Top = 356
+        Width = 381
         Caption = 'Draw divider line between text decode periods (if screen height sufficient).'
         Checked = True
         State = cbChecked
         TabOrder = 16
       end
+      object cbMultiAutoEnableHTX: TCheckBox
+        Left = 396
+        Height = 18
+        Top = 284
+        Width = 242
+        Caption = 'Enable Multidecoder after Halt TX Button press'
+        Checked = True
+        State = cbChecked
+        TabOrder = 17
+      end
+      object cbCWIDFT: TCheckBox
+        Left = 396
+        Height = 18
+        Top = 332
+        Width = 227
+        Caption = 'Send CW ID ONLY with Free Text Message'
+        OnChange = cbCWIDFTChange
+        TabOrder = 18
+      end
+      object cbDecodeDividerCompact: TCheckBox
+        Left = 396
+        Height = 18
+        Top = 356
+        Width = 154
+        Caption = 'Use compressed divider line'
+        Checked = True
+        State = cbChecked
+        TabOrder = 19
+      end
+      object SpinTXCount: TSpinEdit
+        Left = 416
+        Height = 22
+        Top = 232
+        Width = 50
+        MaxValue = 15
+        OnKeyDown = SpinTXCountKeyDown
+        TabOrder = 20
+        Value = 15
+      end
+      object Label1: TLabel
+        Left = 472
+        Height = 15
+        Top = 239
+        Width = 152
+        Caption = 'Repeat TX Count for disable TX'
+        ParentColor = False
+      end
     end
     object TabSheet2: TTabSheet
       Caption = 'Rig Control/PTT'
-      ClientHeight = 460
+      ClientHeight = 462
       ClientWidth = 776
       object Label9: TLabel
         Left = 10
         Height = 17
-        Top = 2
-        Width = 559
+        Top = 1
+        Width = 560
         Caption = 'Enter your PTT port into the input box below in the format COM###, for example, COM11'
         Font.Height = -13
         Font.Name = 'Arial'
@@ -385,15 +451,15 @@ object Form6: TForm6
       end
       object Label10: TLabel
         Left = 10
-        Height = 16
+        Height = 15
         Top = 23
-        Width = 47
+        Width = 41
         Caption = 'PTT Port'
         ParentColor = False
       end
       object editUserDefinedPort1: TEdit
         Left = 10
-        Height = 23
+        Height = 22
         Top = 43
         Width = 90
         CharCase = ecUppercase
@@ -411,17 +477,17 @@ object Form6: TForm6
       end
       object Label3: TLabel
         Left = 113
-        Height = 16
+        Height = 15
         Top = 23
-        Width = 401
+        Width = 369
         Caption = 'Test PTT will Key/Unkey your Transceiver.  No audio will be sent during test.'
         ParentColor = False
       end
       object cbUseAltPTT: TCheckBox
         Left = 213
-        Height = 19
+        Height = 18
         Top = 47
-        Width = 420
+        Width = 381
         Caption = 'Use Alternate PTT Method.  Only enable this if you have problems with PTT.'
         TabOrder = 2
       end
@@ -448,16 +514,16 @@ object Form6: TForm6
           Left = 6
           Height = 23
           Top = 6
-          Width = 115
+          Width = 114
           Caption = 'Enable'
           OnChange = chkUseHRDChange
           TabOrder = 0
         end
         object rbHRD4: TRadioButton
-          Left = 121
+          Left = 120
           Height = 23
           Top = 6
-          Width = 128
+          Width = 129
           Caption = 'Version 4'
           TabOrder = 1
         end
@@ -594,7 +660,7 @@ object Form6: TForm6
           Left = 245
           Height = 17
           Top = 8
-          Width = 89
+          Width = 90
           Caption = 'Tune Antenna'
           ParentColor = False
         end
@@ -643,7 +709,7 @@ object Form6: TForm6
           Left = 368
           Height = 20
           Top = 75
-          Width = 330
+          Width = 328
           Caption = 'Shift QRG to match DF if TxDF matching enabled'
           TabOrder = 2
         end
@@ -651,7 +717,7 @@ object Form6: TForm6
           Left = 369
           Height = 20
           Top = 43
-          Width = 124
+          Width = 122
           Caption = 'Use HRD for PTT'
           TabOrder = 3
         end
@@ -686,9 +752,9 @@ object Form6: TForm6
         end
         object cbEnableQSY1: TCheckBox
           Left = 6
-          Height = 19
+          Height = 17
           Top = 30
-          Width = 20
+          Width = 18
           TabOrder = 7
         end
         object qsyHour2: TSpinEdit
@@ -722,9 +788,9 @@ object Form6: TForm6
         end
         object cbEnableQSY2: TCheckBox
           Left = 6
-          Height = 19
+          Height = 17
           Top = 62
-          Width = 20
+          Width = 18
           TabOrder = 11
         end
         object qsyHour3: TSpinEdit
@@ -758,9 +824,9 @@ object Form6: TForm6
         end
         object cbEnableQSY3: TCheckBox
           Left = 6
-          Height = 19
+          Height = 17
           Top = 91
-          Width = 20
+          Width = 18
           TabOrder = 15
         end
         object qsyHour4: TSpinEdit
@@ -794,9 +860,9 @@ object Form6: TForm6
         end
         object cbEnableQSY4: TCheckBox
           Left = 6
-          Height = 19
+          Height = 17
           Top = 119
-          Width = 20
+          Width = 18
           TabOrder = 19
         end
         object qsyHour5: TSpinEdit
@@ -830,44 +896,44 @@ object Form6: TForm6
         end
         object cbEnableQSY5: TCheckBox
           Left = 6
-          Height = 19
+          Height = 17
           Top = 150
-          Width = 20
+          Width = 18
           TabOrder = 23
         end
         object cbATQSY1: TCheckBox
           Left = 278
-          Height = 19
+          Height = 17
           Top = 30
-          Width = 20
+          Width = 18
           TabOrder = 24
         end
         object cbATQSY2: TCheckBox
           Left = 278
-          Height = 19
+          Height = 17
           Top = 62
-          Width = 20
+          Width = 18
           TabOrder = 25
         end
         object cbATQSY3: TCheckBox
           Left = 278
-          Height = 19
+          Height = 17
           Top = 91
-          Width = 20
+          Width = 18
           TabOrder = 26
         end
         object cbATQSY4: TCheckBox
           Left = 278
-          Height = 19
+          Height = 17
           Top = 119
-          Width = 20
+          Width = 18
           TabOrder = 27
         end
         object cbATQSY5: TCheckBox
           Left = 278
-          Height = 19
+          Height = 17
           Top = 150
-          Width = 20
+          Width = 18
           TabOrder = 28
         end
         object testHRDPTT: TButton
@@ -906,7 +972,7 @@ object Form6: TForm6
       end
       object rigQRG: TEdit
         Left = 684
-        Height = 23
+        Height = 22
         Top = 8
         Width = 80
         ReadOnly = True
@@ -917,43 +983,49 @@ object Form6: TForm6
     end
     object TabSheet3: TTabSheet
       Caption = 'RB and PSKR'
-      ClientHeight = 460
+      ClientHeight = 462
       ClientWidth = 776
       object Label34: TLabel
         Left = 4
-        Height = 16
+        Height = 15
         Top = 7
-        Width = 478
+        Width = 442
         Caption = '[Optional] Call for PSK Reporter or RB.  Suffixed/Prefixed is allowed.  DO NOT add -1 -2 etc.'
         ParentColor = False
       end
       object editPSKRCall: TEdit
         Left = 4
-        Height = 23
+        Height = 24
         Top = 31
         Width = 112
         CharCase = ecUppercase
+        Font.Height = -13
+        Font.Name = 'Arial'
+        ParentFont = False
         TabOrder = 0
       end
       object Label33: TLabel
         Left = 4
-        Height = 16
+        Height = 15
         Top = 65
-        Width = 258
+        Width = 235
         Caption = '[Optional] Antenna Description for PSK Reporter.'
         ParentColor = False
       end
       object editPSKRAntenna: TEdit
         Left = 4
-        Height = 23
+        Height = 24
         Top = 89
         Width = 470
+        Font.Height = -13
+        Font.Name = 'Arial'
+        ParentFont = False
         TabOrder = 1
       end
     end
     object TabSheet4: TTabSheet
       Caption = 'Macros'
-      ClientHeight = 460
+      ClientHeight = 462
       ClientWidth = 776
       object Label2: TLabel
         Left = 1
@@ -1031,7 +1103,7 @@ object Form6: TForm6
         Left = 4
         Height = 17
         Top = 307
-        Width = 22
+        Width = 23
         Caption = '11 -'
         Font.Height = -13
         Font.Name = 'Arial'
@@ -1295,7 +1367,7 @@ object Form6: TForm6
         Left = 358
         Height = 17
         Top = 341
-        Width = 22
+        Width = 23
         Caption = '11 -'
         Font.Height = -13
         Font.Name = 'Arial'
@@ -1365,7 +1437,7 @@ object Form6: TForm6
       end
       object edUserQRG1: TEdit
         Left = 32
-        Height = 23
+        Height = 22
         Top = 207
         Width = 64
         OnKeyPress = edUserQRG13KeyPress
@@ -1374,7 +1446,7 @@ object Form6: TForm6
       end
       object edUserQRG2: TEdit
         Left = 32
-        Height = 23
+        Height = 22
         Top = 239
         Width = 64
         OnKeyPress = edUserQRG13KeyPress
@@ -1383,7 +1455,7 @@ object Form6: TForm6
       end
       object edUserQRG3: TEdit
         Left = 32
-        Height = 23
+        Height = 22
         Top = 272
         Width = 64
         OnKeyPress = edUserQRG13KeyPress
@@ -1392,7 +1464,7 @@ object Form6: TForm6
       end
       object edUserQRG4: TEdit
         Left = 32
-        Height = 23
+        Height = 22
         Top = 303
         Width = 64
         OnKeyPress = edUserQRG13KeyPress
@@ -1401,7 +1473,7 @@ object Form6: TForm6
       end
       object edUserMsg4: TEdit
         Left = 385
-        Height = 23
+        Height = 22
         Top = 107
         Width = 144
         CharCase = ecUppercase
@@ -1412,7 +1484,7 @@ object Form6: TForm6
       end
       object edUserMsg5: TEdit
         Left = 386
-        Height = 23
+        Height = 22
         Top = 140
         Width = 143
         CharCase = ecUppercase
@@ -1423,7 +1495,7 @@ object Form6: TForm6
       end
       object edUserMsg6: TEdit
         Left = 385
-        Height = 23
+        Height = 22
         Top = 173
         Width = 144
         CharCase = ecUppercase
@@ -1434,7 +1506,7 @@ object Form6: TForm6
       end
       object edUserMsg7: TEdit
         Left = 385
-        Height = 23
+        Height = 22
         Top = 206
         Width = 144
         CharCase = ecUppercase
@@ -1445,7 +1517,7 @@ object Form6: TForm6
       end
       object edUserMsg8: TEdit
         Left = 385
-        Height = 23
+        Height = 22
         Top = 240
         Width = 144
         CharCase = ecUppercase
@@ -1456,7 +1528,7 @@ object Form6: TForm6
       end
       object edUserMsg9: TEdit
         Left = 385
-        Height = 23
+        Height = 22
         Top = 273
         Width = 144
         CharCase = ecUppercase
@@ -1467,7 +1539,7 @@ object Form6: TForm6
       end
       object edUserMsg10: TEdit
         Left = 386
-        Height = 23
+        Height = 22
         Top = 306
         Width = 143
         CharCase = ecUppercase
@@ -1478,7 +1550,7 @@ object Form6: TForm6
       end
       object edUserMsg11: TEdit
         Left = 386
-        Height = 23
+        Height = 22
         Top = 339
         Width = 143
         CharCase = ecUppercase
@@ -1489,7 +1561,7 @@ object Form6: TForm6
       end
       object edUserMsg12: TEdit
         Left = 386
-        Height = 23
+        Height = 22
         Top = 373
         Width = 143
         CharCase = ecUppercase
@@ -1500,7 +1572,7 @@ object Form6: TForm6
       end
       object edUserMsg13: TEdit
         Left = 385
-        Height = 23
+        Height = 22
         Top = 407
         Width = 144
         CharCase = ecUppercase
@@ -1511,7 +1583,7 @@ object Form6: TForm6
       end
       object edUserQRG5: TEdit
         Left = 171
-        Height = 23
+        Height = 22
         Top = 34
         Width = 64
         OnKeyPress = edUserQRG13KeyPress
@@ -1520,7 +1592,7 @@ object Form6: TForm6
       end
       object edUserQRG6: TEdit
         Left = 171
-        Height = 23
+        Height = 22
         Top = 69
         Width = 64
         OnKeyPress = edUserQRG13KeyPress
@@ -1529,7 +1601,7 @@ object Form6: TForm6
       end
       object edUserQRG7: TEdit
         Left = 171
-        Height = 23
+        Height = 22
         Top = 103
         Width = 64
         OnKeyPress = edUserQRG13KeyPress
@@ -1538,7 +1610,7 @@ object Form6: TForm6
       end
       object edUserQRG8: TEdit
         Left = 171
-        Height = 23
+        Height = 22
         Top = 139
         Width = 64
         OnKeyPress = edUserQRG13KeyPress
@@ -1547,7 +1619,7 @@ object Form6: TForm6
       end
       object edUserQRG9: TEdit
         Left = 171
-        Height = 23
+        Height = 22
         Top = 173
         Width = 64
         OnKeyPress = edUserQRG13KeyPress
@@ -1568,7 +1640,7 @@ object Form6: TForm6
       end
       object edUserQRG10: TEdit
         Left = 171
-        Height = 23
+        Height = 22
         Top = 207
         Width = 64
         OnKeyPress = edUserQRG13KeyPress
@@ -1589,7 +1661,7 @@ object Form6: TForm6
       end
       object edUserQRG11: TEdit
         Left = 171
-        Height = 23
+        Height = 22
         Top = 239
         Width = 64
         OnKeyPress = edUserQRG13KeyPress
@@ -1610,7 +1682,7 @@ object Form6: TForm6
       end
       object edUserQRG12: TEdit
         Left = 171
-        Height = 23
+        Height = 22
         Top = 272
         Width = 64
         OnKeyPress = edUserQRG13KeyPress
@@ -1631,7 +1703,7 @@ object Form6: TForm6
       end
       object edUserQRG13: TEdit
         Left = 171
-        Height = 23
+        Height = 22
         Top = 303
         Width = 64
         OnKeyPress = edUserQRG13KeyPress
@@ -1640,7 +1712,7 @@ object Form6: TForm6
       end
       object edUserMsg14: TEdit
         Left = 591
-        Height = 23
+        Height = 22
         Top = 13
         Width = 144
         CharCase = ecUppercase
@@ -1663,7 +1735,7 @@ object Form6: TForm6
       end
       object edUserMsg15: TEdit
         Left = 591
-        Height = 23
+        Height = 22
         Top = 47
         Width = 144
         CharCase = ecUppercase
@@ -1686,7 +1758,7 @@ object Form6: TForm6
       end
       object edUserMsg16: TEdit
         Left = 591
-        Height = 23
+        Height = 22
         Top = 79
         Width = 144
         CharCase = ecUppercase
@@ -1709,7 +1781,7 @@ object Form6: TForm6
       end
       object edUserMsg17: TEdit
         Left = 591
-        Height = 23
+        Height = 22
         Top = 111
         Width = 144
         CharCase = ecUppercase
@@ -1732,7 +1804,7 @@ object Form6: TForm6
       end
       object edUserMsg18: TEdit
         Left = 591
-        Height = 23
+        Height = 22
         Top = 143
         Width = 144
         CharCase = ecUppercase
@@ -1755,7 +1827,7 @@ object Form6: TForm6
       end
       object edUserMsg19: TEdit
         Left = 591
-        Height = 23
+        Height = 22
         Top = 176
         Width = 144
         CharCase = ecUppercase
@@ -1778,7 +1850,7 @@ object Form6: TForm6
       end
       object edUserMsg20: TEdit
         Left = 591
-        Height = 23
+        Height = 22
         Top = 210
         Width = 144
         CharCase = ecUppercase
@@ -1802,7 +1874,7 @@ object Form6: TForm6
     end
     object TabSheet6: TTabSheet
       Caption = 'Colors'
-      ClientHeight = 460
+      ClientHeight = 462
       ClientWidth = 776
       object Label78: TLabel
         Left = 12
@@ -1975,19 +2047,19 @@ object Form6: TForm6
     end
     object TabSheet7: TTabSheet
       Caption = 'Diagnostics'
-      ClientHeight = 460
+      ClientHeight = 461
       ClientWidth = 776
       object Label19: TLabel
         Left = 4
-        Height = 16
+        Height = 15
         Top = 2
-        Width = 70
+        Width = 62
         Caption = 'Program Log'
         ParentColor = False
       end
       object lbDiagLog: TListBox
         Left = 4
-        Height = 400
+        Height = 348
         Top = 21
         Width = 760
         Font.Height = -13
@@ -1999,10 +2071,10 @@ object Form6: TForm6
       end
       object chkNoOptFFT: TCheckBox
         Left = 4
-        Height = 19
+        Height = 18
         Top = 434
-        Width = 522
-        Caption = 'Disable Optimal FFT use.  DO NOT CHECK THIS UNLESS YOU KNOW WHY YOU ARE DOING SO.'
+        Width = 528
+        Caption = 'Disable Optimal FFT use.  (DO NOT CHECK THIS BOX UNLESS INSTRUCTED TO BY TECHNICAL SUPPORT)'
         TabOrder = 1
         TabStop = False
       end
@@ -2014,6 +2086,24 @@ object Form6: TForm6
         Caption = 'Clear Log'
         OnClick = btnClearLogClick
         TabOrder = 0
+      end
+      object CheckBox1: TCheckBox
+        Left = 4
+        Height = 18
+        Top = 376
+        Width = 607
+        Caption = 'Thousands mark is . and decimal mark is , (DO NOT CHECK THIS BOX UNLESS INSTRUCTED TO BY TECHNICAL SUPPORT)'
+        OnChange = CheckBox1Change
+        TabOrder = 3
+      end
+      object CheckBox2: TCheckBox
+        Left = 4
+        Height = 18
+        Top = 407
+        Width = 610
+        Caption = 'Thousands mark is , and decimal mark is .  (DO NOT CHECK THIS BOX UNLESS INSTRUCTED TO BY TECHNICAL SUPPORT)'
+        OnChange = CheckBox2Change
+        TabOrder = 4
       end
     end
   end

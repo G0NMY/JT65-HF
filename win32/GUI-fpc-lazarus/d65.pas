@@ -262,11 +262,11 @@ Begin
      End;
      // Attempt to be absolutely sure KVASD.DAT was closed so it can be properly
      // deleted.
-     Try
-        CloseFile(kvFile);
-     except
+     //Try
+     //   CloseFile(kvFile);
+     //except
         // No action required.
-     end;
+     //end;
      // First try to delete KVASD.DAT
      try
         DeleteFile('KVASD.DAT');

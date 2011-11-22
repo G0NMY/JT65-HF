@@ -587,7 +587,7 @@ object Form1: TForm1
       BarShowText = True
     end
     object rbUseLeft: TRadioButton
-      Left = 106
+      Left = 111
       Height = 18
       Top = 13
       Width = 34
@@ -602,7 +602,7 @@ object Form1: TForm1
       TabStop = True
     end
     object rbUseRight: TRadioButton
-      Left = 106
+      Left = 111
       Height = 18
       Top = 34
       Width = 34
@@ -1194,6 +1194,7 @@ object Form1: TForm1
     Caption = 'Enable RB'
     Font.Height = -11
     Font.Name = 'Arial'
+    OnChange = cbEnPSKRChange
     ParentFont = False
     TabOrder = 34
   end
@@ -1208,6 +1209,7 @@ object Form1: TForm1
     Caption = 'Enable PSKR'
     Font.Height = -11
     Font.Name = 'Arial'
+    OnChange = cbEnPSKRChange
     ParentFont = False
     TabOrder = 35
   end
@@ -1387,9 +1389,9 @@ object Form1: TForm1
     AnchorSideTop.Side = asrBottom
     Left = 556
     Height = 17
-    Top = 555
+    Top = 550
     Width = 62
-    BorderSpacing.Top = 30
+    BorderSpacing.Top = 25
     Caption = 'Sound In:'
     Font.Height = -13
     Font.Name = 'Arial'
@@ -1402,7 +1404,7 @@ object Form1: TForm1
     AnchorSideTop.Side = asrBottom
     Left = 566
     Height = 17
-    Top = 576
+    Top = 571
     Width = 5
     BorderSpacing.Top = 4
     Caption = ' '
@@ -1413,7 +1415,7 @@ object Form1: TForm1
     AnchorSideTop.Side = asrBottom
     Left = 556
     Height = 17
-    Top = 599
+    Top = 594
     Width = 72
     BorderSpacing.Around = 6
     Caption = 'Sound Out:'
@@ -1428,7 +1430,7 @@ object Form1: TForm1
     AnchorSideTop.Side = asrBottom
     Left = 566
     Height = 17
-    Top = 622
+    Top = 617
     Width = 5
     BorderSpacing.Bottom = 4
     Caption = ' '
@@ -1919,6 +1921,30 @@ object Form1: TForm1
       item
         Name = 'divider'
         Value = 'y'
+      end    
+      item
+        Name = 'multihalt'
+        Value = 'n'
+      end    
+      item
+        Name = 'cwidfree'
+        Value = 'n'
+      end    
+      item
+        Name = 'dividecompact'
+        Value = 'y'
+      end    
+      item
+        Name = 'TXWDCounter'
+        Value = '15'
+      end    
+      item
+        Name = 'decimalForce1'
+        Value = 'n'
+      end    
+      item
+        Name = 'decimalForce2'
+        Value = 'n'
       end>
     FileName = 'station.xml'
     left = 704

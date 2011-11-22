@@ -435,12 +435,22 @@ implementation
        pskrerr   : WideString;
        pskrrep   : WideString;
        pskrloc   : WideString;
+       cont      : Boolean;
     Begin
+         // Check to see if there's any reason to execute any of this :)
+         cont := false;
+         for i := 0 to 8191 do
+         begin
+              if not prSpots[i].rbsent then cont := true;
+              if not prSpots[i].pskrsent then cont := true;
+              if cont then break;
+         end;
+
          prRBError := '';
          band      := '';
          prBusy    := True;
          // This function handles sending spots to RB Network, PSK Reporter or Internal Database
-         if prUseRB then
+         if prUseRB and cont then
          begin
               // Do RB work
               for i := 0 to 8191 do
@@ -530,10 +540,21 @@ implementation
               // when RB spotting is not enabled as it is otherwise cleared above.
               for i := 0 to 8191 do if not prSpots[i].rbsent then prSpots[i].rbsent := true;
          end;
-         if prUsePSKR then
+
+         if prUsePSKR and cont then
          begin
               // Do PSKR work
               // pskrstat is set at PSKR initialization time.
+              if pskrstat <> 0 Then
+              Begin
+                   // For some reason pskrstat is not 0 which means pskr is offline.
+                   // Lets try to relog
+                   loginpskr;
+                   if pskrstat <> 0 Then
+                   Begin
+                        sleep(100);
+                   end;
+              end;
               if pskrstat = 0 then
               begin
                    for i := 0 to 8191 do
@@ -572,6 +593,10 @@ implementation
               else
               begin
                    // PSKR is not available.  Clear the entries needing PSKR service lest the list fills.
+                   if prUsePSKR then
+                   begin
+                        sleep(100);
+                   end;
                    for i := 0 to 8191 do if not prSpots[i].pskrsent then prSpots[i].pskrsent := true;
               end;
          end
@@ -581,8 +606,6 @@ implementation
               // when PSKR spotting is not enabled as it is otherwise cleared above.
               for i := 0 to 8191 do if not prSpots[i].pskrsent then prSpots[i].pskrsent := true;
          end;
-         // Process any spots marked as sent for DBF lest the array fills with unsent entries.
-         for i := 0 to 8191 do if not prSpots[i].dbfsent then prSpots[i].dbfsent := true;
          // All done.
          // Security blanket code
          for i := 0 to 8191 do if not prSpots[i].rbsent then prSpots[i].rbsent := true;

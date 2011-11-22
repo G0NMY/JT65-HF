@@ -16,26 +16,28 @@ type
   TValidator = Class
      private
         // Station callsign and grid
-        prCall        : String;
-        prCWCall      : String;
-        prGrid        : String;
-        prPrefix      : Integer;
-        prSuffix      : Integer;
-        prRBCall      : String;
-        prRBInfo      : String;
-        prCallValid   : Boolean;
-        prCWCallValid : Boolean;
-        prRBCallValid : Boolean;
-        prGridValid   : Boolean;
-        prPrefixValid : Boolean;
-        prSuffixValid : Boolean;
-        prRBInfoValid : Boolean;
-        prCallError   : String;
-        prGridError   : String;
-        prRBCallError : String;
-        prRBInfoError : String;
-        prSuffixError : String;
-        prPrefixError : String;
+        prCall          : String;
+        prCWCall        : String;
+        prGrid          : String;
+        prPrefix        : Integer;
+        prSuffix        : Integer;
+        prRBCall        : String;
+        prRBInfo        : String;
+        prCallValid     : Boolean;
+        prCWCallValid   : Boolean;
+        prRBCallValid   : Boolean;
+        prGridValid     : Boolean;
+        prPrefixValid   : Boolean;
+        prSuffixValid   : Boolean;
+        prRBInfoValid   : Boolean;
+        prCallError     : String;
+        prGridError     : String;
+        prRBCallError   : String;
+        prRBInfoError   : String;
+        prSuffixError   : String;
+        prPrefixError   : String;
+        prDeciOverride1 : Boolean;
+        prDeciOverride2 : Boolean;
 
      public
         Constructor create();
@@ -102,6 +104,11 @@ type
 
      property prefixError   : String
         read  prPrefixError;
+
+        property forceDecimal1 : Boolean
+           write prDeciOverride1;
+        property forceDecimal2 : Boolean
+           write prDeciOverride2;
   end;
 
 implementation
@@ -127,6 +134,8 @@ implementation
         prRBInfoError   := '';
         prSuffixError   := '';
         prPrefixError   := '';
+        prDeciOverride1 := False;
+        prDeciOverride2 := False;
    end;
 
    procedure TValidator.setCWCallsign(msg : String);
@@ -1181,10 +1190,23 @@ implementation
         // Hopefully this will be correct for decimal point indication.
         decichar := DecimalSeparator;
         kilochar := ThousandSeparator;
+        // Variables to override the system idea of deci and kilo
+        if prDeciOverride1 Then
+        Begin
+             decichar := ',';
+             kilochar := '.';
+        end;
+        if prDeciOverride2 Then
+        Begin
+             decichar := '.';
+             kilochar := ',';
+        end;
         // "Normalize" string qrg to a string with no thousands mark and a . decimal mark
         // based upon locale setting for those marks.
+
         // Remove any thousands indicators first.
         foo := StringReplace(qrg,kilochar,'',[rfReplaceAll]);
+
         // If decichar not . then be sure it is now.
         if not (decichar='.') then
         begin
