@@ -2034,40 +2034,12 @@ Var
    fname, foo  : String;
    pfname      : PChar;
    tstfile     : TextFile;
-   cerr        : Boolean;
    i           : Integer;
 begin
-     // I need to look at station1.xml for any extended characters to stop the
-     // program can't start due to invalid characters in XML config.  Actually...
      // I still need to just do away with XML config other than its use as a
      // holder for the screen positioning.  But not today.
-     // For now it's going to be quick - simple - draconian.  It has an invalid
-     // character?  Delete it and move on.
-     fname := TrimFileName(GetAppConfigDir(False) + PathDelim + 'station1.xml');
-     cerr := False;
-     if FileExists(fname) Then
-     Begin
-          // Test file for invalid characters.
-          AssignFile(tstfile,fname);
-          Reset(tstfile);
-          Repeat
-                Readln(tstfile,foo);
-                for i := 1 to Length(foo) do if ord(foo[i]) > 128 then cerr := true;
-          Until Eof(tstfile);
-          CloseFile(tstfile);
-     end;
 
-     if cerr then
-     begin
-          // XML Config file has an invalid character and it must be removed.  The
-          // entire file -- not the bad character as it is impossible to know what
-          // impact replacing the invalid character might have without tons of branch
-          // coding to evaluate.
-          pfname := StrAlloc(Length(fname)+1);
-          strPcopy(pfname,fname);
-          DeleteFile(pfname);
-          cfgRecover := True;
-     end;
+     fname := TrimFileName(GetAppConfigDir(False) + PathDelim + 'station1.xml');
 
      // Create and initialize TWaterfallControl
      Waterfall := TWaterfallControl.Create(Self);
@@ -5500,6 +5472,10 @@ Begin
           // Changing this to use this value as end of TX rather than only time
           // or fixed point in sample index as stop point.
           eot := mnlooper;  // EOT (End Of Transmission) marks last sample index to be sent.
+
+
+          {TODO Fix CW ID then enable again.}
+          doCWID := False;
 
           // CW ID Handler
           if doCWID Then

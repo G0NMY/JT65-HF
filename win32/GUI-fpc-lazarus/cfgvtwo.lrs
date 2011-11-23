@@ -6,150 +6,150 @@ LazarusResources.Add('TForm6','FORMDATA',[
   +#30#2#11'ClientWidth'#3' '#3#21'Constraints.MaxHeight'#3#30#2#20'Constraints'
   +'.MaxWidth'#3' '#3#21'Constraints.MinHeight'#3#30#2#20'Constraints.MinWidth'
   +#3' '#3#11'Font.Height'#2#245#9'Font.Name'#6#5'Arial'#8'OnCreate'#7#10'FormC'
-  +'reate'#10'LCLVersion'#6#8'0.9.30.2'#7'Visible'#9#0#12'TPageControl'#12'Page'
-  +'Control1'#4'Left'#2#8#6'Height'#3#232#1#3'Top'#2#8#5'Width'#3#16#3#10'Activ'
-  +'ePage'#7#9'TabSheet1'#8'TabIndex'#2#0#8'TabOrder'#2#0#0#9'TTabSheet'#9'TabS'
-  +'heet1'#7'Caption'#6#13'Station Setup'#12'ClientHeight'#3#205#1#11'ClientWid'
-  +'th'#3#8#3#0#6'TLabel'#7'Label26'#4'Left'#2#5#6'Height'#2#15#3'Top'#2#6#5'Wi'
-  +'dth'#2'-'#7'Caption'#6#8'Callsign'#11'Font.Height'#2#245#9'Font.Name'#6#5'A'
-  +'rial'#10'Font.Style'#11#6'fsBold'#0#11'ParentColor'#8#10'ParentFont'#8#0#0#6
-  +'TLabel'#7'Label27'#4'Left'#2#4#6'Height'#2#15#3'Top'#2':'#5'Width'#3#223#0#7
-  +'Caption'#6'*Grid (4 or 6 Characters).  Required value.'#11'Font.Height'#2
-  +#245#9'Font.Name'#6#5'Arial'#10'Font.Style'#11#6'fsBold'#0#11'ParentColor'#8
-  +#10'ParentFont'#8#0#0#6'TLabel'#7'Label22'#4'Left'#2#4#6'Height'#2#15#3'Top'
-  +#2'i'#5'Width'#2'j'#7'Caption'#6#18'Sound Input Device'#11'Font.Height'#2#245
-  +#9'Font.Name'#6#5'Arial'#10'Font.Style'#11#6'fsBold'#0#11'ParentColor'#8#10
-  +'ParentFont'#8#0#0#6'TLabel'#7'Label23'#4'Left'#3';'#1#6'Height'#2#15#3'Top'
-  +#2'i'#5'Width'#2's'#7'Caption'#6#19'Sound Output Device'#11'Font.Height'#2
-  +#245#9'Font.Name'#6#5'Arial'#10'Font.Style'#11#6'fsBold'#0#11'ParentColor'#8
-  +#10'ParentFont'#8#0#0#6'TLabel'#7'Label53'#4'Left'#2#5#6'Height'#2#15#3'Top'
-  +#3#152#0#5'Width'#2'V'#7'Caption'#6#14'RX Sample Rate'#11'Font.Height'#2#245
-  +#9'Font.Name'#6#5'Arial'#10'Font.Style'#11#6'fsBold'#0#11'ParentColor'#8#10
-  +'ParentFont'#8#0#0#6'TLabel'#7'Label54'#4'Left'#2'y'#6'Height'#2#15#3'Top'#3
-  +#152#0#5'Width'#2'V'#7'Caption'#6#14'TX Sample Rate'#11'Font.Height'#2#245#9
-  +'Font.Name'#6#5'Arial'#10'Font.Style'#11#6'fsBold'#0#11'ParentColor'#8#10'Pa'
-  +'rentFont'#8#0#0#6'TLabel'#7'Label14'#4'Left'#2#5#6'Height'#2'!'#3'Top'#3#194
-  +#0#5'Width'#3'~'#2#7'Caption'#6#189'Automatic adjustment may cause some init'
-  +'ial skewing of spectrum display until SR settles.  This is harmless.'#13#10
-  +'In most cases it is suggested that Automatic sample rate correction be enab'
-  +'led.'#11'Font.Height'#2#243#9'Font.Name'#6#5'Arial'#11'ParentColor'#8#10'Pa'
-  +'rentFont'#8#0#0#6'TLabel'#7'Label29'#4'Left'#2#4#6'Height'#2#15#3'Top'#3#160
-  +#1#5'Width'#3#248#0#7'Caption'#6'/Location of RX/TX history file (JT65hf-log'
-  +'.csv)'#11'Font.Height'#2#245#9'Font.Name'#6#5'Arial'#10'Font.Style'#11#6'fs'
-  +'Bold'#0#11'ParentColor'#8#10'ParentFont'#8#0#0#6'TLabel'#7'Label28'#4'Left'
-  +#2'd'#6'Height'#2#15#3'Top'#2#6#5'Width'#2'!'#7'Caption'#6#6'Prefix'#11'Font'
-  +'.Height'#2#245#9'Font.Name'#6#5'Arial'#10'Font.Style'#11#6'fsBold'#0#11'Par'
-  +'entColor'#8#10'ParentFont'#8#0#0#6'TLabel'#7'Label30'#4'Left'#3#204#0#6'Hei'
-  +'ght'#2#15#3'Top'#2#6#5'Width'#2' '#7'Caption'#6#6'Suffix'#11'Font.Height'#2
-  +#245#9'Font.Name'#6#5'Arial'#10'Font.Style'#11#6'fsBold'#0#11'ParentColor'#8
-  +#10'ParentFont'#8#0#0#6'TLabel'#7'Label70'#4'Left'#3#28#1#6'Height'#2'Q'#3'T'
-  +'op'#2#6#5'Width'#3#172#1#7'Caption'#12'\'#1#0#0'Note:  Suffix/Prefix is sug'
-  +'gested to only be used in situations where'#13#10'you have a legal requirem'
-  +'ent to do so.  You may define a suffix OR'#13#10'a prefix but not both.  Su'
-  +'ffix/prefix support in the JT65 protocol is a'#13#10'(very) complex issue. '
-  +' My suggestion is to avoid its use if at all'#13#10'possible.  Suffix/prefi'
-  +'x support in JT65-HF is, at best, incomplete.'#11'Font.Height'#2#243#9'Font'
-  +'.Name'#6#5'Arial'#10'Font.Style'#11#6'fsBold'#0#11'ParentColor'#8#10'Parent'
-  +'Font'#8#0#0#5'TEdit'#8'edMyCall'#4'Left'#2#5#6'Height'#2#24#3'Top'#2#24#5'W'
-  +'idth'#2'P'#8'CharCase'#7#11'ecUppercase'#11'Font.Height'#2#243#9'Font.Name'
-  +#6#5'Arial'#8'OnChange'#7#14'edMyCallChange'#10'OnKeyPress'#7#16'edMyCallKey'
-  +'Press'#10'ParentFont'#8#8'TabOrder'#2#0#0#0#5'TEdit'#8'edMyGrid'#4'Left'#2#5
-  +#6'Height'#2#24#3'Top'#2'K'#5'Width'#2'P'#11'Font.Height'#2#243#9'Font.Name'
-  +#6#5'Arial'#10'OnKeyPress'#7#16'edMyGridKeyPress'#10'ParentFont'#8#8'TabOrde'
-  +'r'#2#1#0#0#9'TComboBox'#9'cbAudioIn'#4'Left'#2#4#6'Height'#2#24#3'Top'#2'y'
-  +#5'Width'#3','#1#11'Font.Height'#2#243#9'Font.Name'#6#5'Arial'#10'ItemHeight'
-  +#2#16#9'ItemIndex'#2#0#13'Items.Strings'#1#6#13'Default Input'#0#8'OnChange'
-  +#7#15'cbAudioInChange'#10'ParentFont'#8#5'Style'#7#14'csDropDownList'#8'TabO'
-  +'rder'#2#2#4'Text'#6#13'Default Input'#0#0#9'TComboBox'#10'cbAudioOut'#4'Lef'
-  +'t'#3';'#1#6'Height'#2#24#3'Top'#2'y'#5'Width'#3','#1#11'Font.Height'#2#243#9
-  +'Font.Name'#6#5'Arial'#10'ItemHeight'#2#16#9'ItemIndex'#2#0#13'Items.Strings'
-  +#1#6#13'Default Ouput'#0#8'OnChange'#7#16'cbAudioOutChange'#10'ParentFont'#8
-  +#5'Style'#7#14'csDropDownList'#8'TabOrder'#2#3#4'Text'#6#13'Default Ouput'#0
-  ,#0#5'TEdit'#9'edRXSRCor'#4'Left'#2#5#6'Height'#2#24#3'Top'#3#168#0#5'Width'#2
-  +'?'#11'Font.Height'#2#243#9'Font.Name'#6#5'Arial'#10'Font.Style'#11#6'fsBold'
-  +#0#10'ParentFont'#8#8'TabOrder'#2#4#4'Text'#6#6'1.0000'#0#0#5'TEdit'#9'edTXS'
-  +'RCor'#4'Left'#2'y'#6'Height'#2#24#3'Top'#3#168#0#5'Width'#2'?'#11'Font.Heig'
-  +'ht'#2#243#9'Font.Name'#6#5'Arial'#10'Font.Style'#11#6'fsBold'#0#10'ParentFo'
-  +'nt'#8#8'TabOrder'#2#5#4'Text'#6#6'1.0000'#0#0#9'TCheckBox'#15'chkEnableAuto'
-  +'SR'#4'Left'#3#220#0#6'Height'#2#18#3'Top'#3#169#0#5'Width'#3#27#1#7'Caption'
-  +#6'.Enable Automatic RX/TX Sample Rate Correction.'#11'Font.Height'#2#245#9
-  +'Font.Name'#6#5'Arial'#10'Font.Style'#11#6'fsBold'#0#8'OnChange'#7#21'chkEna'
-  +'bleAutoSRChange'#10'ParentFont'#8#14'ParentShowHint'#8#8'ShowHint'#9#8'TabO'
-  +'rder'#2#6#0#0#9'TCheckBox'#12'cbTXWatchDog'#4'Left'#2#4#6'Height'#2#18#3'To'
-  +'p'#3#236#0#5'Width'#3#146#1#7'Caption'#6'HDisable TX after sending same mes'
-  +'sage excessively. (Runaway TX watchdog)'#7'Checked'#9#11'Font.Height'#2#245
-  +#9'Font.Name'#6#5'Arial'#10'ParentFont'#8#5'State'#7#9'cbChecked'#8'TabOrder'
-  +#2#7#0#0#9'TCheckBox'#17'cbDisableMultiQSO'#4'Left'#2#4#6'Height'#2#18#3'Top'
-  +#3#4#1#5'Width'#3#181#1#7'Caption'#6'SDisable Multidecoder while in QSO.  Su'
-  +'ggested unless you have a fast CPU (>1.5GHz).'#7'Checked'#9#11'Font.Height'
-  +#2#245#9'Font.Name'#6#5'Arial'#10'ParentFont'#8#5'State'#7#9'cbChecked'#8'Ta'
-  +'bOrder'#2#8#0#0#9'TCheckBox'#17'cbMultiAutoEnable'#4'Left'#2#4#6'Height'#2
-  +#18#3'Top'#3#28#1#5'Width'#3'x'#1#7'Caption'#6'KEnable Multidecoder after 2 '
-  +'minutes of no TX (If disabled by option above).'#7'Checked'#9#5'State'#7#9
-  +'cbChecked'#8'TabOrder'#2#9#0#0#9'TCheckBox'#9'cbSaveCSV'#4'Left'#2#4#6'Heig'
-  +'ht'#2#18#3'Top'#3#141#1#5'Width'#3#245#0#7'Caption'#6'/Save text of decodes'
-  +' and transmissions to file.'#7'Checked'#9#5'State'#7#9'cbChecked'#8'TabOrde'
-  +'r'#2#12#0#0#14'TDirectoryEdit'#14'DirectoryEdit1'#4'Left'#2#4#6'Height'#2#24
-  +#3'Top'#3#176#1#5'Width'#3#199#2#10'ShowHidden'#8#11'ButtonWidth'#2#23#9'Num'
-  +'Glyphs'#2#0#11'Font.Height'#2#243#9'Font.Name'#6#5'Arial'#9'MaxLength'#2#0
-  +#10'ParentFont'#8#8'TabOrder'#2#15#0#0#9'TCheckBox'#14'cbRestoreMulti'#4'Lef'
-  +'t'#2#4#6'Height'#2#18#3'Top'#3'4'#1#5'Width'#3#203#0#7'Caption'#6'%Restore '
-  +'defaults sets Multidecoder On'#7'Checked'#9#5'State'#7#9'cbChecked'#8'TabOr'
-  +'der'#2#10#0#0#9'TComboBox'#11'comboPrefix'#4'Left'#2'd'#6'Height'#2#22#3'To'
-  +'p'#2#24#5'Width'#2'\'#11'Font.Height'#2#245#9'Font.Name'#6#5'Arial'#10'Item'
-  +'Height'#2#14#9'ItemIndex'#2#0#13'Items.Strings'#1#6#4'NONE'#0#8'OnChange'#7
-  +#17'comboPrefixChange'#10'ParentFont'#8#5'Style'#7#14'csDropDownList'#8'TabO'
-  +'rder'#2#13#7'TabStop'#8#4'Text'#6#4'NONE'#0#0#9'TComboBox'#11'comboSuffix'#4
-  +'Left'#3#204#0#6'Height'#2#22#3'Top'#2#24#5'Width'#2'@'#11'Font.Height'#2#245
-  +#9'Font.Name'#6#5'Arial'#10'ItemHeight'#2#14#9'ItemIndex'#2#0#13'Items.Strin'
-  +'gs'#1#6#4'NONE'#0#8'OnChange'#7#17'comboPrefixChange'#10'ParentFont'#8#5'St'
-  +'yle'#7#14'csDropDownList'#8'TabOrder'#2#14#7'TabStop'#8#4'Text'#6#4'NONE'#0
-  +#0#9'TCheckBox'#6'cbCWID'#4'Left'#2#4#6'Height'#2#18#3'Top'#3'L'#1#5'Width'#3
-  +#223#0#7'Caption'#6'''Send CW ID With 73 or Free Text Message'#8'OnChange'#7
-  +#12'cbCWIDChange'#8'TabOrder'#2#11#0#0#9'TCheckBox'#15'cbDecodeDivider'#4'Le'
-  +'ft'#2#4#6'Height'#2#18#3'Top'#3'd'#1#5'Width'#3'}'#1#7'Caption'#6'LDraw div'
-  +'ider line between text decode periods (if screen height sufficient).'#7'Che'
-  +'cked'#9#5'State'#7#9'cbChecked'#8'TabOrder'#2#16#0#0#9'TCheckBox'#20'cbMult'
-  +'iAutoEnableHTX'#4'Left'#3#140#1#6'Height'#2#18#3'Top'#3#28#1#5'Width'#3#242
-  +#0#7'Caption'#6'.Enable Multidecoder after Halt TX Button press'#7'Checked'#9
-  +#5'State'#7#9'cbChecked'#8'TabOrder'#2#17#0#0#9'TCheckBox'#8'cbCWIDFT'#4'Lef'
-  +'t'#3#140#1#6'Height'#2#18#3'Top'#3'L'#1#5'Width'#3#227#0#7'Caption'#6'&Send'
-  +' CW ID ONLY with Free Text Message'#8'OnChange'#7#14'cbCWIDFTChange'#8'TabO'
-  +'rder'#2#18#0#0#9'TCheckBox'#22'cbDecodeDividerCompact'#4'Left'#3#140#1#6'He'
-  +'ight'#2#18#3'Top'#3'd'#1#5'Width'#3#154#0#7'Caption'#6#27'Use compressed di'
-  +'vider line'#7'Checked'#9#5'State'#7#9'cbChecked'#8'TabOrder'#2#19#0#0#9'TSp'
-  +'inEdit'#11'SpinTXCount'#4'Left'#3#160#1#6'Height'#2#22#3'Top'#3#232#0#5'Wid'
-  +'th'#2'2'#8'MaxValue'#2#15#9'OnKeyDown'#7#18'SpinTXCountKeyDown'#8'TabOrder'
-  +#2#20#5'Value'#2#15#0#0#6'TLabel'#6'Label1'#4'Left'#3#216#1#6'Height'#2#15#3
-  +'Top'#3#239#0#5'Width'#3#152#0#7'Caption'#6#30'Repeat TX Count for disable T'
-  +'X'#11'ParentColor'#8#0#0#0#9'TTabSheet'#9'TabSheet2'#7'Caption'#6#15'Rig Co'
-  +'ntrol/PTT'#12'ClientHeight'#3#206#1#11'ClientWidth'#3#8#3#0#6'TLabel'#6'Lab'
-  +'el9'#4'Left'#2#10#6'Height'#2#17#3'Top'#2#1#5'Width'#3'0'#2#7'Caption'#6'UE'
-  +'nter your PTT port into the input box below in the format COM###, for examp'
-  +'le, COM11'#11'Font.Height'#2#243#9'Font.Name'#6#5'Arial'#10'Font.Style'#11#6
-  +'fsBold'#0#11'ParentColor'#8#10'ParentFont'#8#0#0#6'TLabel'#7'Label10'#4'Lef'
-  +'t'#2#10#6'Height'#2#15#3'Top'#2#23#5'Width'#2')'#7'Caption'#6#8'PTT Port'#11
-  ,'ParentColor'#8#0#0#5'TEdit'#20'editUserDefinedPort1'#4'Left'#2#10#6'Height'
-  +#2#22#3'Top'#2'+'#5'Width'#2'Z'#8'CharCase'#7#11'ecUppercase'#8'TabOrder'#2#0
-  +#4'Text'#6#4'NONE'#0#0#7'TButton'#13'buttonTestPTT'#4'Left'#2'q'#6'Height'#2
-  +#24#3'Top'#2'+'#5'Width'#2'K'#7'Caption'#6#8'Test PTT'#7'OnClick'#7#18'butto'
-  +'nTestPTTClick'#8'TabOrder'#2#1#0#0#6'TLabel'#6'Label3'#4'Left'#2'q'#6'Heigh'
-  +'t'#2#15#3'Top'#2#23#5'Width'#3'q'#1#7'Caption'#6'MTest PTT will Key/Unkey y'
-  +'our Transceiver.  No audio will be sent during test.'#11'ParentColor'#8#0#0
-  +#9'TCheckBox'#11'cbUseAltPTT'#4'Left'#3#213#0#6'Height'#2#18#3'Top'#2'/'#5'W'
-  +'idth'#3'}'#1#7'Caption'#6'JUse Alternate PTT Method.  Only enable this if y'
-  +'ou have problems with PTT.'#8'TabOrder'#2#2#0#0#11'TRadioGroup'#11'RadioGro'
-  +'up1'#4'Left'#2#10#6'Height'#2'5'#3'Top'#2'H'#5'Width'#3#130#1#8'AutoFill'#9
-  +#7'Caption'#6#16'Ham Radio Deluxe'#28'ChildSizing.LeftRightSpacing'#2#6#28'C'
-  +'hildSizing.TopBottomSpacing'#2#6#29'ChildSizing.EnlargeHorizontal'#7#24'crs'
-  +'HomogenousChildResize'#27'ChildSizing.EnlargeVertical'#7#24'crsHomogenousCh'
-  +'ildResize'#28'ChildSizing.ShrinkHorizontal'#7#14'crsScaleChilds'#26'ChildSi'
-  +'zing.ShrinkVertical'#7#14'crsScaleChilds'#18'ChildSizing.Layout'#7#29'cclLe'
-  +'ftToRightThenTopToBottom'#27'ChildSizing.ControlsPerLine'#2#3#12'ClientHeig'
-  +'ht'#2'#'#11'ClientWidth'#3'~'#1#7'Columns'#2#3#8'TabOrder'#2#3#0#9'TCheckBo'
-  +'x'#9'chkUseHRD'#4'Left'#2#6#6'Height'#2#23#3'Top'#2#6#5'Width'#2'r'#7'Capti'
-  +'on'#6#6'Enable'#8'OnChange'#7#15'chkUseHRDChange'#8'TabOrder'#2#0#0#0#12'TR'
-  +'adioButton'#6'rbHRD4'#4'Left'#2'x'#6'Height'#2#23#3'Top'#2#6#5'Width'#3#129
+  +'reate'#10'LCLVersion'#6#8'0.9.30.2'#0#12'TPageControl'#12'PageControl1'#4'L'
+  +'eft'#2#8#6'Height'#3#232#1#3'Top'#2#8#5'Width'#3#16#3#10'ActivePage'#7#9'Ta'
+  +'bSheet1'#8'TabIndex'#2#0#8'TabOrder'#2#0#0#9'TTabSheet'#9'TabSheet1'#7'Capt'
+  +'ion'#6#13'Station Setup'#12'ClientHeight'#3#205#1#11'ClientWidth'#3#8#3#0#6
+  +'TLabel'#7'Label26'#4'Left'#2#5#6'Height'#2#15#3'Top'#2#6#5'Width'#2'-'#7'Ca'
+  +'ption'#6#8'Callsign'#11'Font.Height'#2#245#9'Font.Name'#6#5'Arial'#10'Font.'
+  +'Style'#11#6'fsBold'#0#11'ParentColor'#8#10'ParentFont'#8#0#0#6'TLabel'#7'La'
+  +'bel27'#4'Left'#2#4#6'Height'#2#15#3'Top'#2':'#5'Width'#3#223#0#7'Caption'#6
+  +'*Grid (4 or 6 Characters).  Required value.'#11'Font.Height'#2#245#9'Font.N'
+  +'ame'#6#5'Arial'#10'Font.Style'#11#6'fsBold'#0#11'ParentColor'#8#10'ParentFo'
+  +'nt'#8#0#0#6'TLabel'#7'Label22'#4'Left'#2#4#6'Height'#2#15#3'Top'#2'i'#5'Wid'
+  +'th'#2'j'#7'Caption'#6#18'Sound Input Device'#11'Font.Height'#2#245#9'Font.N'
+  +'ame'#6#5'Arial'#10'Font.Style'#11#6'fsBold'#0#11'ParentColor'#8#10'ParentFo'
+  +'nt'#8#0#0#6'TLabel'#7'Label23'#4'Left'#3';'#1#6'Height'#2#15#3'Top'#2'i'#5
+  +'Width'#2's'#7'Caption'#6#19'Sound Output Device'#11'Font.Height'#2#245#9'Fo'
+  +'nt.Name'#6#5'Arial'#10'Font.Style'#11#6'fsBold'#0#11'ParentColor'#8#10'Pare'
+  +'ntFont'#8#0#0#6'TLabel'#7'Label53'#4'Left'#2#5#6'Height'#2#15#3'Top'#3#152#0
+  +#5'Width'#2'V'#7'Caption'#6#14'RX Sample Rate'#11'Font.Height'#2#245#9'Font.'
+  +'Name'#6#5'Arial'#10'Font.Style'#11#6'fsBold'#0#11'ParentColor'#8#10'ParentF'
+  +'ont'#8#0#0#6'TLabel'#7'Label54'#4'Left'#2'y'#6'Height'#2#15#3'Top'#3#152#0#5
+  +'Width'#2'V'#7'Caption'#6#14'TX Sample Rate'#11'Font.Height'#2#245#9'Font.Na'
+  +'me'#6#5'Arial'#10'Font.Style'#11#6'fsBold'#0#11'ParentColor'#8#10'ParentFon'
+  +'t'#8#0#0#6'TLabel'#7'Label14'#4'Left'#2#5#6'Height'#2'!'#3'Top'#3#194#0#5'W'
+  +'idth'#3'~'#2#7'Caption'#6#189'Automatic adjustment may cause some initial s'
+  +'kewing of spectrum display until SR settles.  This is harmless.'#13#10'In m'
+  +'ost cases it is suggested that Automatic sample rate correction be enabled.'
+  +#11'Font.Height'#2#243#9'Font.Name'#6#5'Arial'#11'ParentColor'#8#10'ParentFo'
+  +'nt'#8#0#0#6'TLabel'#7'Label29'#4'Left'#2#4#6'Height'#2#15#3'Top'#3#160#1#5
+  +'Width'#3#248#0#7'Caption'#6'/Location of RX/TX history file (JT65hf-log.csv'
+  +')'#11'Font.Height'#2#245#9'Font.Name'#6#5'Arial'#10'Font.Style'#11#6'fsBold'
+  +#0#11'ParentColor'#8#10'ParentFont'#8#0#0#6'TLabel'#7'Label28'#4'Left'#2'd'#6
+  +'Height'#2#15#3'Top'#2#6#5'Width'#2'!'#7'Caption'#6#6'Prefix'#11'Font.Height'
+  +#2#245#9'Font.Name'#6#5'Arial'#10'Font.Style'#11#6'fsBold'#0#11'ParentColor'
+  +#8#10'ParentFont'#8#0#0#6'TLabel'#7'Label30'#4'Left'#3#204#0#6'Height'#2#15#3
+  +'Top'#2#6#5'Width'#2' '#7'Caption'#6#6'Suffix'#11'Font.Height'#2#245#9'Font.'
+  +'Name'#6#5'Arial'#10'Font.Style'#11#6'fsBold'#0#11'ParentColor'#8#10'ParentF'
+  +'ont'#8#0#0#6'TLabel'#7'Label70'#4'Left'#3#28#1#6'Height'#2'Q'#3'Top'#2#6#5
+  +'Width'#3#172#1#7'Caption'#12'\'#1#0#0'Note:  Suffix/Prefix is suggested to '
+  +'only be used in situations where'#13#10'you have a legal requirement to do '
+  +'so.  You may define a suffix OR'#13#10'a prefix but not both.  Suffix/prefi'
+  +'x support in the JT65 protocol is a'#13#10'(very) complex issue.  My sugges'
+  +'tion is to avoid its use if at all'#13#10'possible.  Suffix/prefix support '
+  +'in JT65-HF is, at best, incomplete.'#11'Font.Height'#2#243#9'Font.Name'#6#5
+  +'Arial'#10'Font.Style'#11#6'fsBold'#0#11'ParentColor'#8#10'ParentFont'#8#0#0
+  +#5'TEdit'#8'edMyCall'#4'Left'#2#5#6'Height'#2#24#3'Top'#2#24#5'Width'#2'P'#8
+  +'CharCase'#7#11'ecUppercase'#11'Font.Height'#2#243#9'Font.Name'#6#5'Arial'#8
+  +'OnChange'#7#14'edMyCallChange'#10'OnKeyPress'#7#16'edMyCallKeyPress'#10'Par'
+  +'entFont'#8#8'TabOrder'#2#0#0#0#5'TEdit'#8'edMyGrid'#4'Left'#2#5#6'Height'#2
+  +#24#3'Top'#2'K'#5'Width'#2'P'#11'Font.Height'#2#243#9'Font.Name'#6#5'Arial'
+  +#10'OnKeyPress'#7#16'edMyGridKeyPress'#10'ParentFont'#8#8'TabOrder'#2#1#0#0#9
+  +'TComboBox'#9'cbAudioIn'#4'Left'#2#4#6'Height'#2#24#3'Top'#2'y'#5'Width'#3','
+  +#1#11'Font.Height'#2#243#9'Font.Name'#6#5'Arial'#10'ItemHeight'#2#16#9'ItemI'
+  +'ndex'#2#0#13'Items.Strings'#1#6#13'Default Input'#0#8'OnChange'#7#15'cbAudi'
+  +'oInChange'#10'ParentFont'#8#5'Style'#7#14'csDropDownList'#8'TabOrder'#2#2#4
+  +'Text'#6#13'Default Input'#0#0#9'TComboBox'#10'cbAudioOut'#4'Left'#3';'#1#6
+  +'Height'#2#24#3'Top'#2'y'#5'Width'#3','#1#11'Font.Height'#2#243#9'Font.Name'
+  +#6#5'Arial'#10'ItemHeight'#2#16#9'ItemIndex'#2#0#13'Items.Strings'#1#6#13'De'
+  +'fault Ouput'#0#8'OnChange'#7#16'cbAudioOutChange'#10'ParentFont'#8#5'Style'
+  +#7#14'csDropDownList'#8'TabOrder'#2#3#4'Text'#6#13'Default Ouput'#0#0#5'TEdi'
+  ,'t'#9'edRXSRCor'#4'Left'#2#5#6'Height'#2#24#3'Top'#3#168#0#5'Width'#2'?'#11
+  +'Font.Height'#2#243#9'Font.Name'#6#5'Arial'#10'Font.Style'#11#6'fsBold'#0#10
+  +'ParentFont'#8#8'TabOrder'#2#4#4'Text'#6#6'1.0000'#0#0#5'TEdit'#9'edTXSRCor'
+  +#4'Left'#2'y'#6'Height'#2#24#3'Top'#3#168#0#5'Width'#2'?'#11'Font.Height'#2
+  +#243#9'Font.Name'#6#5'Arial'#10'Font.Style'#11#6'fsBold'#0#10'ParentFont'#8#8
+  +'TabOrder'#2#5#4'Text'#6#6'1.0000'#0#0#9'TCheckBox'#15'chkEnableAutoSR'#4'Le'
+  +'ft'#3#220#0#6'Height'#2#18#3'Top'#3#169#0#5'Width'#3#27#1#7'Caption'#6'.Ena'
+  +'ble Automatic RX/TX Sample Rate Correction.'#11'Font.Height'#2#245#9'Font.N'
+  +'ame'#6#5'Arial'#10'Font.Style'#11#6'fsBold'#0#8'OnChange'#7#21'chkEnableAut'
+  +'oSRChange'#10'ParentFont'#8#14'ParentShowHint'#8#8'ShowHint'#9#8'TabOrder'#2
+  +#6#0#0#9'TCheckBox'#12'cbTXWatchDog'#4'Left'#2#4#6'Height'#2#18#3'Top'#3#236
+  +#0#5'Width'#3#146#1#7'Caption'#6'HDisable TX after sending same message exce'
+  +'ssively. (Runaway TX watchdog)'#7'Checked'#9#11'Font.Height'#2#245#9'Font.N'
+  +'ame'#6#5'Arial'#10'ParentFont'#8#5'State'#7#9'cbChecked'#8'TabOrder'#2#7#0#0
+  +#9'TCheckBox'#17'cbDisableMultiQSO'#4'Left'#2#4#6'Height'#2#18#3'Top'#3#4#1#5
+  +'Width'#3#181#1#7'Caption'#6'SDisable Multidecoder while in QSO.  Suggested '
+  +'unless you have a fast CPU (>1.5GHz).'#7'Checked'#9#11'Font.Height'#2#245#9
+  +'Font.Name'#6#5'Arial'#10'ParentFont'#8#5'State'#7#9'cbChecked'#8'TabOrder'#2
+  +#8#0#0#9'TCheckBox'#17'cbMultiAutoEnable'#4'Left'#2#4#6'Height'#2#18#3'Top'#3
+  +#28#1#5'Width'#3'x'#1#7'Caption'#6'KEnable Multidecoder after 2 minutes of n'
+  +'o TX (If disabled by option above).'#7'Checked'#9#5'State'#7#9'cbChecked'#8
+  +'TabOrder'#2#9#0#0#9'TCheckBox'#9'cbSaveCSV'#4'Left'#2#4#6'Height'#2#18#3'To'
+  +'p'#3#141#1#5'Width'#3#245#0#7'Caption'#6'/Save text of decodes and transmis'
+  +'sions to file.'#7'Checked'#9#5'State'#7#9'cbChecked'#8'TabOrder'#2#12#0#0#14
+  +'TDirectoryEdit'#14'DirectoryEdit1'#4'Left'#2#4#6'Height'#2#24#3'Top'#3#176#1
+  +#5'Width'#3#199#2#10'ShowHidden'#8#11'ButtonWidth'#2#23#9'NumGlyphs'#2#0#11
+  +'Font.Height'#2#243#9'Font.Name'#6#5'Arial'#9'MaxLength'#2#0#10'ParentFont'#8
+  +#8'TabOrder'#2#15#0#0#9'TCheckBox'#14'cbRestoreMulti'#4'Left'#2#4#6'Height'#2
+  +#18#3'Top'#3'4'#1#5'Width'#3#203#0#7'Caption'#6'%Restore defaults sets Multi'
+  +'decoder On'#7'Checked'#9#5'State'#7#9'cbChecked'#8'TabOrder'#2#10#0#0#9'TCo'
+  +'mboBox'#11'comboPrefix'#4'Left'#2'd'#6'Height'#2#22#3'Top'#2#24#5'Width'#2
+  +'\'#11'Font.Height'#2#245#9'Font.Name'#6#5'Arial'#10'ItemHeight'#2#14#9'Item'
+  +'Index'#2#0#13'Items.Strings'#1#6#4'NONE'#0#8'OnChange'#7#17'comboPrefixChan'
+  +'ge'#10'ParentFont'#8#5'Style'#7#14'csDropDownList'#8'TabOrder'#2#13#7'TabSt'
+  +'op'#8#4'Text'#6#4'NONE'#0#0#9'TComboBox'#11'comboSuffix'#4'Left'#3#204#0#6
+  +'Height'#2#22#3'Top'#2#24#5'Width'#2'@'#11'Font.Height'#2#245#9'Font.Name'#6
+  +#5'Arial'#10'ItemHeight'#2#14#9'ItemIndex'#2#0#13'Items.Strings'#1#6#4'NONE'
+  +#0#8'OnChange'#7#17'comboPrefixChange'#10'ParentFont'#8#5'Style'#7#14'csDrop'
+  +'DownList'#8'TabOrder'#2#14#7'TabStop'#8#4'Text'#6#4'NONE'#0#0#9'TCheckBox'#6
+  +'cbCWID'#4'Left'#2#4#6'Height'#2#18#3'Top'#3'L'#1#5'Width'#3#223#0#7'Caption'
+  +#6'''Send CW ID With 73 or Free Text Message'#8'OnChange'#7#12'cbCWIDChange'
+  +#8'TabOrder'#2#11#7'Visible'#8#0#0#9'TCheckBox'#15'cbDecodeDivider'#4'Left'#2
+  +#4#6'Height'#2#18#3'Top'#3'd'#1#5'Width'#3'}'#1#7'Caption'#6'LDraw divider l'
+  +'ine between text decode periods (if screen height sufficient).'#7'Checked'#9
+  +#5'State'#7#9'cbChecked'#8'TabOrder'#2#16#0#0#9'TCheckBox'#20'cbMultiAutoEna'
+  +'bleHTX'#4'Left'#3#140#1#6'Height'#2#18#3'Top'#3#28#1#5'Width'#3#242#0#7'Cap'
+  +'tion'#6'.Enable Multidecoder after Halt TX Button press'#7'Checked'#9#5'Sta'
+  +'te'#7#9'cbChecked'#8'TabOrder'#2#17#0#0#9'TCheckBox'#8'cbCWIDFT'#4'Left'#3
+  +#140#1#6'Height'#2#18#3'Top'#3'L'#1#5'Width'#3#227#0#7'Caption'#6'&Send CW I'
+  +'D ONLY with Free Text Message'#8'OnChange'#7#14'cbCWIDFTChange'#8'TabOrder'
+  +#2#18#7'Visible'#8#0#0#9'TCheckBox'#22'cbDecodeDividerCompact'#4'Left'#3#140
+  +#1#6'Height'#2#18#3'Top'#3'd'#1#5'Width'#3#154#0#7'Caption'#6#27'Use compres'
+  +'sed divider line'#7'Checked'#9#5'State'#7#9'cbChecked'#8'TabOrder'#2#19#0#0
+  +#9'TSpinEdit'#11'SpinTXCount'#4'Left'#3#160#1#6'Height'#2#22#3'Top'#3#232#0#5
+  +'Width'#2'2'#8'MaxValue'#2#15#9'OnKeyDown'#7#18'SpinTXCountKeyDown'#8'TabOrd'
+  +'er'#2#20#5'Value'#2#15#0#0#6'TLabel'#6'Label1'#4'Left'#3#216#1#6'Height'#2
+  +#15#3'Top'#3#239#0#5'Width'#3#152#0#7'Caption'#6#30'Repeat TX Count for disa'
+  +'ble TX'#11'ParentColor'#8#0#0#0#9'TTabSheet'#9'TabSheet2'#7'Caption'#6#15'R'
+  +'ig Control/PTT'#12'ClientHeight'#3#206#1#11'ClientWidth'#3#8#3#0#6'TLabel'#6
+  +'Label9'#4'Left'#2#10#6'Height'#2#17#3'Top'#2#1#5'Width'#3'0'#2#7'Caption'#6
+  +'UEnter your PTT port into the input box below in the format COM###, for exa'
+  +'mple, COM11'#11'Font.Height'#2#243#9'Font.Name'#6#5'Arial'#10'Font.Style'#11
+  +#6'fsBold'#0#11'ParentColor'#8#10'ParentFont'#8#0#0#6'TLabel'#7'Label10'#4'L'
+  +'eft'#2#10#6'Height'#2#15#3'Top'#2#23#5'Width'#2')'#7'Caption'#6#8'PTT Port'
+  ,#11'ParentColor'#8#0#0#5'TEdit'#20'editUserDefinedPort1'#4'Left'#2#10#6'Heig'
+  +'ht'#2#22#3'Top'#2'+'#5'Width'#2'Z'#8'CharCase'#7#11'ecUppercase'#8'TabOrder'
+  +#2#0#4'Text'#6#4'NONE'#0#0#7'TButton'#13'buttonTestPTT'#4'Left'#2'q'#6'Heigh'
+  +'t'#2#24#3'Top'#2'+'#5'Width'#2'K'#7'Caption'#6#8'Test PTT'#7'OnClick'#7#18
+  +'buttonTestPTTClick'#8'TabOrder'#2#1#0#0#6'TLabel'#6'Label3'#4'Left'#2'q'#6
+  +'Height'#2#15#3'Top'#2#23#5'Width'#3'q'#1#7'Caption'#6'MTest PTT will Key/Un'
+  +'key your Transceiver.  No audio will be sent during test.'#11'ParentColor'#8
+  +#0#0#9'TCheckBox'#11'cbUseAltPTT'#4'Left'#3#213#0#6'Height'#2#18#3'Top'#2'/'
+  +#5'Width'#3'}'#1#7'Caption'#6'JUse Alternate PTT Method.  Only enable this i'
+  +'f you have problems with PTT.'#8'TabOrder'#2#2#0#0#11'TRadioGroup'#11'Radio'
+  +'Group1'#4'Left'#2#10#6'Height'#2'5'#3'Top'#2'H'#5'Width'#3#130#1#8'AutoFill'
+  +#9#7'Caption'#6#16'Ham Radio Deluxe'#28'ChildSizing.LeftRightSpacing'#2#6#28
+  +'ChildSizing.TopBottomSpacing'#2#6#29'ChildSizing.EnlargeHorizontal'#7#24'cr'
+  +'sHomogenousChildResize'#27'ChildSizing.EnlargeVertical'#7#24'crsHomogenousC'
+  +'hildResize'#28'ChildSizing.ShrinkHorizontal'#7#14'crsScaleChilds'#26'ChildS'
+  +'izing.ShrinkVertical'#7#14'crsScaleChilds'#18'ChildSizing.Layout'#7#29'cclL'
+  +'eftToRightThenTopToBottom'#27'ChildSizing.ControlsPerLine'#2#3#12'ClientHei'
+  +'ght'#2'#'#11'ClientWidth'#3'~'#1#7'Columns'#2#3#8'TabOrder'#2#3#0#9'TCheckB'
+  +'ox'#9'chkUseHRD'#4'Left'#2#6#6'Height'#2#23#3'Top'#2#6#5'Width'#2'r'#7'Capt'
+  +'ion'#6#6'Enable'#8'OnChange'#7#15'chkUseHRDChange'#8'TabOrder'#2#0#0#0#12'T'
+  +'RadioButton'#6'rbHRD4'#4'Left'#2'x'#6'Height'#2#23#3'Top'#2#6#5'Width'#3#129
   +#0#7'Caption'#6#9'Version 4'#8'TabOrder'#2#1#0#0#12'TRadioButton'#6'rbHRD5'#4
   +'Left'#3#249#0#6'Height'#2#23#3'Top'#2#6#5'Width'#2#127#7'Caption'#6#9'Versi'
   +'on 5'#7'Checked'#9#8'TabOrder'#2#2#7'TabStop'#9#0#0#0#11'TRadioGroup'#9'Omn'

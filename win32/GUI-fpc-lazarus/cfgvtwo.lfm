@@ -15,7 +15,6 @@ object Form6: TForm6
   Font.Name = 'Arial'
   OnCreate = FormCreate
   LCLVersion = '0.9.30.2'
-  Visible = True
   object PageControl1: TPageControl
     Left = 8
     Height = 488
@@ -374,6 +373,7 @@ object Form6: TForm6
         Caption = 'Send CW ID With 73 or Free Text Message'
         OnChange = cbCWIDChange
         TabOrder = 11
+        Visible = False
       end
       object cbDecodeDivider: TCheckBox
         Left = 4
@@ -403,6 +403,7 @@ object Form6: TForm6
         Caption = 'Send CW ID ONLY with Free Text Message'
         OnChange = cbCWIDFTChange
         TabOrder = 18
+        Visible = False
       end
       object cbDecodeDividerCompact: TCheckBox
         Left = 396

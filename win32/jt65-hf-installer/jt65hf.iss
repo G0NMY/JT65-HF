@@ -4,8 +4,8 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING .ISS SCRIPT FILES!
 
 [Setup]
-AppName=JT65-HF-1.0.9
-AppVerName=JT65-HF 1.0.9
+AppName=JT65-HF-1.0.9.2
+AppVerName=JT65-HF 1.0.9.2
 DefaultDirName={pf}\jt65hf109
 DefaultGroupName=JT65-HF-V109
 UninstallDisplayIcon={app}\jt65-hf.exe
@@ -16,13 +16,13 @@ OutputDir=.
 AppCopyright=(c)2009...2011 J C Large W6CQZ
 PrivilegesRequired=none
 MinVersion=,5.1.2600
-VersionInfoVersion=1.0.9
+VersionInfoVersion=1.0.9.2
 VersionInfoCompany=W6CQZ
 VersionInfoDescription=JT65A for HF
-VersionInfoTextVersion=JT65-HF 1.0.9
+VersionInfoTextVersion=JT65-HF 1.0.9.2
 VersionInfoCopyright=(c)2009...2011 J C Large W6CQZ
 VersionInfoProductName=JT65-HF
-VersionInfoProductVersion=1.0.9
+VersionInfoProductVersion=1.0.9.2
 
 [InstallDelete]
 Type: files; Name: "{app}\gpl-2.0.txt"
