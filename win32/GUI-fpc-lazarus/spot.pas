@@ -510,8 +510,8 @@ implementation
                              end
                              else
                              begin
-                                  { TODO [1.0.9] Pass back error to main code so user can be notified of problem }
-                                  { TODO [1.0.9] This is a hard fail.. even in the case where a retry is warranted the spot is discarded. }
+                                  { TODO [1.1.0] Pass back error to main code so user can be notified of problem }
+                                  { TODO [1.1.0] This is a hard fail.. even in the case where a retry is warranted the spot is discarded. }
                                   //if length(foo) < 2 then foo := 'EXC';
                                   //prSpots[i].rbsent:= true;
                                   //if foo[1..3] = 'QRG' then prSpots[i].rbsent := true;  // RB Server says bad QRG so don't try to send this again...

@@ -24,7 +24,6 @@ unit maincode;
 {$MODE DELPHI }
 {$H+}
 
-{TODO Diagnose pskr disable/enable cycle does not return to sending pskr spots}
 {TODO DT adjustment leads to no WF display}
 {TODO Remove internal DB functions replace with SQLite now that I know it will run in thread}
 
@@ -805,7 +804,7 @@ begin
      end;
 end;
 
-{TODO [1.0.9] Re-hook this eventually}
+{TODO [1.1.0] Re-hook this eventually}
 //procedure TForm1.updateList(callsign : String);
 //Var
 //   i     : integer;
@@ -1866,7 +1865,7 @@ begin
 
           saveConfig;
 
-          {TODO [1.0.9] Debug this.. something seems awry.  Using Try/Except to pass this for 1.0.8}
+          {TODO [1.1.0] Debug this.. something seems awry.  Using Try/Except to pass this for 1.0.8}
           Try
              if mnpttOpened Then
              Begin
@@ -2850,7 +2849,7 @@ begin
                          efoo     := 'Can not compute TX message';
                     End;
 
-                    {TODO [1.0.9 and beyond] Continue testing result of message parsers for bith 2/3 word forms.}
+                    {TODO [1.1.0 and beyond] Continue testing result of message parsers for both 2/3 word forms.}
 
                     // Lots of comments.  :)
                     //
@@ -6495,7 +6494,7 @@ Begin
      // Update AU Levels display
      displayAudio(audioAve1, audioAve2);
      if Form1.chkMultiDecode.Checked Then watchMulti := False;
-     {TODO [1.0.9] Reattach this to new RB Code}
+     {TODO [1.1.0] Reattach this to new RB Code}
      // Update rbstats once per minute at second = 30
      //If st.Second = 30 Then
      //Begin
@@ -6748,7 +6747,7 @@ begin
           diagout.Form3.ListBox1.Items.Add('resync! ' + IntToStr(gst.Second));
           runOnce := True;
           Form1.Timer1.Enabled := True;
-          {TODO [1.0.9] Review this based on any 1.0.8 feedback.}
+          {TODO [1.1.0] Review this based on any feedback.}
      End
      Else
      Begin
