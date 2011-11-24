@@ -34,7 +34,7 @@ function dacCallback(input: Pointer; output: Pointer; frameCount: Longword;
 
 Var
    d65txBuffer    : Packed Array[0..661503] of CTypes.cint16;
-   d65txBufferPtr : ^CTypes.cint16;
+   //d65txBufferPtr : ^CTypes.cint16;
    d65txBufferIdx : Integer;
    dacE, dacT     : LongInt;
    dacErate       : Double;
@@ -92,8 +92,9 @@ Begin
                optr^ := d65txBuffer[d65txBufferIdx+i];
                inc(optr);
           End;
-          d65txBufferPtr := d65txBufferPtr+frameCount;
+          //d65txBufferPtr := d65txBufferPtr+frameCount;
           d65txBufferIdx := d65txBufferIdx+frameCount;
+          if d65txBufferIdx > 661503 then d65txBufferIdx := 0;
      End
      Else
      Begin

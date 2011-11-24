@@ -280,7 +280,6 @@ type
     procedure initDecode();
     procedure updateSR();
     procedure genTX1();
-    procedure genTX2();
     procedure myCallCheck();
     procedure txControls();
     procedure processNewMinute(st : TSystemTime);
@@ -399,11 +398,7 @@ type
      catInProgress              : Boolean;
      rxInProgress, doCWID       : Boolean;
      useBuffer                  : Integer;
-     d65samfacout               : CTypes.cdouble;
-     d65nwave, d65nmsg          : CTypes.cint;
-     d65sendingsh               : CTypes.cint;
-     d65txmsg                   : PChar;
-     cwidMsg                    : PChar;
+     //d65samfacout               : CTypes.cdouble;
      cfgerror, cfgRecover       : Boolean;
      mnHavePrefix, mnHaveSuffix : Boolean;
      txmode                     : Integer;
@@ -435,7 +430,11 @@ begin
      inherited Create(CreateSuspended);
 end;
 
-function ptt(nport : Pointer; msg : Pointer; ntx : Pointer; iptt : Pointer) : CTypes.cint; cdecl; external JT_DLL name 'ptt_';
+function  ptt(nport : Pointer; msg : Pointer; ntx : Pointer; iptt : Pointer) : CTypes.cint; cdecl; external JT_DLL name 'ptt_';
+
+procedure morse(msg, buffer, dits : Pointer); cdecl; external JT_DLL name 'morse_';
+
+procedure genCW(PMsg, Pfreqcw, Piwave, Pnwave : Pointer); cdecl; external JT_DLL name 'gencwid_';
 
 procedure TForm1.DisableFloatingPointExceptions();
 begin
@@ -1081,7 +1080,7 @@ Begin
           d65.gld65timestamp := d65.gld65timestamp + '00';
           sr := 1.0;
           if tryStrToFloat(cfgvtwo.Form6.edRXSRCor.Text,sr) Then globalData.d65samfacin := StrToFloat(cfgvtwo.Form6.edRXSRCor.Text) else globalData.d65samfacin := 1.0;
-          d65samfacout := 1.0;
+          //d65samfacout := 1.0;
           d65.glMouseDF := Form1.spinDecoderCF.Value;
           if d65.glMouseDF > 1000 then d65.glMouseDF := 1000;
           if d65.glMouseDF < -1000 then d65.glMouseDF := -1000;
@@ -1311,7 +1310,7 @@ begin
                Form1.rbGenMsg.Font.Color := clRed;
                Form1.rbFreeMsg.Font.Color  := clBlack;
                useBuffer := 0;
-               if cfgvtwo.Form6.cbCWID.Checked Then doCWID := True else doCWID := False;
+               doCWID := True;
           End;
      end;
 end;
@@ -2469,7 +2468,7 @@ Begin
                                    msg := edHisCall.Text + ' 73';
                                    Resolved := True;
                                    doQSO       := True;
-                                   if cfgvtwo.Form6.cbCWID.Checked Then doCWID := True else doCWID := False;
+                                   doCWID := True;
                               End
                               Else
                               Begin
@@ -2695,7 +2694,7 @@ Begin
                     If ValidateCallsign(word2) Then Form1.edHisCall.Text := word2 Else Form1.edHisCall.Text := '';
                     resolved := True;
                     if ansiContainsText(globalData.fullcall,'/') Then msg := word2 + ' 73' else msg := word2 + ' ' + globalData.fullcall + ' 73';
-                    if cfgvtwo.Form6.cbCWID.Checked Then doCWID := True else doCWID := False;
+                    doCWID := True;
                     doQSO    := True;
                End;
                if (word3 = '73') And not resolved Then
@@ -2704,8 +2703,8 @@ Begin
                     If ValidateCallsign(word2) Then Form1.edHisCall.Text := word2 Else Form1.edHisCall.Text := '';
                     resolved := True;
                     if ansiContainsText(globalData.fullcall,'/') Then msg := word2 + ' 73' else msg := word2 + ' ' + globalData.fullcall + ' 73';
-                    if cfgvtwo.Form6.cbCWID.Checked Then doCWID := True else doCWID := False;
-                    doQSO    := True;
+                    doCWID := True;
+                    doQSO  := True;
                End;
           End
           Else
@@ -3206,7 +3205,7 @@ begin
                d65.gld65timestamp := d65.gld65timestamp + '00';
                sr := 1.0;
                if tryStrToFloat(cfgvtwo.Form6.edRXSRCor.Text,sr) Then globalData.d65samfacin := StrToFloat(cfgvtwo.Form6.edRXSRCor.Text) else globalData.d65samfacin := 1.0;
-               d65samfacout := 1.0;
+               //d65samfacout := 1.0;
                d65.glMouseDF := Form1.spinDecoderCF.Value;
                if d65.glMouseDF > 1000 then d65.glMouseDF := 1000;
                if d65.glMouseDF < -1000 then d65.glMouseDF := -1000;
@@ -4769,7 +4768,7 @@ Begin
      // Set txBuffer index to start of array.
      dac.d65txBufferIdx := 0;
      // Set ptr to start of buffer.
-     dac.d65txBufferPtr := @dac.d65txBuffer[0];
+     //dac.d65txBufferPtr := @dac.d65txBuffer[0];
      dac.dacT := 0;
      // Attempt to open selected devices, both must pass open/start to continue.
      result := false;
@@ -5409,37 +5408,110 @@ End;
 
 procedure TForm1.genTX1();
 Var
-   txdf, nwave, i : CTypes.cint;
-   txsr, freqcw   : CTypes.cdouble;
-   d65sending     : PChar;
+   txdf, nwave, i    : CTypes.cint;
+   txsr, freqcw      : CTypes.cdouble;
+   d65sending        : PChar;
+   d65txmsg          : PChar;
+   ditsb             : Array Of CTypes.cint8;
+   pditsb            : CTypes.pcint8;
+   dits              : CTypes.cint;
+   pdits             : CTypes.pcint;
+   fblocks           : CTypes.cfloat;
+   iblocks           : Integer;
+   d65nwave, d65nmsg : CTypes.cint;
+   d65sendingsh      : CTypes.cint;
+   cwidMsg           : PChar;
+   txBuffer          : Array of CTypes.cint16;
+   cwidb             : Array of CTypes.cint16;
+   pcwidb            : CTypes.pcint16;
+   ptxBuffer         : CTypes.pcint16;
+   foo1, foo2        : String;
+   txsamps           : Integer;
+   cont, doLCWID     : Boolean;
+
 Begin
      // Generate TX samples for a normal TX Cycle.
      // curMsg holds text to TX
+
      // A JT65 TX sequence runs 46.8 Seconds starting at 1 second into
      // minute, ending at 47.8 seconds.  Here I will raise PTT at second
-     // = 0.  By adding 1 second of silence to the TX output I will have
-     // a total TX buffer length of 1 second silence + 46.8 seconds of data
-     // + 1 second of silence (last silence period allows TX buffer to
-     // flush before lowering PTT) for a total buffer length of 48.8 seconds
-     // or 538020 samples (262.7 2K buffers).  Raising upper bound to an
-     // even 2K multiple gives me 538624 samples or 263 2K buffers.
+     // = 0.  By adding 1 second lead in silence I will have a total TX
+     // buffer length of 1 second silence + 46.8 seconds of data.
 
-     eot := 0;
+     // Frame times
+     // Lead in silence 11025 samples
+     // Data 126*4096 samples = 516096
+     // Lead out silence to CW ID 5512 samples
+     // CW ID 0 to max 110250 samples
+     // Lead out silence to PTT off 5512 samples
+     // Maximum frame = 11025 + 516096 + 5512 + 110250 + 5512 = 648395 = 58.811337868 seconds.
+     // Minimum frame = 11025 + 516096 + 5512 + 0 + 5512 = 538145 = 48.811337868 seconds.
+     // DAC Callback works in 2048 sample blocks.
+     // Maximum frame = 648395/2048 = Int(317) blocks = 649216 samples = 58.885804989 seconds.
+     // Minimum frame = 538145/2048 = Int(263) blocks = 538624 samples = 48.854784580 seconds.
+     //
+     // One 2K sample block = time of 0.185759637 second.
 
+     // So... with TX assert at second = 0 then 1 second silence then
+     // 46.811428571 seconds data then .5 second silence then (max) 10
+     // seconds CW ID and ending with .5 second silence I have the worst
+     // case length of 58.9 seconds before EOT.
+
+     // Temporary buffer to hold generated JT65a tones.
+     SetLength(txBuffer,661504);
+     // Temporary buffer used to validate CW ID
+     SetLength(ditsB,460);
+     // Temporary buffer to hold generated CW ID tones.
+     SetLength(cwidb,110250);
+
+     // PChar setup for message, message generated and CW ID
      d65sending := StrAlloc(28);
-     for i := 0 to 27 do d65sending[i] := ' ';
+     d65txmsg   := StrAlloc(28);
+     cwidMsg    := StrAlloc(22);
 
+     // Clear sample and other buffers
+     for i := 0 to length(txBuffer)-1 do txBuffer[i] := 0;
+     for i := 0 to length(dac.d65txBuffer)-1 do dac.d65txBuffer[i] := 0;
+     for i := 0 to length(cwidb)-1 do cwidb[i] := 0;
+     for i := 0 to length(ditsb)-1 do ditsb[i] := 0;
+
+     // Pointer for JT65 signal sample buffer
+     ptxBuffer := @txBuffer[0];
+     // Pointer for "dits" buffer
+     pditsb := @ditsb[0];
+     // Pointer for CW ID sample buffer
+     pcwidb := @cwidb[0];
+
+
+     // Insure all PChar strings are clear
+     for i := 0 to 27 do d65sending[i] := ' ';
+     for i := 0 to 27 do d65TXMsg[i]   := ' ';
+     for i := 0 to 21 do cwidMsg[i]    := ' ';
+
+     // Select message input buffer to use
      if useBuffer = 0 Then
      Begin
           curMsg := UpCase(padRight(Form1.edMsg.Text,22));
+          if doCWID and cfgvtwo.Form6.cbCWID.Checked Then doCWID := True else doCWID := false;
      End;
      if useBuffer = 1 Then
      Begin
           curMsg := UpCase(padRight(Form1.edFreeText.Text,22));
-          if cfgvtwo.Form6.cbCWID.Checked or cfgvtwo.Form6.cbCWIDFT.Checked Then doCWID := True else doCWID := False;
+          if cfgvtwo.Form6.cbCWID.Checked or cfgvtwo.Form6.cbCWIDFT.Checked Then doCWID := True else doCWID := false;
      End;
+
+     // eot will hold the index to last sample for TX inclusive of all lead in, data, CW ID and lead out.
+     // txsamps holds index to last sample in output buffer as I stich together the lead in, data, cw id and lead out samples
+     // into a unified buffer (dac.d65txBuffer)
+
+     eot     := 0;
+     txsamps := 0;
+
+
+     // Check for valid message and generate TX samples if so into txBuffer[]
      if Length(TrimLeft(TrimRight(curMsg)))>1 Then
      Begin
+          cont := true;
           StrPCopy(d65txmsg, curMsg);
           d65.glmode65 := 1;
           txdf := 0;
@@ -5448,111 +5520,163 @@ Begin
           d65sendingsh := -1;
           d65nmsg := 0;
           txsr := 1.0;
-          if tryStrToFloat(cfgvtwo.Form6.edTXSRCor.Text,txsr) Then d65samfacout := StrToFloat(cfgvtwo.Form6.edTXSRCor.Text) else d65samfacout := 1.0;
-          // Insert .3 second or 3307 samples of silence as .3 Seconds of prepended silence seems to get the timing right.
-          // Why .3?  No idea, it was discovered through trial and error in the earliest days of coding JT65-HF.
-          for mnlooper := 0 to  3306 do
-          begin
-               dac.d65txBuffer[mnlooper] := 0;
-          end;
-          if (paOutParams.channelCount = 2) And (txMode = 65) then encode65.gen65(d65txmsg,@txdf,@dac.d65txBuffer[0],@d65nwave,@d65sendingsh,d65sending,@d65nmsg);
+          //if tryStrToFloat(cfgvtwo.Form6.edTXSRCor.Text,txsr) Then d65samfacout := StrToFloat(cfgvtwo.Form6.edTXSRCor.Text) else d65samfacout := 1.0;
+          {TODO Fix TX SR adjustment}
 
+          // Generate JT65a frame samples into txBuffer[] taking note that gen65 adds 5512 silence samples at buffer end.
+          if (paOutParams.channelCount = 2) And (txMode = 65) then encode65.gen65(d65txmsg,@txdf,ptxBuffer,@d65nwave,@d65sendingsh,d65sending,@d65nmsg);
+
+          //if (paOutParams.channelCount = 2) And (txMode = 65) then encode65.gen65(d65txmsg,@txdf,@dac.d65txBuffer[0],@d65nwave,@d65sendingsh,d65sending,@d65nmsg);
           //if txMode =  4 Then  encode65.gen4(d65txmsg,@txdf,@dac.d65txBuffer[0],@d65nwave,@d65sendingsh,d65sending,@d65nmsg);
 
-          //
-          // Now I want to pad the data to length of txBuffer with silence
-          // (or add CW ID then pad with silence) so there's no chance of
-          // sending anything other than generated samples or silence...
-          //
-          mnlooper := d65nwave;
+          // Compare message requested for TX to actual message that will be TX
+          foo1 := '';
+          foo2 := '';
+          for i := 1 to d65nmsg do
+          begin
+               foo1 := foo1 + d65TXMsg[i-1];
+               foo2 := foo2 + d65Sending[i-1];
+          end;
 
-          // At this point mnlooper is pointing at last sample of TX data + 1
-          // and if no CW ID would be the index to stop TX.  If CW ID then
-          // mnlooper would once again hold the index of last sample to TX.
-          // Changing this to use this value as end of TX rather than only time
-          // or fixed point in sample index as stop point.
-          eot := mnlooper;  // EOT (End Of Transmission) marks last sample index to be sent.
-
-
-          {TODO Fix CW ID then enable again.}
-          doCWID := False;
-
-          // CW ID Handler
-          if doCWID Then
+          if (foo1 = foo2) Then
           Begin
-               diagout.Form3.ListBox3.Clear;
-               doCWID := False;
-               // Add .25s silence between end of JT65 and start of CW ID
-               for mnlooper := mnlooper to mnlooper + 2756 do
+               // Input message same as output
+               //sleep(100);
+          end
+          else
+          begin
+               // Input message NOT same as output
+               cont := False;
+               sleep(100);
+          end;
+     End
+     Else
+     Begin
+          // Message to TX too short -- not valid.
+          cont := false;
+     End;
+
+     // Data sample in txBuffer[] with no lead in.  Dealing with CW ID now.
+
+     // Determine if CW ID can happen
+     // procedure morse(msg, buffer, dits : Pointer); cdecl; external JT_DLL name 'morse_';
+     // msg is pchar string with text to send padded to 22 characters
+     // buffer is int16 buffer holding dits/dashes 460 elements.
+     // dits is integer reutrning last element in buffer
+
+     StrPCopy(cwidMsg,UpCase(padRight(globalData.fullcall,22))); // this is msg
+     dits   := 0;
+     nwave  := 0;
+     pdits  := @dits;
+     morse(cwidMsg, pditsb, pdits);
+
+     // Length of samples for this CW ID will be
+     // dits * tdit/dt where
+     // tdit = 1.2/25.0 (25 WPM Morse)
+     // dt   = 1.0/11025.0
+     // tdit = 0.048
+     // dt   = 0.000090703
+     // tdit/dt = 529.19969571
+     // Length of samples = dits * 529.19969571
+
+     nwave  := Trunc(dits * 529.19969571);
+
+     if nwave > 110250 then doLCWID := False else doLCWID := true;  // Length of CW ID exceeds maximum of 10 seconds (110250 samples)
+
+     if doLCWID then
+     begin
+          // Generate CW ID
+          StrPCopy(cwidMsg,UpCase(padRight(globalData.fullcall,22)));
+          // DF of CW ID is -50 Hz from TxDF but never less than 200 Hz or greater than 2270 Hz.
+          if txdf < 0 Then freqcw := (1270-abs(txdf))-50;
+          if txdf > 0 Then freqcw := (1270+txdf)-50;
+          if txdf = 0 Then freqcw := 1220.0;
+          if freqcw < 200.0 then freqcw := 200.0;
+          if freqcw > 2270.0 then freqcw := 2270.0;
+          // DF of CW ID set and CW ID message set so make it happen.
+          nwave := 0;
+          genCW(cwidMsg,@freqcw,pcwidb,@nwave);
+          // Clear from nwave to end of CW ID buffer
+          for i := nwave to length(cwidb)-1 do cwidb[i] := 0;
+     end;
+
+     // Disable CW ID if tests above say no go.
+     if not doLCWID then doCWID := False;
+
+     // OK...  Now I have data samples in txBuffer[] and CW ID in cwidb[]
+     // If I'm good to go then stich them together with appropriate lead in
+     // and gaps/lead out added.
+
+     if cont then
+     begin
+          // cont is set so message to send has been generated and is ready.
+
+          // Need to investigate -- but no need for lead in -- with it TX starts
+          // at second = ~2
+          // I need to damn well understand why.
+
+          // Start with 11025 samples of silence lead in
+          //for i := 0 to 11024 do dac.d65txBuffer[i] := 0;
+          //txsamps := i;
+
+          // Add data from txBuff[0..4096*126]
+          for i := 0 to 516095 do
+          begin
+               dac.d65txBuffer[txsamps] := txBuffer[i];
+               inc(txsamps);
+          end;
+
+          // This will be lead out or gap to CW ID (.5 second silence)
+          for i := 0 to 5511 do
+          begin
+               dac.d65txBuffer[txsamps] := 0;
+               inc(txsamps);
+          end;
+
+          // If no CW ID then this really is eot :)
+          eot := txsamps;
+
+          // Handle CW ID if needed
+          if doCWID then
+          begin
+               // CW ID generator sets nwave to length of CW ID tones.
+               for i := 0 to nwave-1 do
                begin
-                    dac.d65txBuffer[mnlooper] := 0;
+                    dac.d65txBuffer[txsamps] := cwidb[i];
+                    inc(txsamps);
                end;
-               // Gen CW ID
-               for i := 0 to length(encode65.e65cwid)-1 do encode65.e65cwid[i] := 0; // Clear CW ID Buffer
-               StrPCopy(cwidMsg,UpCase(padRight(globalData.fullcall,22)));
-               if txdf < 0 Then
-               Begin
-                    freqcw := (1270-abs(txdf))-50;
-               End;
-               if txdf > 0 Then
-               Begin
-                    freqcw := (1270+txdf)-50;
-               End;
-               if txdf = 0 Then
-               Begin
-                    freqcw := 1220.0;
-               End;
-               if freqcw < 300.0 then freqcw := 300.0;
-               if freqcw > 2270.0 then freqcw := 2270.0;
-               //diagout.Form3.ListBox3.Items.Add('CW ID Au=' + FloatToStr(freqcw) + ' Hz');
-               nwave := 0;
-               encode65.genCW(cwidMsg,@freqcw,@encode65.e65cwid[0],@nwave);
-               //subroutine gencwid(msg,freqcw,iwave,nwave)
-               // Append CW ID.  nwave is length of CWID samples buffer.
-               if mnlooper+nwave < 661504 Then
-               Begin
-                    for i := 0 to nwave-1 do
-                    begin
-                         dac.d65txBuffer[mnlooper] := encode65.e65cwid[i];
-                         inc(mnlooper);
-                    end;
-                    // At this point mnlooper is at the end of TX samples and
-                    // has a good value to mark actual end of TX point.
-                    eot := mnlooper;
-               End
-               Else
-               Begin
-                    // CW ID too long... so we will not do it.
-                    for i := mnlooper to 661503 do
-                    begin
-                         dac.d65txBuffer[i] := 0;
-                         diagout.Form3.ListBox3.Items.Add('CW ID is too long to be sent, disabled.');
-                         cfgvtwo.Form6.cbCWID.Checked:=false;
-                    end;
-               End;
-               // Finish buffer to end with silence.
-               for i := mnlooper to 661503 do
-               begin
-                    dac.d65txBuffer[i] := 0;
-               end;
-          End
-          Else
-          Begin
-               for i := mnlooper to 661503 do
-               begin
-                    dac.d65txBuffer[i] := 0;
-               end;
-          End;
-          // I now have a set of samples representing the JT65A audio
-          // tones in txBuffer with nwave indicating number of samples
-          // generated.
-          d65nwave := mnlooper;
+          end;
+
+          // Final lead out silence (.5 second)
+          for i := 0 to 5511 do
+          begin
+               dac.d65txBuffer[txsamps] := 0;
+               inc(txsamps);
+          end;
+
+          // Update eot
+          eot := txsamps;
+
+          // Clear to end of TX sample buffer.
+          for i := txsamps to length(dac.d65txBuffer)-1 do dac.d65txBuffer[i] := 0;
+
+          // Now round up eot to the next HIGHEST 2K block as the DAC callback
+          // works in 2K blocks :)
+          fblocks := eot/2048.0;
+          iblocks := Trunc(fblocks)+1;
+
+          // eot now set such that it's on a block boundary.
+          eot := iblocks*2048+1;
+
+          if doCWID Then doCWID := False;  // Reset doCWID so it can be set as needed for next frame -- this one is handled :)
+
+          // Message is ready to TX
           TxValid := True;
           TxDirty := False;
           thisTX := curMsg + IntToStr(txdf);
           if lastTX <> thisTX Then
           Begin
-               txCount := 0;
+               txCount := 1;
                lastTX := thisTX;
           End
           Else
@@ -5561,9 +5685,10 @@ Begin
           End;
           thisAction := 3;
           actionSet := True;
-     End
-     Else
-     Begin
+     end
+     else
+     begin
+          // Message invalid NO TX will take place.
           globalData.txInProgress := False;
           rxInProgress := False;
           form1.chkEnTX.Checked := False;
@@ -5572,88 +5697,16 @@ Begin
           thisAction := 2;
           lastTX := '';
           actionSet := False;
-     End;
+          eot := 0;
+     end;
+
+     // Clean up temporary arrays and PChar variables
+     SetLength(txBuffer,0);
+     SetLength(ditsB,0);
+     SetLength(cwidb,0);
      d65sending := StrAlloc(0);
-End;
-
-procedure TForm1.genTX2();
-Var
-   txdf : CTypes.cint;
-   txsr : CTypes.cdouble;
-   d65sending : PChar;
-Begin
-     {TODO [1.0.9] Modify this routine such that it looks at the current offset to correct timing then begins TX where the data SHOULD be if timing was perfect.}
-     {TODO [1.0.9] This may work better than simply starting late.. it would be no different than the first X seconds being missing due to a fade or QRM/N and}
-     {TODO [1.0.9] would not lead to a DT error as is now. Leave this for 1.0.9}
-     // Generate TX samples for a late starting TX Cycle.
-
-     eot := 0;
-
-     d65sending := StrAlloc(28);
-
-     if useBuffer = 0 Then
-     Begin
-          curMsg := UpCase(padRight(Form1.edMsg.Text,22));
-     End;
-     if useBuffer = 1 Then
-     Begin
-          curMsg := UpCase(padRight(Form1.edFreeText.Text,22));
-     End;
-     if Length(TrimLeft(TrimRight(curMsg)))>1 Then
-     Begin
-          StrPCopy(d65txmsg, curMsg);
-          d65.glmode65 := 1;
-          txdf := 0;
-          txdf := Form1.spinTXCF.Value;
-          d65nwave := 0;
-          d65sendingsh := -1;
-          d65nmsg := 0;
-          txsr := 1.0;
-          if tryStrToFloat(cfgvtwo.Form6.edTXSRCor.Text,txsr) Then d65samfacout := StrToFloat(cfgvtwo.Form6.edTXSRCor.Text) else d65samfacout := 1.0;
-          // Generate samples.
-          if (paOutParams.channelCount = 2) And (txMode = 65) Then encode65.gen65(d65txmsg,@txdf,@dac.d65txBuffer[0],@d65nwave,@d65sendingsh,d65sending,@d65nmsg);
-
-          //if txMode =  4 Then  encode65.gen4(d65txmsg,@txdf,@dac.d65txBuffer[0],@d65nwave,@d65sendingsh,d65sending,@d65nmsg);
-
-          // Now I want to pad the data to length of txBuffer with silence
-          mnlooper := d65nwave;
-          // At this point mnlooper is pointing at last sample of TX data + 1
-          // and is the index to stop TX.
-          eot := mnlooper;  // EOT (End Of Transmission) marks last sample index to be sent.
-
-          while mnlooper < 661504 do
-          begin
-               dac.d65txBuffer[mnlooper] := 0;
-               inc(mnlooper);
-          end;
-          d65nwave := 538624;
-          TxValid := True;
-          TxDirty := False;
-          thisTX := curMsg + IntToStr(txdf);
-          if lastTX <> thisTX Then
-          Begin
-               txCount := 0;
-               lastTX := thisTX;
-          End
-          Else
-          Begin
-               inc(txCount);
-          End;
-          thisAction := 6;
-          actionSet := True;
-     End
-     Else
-     Begin
-          globalData.txInProgress := False;
-          rxInProgress := False;
-          form1.chkEnTX.Checked := False;
-          TxValid := False;
-          TxDirty := True;
-          thisAction := 2;
-          actionSet := False;
-          lastTX := '';
-     End;
-     d65sending := StrAlloc(0);
+     d65txmsg   := StrAlloc(0);
+     cwidMsg    := StrAlloc(0);
 End;
 
 procedure TForm1.audioChange();
@@ -5958,6 +6011,8 @@ Begin
                // generate the txBuffer
                genTX1();
                if not cfgvtwo.Form6.cbTXWatchDog.Checked Then txCount := 0;
+               if cfgvtwo.Form6.SpinTXCount.Value < 2 then txCount := 0;
+               if cfgvtwo.Form6.SpinTXCount.Value > 30 then cfgvtwo.Form6.SpinTXCount.Value := 30;
                if txCount < cfgvtwo.Form6.SpinTXCount.Value Then
                Begin
                     // Flag TX Buffer as valid.
@@ -5966,12 +6021,10 @@ Begin
                     if not TxDirty and TxValid Then
                     Begin
                          // For TX I need to scale progress bar for TX display
-                         Form1.ProgressBar3.Max := d65nwave;
+                         Form1.ProgressBar3.Max := eot+10240;
                          rxInProgress := False;
                          nextAction := 2;
                          dac.d65txBufferIdx := 0;
-
-                         dac.d65txBufferPtr := @dac.d65txBuffer[0];
 
                          rxCount := 0;
                          if getPTTMethod() = 'HRD' Then hrdRaisePTT();
@@ -6029,16 +6082,9 @@ Begin
                rxInProgress := False;
                if paOutParams.channelCount = 2 Then
                Begin
-                    // This is where CWID is probably getting chopped.  Changing this to
-                    // use the eot variable that is set in message generator.
-                    // To be clear... var eot marks the end of TX samples + 1.  The message
-                    // generator has also 0 padded the txBuffer array beyond eot to end of
-                    // array.  If CW ID is in play then eot could extend upwards toward
-                    // approximately second ~ 58 plus a little.  The callback code works
-                    // in blocks of 2048 samples so lets try this as eot+2048 and see
-                    // what happens.
-                    //if (dac.d65txBufferIdx >= d65nwave+11025) Or (dac.d65txBufferIdx >= 661503-(11025 DIV 2)) Then
-                    if (dac.d65txBufferIdx >= eot+2048) Or (dac.d65txBufferIdx >= 661503-(11025 DIV 2)) Then
+                    // eot + 10240 determined experimentally.  The 'padding' of 10240 ensures
+                    // no tones get chopped by prematrue dropping of PTT.
+                    if (dac.d65txBufferIdx >= eot+10240) Or (dac.d65txBufferIdx >= 661503-(11025 DIV 2)) Then
                     Begin
                          globalData.txInProgress := False;
                          if getPTTMethod() = 'HRD' Then hrdLowerPTT();
@@ -6080,8 +6126,10 @@ Begin
                // Starting a late sequence TX
                // Generate TX Samples
                TxDirty := True;
-               genTX2();
+               genTX1();
                if not cfgvtwo.Form6.cbTXWatchDog.Checked Then txCount := 0;
+               if cfgvtwo.Form6.SpinTXCount.Value < 2 then txCount := 0;
+               if cfgvtwo.Form6.SpinTXCount.Value > 30 then cfgvtwo.Form6.SpinTXCount.Value := 30;
                if txCount < cfgvtwo.Form6.SpinTXCount.Value Then
                Begin
                     // Flag TX Buffer as valid.
@@ -6100,7 +6148,7 @@ Begin
                          nst := utcTime();
                          // Calculate offset in samples to this second
                          dac.d65txBufferIdx := nst.Second * 11025;
-                         dac.d65txBufferPtr := @dac.d65txBuffer[dac.d65txBufferIdx];
+                         //dac.d65txBufferPtr := @dac.d65txBuffer[dac.d65txBufferIdx];
 
                          rxCount := 0;
                          if getPTTMethod() = 'HRD' Then hrdRaisePTT();
@@ -6809,11 +6857,8 @@ initialization
   adc.d65rxBufferPtr := @adc.d65rxBuffer[0];  // pointer set to start of rxBuffer
   adc.d65rxBufferIdx := 0;
   // Initialize txBuffer and its pointer, txBuffer holds outgoing sample data for PA
-  dac.d65txBufferPtr := @dac.d65txBuffer[0];  // pointer set to start of txBuffer
+  //dac.d65txBufferPtr := @dac.d65txBuffer[0];  // pointer set to start of txBuffer
   dac.d65txBufferIdx := 0;
-  // Setup PChar type variables.
-  d65txmsg := StrAlloc(28);
-  cwidMsg := StrAlloc(22);
   // Miscelanious operational vars.
   runOnce := True;
   spectrum.specFirstRun := True;

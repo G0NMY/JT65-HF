@@ -34,7 +34,7 @@ uses
 implementation
   function verReturn : String;
   Begin
-       Result := '1.0.9.2';
+       Result := '1.0.9.3';
   End;
   function dllReturn : Integer;
   Begin

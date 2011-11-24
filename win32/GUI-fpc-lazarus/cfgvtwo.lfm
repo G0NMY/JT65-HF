@@ -373,7 +373,6 @@ object Form6: TForm6
         Caption = 'Send CW ID With 73 or Free Text Message'
         OnChange = cbCWIDChange
         TabOrder = 11
-        Visible = False
       end
       object cbDecodeDivider: TCheckBox
         Left = 4
@@ -403,7 +402,6 @@ object Form6: TForm6
         Caption = 'Send CW ID ONLY with Free Text Message'
         OnChange = cbCWIDFTChange
         TabOrder = 18
-        Visible = False
       end
       object cbDecodeDividerCompact: TCheckBox
         Left = 396
@@ -420,7 +418,8 @@ object Form6: TForm6
         Height = 22
         Top = 232
         Width = 50
-        MaxValue = 15
+        MaxValue = 30
+        MinValue = 2
         OnKeyDown = SpinTXCountKeyDown
         TabOrder = 20
         Value = 15
